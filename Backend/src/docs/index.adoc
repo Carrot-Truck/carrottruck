@@ -1,0 +1,12 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= 당근트럭 REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: higlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+include::overview.adoc[]

@@ -1,0 +1,52 @@
+spring:
+  # database setting
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # jpa setting
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        # reserved words error config (add backticks)
+        auto_quote_keyword: true
+        globally_quoted_identifiers: true
+    open-in-view: true
+    defer-datasource-initialization: true
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_ID}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30분
+# log setting
+logging:
+  level:
+    org.hibernate.sql: debug
+    com.boyworld.carrot: debug
+
+server:
+  port: 8001
+
+file:
+  dir: /var/images

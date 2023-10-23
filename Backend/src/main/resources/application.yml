@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    include: dev, env  #dev
+#    include: server, env  #server
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+logging:
+  file:
+    path: logs
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true

@@ -1,0 +1,47 @@
+##db
+MYSQL_USER: carrot
+MYSQL_PASSWORD: carrot123!@
+MYSQL_URL: jdbc:mysql://localhost:3306/carrottruck?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+
+##jwt
+JWT_SECRET: rlaehdgusqkrrjsgnqkrdmsrbdidwlsguddlwjdckschldudghksekdrmsxmfjrthsuscjswl
+
+
+##email
+EMAIL_ID: carrot.truck.noreply@gmail.com
+EMAIL_PASSWORD: carrot123!@
+
+##social-google
+#OAUTH2_GOOGLE_ID: 959258029329-0u075vev112cmjl4ochnt3ln27j8r7hu.apps.googleusercontent.com
+#OAUTH2_GOOGLE_PASSWORD: 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
+
+##social-kakao
+#OAUTH2_KAKAO_REDIRECT_URL: http://localhost:3000/oauth/kakao/callback
+#OAUTH2_KAKAO_REST_API: 0995822231823eb8a5fc4ec57bd81ffc
+
+
+---
+
+##dev
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+##db
+MYSQL_USER: carrot
+MYSQL_PASSWORD: carrot123!@
+MYSQL_URL: jdbc:mysql://localhost:3306/carrottruck?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+
+---
+
+##server
+spring:
+  config:
+    activate:
+      on-profile: server
+
+##db
+MYSQL_USER: carrot
+MYSQL_PASSWORD: carrot123!@
+MYSQL_URL: jdbc:mysql://k9c211.p.ssafy.io:3306/carrottruck?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8

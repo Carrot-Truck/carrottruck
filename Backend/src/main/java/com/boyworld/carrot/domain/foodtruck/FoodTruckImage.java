@@ -25,18 +25,19 @@ public class FoodTruckImage extends TimeBaseEntity {
     private Long id;
 
     @Embedded
-    UploadFile uploadFile;
+    private UploadFile uploadFile;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "truck_id")
+    @JoinColumn(name = "food_truck_id")
     private FoodTruck foodTruck;
 
     @Column(nullable = false)
     private Boolean active;
 
     @Builder
-    private FoodTruckImage(UploadFile uploadFile, FoodTruck foodTruck) {
+    private FoodTruckImage(UploadFile uploadFile, FoodTruck foodTruck, Boolean active) {
         this.uploadFile = uploadFile;
         this.foodTruck = foodTruck;
+        this.active = active;
     }
 }

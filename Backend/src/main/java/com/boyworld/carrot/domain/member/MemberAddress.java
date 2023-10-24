@@ -19,6 +19,7 @@ public class MemberAddress extends TimeBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_address_id")
     private Long id;
 
     @Column(nullable = false)
@@ -28,6 +29,7 @@ public class MemberAddress extends TimeBaseEntity {
     private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder

@@ -18,6 +18,7 @@ public class VendorInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "vendor_info_id")
     private Long id;
 
     @Column(length = 100, nullable = false)
@@ -33,6 +34,7 @@ public class VendorInfo {
     private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder

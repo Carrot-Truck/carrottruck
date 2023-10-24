@@ -3,6 +3,7 @@ package com.boyworld.carrot.domain.foodtruck;
 
 import com.boyworld.carrot.domain.TimeBaseEntity;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,10 +31,10 @@ public class Schedule extends TimeBaseEntity {
     private String address;
 
     @Column(nullable = false)
-    private Double latitude;
+    private BigDecimal latitude;
 
     @Column(nullable = false)
-    private Double longitude;
+    private BigDecimal longitude;
 
     @Column(nullable = false, length = 30)
     private String days;
@@ -52,7 +53,7 @@ public class Schedule extends TimeBaseEntity {
     private FoodTruck foodTruck;
 
     @Builder
-    private Schedule(String address, Double latitude, Double longitude, String days, LocalDateTime startTime, LocalDateTime endTime, Boolean active, FoodTruck foodTruck) {
+    private Schedule(String address, BigDecimal latitude, BigDecimal longitude, String days, LocalDateTime startTime, LocalDateTime endTime, Boolean active, FoodTruck foodTruck) {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;

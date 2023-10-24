@@ -39,7 +39,7 @@ public class Order extends TimeBaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "sales_id", nullable = false)
-    private Sale sales;
+    private Sale sale;
 
     @Column(length = 100, nullable = false)
     private Status status;

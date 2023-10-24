@@ -38,7 +38,7 @@ public class OrderMenuOption extends TimeBaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "orders_menu_id", nullable = false)
-    private OrderMenu ordersMenu;
+    private OrderMenu orderMenu;
 
     @Column(nullable = false)
     private Integer quantity;

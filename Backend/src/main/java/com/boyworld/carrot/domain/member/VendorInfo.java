@@ -28,6 +28,9 @@ public class VendorInfo {
     private String vendorName;
 
     @Column(nullable = false)
+    private String businessNumber;
+
+    @Column(nullable = false)
     private String phoneNumber;
 
     @Column(nullable = false)
@@ -38,9 +41,10 @@ public class VendorInfo {
     private Member member;
 
     @Builder
-    private VendorInfo(String tradeName, String vendorName, String phoneNumber, Boolean active, Member member) {
+    private VendorInfo(String tradeName, String vendorName, String businessNumber, String phoneNumber, Boolean active, Member member) {
         this.tradeName = tradeName;
         this.vendorName = vendorName;
+        this.businessNumber = businessNumber;
         this.phoneNumber = phoneNumber;
         this.active = active;
         this.member = member;

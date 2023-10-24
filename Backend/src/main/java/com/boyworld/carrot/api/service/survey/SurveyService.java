@@ -1,5 +1,7 @@
 package com.boyworld.carrot.api.service.survey;
 
+import com.boyworld.carrot.api.controller.survey.response.SubmitSurveyResponse;
+import com.boyworld.carrot.api.service.survey.dto.SubmitSurveyDto;
 import com.boyworld.carrot.domain.survey.repository.SurveyRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ public class SurveyService {
 
     private final SurveyRepository surveyRepository;
 
-//    public void SubmitSurvey()
+    public SubmitSurveyResponse SubmitSurvey(SubmitSurveyDto dto) {
+        return null;
+    }
 
 }

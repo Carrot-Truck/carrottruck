@@ -28,6 +28,7 @@ public class OrderMenu extends TimeBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "orders_menu_id")
     private Long id;
 
     @ManyToOne

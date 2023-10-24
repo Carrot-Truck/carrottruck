@@ -1,11 +1,12 @@
 package com.boyworld.carrot.api.controller.member;
 
 import com.boyworld.carrot.api.ApiResponse;
+import com.boyworld.carrot.api.controller.member.request.EditMemberRequest;
 import com.boyworld.carrot.api.controller.member.request.JoinRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
-import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
+import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
 import com.boyworld.carrot.api.service.member.MemberAccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
 import com.boyworld.carrot.security.SecurityUtil;
@@ -85,7 +86,7 @@ public class ClientController {
 
     /**
      * 로그인 중인 회원 정보 조회
-     * 
+     *
      * @return 로그인 중인 회원 정보
      */
     @GetMapping("/info")
@@ -96,6 +97,25 @@ public class ClientController {
         log.debug("email={}", email);
 
         ClientResponse response = memberAccountService.getClientInfo(email);
+        log.debug("ClientResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 회원 정보 수정
+     *
+     * @param request 수정할 회원 정보
+     * @return 수정된 회원 정보
+     */
+    @PutMapping
+    public ApiResponse<ClientResponse> edit(@Valid @RequestBody EditMemberRequest request) {
+        log.debug("ClientController#edit called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        ClientResponse response = memberAccountService.editClient(request.toEditMemberDto(email));
         log.debug("ClientResponse={}", response);
 
         return ApiResponse.ok(response);

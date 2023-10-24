@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.controller.member;
 
 import com.boyworld.carrot.api.ApiResponse;
+import com.boyworld.carrot.api.controller.member.request.EditMemberRequest;
 import com.boyworld.carrot.api.controller.member.request.JoinRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
@@ -97,6 +98,25 @@ public class VendorController {
 
         VendorResponse response = memberAccountService.getVendorInfo(email);
         log.debug("MemberResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 회원 정보 수정
+     *
+     * @param request 수정할 회원 정보
+     * @return 수정된 회원 정보
+     */
+    @PutMapping
+    public ApiResponse<VendorResponse> edit(@Valid @RequestBody EditMemberRequest request) {
+        log.debug("VendorController#edit called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        VendorResponse response = memberAccountService.editVendor(request.toEditMemberDto(email));
+        log.debug("ClientResponse={}", response);
 
         return ApiResponse.ok(response);
     }

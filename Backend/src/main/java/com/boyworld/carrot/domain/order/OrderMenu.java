@@ -1,6 +1,7 @@
 package com.boyworld.carrot.domain.order;
 
 import com.boyworld.carrot.domain.TimeBaseEntity;
+import com.boyworld.carrot.domain.menu.Menu;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,9 +34,9 @@ public class OrderMenu extends TimeBaseEntity {
     @JoinColumn(name = "orders_id")
     private Order orders;
 
-//    @OneToOne
-//    @JoinColumn(name = "menu_id")
-//    private Menu menu;
+    @OneToOne
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
 
     @Column(nullable = false)
     private Integer quantity;

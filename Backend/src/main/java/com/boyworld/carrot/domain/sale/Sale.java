@@ -1,11 +1,14 @@
 package com.boyworld.carrot.domain.sale;
 
 import com.boyworld.carrot.domain.TimeBaseEntity;
+import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -34,9 +37,9 @@ public class Sale extends TimeBaseEntity {
     @Column(name = "sales_id")
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "food_truck_id", nullable = false)
-//    private FoodTruck foodTruckId;
+    @ManyToOne
+    @JoinColumn(name = "food_truck_id", nullable = false)
+    private FoodTruck foodTruck;
 
     @Column(nullable = false)
     private BigDecimal latitude;

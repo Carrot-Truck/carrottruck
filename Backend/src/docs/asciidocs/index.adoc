@@ -14,3 +14,7 @@ include::overview.adoc[]
 [[Client-API]]
 == Client API
 include::{docdir}/api/client.adoc[]
+
+[[Vendor_API]]
+== Vendor API
+include::{docdir}/api/vendor.adoc[]

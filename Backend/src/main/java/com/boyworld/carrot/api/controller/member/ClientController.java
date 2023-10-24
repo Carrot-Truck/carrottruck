@@ -3,6 +3,7 @@ package com.boyworld.carrot.api.controller.member;
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.member.request.JoinRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
+import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
 import com.boyworld.carrot.api.service.member.MemberAccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member")
+@RequestMapping("/member/client")
 public class ClientController {
 
     private final MemberService memberService;
@@ -33,7 +34,7 @@ public class ClientController {
      * @param request 가입할 회원 정보
      * @return 가입된 회원 정보
      */
-    @PostMapping("/client/join")
+    @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<JoinMemberResponse> join(@Valid @RequestBody JoinRequest request) {
         log.debug("ClientController#join called !!!");
@@ -51,7 +52,7 @@ public class ClientController {
      * @param request 로그인할 아이디, 비밀번호
      * @return 로그인한 회원정보
      */
-    @PostMapping("/client/login")
+    @PostMapping("/login")
     public ApiResponse<TokenInfo> login(@Valid @RequestBody LoginRequest request) {
         log.debug("ClientController#login called !!!");
         log.debug("LoginRequest={}", request);
@@ -61,4 +62,23 @@ public class ClientController {
 
         return ApiResponse.ok(tokenInfo);
     }
+
+    /**
+     * 회원탈퇴 API
+     *
+     * @param request 탈퇴할 아이디, 비밀번호
+     * @return 탈퇴 성공 여부
+     */
+    @PostMapping("/withdrawal")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ApiResponse<Boolean> withdrawal(@Valid @RequestBody WithdrawalRequest request) {
+        log.debug("ClientController#withdrawal called !!!");
+        log.debug("WithdrawalRequest={}", request);
+
+        Boolean result = memberService.withdrawal(request.getEmail(), request.getPassword());
+        log.debug("result={}", result);
+
+        return ApiResponse.found(true);
+    }
+
 }

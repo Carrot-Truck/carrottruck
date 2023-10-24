@@ -21,7 +21,24 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    /**
+     * 회원가입
+     *
+     * @param dto 가입할 회원 정보
+     * @return 가입한 회원 정보
+     */
     public JoinMemberResponse join(JoinMemberDto dto) {
         return null;
+    }
+
+    /**
+     * 회원탈퇴
+     *
+     * @param email    탈퇴할 회원 이메일
+     * @param password 탈퇴할 회원 비밀번호
+     * @return 탈퇴여부
+     */
+    public Boolean withdrawal(String email, String password) {
+        return true;
     }
 }

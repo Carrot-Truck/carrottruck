@@ -9,7 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -34,17 +34,15 @@ public class Review extends TimeBaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinTable(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne
-    @JoinTable(name = "food_truck_id")
-    @Column(nullable = false)
+    @JoinColumn(name = "food_truck_id", nullable = false)
     private FoodTruck foodTruck;
 
     @ManyToOne
-    @JoinTable(name = "orders_id")
-    @Column(nullable = false)
+    @JoinColumn(name = "orders_id", nullable = false)
     private Order order;
 
     @Column(nullable = false)

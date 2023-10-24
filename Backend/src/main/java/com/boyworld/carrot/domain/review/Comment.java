@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -33,13 +33,11 @@ public class Comment extends TimeBaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinTable(name = "review_id")
-    @Column(nullable = false)
+    @JoinColumn(name = "review_id", nullable = false)
     private Review review;
 
     @ManyToOne
-    @JoinTable(name = "vendor_id")
-    @Column(nullable = false)
+    @JoinColumn(name = "vendor_id", nullable = false)
     private Member member;
 
     @Column(columnDefinition = "text", nullable = false)

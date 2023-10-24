@@ -1,5 +1,4 @@
-package com.boyworld.carrot.domain.foodtruck;
-
+package com.boyworld.carrot.domain.menu;
 
 import com.boyworld.carrot.domain.TimeBaseEntity;
 import com.boyworld.carrot.file.UploadFile;
@@ -10,34 +9,34 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 푸드트럭 이미지
+ * 메뉴 이미지 엔티티
  *
  * @author 최영환
  */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FoodTruckImage extends TimeBaseEntity {
+public class MenuImage extends TimeBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "food_truck_image_id")
+    @Column(name = "menu_image_id")
     private Long id;
 
     @Embedded
     private UploadFile uploadFile;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "food_truck_id")
-    private FoodTruck foodTruck;
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
 
     @Column(nullable = false)
     private Boolean active;
 
     @Builder
-    private FoodTruckImage(UploadFile uploadFile, FoodTruck foodTruck, Boolean active) {
+    private MenuImage(UploadFile uploadFile, Menu menu, Boolean active) {
         this.uploadFile = uploadFile;
-        this.foodTruck = foodTruck;
+        this.menu = menu;
         this.active = active;
     }
 }

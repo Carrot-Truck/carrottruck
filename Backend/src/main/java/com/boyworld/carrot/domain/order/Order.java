@@ -40,7 +40,7 @@ public class Order extends TimeBaseEntity {
     private Sale sales;
 
     @Column(length = 100, nullable = false)
-    private String status;
+    private Status status;
 
     @Column
     private LocalDateTime expectTime;

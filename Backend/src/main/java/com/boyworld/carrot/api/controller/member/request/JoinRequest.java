@@ -25,13 +25,17 @@ public class JoinRequest {
     @NotBlank
     private String phoneNumber;
 
+    @NotBlank
+    private String role;
+
     @Builder
-    public JoinRequest(String email, String nickname, String password, String name, String phoneNumber) {
+    public JoinRequest(String email, String nickname, String password, String name, String phoneNumber, String role) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.role = role;
     }
 
     public JoinMemberDto toJoinMemberDto() {

@@ -33,7 +33,7 @@ public class OrderMenu extends TimeBaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "orders_id")
-    private Order orders;
+    private Order order;
 
     @OneToOne
     @JoinColumn(name = "menu_id")

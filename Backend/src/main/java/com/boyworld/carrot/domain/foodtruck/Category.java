@@ -19,7 +19,7 @@ public class Category extends TimeBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "food_truck_id")
+    @Column(name = "category_id")
     private Long id;
 
     @Column(nullable = false, length = 30)

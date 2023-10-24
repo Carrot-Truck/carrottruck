@@ -38,7 +38,7 @@ public class Comment extends TimeBaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "vendor_id", nullable = false)
-    private Member member;
+    private Member vendor;
 
     @Column(columnDefinition = "text", nullable = false)
     private String content;
@@ -53,10 +53,10 @@ public class Comment extends TimeBaseEntity {
     private Boolean active;
 
     @Builder
-    private Comment(Review review, Member member, String content, LocalDateTime createdDate,
+    private Comment(Review review, Member vendor, String content, LocalDateTime createdDate,
         LocalDateTime modifiedDate, Boolean active) {
         this.review = review;
-        this.member = member;
+        this.vendor = vendor;
         this.content = content;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;

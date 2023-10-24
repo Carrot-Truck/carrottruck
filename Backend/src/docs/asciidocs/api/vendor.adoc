@@ -8,3 +8,13 @@ include::{snippets}/create-vendor/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/create-vendor/http-response.adoc[]
 include::{snippets}/create-vendor/response-fields.adoc[]
+
+[[login-client]]
+=== 사업자 로그인
+==== HTTP Request
+include::{snippets}/login-client/http-request.adoc[]
+include::{snippets}/login-vendor/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/login-vendor/http-response.adoc[]
+include::{snippets}/login-vendor/response-fields.adoc[]

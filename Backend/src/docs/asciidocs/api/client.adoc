@@ -8,3 +8,14 @@ include::{snippets}/create-client/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/create-client/http-response.adoc[]
 include::{snippets}/create-client/response-fields.adoc[]
+
+
+[[login-client]]
+=== 일반 사용자 로그인
+==== HTTP Request
+include::{snippets}/login-client/http-request.adoc[]
+include::{snippets}/login-client/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/login-client/http-response.adoc[]
+include::{snippets}/login-client/response-fields.adoc[]

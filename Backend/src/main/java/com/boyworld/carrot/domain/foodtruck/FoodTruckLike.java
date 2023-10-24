@@ -1,6 +1,7 @@
-package com.boyworld.carrot.domain.member;
+package com.boyworld.carrot.domain.foodtruck;
 
-import com.boyworld.carrot.domain.TimeBaseEntity;
+
+import com.boyworld.carrot.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,22 +9,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 회원 주소 엔티티
+ * 푸드트럭 찜
  *
  * @author 최영환
  */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberAddress extends TimeBaseEntity {
+public class FoodTruckLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_address_id")
+    @Column(name = "food_truck_like_id")
     private Long id;
-
-    @Column(nullable = false)
-    private String address;
 
     @Column(nullable = false)
     private Boolean active;
@@ -32,10 +30,14 @@ public class MemberAddress extends TimeBaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "food_truck_id")
+    private FoodTruck foodTruck;
+
     @Builder
-    private MemberAddress(String address, Boolean active, Member member) {
-        this.address = address;
+    private FoodTruckLike(Boolean active, Member member, FoodTruck foodTruck) {
         this.active = active;
         this.member = member;
+        this.foodTruck = foodTruck;
     }
 }

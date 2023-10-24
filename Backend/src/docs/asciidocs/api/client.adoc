@@ -1,0 +1,10 @@
+[[create-client]]
+=== 일반 사용자 회원가입
+
+==== HTTP Request
+include::{snippets}/create-client/http-request.adoc[]
+include::{snippets}/create-client/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-client/http-response.adoc[]
+include::{snippets}/create-client/response-fields.adoc[]

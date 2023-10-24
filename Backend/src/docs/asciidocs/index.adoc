@@ -10,3 +10,7 @@ endif::[]
 :sectlinks:
 
 include::overview.adoc[]
+
+[[Client-API]]
+== Client API
+include::{docdir}/api/client.adoc[]

@@ -38,3 +38,13 @@ include::{snippets}/search-client/http-request.adoc[]
 ==== HTTP Response
 include::{snippets}/search-client/http-response.adoc[]
 include::{snippets}/search-client/response-fields.adoc[]
+
+[[edit-client]]
+=== 일반 사용자 정보 수정
+==== HTTP Request
+include::{snippets}/edit-client/http-request.adoc[]
+include::{snippets}/edit-client/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/edit-client/http-response.adoc[]
+include::{snippets}/edit-client/response-fields.adoc[]

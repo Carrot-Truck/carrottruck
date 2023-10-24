@@ -1,13 +1,15 @@
 package com.boyworld.carrot.docs.mermber;
 
 import com.boyworld.carrot.api.controller.member.ClientController;
+import com.boyworld.carrot.api.controller.member.request.EditMemberRequest;
 import com.boyworld.carrot.api.controller.member.request.JoinRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
-import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
+import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
 import com.boyworld.carrot.api.service.member.MemberAccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
+import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import com.boyworld.carrot.security.TokenInfo;
@@ -27,6 +29,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -243,6 +246,72 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                                         .description("이메일"),
                                 fieldWithPath("data.phoneNumber").type(JsonFieldType.STRING)
                                         .description("연락처"),
+                                fieldWithPath("data.role").type(JsonFieldType.STRING)
+                                        .description("역할")
+                        )
+                ));
+    }
+
+    @DisplayName("일반 사용자 정보 수정 API")
+    @WithMockUser(roles = "CLIENT")
+    @Test
+    void editClient() throws Exception {
+        EditMemberRequest request = EditMemberRequest.builder()
+                .name("박동현")
+                .nickname("매미킴123")
+                .phoneNumber("010-1234-5678")
+                .role("CLIENT")
+                .build();
+
+        ClientResponse response = ClientResponse.builder()
+                .name("박동현")
+                .nickname("매미킴123")
+                .email("ssafy@ssafy.com")
+                .phoneNumber("010-1234-5678")
+                .role("CLIENT")
+                .build();
+
+        given(memberAccountService.editClient(any(EditMemberDto.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        put("/member/client")
+                                .header("Authentication", "authentication")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("edit-client",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING)
+                                        .description("이름"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING)
+                                        .description("닉네임"),
+                                fieldWithPath("phoneNumber").type(JsonFieldType.STRING)
+                                        .description("전화번호"),
+                                fieldWithPath("role").type(JsonFieldType.STRING)
+                                        .description("역할")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답데이터"),
+                                fieldWithPath("data.email").type(JsonFieldType.STRING)
+                                        .description("이메일"),
+                                fieldWithPath("data.nickname").type(JsonFieldType.STRING)
+                                        .description("닉네임"),
+                                fieldWithPath("data.name").type(JsonFieldType.STRING)
+                                        .description("이름"),
+                                fieldWithPath("data.phoneNumber").type(JsonFieldType.STRING)
+                                        .description("전화번호"),
                                 fieldWithPath("data.role").type(JsonFieldType.STRING)
                                         .description("역할")
                         )

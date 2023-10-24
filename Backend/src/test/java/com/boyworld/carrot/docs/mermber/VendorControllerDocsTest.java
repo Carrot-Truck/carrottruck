@@ -3,6 +3,7 @@ package com.boyworld.carrot.docs.mermber;
 import com.boyworld.carrot.api.controller.member.VendorController;
 import com.boyworld.carrot.api.controller.member.request.JoinRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
+import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
 import com.boyworld.carrot.api.service.member.MemberAccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
@@ -155,6 +156,48 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                                         .description("accessToken"),
                                 fieldWithPath("data.refreshToken").type(JsonFieldType.STRING)
                                         .description("refreshToken")
+                        )
+                ));
+    }
+
+    @DisplayName("사업자 회원탈퇴 API")
+    @Test
+    void withdrawal() throws Exception {
+        WithdrawalRequest request = WithdrawalRequest.builder()
+                .email("ssafy@ssafy.com")
+                .password("ssafy1234")
+                .build();
+
+        Boolean result = true;
+
+        given(memberService.withdrawal(anyString(), anyString()))
+                .willReturn(result);
+
+        mockMvc.perform(
+                        post("/member/vendor/withdrawal")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andDo(document("remove-vendor",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("email").type(JsonFieldType.STRING)
+                                        .description("이메일"),
+                                fieldWithPath("password").type(JsonFieldType.STRING)
+                                        .description("비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.BOOLEAN)
+                                        .description("탈퇴 여부")
                         )
                 ));
     }

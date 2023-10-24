@@ -18,3 +18,12 @@ include::{snippets}/login-vendor/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/login-vendor/http-response.adoc[]
 include::{snippets}/login-vendor/response-fields.adoc[]
+
+[[remove-client]]
+==== HTTP Request
+include::{snippets}/remove-vendor/http-request.adoc[]
+include::{snippets}/remove-vendor/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/remove-vendor/http-response.adoc[]
+include::{snippets}/remove-vendor/response-fields.adoc[]

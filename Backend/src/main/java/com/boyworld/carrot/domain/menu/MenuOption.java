@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.member;
+package com.boyworld.carrot.domain.menu;
 
 import com.boyworld.carrot.domain.TimeBaseEntity;
 import jakarta.persistence.*;
@@ -8,34 +8,34 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 회원 주소 엔티티
+ * 메뉴 옵션 엔티티
  *
  * @author 최영환
  */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberAddress extends TimeBaseEntity {
+public class MenuOption extends TimeBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_address_id")
+    @Column(name = "menu_option_id")
     private Long id;
 
-    @Column(nullable = false)
-    private String address;
+    @Embedded
+    private MenuInfo menuInfo;
 
     @Column(nullable = false)
     private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
 
     @Builder
-    private MemberAddress(String address, Boolean active, Member member) {
-        this.address = address;
+    private MenuOption(MenuInfo menuInfo, Boolean active, Menu menu) {
+        this.menuInfo = menuInfo;
         this.active = active;
-        this.member = member;
+        this.menu = menu;
     }
 }

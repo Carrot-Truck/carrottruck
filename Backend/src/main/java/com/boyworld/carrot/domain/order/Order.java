@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -52,4 +53,15 @@ public class Order extends TimeBaseEntity {
 
     @Column(nullable = false)
     private Boolean active;
+
+    @Builder
+    private Order(Member member, Sale sale, Status status, LocalDateTime expectTime,
+        Integer totalPrice, Boolean active) {
+        this.member = member;
+        this.sale = sale;
+        this.status = status;
+        this.expectTime = expectTime;
+        this.totalPrice = totalPrice;
+        this.active = active;
+    }
 }

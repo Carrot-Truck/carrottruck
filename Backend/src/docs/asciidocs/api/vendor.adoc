@@ -1,0 +1,10 @@
+[[create-vendor]]
+=== 사업자 회원가입
+
+==== HTTP Request
+include::{snippets}/create-vendor/http-request.adoc[]
+include::{snippets}/create-vendor/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-vendor/http-response.adoc[]
+include::{snippets}/create-vendor/response-fields.adoc[]

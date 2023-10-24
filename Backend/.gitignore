@@ -5,8 +5,13 @@ logs/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+**/src/main/resources/application.yml
+**/src/main/resources/application-dev.yml
 **/src/main/resources/application-env.yml
 **/src/main/resources/application-server.yml
+
+**/src/main/generated/**
+
 
 ### STS ###
 .apt_generated

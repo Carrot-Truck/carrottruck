@@ -1,5 +1,7 @@
 package com.boyworld.carrot.api.service.member;
 
+import com.boyworld.carrot.api.controller.member.response.ClientResponse;
+import com.boyworld.carrot.api.controller.member.response.VendorResponse;
 import com.boyworld.carrot.security.TokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,5 +29,24 @@ public class MemberAccountService {
     public TokenInfo login(String email, String password) {
         return null;
     }
-}
 
+    /**
+     * 로그인 중인 일반 사용자 회원 정보 조회
+     *
+     * @param email 로그인 중인 회원 이메일
+     * @return 로그인 중인 회원 정보
+     */
+    public ClientResponse getClientInfo(String email) {
+        return null;
+    }
+
+    /**
+     * 로그인 중인 사업자 회원 정보 조회
+     *
+     * @param email 로그인 중인 회원 이메일
+     * @return 로그인 중인 회원 정보
+     */
+    public VendorResponse getVendorInfo(String email) {
+        return null;
+    }
+}

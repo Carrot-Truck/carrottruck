@@ -5,8 +5,10 @@ import com.boyworld.carrot.api.controller.member.request.JoinRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
+import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.service.member.MemberAccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
+import com.boyworld.carrot.security.SecurityUtil;
 import com.boyworld.carrot.security.TokenInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -81,4 +83,21 @@ public class ClientController {
         return ApiResponse.found(true);
     }
 
+    /**
+     * 로그인 중인 회원 정보 조회
+     * 
+     * @return 로그인 중인 회원 정보
+     */
+    @GetMapping("/info")
+    public ApiResponse<ClientResponse> getInfo() {
+        log.debug("ClientController#getInfo called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        ClientResponse response = memberAccountService.getClientInfo(email);
+        log.debug("ClientResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
 }

@@ -20,6 +20,7 @@ include::{snippets}/login-vendor/http-response.adoc[]
 include::{snippets}/login-vendor/response-fields.adoc[]
 
 [[remove-client]]
+=== 사업자 탈퇴
 ==== HTTP Request
 include::{snippets}/remove-vendor/http-request.adoc[]
 include::{snippets}/remove-vendor/request-fields.adoc[]
@@ -27,3 +28,12 @@ include::{snippets}/remove-vendor/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/remove-vendor/http-response.adoc[]
 include::{snippets}/remove-vendor/response-fields.adoc[]
+
+[[search-vendor]]
+=== 사업자 정보 조회
+==== HTTP Request
+include::{snippets}/search-vendor/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-vendor/http-response.adoc[]
+include::{snippets}/search-vendor/response-fields.adoc[]

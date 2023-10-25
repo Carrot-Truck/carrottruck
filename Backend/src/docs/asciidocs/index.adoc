@@ -15,6 +15,10 @@ include::overview.adoc[]
 == Client API
 include::{docdir}/api/client.adoc[]
 
-[[Vendor_API]]
+[[Vendor-API]]
 == Vendor API
 include::{docdir}/api/vendor.adoc[]
+
+[[FoodTruck-API]]
+== FoodTruck API
+include::{docdir}/api/food-truck.adoc[]

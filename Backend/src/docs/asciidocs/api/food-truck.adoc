@@ -1,0 +1,11 @@
+[[create-food-truck]]
+=== 푸드트럭 등록
+
+==== HTTP Request
+include::{snippets}/create-food-truck/http-request.adoc[]
+include::{snippets}/create-food-truck/request-parts.adoc[]
+include::{snippets}/create-food-truck/request-part-request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-food-truck/http-response.adoc[]
+include::{snippets}/create-food-truck/response-fields.adoc[]

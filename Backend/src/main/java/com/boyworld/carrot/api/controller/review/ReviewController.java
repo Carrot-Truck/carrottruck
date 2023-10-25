@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,12 +57,16 @@ public class ReviewController {
     }
 
     /*
-     * delete my review API
+     * read food truck's review-list API
      */
+    @GetMapping("/{foodTruckId}")
+    public ApiResponse<List<Review>> getFoodTruckReview(@Valid @PathVariable Long foodTruckId){
+        log.debug("ReviewController#getFoodTruckReview called! Food truck id = {}", foodTruckId);
+        return ApiResponse.found(reviewService.getFoodTruckReview(foodTruckId));
+    }
 
     /*
-     * read food truck's review-list API
-     *
+     * delete my review API
      */
 
 }

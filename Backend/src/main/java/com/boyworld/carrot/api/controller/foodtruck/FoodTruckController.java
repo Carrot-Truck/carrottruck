@@ -2,7 +2,6 @@ package com.boyworld.carrot.api.controller.foodtruck;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
 import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
@@ -30,12 +29,12 @@ public class FoodTruckController {
      *
      * @param request 푸드트럭 정보
      * @param file    푸드트럭 이미지
-     * @return 등록된 푸드트럭 정보
+     * @return 등록된 푸드트럭 식별키
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<FoodTruckResponse> createFoodTruck(@Valid @RequestPart(name = "request") CreateFoodTruckRequest request,
-                                                          @RequestPart(required = false, name = "file") MultipartFile file) {
+    public ApiResponse<Long> createFoodTruck(@Valid @RequestPart(name = "request") CreateFoodTruckRequest request,
+                                             @RequestPart(required = false, name = "file") MultipartFile file) {
         log.debug("FoodTruckController#createFoodTruck called");
         log.debug("CreateFoodTruckRequest={}", request);
         log.debug("MultipartFile={}", file);
@@ -43,9 +42,10 @@ public class FoodTruckController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        FoodTruckResponse response = foodTruckService.createFoodTruck(request.toCreateFoodTruckDto(), email, file);
-        log.debug("FoodTruckResponse={}", response);
+        Long saveId = foodTruckService.createFoodTruck(request.toCreateFoodTruckDto(), email, file);
+        log.debug("saveId={}", saveId);
 
-        return ApiResponse.created(response);
+        return ApiResponse.created(saveId);
     }
+
 }

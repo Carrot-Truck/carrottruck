@@ -9,3 +9,14 @@ include::{snippets}/create-food-truck/request-part-request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/create-food-truck/http-response.adoc[]
 include::{snippets}/create-food-truck/response-fields.adoc[]
+
+[[search-food-truck-client]]
+=== 푸드트럭 검색
+
+==== HTTP Request
+include::{snippets}/search-food-truck-client/http-request.adoc[]
+include::{snippets}/search-food-truck-client/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-food-truck-client/http-response.adoc[]
+include::{snippets}/search-food-truck-client/response-fields.adoc[]

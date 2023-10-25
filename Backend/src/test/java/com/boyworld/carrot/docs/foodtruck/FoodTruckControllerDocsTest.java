@@ -2,7 +2,6 @@ package com.boyworld.carrot.docs.foodtruck;
 
 import com.boyworld.carrot.api.controller.foodtruck.FoodTruckController;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
 import com.boyworld.carrot.api.service.foodtruck.dto.CreateFoodTruckDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
@@ -23,7 +22,8 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
@@ -56,23 +56,11 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
 
         MockMultipartFile file = new MockMultipartFile("file", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "image data".getBytes());
 
-        FoodTruckResponse response = FoodTruckResponse.builder()
-                .foodTruckId(1L)
-                .categoryId(1L)
-                .foodTruckName("동현 된장삼겹")
-                .categoryName("고기/구이")
-                .phoneNumber("010-1234-5678")
-                .content("된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭")
-                .originInfo("돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)")
-                .prepareTime(40)
-                .waitLimits(10)
-                .build();
-
         String jsonRequest = objectMapper.writeValueAsString(request);
         MockMultipartFile jsonRequestPart = new MockMultipartFile("request", "request.json", APPLICATION_JSON_VALUE, jsonRequest.getBytes(UTF_8));
 
         given(foodTruckService.createFoodTruck(any(CreateFoodTruckDto.class), anyString(), any(MultipartFile.class)))
-                .willReturn(response);
+                .willReturn(1L);
 
         mockMvc.perform(
                         multipart("/food-truck")
@@ -112,26 +100,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("상태"),
                                 fieldWithPath("message").type(JsonFieldType.STRING)
                                         .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답데이터"),
-                                fieldWithPath("data.foodTruckId").type(JsonFieldType.NUMBER)
-                                        .description("푸드트럭 식별키"),
-                                fieldWithPath("data.categoryId").type(JsonFieldType.NUMBER)
-                                        .description("카테고리 식별키"),
-                                fieldWithPath("data.foodTruckName").type(JsonFieldType.STRING)
-                                        .description("푸드트럭 이름"),
-                                fieldWithPath("data.categoryName").type(JsonFieldType.STRING)
-                                        .description("카테고리 이름"),
-                                fieldWithPath("data.phoneNumber").type(JsonFieldType.STRING)
-                                        .description("연락처"),
-                                fieldWithPath("data.content").type(JsonFieldType.STRING)
-                                        .description("가게 소개"),
-                                fieldWithPath("data.originInfo").type(JsonFieldType.STRING)
-                                        .description("원산지 정보"),
-                                fieldWithPath("data.prepareTime").type(JsonFieldType.NUMBER)
-                                        .description("예상 준비 시간"),
-                                fieldWithPath("data.waitLimits").type(JsonFieldType.NUMBER)
-                                        .description("최대 주문 대기 건수")
+                                fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("저장된 푸드트럭 식별키")
                         )
                 ));
     }

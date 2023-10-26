@@ -42,3 +42,17 @@ include::{snippets}/search-food-truck-detail/path-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/search-food-truck-detail/http-response.adoc[]
 include::{snippets}/search-food-truck-detail/response-fields.adoc[]
+
+[[edit-food-truck]]
+=== 푸드트럭 수정
+
+==== HTTP Request
+include::{snippets}/edit-food-truck/http-request.adoc[]
+include::{snippets}/edit-food-truck/path-parameters.adoc[]
+include::{snippets}/edit-food-truck/request-parts.adoc[]
+include::{snippets}/edit-food-truck/request-part-request-fields.adoc[]
+
+
+==== HTTP Response
+include::{snippets}/edit-food-truck/http-response.adoc[]
+include::{snippets}/edit-food-truck/response-fields.adoc[]

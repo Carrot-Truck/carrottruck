@@ -2,6 +2,7 @@ package com.boyworld.carrot.docs.foodtruck;
 
 import com.boyworld.carrot.api.controller.foodtruck.FoodTruckController;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
+import com.boyworld.carrot.api.controller.foodtruck.request.UpdateFoodTruckRequest;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
@@ -11,18 +12,24 @@ import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
 import com.boyworld.carrot.api.service.foodtruck.dto.CreateFoodTruckDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckDetailDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
+import com.boyworld.carrot.api.service.foodtruck.dto.UpdateFoodTruckDto;
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
 import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -479,6 +486,91 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("만족도"),
                                 fieldWithPath("data.reviews[].content").type(JsonFieldType.STRING)
                                         .description("리뷰 내용")
+                        )
+                ));
+    }
+
+    @DisplayName("푸드트럭 수정 API")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void editFoodTruck() throws Exception {
+        UpdateFoodTruckRequest request = UpdateFoodTruckRequest.builder()
+                .categoryId(1L)
+                .foodTruckName("동현 된장삼겹")
+                .phoneNumber("010-4321-8756")
+                .content("된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭")
+                .originInfo("돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)")
+                .prepareTime(40)
+                .waitLimits(10)
+                .build();
+
+        Long foodTruckId = 1L;
+
+        given(foodTruckService.editFoodTruck(any(UpdateFoodTruckDto.class), any(MultipartFile.class), anyString()))
+                .willReturn(foodTruckId);
+
+        MockMultipartFile file = new MockMultipartFile("file", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "image data".getBytes());
+
+        String jsonRequest = objectMapper.writeValueAsString(request);
+        MockMultipartFile jsonRequestPart = new MockMultipartFile("request", "request.json", APPLICATION_JSON_VALUE, jsonRequest.getBytes(UTF_8));
+
+        // multipart 는 기본적으로 POST 요청을 위한 처리로만 사용되고 있으므로 아래와 같이 Override 해서 만들어줘야함
+        MockMultipartHttpServletRequestBuilder builder =
+                RestDocumentationRequestBuilders.
+                        multipart("/food-truck/{foodTruckId}", foodTruckId);
+
+        builder.with(new RequestPostProcessor() {
+            @Override
+            public @NotNull MockHttpServletRequest postProcessRequest(@NotNull MockHttpServletRequest request) {
+                request.setMethod("PATCH");
+                return request;
+            }
+        });
+
+        mockMvc.perform(
+                        builder
+                                .file(file)
+                                .file(jsonRequestPart)
+                                .header("Authentication", "authentication")
+                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("edit-food-truck",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("foodTruckId").description("푸드트럭 식별키")
+                        ),
+                        requestParts(
+                                partWithName("file").description("푸드트럭 이미지"),
+                                partWithName("request").description("푸드트럭 정보")
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("categoryId").type(JsonFieldType.NUMBER)
+                                        .description("카테고리 식별키"),
+                                fieldWithPath("foodTruckName").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 이름"),
+                                fieldWithPath("phoneNumber").type(JsonFieldType.STRING)
+                                        .description("연락처"),
+                                fieldWithPath("content").type(JsonFieldType.STRING)
+                                        .description("가게 소개"),
+                                fieldWithPath("originInfo").type(JsonFieldType.STRING)
+                                        .description("원산지 정보"),
+                                fieldWithPath("prepareTime").type(JsonFieldType.NUMBER)
+                                        .description("예상 준비 시간"),
+                                fieldWithPath("waitLimits").type(JsonFieldType.NUMBER)
+                                        .description("최대 주문 대기 건수")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("수정된 푸드트럭 식별키")
                         )
                 ));
     }

@@ -14,11 +14,12 @@ public class FoodTruckItem {
     private Double grade;
     private Integer reviewCount;
     private Integer distance;
+    private String address;
     private Long foodTruckImageId;
     private Boolean isNew;
 
     @Builder
-    public FoodTruckItem(Long categoryId, Long foodTruckId, String foodTruckName, Boolean isOpen, Boolean isLiked, Integer prepareTime, Double grade, Integer reviewCount, Integer distance, Long foodTruckImageId, Boolean isNew) {
+    public FoodTruckItem(Long categoryId, Long foodTruckId, String foodTruckName, Boolean isOpen, Boolean isLiked, Integer prepareTime, Double grade, Integer reviewCount, Integer distance, String address, Long foodTruckImageId, Boolean isNew) {
         this.categoryId = categoryId;
         this.foodTruckId = foodTruckId;
         this.foodTruckName = foodTruckName;
@@ -28,6 +29,7 @@ public class FoodTruckItem {
         this.grade = grade;
         this.reviewCount = reviewCount;
         this.distance = distance;
+        this.address = address;
         this.foodTruckImageId = foodTruckImageId;
         this.isNew = isNew;
     }

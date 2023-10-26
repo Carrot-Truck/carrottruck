@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.controller.foodtruck;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
@@ -104,7 +105,11 @@ public class FoodTruckController {
         log.debug("longitude={}", longitude);
         log.debug("lastFoodTruckId={}", lastFoodTruckId);
 
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
         FoodTruckResponse response = foodTruckQueryService.getFoodTrucks(SearchCondition.of(categoryId, keyword, longitude, latitude), lastFoodTruckId);
+        log.debug("FoodTruckResponse={}", response);
 
         return ApiResponse.ok(response);
     }

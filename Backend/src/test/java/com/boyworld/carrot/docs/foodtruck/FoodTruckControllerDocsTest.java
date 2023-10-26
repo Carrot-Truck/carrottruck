@@ -201,6 +201,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .grade(4.5)
                 .reviewCount(1324)
                 .distance(123)
+                .address("광주 광산구 장덕로 5번길 16")
                 .foodTruckImageId(1L)
                 .isNew(true)
                 .build();
@@ -215,6 +216,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .grade(4.0)
                 .reviewCount(1324)
                 .distance(100)
+                .address("수완자이아파트정문")
                 .foodTruckImageId(2L)
                 .isNew(false)
                 .build();
@@ -283,6 +285,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("리뷰 개수"),
                                 fieldWithPath("data.foodTruckItems[].distance").type(JsonFieldType.NUMBER)
                                         .description("현재 사용자와의 거리"),
+                                fieldWithPath("data.foodTruckItems[].address").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 주소"),
                                 fieldWithPath("data.foodTruckItems[].foodTruckImageId").type(JsonFieldType.NUMBER)
                                         .description("푸드트럭 이미지 식별키"),
                                 fieldWithPath("data.foodTruckItems[].isNew").type(JsonFieldType.BOOLEAN)

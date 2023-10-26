@@ -100,4 +100,11 @@ public class ReviewService {
     public Boolean withdrawal(String email, String password, Long foodTruckId) {
         return true;
     }
+
+    /*
+     * report review API
+     */
+    public Boolean report(Long reviewId, String content) {
+        return true;
+    }
 }

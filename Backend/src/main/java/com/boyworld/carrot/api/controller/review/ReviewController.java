@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.controller.review;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.review.request.CommentRequest;
+import com.boyworld.carrot.api.controller.review.request.ReportRequest;
 import com.boyworld.carrot.api.controller.review.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
@@ -95,7 +96,7 @@ public class ReviewController {
      * @return Boolean
      */
     @PostMapping("/withdrawal")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Boolean> withdrawal(@Valid @RequestBody WithdrawalRequest request) {
         log.debug("ReviewController#withdrawal called !!!");
         log.debug("WithdrawalRequest={}", request);
@@ -103,7 +104,23 @@ public class ReviewController {
         Boolean result = reviewService.withdrawal(request.getEmail(), request.getPassword(), request.getFoodTruckId());
         log.debug("result={}", result);
 
-        return ApiResponse.found(true);
+        return ApiResponse.ok(true);
     }
 
+    /**
+     * report review API
+     * @param request reviewId, content
+     * @return Boolean
+     */
+    @PostMapping("/report")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<Boolean> report(@Valid @RequestBody ReportRequest request){
+        log.debug("ReviewController#report called !!!");
+        log.debug("ReportRequest={}", request);
+
+        Boolean result = reviewService.report(request.getReviewId(), request.getContent());
+        log.debug("result={}", result);
+
+        return ApiResponse.ok(result);
+    }
 }

@@ -16,9 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * 푸드트럭 관련 API 컨트롤러
  *
@@ -85,10 +82,11 @@ public class FoodTruckController {
 
     /**
      * 푸드트럭 목록 조회 API
-     * @param categoryId 카테고리 식별키
-     * @param keyword    검색어(푸드트럭 이름 / 메뉴 이름)
-     * @param latitude   위도
-     * @param longitude  경도
+     *
+     * @param categoryId      카테고리 식별키
+     * @param keyword         검색어(푸드트럭 이름 / 메뉴 이름)
+     * @param latitude        위도
+     * @param longitude       경도
      * @param lastFoodTruckId 마지막으로 조회된 푸드트럭 식별키
      * @return 식별키 리스트에 해당하는 푸드트럭 리스트 (거리순 정렬)
      */
@@ -114,4 +112,24 @@ public class FoodTruckController {
         return ApiResponse.ok(response);
     }
 
+
+    /**
+     * 푸드트럭 상세조회 API
+     *
+     * @param truckId 푸드트럭 식별키
+     * @return 푸드트럭 상세 정보
+     */
+    @GetMapping("/{truckId}")
+    public ApiResponse<FoodTruckDetailResponse> getFoodTruck(@PathVariable Long truckId) {
+        log.debug("FoodTruckController#getFoodTruck called");
+        log.debug("truckId={}", truckId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        FoodTruckDetailResponse response = foodTruckQueryService.getFoodTruck(truckId, email);
+        log.debug("FoodTruckDetailResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
 }

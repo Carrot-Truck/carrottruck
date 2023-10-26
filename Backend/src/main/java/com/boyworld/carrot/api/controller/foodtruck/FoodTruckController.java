@@ -108,7 +108,7 @@ public class FoodTruckController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        FoodTruckResponse response = foodTruckQueryService.getFoodTrucks(SearchCondition.of(categoryId, keyword, longitude, latitude), lastFoodTruckId);
+        FoodTruckResponse response = foodTruckQueryService.getFoodTrucks(SearchCondition.of(categoryId, keyword, longitude, latitude), lastFoodTruckId, email);
         log.debug("FoodTruckResponse={}", response);
 
         return ApiResponse.ok(response);

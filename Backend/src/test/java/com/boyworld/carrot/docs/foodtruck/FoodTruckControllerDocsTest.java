@@ -227,7 +227,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .foodTruckItems(items)
                 .build();
 
-        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), anyString()))
+        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), anyString(), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(

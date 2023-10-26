@@ -56,3 +56,14 @@ include::{snippets}/edit-food-truck/request-part-request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/edit-food-truck/http-response.adoc[]
 include::{snippets}/edit-food-truck/response-fields.adoc[]
+
+[[delete-food-truck]]
+=== 푸드트럭 삭제
+
+==== HTTP Request
+include::{snippets}/delete-food-truck/http-request.adoc[]
+include::{snippets}/delete-food-truck/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/delete-food-truck/http-response.adoc[]
+include::{snippets}/delete-food-truck/response-fields.adoc[]

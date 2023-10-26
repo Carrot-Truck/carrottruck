@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.controller.survey.request;
 
+import com.boyworld.carrot.api.service.survey.dto.CreateSurveyDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,13 @@ import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
-public class SubmitSurveyRequest {
+public class CreateSurveyRequest {
+
+    @NotBlank
+    private Long categoryId;
+
+    @NotBlank
+    private Long memberId;
 
     @NotBlank
     private BigDecimal longitude;
@@ -21,7 +28,9 @@ public class SubmitSurveyRequest {
     private String content;
 
     @Builder
-    public SubmitSurveyRequest(BigDecimal longitude, BigDecimal latitude, String content) {
+    public CreateSurveyRequest(Long categoryId, Long memberId, BigDecimal longitude, BigDecimal latitude, String content) {
+        this.categoryId = categoryId;
+        this.memberId = memberId;
         this.longitude = longitude;
         this.latitude = latitude;
         this.content = content;

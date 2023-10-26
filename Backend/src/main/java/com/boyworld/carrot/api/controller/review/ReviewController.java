@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.controller.review;
 
 import com.boyworld.carrot.api.ApiResponse;
+import com.boyworld.carrot.api.controller.review.request.CommentRequest;
 import com.boyworld.carrot.api.controller.review.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Review Controller - Create Review - Read Review - Update Review - Delete Review
+ * Review Controller - Review CRD(Create/Read/Delete), Report and Comment
  *
  * @author Gunhoo Park
  */
@@ -33,7 +34,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     /**
-     *  write review API
+     *  create review API
      * @param request memberId, foodTruckId, orderId, content, grade(max 5)
      * @return review 등록 여부
      */
@@ -44,6 +45,20 @@ public class ReviewController {
         log.debug("review= {}", request);
 
         return ApiResponse.created(reviewService.createReview(request));
+    }
+
+    /**
+     *  create review comment API
+     * @param request reviewId, comment
+     * @return review comment 등록 여부
+     */
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<Boolean> createComment(@Valid @RequestBody CommentRequest request) {
+        log.debug("ReviewController#createComment called !!!");
+        log.debug("review= {}", request);
+
+        return ApiResponse.created(reviewService.createComment(request));
     }
 
     /**

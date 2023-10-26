@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.service.review;
 
+import com.boyworld.carrot.api.controller.review.request.CommentRequest;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
@@ -36,6 +37,19 @@ public class ReviewService {
      * @return boolean
      */
     public Boolean createReview(ReviewRequest request) {
+        try {
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /*
+     *  write comment API
+     * @param request
+     * @return boolean
+     */
+    public Boolean createComment(CommentRequest request) {
         try {
             return true;
         } catch (Exception e) {

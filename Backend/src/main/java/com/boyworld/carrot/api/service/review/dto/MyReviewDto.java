@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class MyReviewDto {
 
-    private Long id;
+    private Long reviewId;
 
     private FoodTruck foodTruck;
 
@@ -24,8 +24,8 @@ public class MyReviewDto {
     private String content;
 
     @Builder
-    public MyReviewDto(Long id, FoodTruck foodTruck, int grade, LocalDateTime createdDate, String content) {
-        this.id = id;
+    public MyReviewDto(Long reviewId, FoodTruck foodTruck, int grade, LocalDateTime createdDate, String content) {
+        this.reviewId = reviewId;
         this.foodTruck = foodTruck;
         this.grade = grade;
         this.content = content;

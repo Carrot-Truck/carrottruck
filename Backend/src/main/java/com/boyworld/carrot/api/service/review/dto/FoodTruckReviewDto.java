@@ -12,15 +12,15 @@ import lombok.Data;
 @Data
 public class FoodTruckReviewDto {
 
-    private Long id;
+    private Long reviewId;
 
     private int grade;
 
     private String content;
 
     @Builder
-    public FoodTruckReviewDto(Long id, int grade, String content) {
-        this.id = id;
+    public FoodTruckReviewDto(Long reviewId, int grade, String content) {
+        this.reviewId = reviewId;
         this.grade = grade;
         this.content = content;
     }

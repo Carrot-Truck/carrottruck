@@ -2,11 +2,13 @@ package com.boyworld.carrot.api.controller.foodtruck;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
+import com.boyworld.carrot.api.controller.foodtruck.request.UpdateFoodTruckRequest;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
+import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
@@ -131,5 +133,30 @@ public class FoodTruckController {
         log.debug("FoodTruckDetailResponse={}", response);
 
         return ApiResponse.ok(response);
+    }
+
+    /**
+     * 푸드트럭 수정 API
+     * 
+     * @param foodTruckId 푸드트럭 식별키
+     * @param request 수정할 푸드트럭 정보
+     * @return 수정된 푸드트럭 식별키
+     */
+    @PatchMapping("/{foodTruckId}")
+    public ApiResponse<Long> editFoodTruck(@PathVariable Long foodTruckId, 
+                                           @Valid @RequestPart(name = "request") UpdateFoodTruckRequest request,
+                                           @RequestPart(required = false, name = "file") MultipartFile file) {
+        log.debug("FoodTruckController#editFoodTruck called");
+        log.debug("foodTruckId={}", foodTruckId);
+        log.debug("UpdateFoodTruckRequest={}", request);
+        log.debug("MultipartFile={}", file);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long updateId = foodTruckService.editFoodTruck(request.toUpdateFoodTruckDto(foodTruckId), file, email);
+        log.debug("updateId={}", updateId);
+
+        return ApiResponse.ok(updateId);
     }
 }

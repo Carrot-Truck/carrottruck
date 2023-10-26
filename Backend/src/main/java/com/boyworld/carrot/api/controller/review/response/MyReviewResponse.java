@@ -16,7 +16,13 @@ public class MyReviewResponse {
     private List<MyReviewDto> myReviewDtoList;
 
     @Builder
-    public MyReviewResponse(List<MyReviewDto> myReviewDtoList){
+    private MyReviewResponse(List<MyReviewDto> myReviewDtoList){
         this.myReviewDtoList = myReviewDtoList;
+    }
+
+    public static MyReviewResponse of(List<MyReviewDto> myReviewDto){
+        return MyReviewResponse.builder()
+            .myReviewDtoList(myReviewDto)
+            .build();
     }
 }

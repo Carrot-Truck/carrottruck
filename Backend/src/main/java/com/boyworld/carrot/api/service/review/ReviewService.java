@@ -4,13 +4,16 @@ import com.boyworld.carrot.api.controller.review.request.CommentRequest;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
+import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
+import com.boyworld.carrot.domain.foodtruck.FoodTruck;
+import com.boyworld.carrot.domain.foodtruck.repository.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.repository.MemberRepository;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
-//    private final FoodTruckRepository foodTruckRepository;
+    private final FoodTruckRepository foodTruckRepository;
 
     /*
      *  write review API
@@ -65,17 +68,7 @@ public class ReviewService {
         try {
             Member member = memberRepository.findByEmail(userEmail).orElseThrow();
             List<Review> myReview = reviewRepository.findByMember(member).orElseThrow();
-            List<MyReviewDto> myReviewDtoList = new ArrayList<>();
-            myReview.forEach(review -> {
-                myReviewDtoList.add(MyReviewDto.builder()
-                    .reviewId(review.getId())
-                    .createdDate(review.getCreatedDate())
-                    .foodTruck(review.getFoodTruck())
-                    .grade(review.getGrade())
-                    .content(review.getContent())
-                    .build());
-            });
-            return MyReviewResponse.builder().myReviewDtoList(myReviewDtoList).build();
+            return MyReviewResponse.of(myReview.stream().map(MyReviewDto::of).collect(Collectors.toList()));
         } catch (Exception e) {
             return null;
         }
@@ -86,9 +79,9 @@ public class ReviewService {
      */
     public FoodTruckReviewResponse getFoodTruckReview(Long foodTruckId) {
         try {
-//            FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId);
-//            return reviewRepository.findByFoodTruck(foodTruck).orElseThrow();
-            return null;
+            FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId).orElseThrow();
+            List<Review> list = reviewRepository.findByFoodTruck(foodTruck).orElseThrow();
+            return FoodTruckReviewResponse.of(list.stream().map(FoodTruckReviewDto::of).collect(Collectors.toList()));
         } catch (Exception e) {
             return null;
         }

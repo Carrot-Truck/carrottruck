@@ -1,0 +1,10 @@
+[[create-menu]]
+=== 메뉴 등록
+
+==== HTTP Request
+include::{snippets}/create-menu/http-request.adoc[]
+include::{snippets}/create-menu/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-menu/http-response.adoc[]
+include::{snippets}/create-menu/response-fields.adoc[]

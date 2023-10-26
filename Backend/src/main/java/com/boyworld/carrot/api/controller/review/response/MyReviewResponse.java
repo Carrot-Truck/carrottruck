@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class MyReviewResponse {
 
-    List<MyReviewDto> myReviewDtoList;
+    private List<MyReviewDto> myReviewDtoList;
 
     @Builder
     public MyReviewResponse(List<MyReviewDto> myReviewDtoList){

@@ -2,8 +2,10 @@ package com.boyworld.carrot.api.controller.review;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
+import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
 import com.boyworld.carrot.api.service.review.ReviewService;
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
+import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
@@ -61,9 +63,10 @@ public class ReviewController {
      * read food truck's review-list API
      */
     @GetMapping("/{foodTruckId}")
-    public ApiResponse<List<Review>> getFoodTruckReview(@Valid @PathVariable Long foodTruckId){
+    public ApiResponse<FoodTruckReviewResponse> getFoodTruckReview(@Valid @PathVariable Long foodTruckId){
         log.debug("ReviewController#getFoodTruckReview called! Food truck id = {}", foodTruckId);
-        return ApiResponse.found(reviewService.getFoodTruckReview(foodTruckId));
+        FoodTruckReviewResponse response = reviewService.getFoodTruckReview(foodTruckId);
+        return ApiResponse.found(response);
     }
 
     /*

@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.service.review;
 
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
+import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
 import com.boyworld.carrot.domain.member.Member;
@@ -69,7 +70,7 @@ public class ReviewService {
     /*
      * read food truck's review-list API
      */
-    public List<Review> getFoodTruckReview(Long foodTruckId) {
+    public FoodTruckReviewResponse getFoodTruckReview(Long foodTruckId) {
         try {
 //            FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId);
 //            return reviewRepository.findByFoodTruck(foodTruck).orElseThrow();

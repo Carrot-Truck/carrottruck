@@ -1,10 +1,11 @@
 package com.boyworld.carrot.api.controller.review;
 
 import com.boyworld.carrot.api.ApiResponse;
+import com.boyworld.carrot.api.controller.review.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
-import com.boyworld.carrot.api.service.review.ReviewService;
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
+import com.boyworld.carrot.api.service.review.ReviewService;
 import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,10 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    /*
+    /**
      *  write review API
+     * @param request memberId, foodTruckId, orderId, content, grade(max 5)
+     * @return review 등록 여부
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -43,10 +46,12 @@ public class ReviewController {
         return ApiResponse.created(reviewService.createReview(request));
     }
 
-    /*
+    /**
      * read my review-list API
+     * @return MyReviewResponse : List of MyReviewDto(reviewId, foodTruck, grade, createdDate, content)
      */
     @GetMapping
+    @ResponseStatus(HttpStatus.FOUND)
     public ApiResponse<MyReviewResponse> getMyReview() {
         log.debug("ReviewController#getMyReview called !!!");
 
@@ -56,18 +61,34 @@ public class ReviewController {
         return ApiResponse.found(response);
     }
 
-    /*
+    /**
      * read food truck's review-list API
+     * @param foodTruckId foodTruckId
+     * @return FoodTruckReviewResponse : averageGrade and List of FoodTruckReviewDto(reviewId, grade, content)
      */
     @GetMapping("/{foodTruckId}")
+    @ResponseStatus(HttpStatus.FOUND)
     public ApiResponse<FoodTruckReviewResponse> getFoodTruckReview(@Valid @PathVariable Long foodTruckId){
         log.debug("ReviewController#getFoodTruckReview called! Food truck id = {}", foodTruckId);
         FoodTruckReviewResponse response = reviewService.getFoodTruckReview(foodTruckId);
         return ApiResponse.found(response);
     }
 
-    /*
+    /**
      * delete my review API
+     * @param request email, password, reviewId
+     * @return Boolean
      */
+    @PostMapping("/withdrawal")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ApiResponse<Boolean> withdrawal(@Valid @RequestBody WithdrawalRequest request) {
+        log.debug("ReviewController#withdrawal called !!!");
+        log.debug("WithdrawalRequest={}", request);
+
+        Boolean result = reviewService.withdrawal(request.getEmail(), request.getPassword(), request.getFoodTruckId());
+        log.debug("result={}", result);
+
+        return ApiResponse.found(true);
+    }
 
 }

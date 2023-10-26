@@ -83,4 +83,7 @@ public class ReviewService {
     /*
      * delete my review API
      */
+    public Boolean withdrawal(String email, String password, Long foodTruckId) {
+        return true;
+    }
 }

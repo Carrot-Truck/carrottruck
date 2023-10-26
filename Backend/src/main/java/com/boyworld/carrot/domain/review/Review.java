@@ -12,7 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,23 +51,15 @@ public class Review extends TimeBaseEntity {
     private int grade;
 
     @Column(nullable = false)
-    private LocalDateTime createdDate;
-
-    @Column(nullable = false)
-    private LocalDateTime modifiedDate;
-
-    @Column(nullable = false)
     private Boolean active;
 
     @Builder
-    private Review(Member member, FoodTruck foodTruck, Order order, String content, int grade, LocalDateTime createdDate, LocalDateTime modifiedDate, Boolean active){
+    private Review(Member member, FoodTruck foodTruck, Order order, String content, int grade, Boolean active){
         this.member = member;
         this.foodTruck = foodTruck;
         this.order = order;
         this.content = content;
         this.grade = grade;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
         this.active = active;
     }
 }

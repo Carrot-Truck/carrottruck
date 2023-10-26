@@ -15,6 +15,8 @@ public class FoodTruckReviewDto {
 
     private Long reviewId;
 
+    private String nickname;
+
     private int grade;
 
     private String content;
@@ -24,6 +26,7 @@ public class FoodTruckReviewDto {
     @Builder
     private FoodTruckReviewDto(Long reviewId, int grade, String content, String nickname) {
         this.reviewId = reviewId;
+        this.nickname = nickname;
         this.grade = grade;
         this.content = content;
         this.nickname = nickname;

@@ -10,13 +10,60 @@ include::{snippets}/create-food-truck/request-part-request-fields.adoc[]
 include::{snippets}/create-food-truck/http-response.adoc[]
 include::{snippets}/create-food-truck/response-fields.adoc[]
 
-[[search-food-truck-client]]
-=== 푸드트럭 검색
+[[search-food-truck-marker]]
+=== 푸드트럭 지도 위치(마커) 조회
 
 ==== HTTP Request
-include::{snippets}/search-food-truck-client/http-request.adoc[]
-include::{snippets}/search-food-truck-client/query-parameters.adoc[]
+include::{snippets}/search-food-truck-marker/http-request.adoc[]
+include::{snippets}/search-food-truck-marker/query-parameters.adoc[]
 
 ==== HTTP Response
-include::{snippets}/search-food-truck-client/http-response.adoc[]
-include::{snippets}/search-food-truck-client/response-fields.adoc[]
+include::{snippets}/search-food-truck-marker/http-response.adoc[]
+include::{snippets}/search-food-truck-marker/response-fields.adoc[]
+
+[[search-food-truck-list]]
+=== 푸드트럭 목록 조회
+
+==== HTTP Request
+include::{snippets}/search-food-truck-list/http-request.adoc[]
+include::{snippets}/search-food-truck-list/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-food-truck-list/http-response.adoc[]
+include::{snippets}/search-food-truck-list/response-fields.adoc[]
+
+[[search-food-truck-detail]]
+=== 푸드트럭 상세 조회
+
+==== HTTP Request
+include::{snippets}/search-food-truck-detail/http-request.adoc[]
+include::{snippets}/search-food-truck-detail/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-food-truck-detail/http-response.adoc[]
+include::{snippets}/search-food-truck-detail/response-fields.adoc[]
+
+[[edit-food-truck]]
+=== 푸드트럭 수정
+
+==== HTTP Request
+include::{snippets}/edit-food-truck/http-request.adoc[]
+include::{snippets}/edit-food-truck/path-parameters.adoc[]
+include::{snippets}/edit-food-truck/request-parts.adoc[]
+include::{snippets}/edit-food-truck/request-part-request-fields.adoc[]
+
+
+==== HTTP Response
+include::{snippets}/edit-food-truck/http-response.adoc[]
+include::{snippets}/edit-food-truck/response-fields.adoc[]
+
+[[delete-food-truck]]
+=== 푸드트럭 삭제
+
+==== HTTP Request
+include::{snippets}/delete-food-truck/http-request.adoc[]
+include::{snippets}/delete-food-truck/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/delete-food-truck/http-response.adoc[]
+include::{snippets}/delete-food-truck/response-fields.adoc[]

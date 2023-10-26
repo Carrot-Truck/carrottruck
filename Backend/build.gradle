@@ -70,9 +70,10 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-tasks.named('asciidoctor') {
+asciidoctor {
 	inputs.dir snippetsDir
 	configurations 'asciidoctorExt'
+
 	sources {
 		include("**/index.adoc")
 	}
@@ -82,7 +83,7 @@ tasks.named('asciidoctor') {
 
 bootJar {
 	dependsOn asciidoctor
-	from("${asciidoctor.outputDir}") {
-		into 'static/docs'
+	from("${asciidoctor.outputDir}/html5") {
+		into 'src/main/resources/static/docs'
 	}
 }

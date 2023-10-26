@@ -45,4 +45,15 @@ public class FoodTruckService {
     public Long editFoodTruck(UpdateFoodTruckDto dto, MultipartFile file, String email) {
         return null;
     }
+
+    /**
+     * 푸드트럭 삭제
+     * 
+     * @param foodTruckId 푸드트럭 식별키
+     * @param email 로그인 중인 회원 이메일
+     * @return 삭제된 푸드트럭 식별키
+     */
+    public Long deleteFoodTruck(Long foodTruckId, String email) {
+        return null;
+    }
 }

@@ -8,7 +8,6 @@ import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResp
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
-import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
@@ -137,13 +136,13 @@ public class FoodTruckController {
 
     /**
      * 푸드트럭 수정 API
-     * 
+     *
      * @param foodTruckId 푸드트럭 식별키
-     * @param request 수정할 푸드트럭 정보
+     * @param request     수정할 푸드트럭 정보
      * @return 수정된 푸드트럭 식별키
      */
     @PatchMapping("/{foodTruckId}")
-    public ApiResponse<Long> editFoodTruck(@PathVariable Long foodTruckId, 
+    public ApiResponse<Long> editFoodTruck(@PathVariable Long foodTruckId,
                                            @Valid @RequestPart(name = "request") UpdateFoodTruckRequest request,
                                            @RequestPart(required = false, name = "file") MultipartFile file) {
         log.debug("FoodTruckController#editFoodTruck called");
@@ -158,5 +157,26 @@ public class FoodTruckController {
         log.debug("updateId={}", updateId);
 
         return ApiResponse.ok(updateId);
+    }
+
+    /**
+     * 푸드트럭 삭제 API
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @return 삭제된 푸드트럭 식별키
+     */
+    @DeleteMapping("/{foodTruckId}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ApiResponse<Long> deleteFoodTruck(@PathVariable Long foodTruckId) {
+        log.debug("FoodTruckController#deleteFoodTruck called");
+        log.debug("foodTruckId={}", foodTruckId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long deleteId = foodTruckService.deleteFoodTruck(foodTruckId, email);
+        log.debug("deleteId={}", deleteId);
+
+        return ApiResponse.found(deleteId);
     }
 }

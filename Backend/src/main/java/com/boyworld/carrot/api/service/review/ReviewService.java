@@ -1,11 +1,13 @@
 package com.boyworld.carrot.api.service.review;
 
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
-import com.boyworld.carrot.domain.foodtruck.FoodTruck;
+import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
+import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.repository.MemberRepository;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,7 @@ public class ReviewService {
      * @param request
      * @return boolean
      */
-    public Boolean writeReview(ReviewRequest request) {
+    public Boolean createReview(ReviewRequest request) {
         try {
             return true;
         } catch (Exception e) {
@@ -44,10 +46,21 @@ public class ReviewService {
      * read my review-list API
      *
      */
-    public List<Review> getMyReview(String userEmail) {
+    public MyReviewResponse getMyReview(String userEmail) {
         try {
             Member member = memberRepository.findByEmail(userEmail).orElseThrow();
-            return reviewRepository.findByMember(member).orElseThrow();
+            List<Review> myReview = reviewRepository.findByMember(member).orElseThrow();
+            List<MyReviewDto> myReviewDtoList = new ArrayList<>();
+            myReview.forEach(review -> {
+                myReviewDtoList.add(MyReviewDto.builder()
+                    .id(review.getId())
+                    .createdDate(review.getCreatedDate())
+                    .foodTruck(review.getFoodTruck())
+                    .grade(review.getGrade())
+                    .content(review.getContent())
+                    .build());
+            });
+            return MyReviewResponse.builder().myReviewDtoList(myReviewDtoList).build();
         } catch (Exception e) {
             return null;
         }

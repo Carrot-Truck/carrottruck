@@ -3,6 +3,7 @@ package com.boyworld.carrot.api.controller.review;
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.api.service.review.ReviewService;
+import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
@@ -36,24 +37,24 @@ public class ReviewController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Boolean> writeReview(@Valid @RequestBody ReviewRequest request) {
-        log.debug("ReviewController#writeReview called !!!");
+    public ApiResponse<Boolean> createReview(@Valid @RequestBody ReviewRequest request) {
+        log.debug("ReviewController#createReview called !!!");
         log.debug("review= {}", request);
 
-        return ApiResponse.created(reviewService.writeReview(request));
+        return ApiResponse.created(reviewService.createReview(request));
     }
 
     /*
      * read my review-list API
      */
     @GetMapping
-    public ApiResponse<List<Review>> getMyReview() {
+    public ApiResponse<MyReviewResponse> getMyReview() {
         log.debug("ReviewController#getMyReview called !!!");
 
         String userEmail = SecurityUtil.getCurrentLoginId();
         log.debug("id= {}", userEmail);
-
-        return ApiResponse.found(reviewService.getMyReview(userEmail));
+        MyReviewResponse response = reviewService.getMyReview(userEmail);
+        return ApiResponse.found(response);
     }
 
     /*

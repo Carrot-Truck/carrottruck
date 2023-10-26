@@ -54,7 +54,7 @@ public class ReviewService {
             List<MyReviewDto> myReviewDtoList = new ArrayList<>();
             myReview.forEach(review -> {
                 myReviewDtoList.add(MyReviewDto.builder()
-                    .id(review.getId())
+                    .reviewId(review.getId())
                     .createdDate(review.getCreatedDate())
                     .foodTruck(review.getFoodTruck())
                     .grade(review.getGrade())

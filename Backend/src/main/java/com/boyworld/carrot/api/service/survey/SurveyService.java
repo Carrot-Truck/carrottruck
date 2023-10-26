@@ -32,8 +32,7 @@ public class SurveyService {
      */
     public CreateSurveyResponse createSurvey(CreateSurveyRequest request) {
 
-        // Survey?
-//        return surveyRepository.save(dto);
+        // GeocodingUtil 사용
         return null;
     }
 
@@ -71,16 +70,6 @@ public class SurveyService {
      * @return 삭제한 수요조사 ID
      */
     public Long deleteSurvey(Long surveyId) {
-        return null;
-    }
-
-    /**
-     * 좌표 -> 주소 변환
-     *
-     * @param request 제출 수요조사 정보
-     * @return 변환된 주소를 담은 DTO
-     */
-    private CreateSurveyDto locationMapper(CreateSurveyRequest request) {
         return null;
     }
 

@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -44,4 +45,12 @@ public class OrderMenu extends TimeBaseEntity {
 
     @Column(nullable = false)
     private Boolean active;
+
+    @Builder
+    private OrderMenu(Order order, Menu menu, Integer quantity, Boolean active) {
+        this.order = order;
+        this.menu = menu;
+        this.quantity = quantity;
+        this.active = active;
+    }
 }

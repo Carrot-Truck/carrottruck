@@ -62,4 +62,16 @@ public class Sale extends TimeBaseEntity {
     @Column(nullable = false)
     private Boolean active;
 
+    @Builder
+    private Sale(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, Integer orderNumber,
+        Integer totalAmount, LocalDateTime startTime, LocalDateTime endTime, Boolean active) {
+        this.foodTruck = foodTruck;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.orderNumber = orderNumber;
+        this.totalAmount = totalAmount;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.active = active;
+    }
 }

@@ -10,14 +10,16 @@ public class FoodTruckReviewResponse {
 
     private List<FoodTruckReviewDto> foodTruckReviewDtoList;
 
-    private int averageGrade;
+    private Integer averageGrade;
 
     @Builder
     public FoodTruckReviewResponse(List<FoodTruckReviewDto> foodTruckReviewDtoList){
         this.foodTruckReviewDtoList = foodTruckReviewDtoList;
-        for(FoodTruckReviewDto foodTruckReviewDto : foodTruckReviewDtoList){
-            this.averageGrade += foodTruckReviewDto.getGrade();
+        if(foodTruckReviewDtoList.size() != 0){
+            for(FoodTruckReviewDto foodTruckReviewDto : foodTruckReviewDtoList){
+                this.averageGrade += foodTruckReviewDto.getGrade();
+            }
+            this.averageGrade /= foodTruckReviewDtoList.size();
         }
-        this.averageGrade /= foodTruckReviewDtoList.size();
     }
 }

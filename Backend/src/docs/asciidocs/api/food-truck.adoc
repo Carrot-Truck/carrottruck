@@ -31,3 +31,14 @@ include::{snippets}/search-food-truck-list/query-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/search-food-truck-list/http-response.adoc[]
 include::{snippets}/search-food-truck-list/response-fields.adoc[]
+
+[[search-food-truck-detail]]
+=== 푸드트럭 상세 조회
+
+==== HTTP Request
+include::{snippets}/search-food-truck-detail/http-request.adoc[]
+include::{snippets}/search-food-truck-detail/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-food-truck-detail/http-response.adoc[]
+include::{snippets}/search-food-truck-detail/response-fields.adoc[]

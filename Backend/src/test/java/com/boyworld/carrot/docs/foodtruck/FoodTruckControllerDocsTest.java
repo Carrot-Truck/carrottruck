@@ -2,13 +2,18 @@ package com.boyworld.carrot.docs.foodtruck;
 
 import com.boyworld.carrot.api.controller.foodtruck.FoodTruckController;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
 import com.boyworld.carrot.api.service.foodtruck.dto.CreateFoodTruckDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckDetailDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
+import com.boyworld.carrot.api.service.menu.dto.MenuDto;
+import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
+import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import org.junit.jupiter.api.DisplayName;
@@ -291,6 +296,189 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("푸드트럭 이미지 식별키"),
                                 fieldWithPath("data.foodTruckItems[].isNew").type(JsonFieldType.BOOLEAN)
                                         .description("신규 등록 여부")
+                        )
+                ));
+    }
+
+    @DisplayName("푸드트럭 상세조회 API")
+    @Test
+    @WithMockUser(roles = {"CLIENT", "VENDOR"})
+    void getFoodTruck() throws Exception {
+        FoodTruckDetailDto foodTruckDetail = FoodTruckDetailDto.builder()
+                .foodTruckId(1L)
+                .foodTruckName("동현 된장삼겹")
+                .phoneNumber("010-1234-5678")
+                .content("된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭")
+                .originInfo("돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)")
+                .isOpen(false)
+                .isLiked(true)
+                .prepareTime(30)
+                .grade(4.5)
+                .reviewCount(1324)
+                .distance(123)
+                .address("광주 광산구 장덕로 5번길 16")
+                .foodTruckImageId(1L)
+                .isNew(true)
+                .vendorName("김동현")
+                .tradeName("동현 된장삼겹")
+                .businessNumber("123-45-23523")
+                .build();
+
+        MenuDto menu1 = MenuDto.builder()
+                .menuId(1L)
+                .menuName("달콤짭짤한 밥도둑 된장 삼겹살 구이")
+                .description("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
+                .price(8900)
+                .soldOut(false)
+                .build();
+
+        MenuDto menu2 = MenuDto.builder()
+                .menuId(2L)
+                .menuName("노른자 된장 삼겹살 덮밥")
+                .description("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
+                .price(6900)
+                .soldOut(false)
+                .build();
+
+        ScheduleDto schedule1 = ScheduleDto.builder()
+                .scheduleId(1L)
+                .address("광주 광산구 장덕로5번길 16")
+                .days("월요일")
+                .startTime("17:00")
+                .endTime("01:00")
+                .build();
+
+        ScheduleDto schedule2 = ScheduleDto.builder()
+                .scheduleId(2L)
+                .address("광주 광산구 장덕로5번길 16")
+                .days("화요일")
+                .startTime("17:00")
+                .endTime("01:00")
+                .build();
+
+        ScheduleDto schedule3 = ScheduleDto.builder()
+                .scheduleId(3L)
+                .address("")
+                .days("수요일")
+                .startTime("")
+                .endTime("")
+                .build();
+
+        FoodTruckReviewDto review1 = FoodTruckReviewDto.builder()
+                .reviewId(1L)
+                .nickname("아닌데?소대장")
+                .grade(4)
+                .content("정말 맛있게 먹었어요")
+                .build();
+
+        FoodTruckReviewDto review2 = FoodTruckReviewDto.builder()
+                .reviewId(2L)
+                .nickname("어서와")
+                .grade(5)
+                .content("안주로 최고에요!! 너무 맛있어서 숙취에 시달릴만큼 많이 마셨어요")
+                .build();
+
+        FoodTruckDetailResponse response = FoodTruckDetailResponse.builder()
+                .foodTruckDetail(foodTruckDetail)
+                .menus(List.of(menu1, menu2))
+                .schedules(List.of(schedule1, schedule2, schedule3))
+                .reviews(List.of(review1, review2))
+                .build();
+
+        given(foodTruckQueryService.getFoodTruck(anyLong(), anyString()))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/food-truck/{foodTruckId}", foodTruckDetail.getFoodTruckId())
+                                .header("Authentication", "authentication")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("search-food-truck-detail",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("foodTruckId").description("푸드트럭 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("푸드트럭 상세 조회 결과"),
+                                fieldWithPath("data.foodTruckDetail").type(JsonFieldType.OBJECT)
+                                        .description("푸드트럭 상세 정보"),
+                                fieldWithPath("data.foodTruckDetail.foodTruckId").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 식별키"),
+                                fieldWithPath("data.foodTruckDetail.foodTruckName").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 이름"),
+                                fieldWithPath("data.foodTruckDetail.phoneNumber").type(JsonFieldType.STRING)
+                                        .description("연락처"),
+                                fieldWithPath("data.foodTruckDetail.content").type(JsonFieldType.STRING)
+                                        .description("가게 소개"),
+                                fieldWithPath("data.foodTruckDetail.originInfo").type(JsonFieldType.STRING)
+                                        .description("원산지 정보"),
+                                fieldWithPath("data.foodTruckDetail.isOpen").type(JsonFieldType.BOOLEAN)
+                                        .description("영업 상태"),
+                                fieldWithPath("data.foodTruckDetail.isLiked").type(JsonFieldType.BOOLEAN)
+                                        .description("찜 여부"),
+                                fieldWithPath("data.foodTruckDetail.prepareTime").type(JsonFieldType.NUMBER)
+                                        .description("예상 준비 시간"),
+                                fieldWithPath("data.foodTruckDetail.grade").type(JsonFieldType.NUMBER)
+                                        .description("평점"),
+                                fieldWithPath("data.foodTruckDetail.reviewCount").type(JsonFieldType.NUMBER)
+                                        .description("리뷰 개수"),
+                                fieldWithPath("data.foodTruckDetail.distance").type(JsonFieldType.NUMBER)
+                                        .description("현재 사용자와의 거리"),
+                                fieldWithPath("data.foodTruckDetail.address").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 주소"),
+                                fieldWithPath("data.foodTruckDetail.foodTruckImageId").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 이미지 식별키"),
+                                fieldWithPath("data.foodTruckDetail.isNew").type(JsonFieldType.BOOLEAN)
+                                        .description("신규 등록 여부"),
+                                fieldWithPath("data.foodTruckDetail.vendorName").type(JsonFieldType.STRING)
+                                        .description("대표자명"),
+                                fieldWithPath("data.foodTruckDetail.tradeName").type(JsonFieldType.STRING)
+                                        .description("상호명"),
+                                fieldWithPath("data.foodTruckDetail.businessNumber").type(JsonFieldType.STRING)
+                                        .description("사업자 등록번호"),
+                                fieldWithPath("data.menus").type(JsonFieldType.ARRAY)
+                                        .description("메뉴 리스트"),
+                                fieldWithPath("data.menus[].menuId").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 식별키"),
+                                fieldWithPath("data.menus[].menuName").type(JsonFieldType.STRING)
+                                        .description("메뉴명"),
+                                fieldWithPath("data.menus[].price").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 가격"),
+                                fieldWithPath("data.menus[].description").type(JsonFieldType.STRING)
+                                        .description("메뉴 설명"),
+                                fieldWithPath("data.menus[].soldOut").type(JsonFieldType.BOOLEAN)
+                                        .description("품절 여부"),
+                                fieldWithPath("data.schedules").type(JsonFieldType.ARRAY)
+                                        .description("운영시간 리스트"),
+                                fieldWithPath("data.schedules[].scheduleId").type(JsonFieldType.NUMBER)
+                                        .description("운영시간 식별키"),
+                                fieldWithPath("data.schedules[].address").type(JsonFieldType.STRING)
+                                        .description("주소"),
+                                fieldWithPath("data.schedules[].days").type(JsonFieldType.STRING)
+                                        .description("요일"),
+                                fieldWithPath("data.schedules[].startTime").type(JsonFieldType.STRING)
+                                        .description("시작 시간"),
+                                fieldWithPath("data.schedules[].endTime").type(JsonFieldType.STRING)
+                                        .description("종료 시간"),
+                                fieldWithPath("data.reviews").type(JsonFieldType.ARRAY)
+                                        .description("리뷰 리스트"),
+                                fieldWithPath("data.reviews[].reviewId").type(JsonFieldType.NUMBER)
+                                        .description("리뷰 식별키"),
+                                fieldWithPath("data.reviews[].nickname").type(JsonFieldType.STRING)
+                                        .description("작성자 닉네임"),
+                                fieldWithPath("data.reviews[].grade").type(JsonFieldType.NUMBER)
+                                        .description("만족도"),
+                                fieldWithPath("data.reviews[].content").type(JsonFieldType.STRING)
+                                        .description("리뷰 내용")
                         )
                 ));
     }

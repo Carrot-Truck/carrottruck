@@ -19,20 +19,20 @@ public class CreateSurveyRequest {
     private Long memberId;
 
     @NotBlank
-    private BigDecimal longitude;
+    private BigDecimal latitude;
 
     @NotBlank
-    private BigDecimal latitude;
+    private BigDecimal longitude;
 
     @NotBlank
     private String content;
 
     @Builder
-    public CreateSurveyRequest(Long categoryId, Long memberId, BigDecimal longitude, BigDecimal latitude, String content) {
+    public CreateSurveyRequest(Long categoryId, Long memberId, BigDecimal latitude, BigDecimal longitude, String content) {
         this.categoryId = categoryId;
         this.memberId = memberId;
-        this.longitude = longitude;
         this.latitude = latitude;
+        this.longitude = longitude;
         this.content = content;
     }
 }

@@ -53,9 +53,9 @@ public class SurveyController {
      */
     @GetMapping("/list")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SurveyCountResponse> getSurveyCount(@RequestParam(name = "sido") String sido,
-                                                           @RequestParam(name = "sigungu") String sigungu,
-                                                           @RequestParam(name = "dong") String dong) {
+    public ApiResponse<SurveyCountResponse> getSurveyCount(@RequestParam String sido,
+                                                           @RequestParam String sigungu,
+                                                           @RequestParam String dong) {
         log.debug("SurveyController#getSurveyCount called !!!");
         log.debug("Address={} {} {}", sido, sigungu, dong);
 
@@ -75,9 +75,9 @@ public class SurveyController {
      * @param page 페이지
      * @return 수요조사 상세내용 리스트(최근 6개월)
      */
-    @GetMapping("/list/{category}")
+    @GetMapping("/list/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<SurveyDetailsResponse> getSurveyDetails(@PathVariable(name = "category") Long categoryId,
+    public ApiResponse<SurveyDetailsResponse> getSurveyDetails(@PathVariable Long categoryId,
                                                                @RequestParam String sido,
                                                                @RequestParam String sigungu,
                                                                @RequestParam String dong,
@@ -99,7 +99,7 @@ public class SurveyController {
      */
     @DeleteMapping("/remove/{surveyId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<Long> deleteSurvey(@PathVariable(name = "surveyId") Long surveyId) {
+    public ApiResponse<Long> deleteSurvey(@PathVariable Long surveyId) {
         log.debug("SurveyController#deleteSurvey called !!!");
         log.debug("SurveyID={}", surveyId);
 

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class CreateSurveyResponse {
 
-    private String category_name;
+    private String categoryName;
 
     private String nickname;
 
@@ -17,8 +17,8 @@ public class CreateSurveyResponse {
     private String dong;
 
     @Builder
-    public CreateSurveyResponse(String category_name, String nickname, String sido, String sigungu, String dong) {
-        this.category_name = category_name;
+    public CreateSurveyResponse(String categoryName, String nickname, String sido, String sigungu, String dong) {
+        this.categoryName = categoryName;
         this.nickname = nickname;
         this.sido = sido;
         this.sigungu = sigungu;

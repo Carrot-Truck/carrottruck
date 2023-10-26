@@ -3,11 +3,14 @@ package com.boyworld.carrot.docs.foodtruck;
 import com.boyworld.carrot.api.controller.foodtruck.FoodTruckController;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
 import com.boyworld.carrot.api.service.foodtruck.dto.CreateFoodTruckDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
 import com.boyworld.carrot.docs.RestDocsSupport;
+import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,8 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -111,34 +113,110 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
+    @DisplayName("푸드트럭 지도 검색 API")
+    @Test
+    void getFoodTruckMarkers() throws Exception {
+        FoodTruckMarkerItem info1 = FoodTruckMarkerItem.builder()
+                .categoryId(1L)
+                .foodTruckId(1L)
+                .latitude("37.5665")
+                .longitude("126.9780")
+                .isOpen(true)
+                .build();
+
+        FoodTruckMarkerItem info2 = FoodTruckMarkerItem.builder()
+                .categoryId(2L)
+                .foodTruckId(2L)
+                .latitude("35.1595")
+                .longitude("126.8526")
+                .isOpen(false)
+                .build();
+
+        FoodTruckMarkerResponse response = FoodTruckMarkerResponse.builder()
+                .markerCount(2)
+                .markerItems(List.of(info1, info2))
+                .build();
+
+        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class)))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/food-truck/marker")
+                                .param("categoryId", "")
+                                .param("keyword", "")
+                                .param("latitude", "")
+                                .param("longitude", "")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("search-food-truck-marker",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("categoryId")
+                                        .description("카테고리 식별키"),
+                                parameterWithName("keyword")
+                                        .description("푸드트럭/메뉴 이름"),
+                                parameterWithName("latitude")
+                                        .description("현재 사용자의 위도"),
+                                parameterWithName("longitude")
+                                        .description("현재 사용자의 경도")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data.markerCount").type(JsonFieldType.NUMBER)
+                                        .description("마커 개수"),
+                                fieldWithPath("data.markerItems").type(JsonFieldType.ARRAY)
+                                        .description("푸드트럭 검색 결과 목록"),
+                                fieldWithPath("data.markerItems[].categoryId").type(JsonFieldType.NUMBER)
+                                        .description("카테고리 식별키"),
+                                fieldWithPath("data.markerItems[].foodTruckId").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 식별키"),
+                                fieldWithPath("data.markerItems[].latitude").type(JsonFieldType.STRING)
+                                        .description("위도"),
+                                fieldWithPath("data.markerItems[].longitude").type(JsonFieldType.STRING)
+                                        .description("경도"),
+                                fieldWithPath("data.markerItems[].isOpen").type(JsonFieldType.BOOLEAN)
+                                        .description("영업여부")
+                        )
+                ));
+    }
+
     @DisplayName("푸드트럭 검색 결과 목록 조회 API")
     @Test
+    @WithMockUser(roles = "CLIENT")
     void getFoodTrucks() throws Exception {
         FoodTruckItem item1 = FoodTruckItem.builder()
                 .categoryId(1L)
-                .categoryName("고기/구이")
                 .foodTruckId(1L)
                 .foodTruckName("동현 된장삼겹")
-                .isOpen(true)
+                .isOpen(false)
+                .isLiked(true)
                 .prepareTime(30)
                 .grade(4.5)
                 .reviewCount(1324)
-                .latitude("37.5665")
-                .longitude("126.9780")
+                .distance(123)
                 .foodTruckImageId(1L)
+                .isNew(true)
                 .build();
+
         FoodTruckItem item2 = FoodTruckItem.builder()
                 .categoryId(2L)
-                .categoryName("분식")
                 .foodTruckId(2L)
                 .foodTruckName("팔천순대")
                 .isOpen(true)
+                .isLiked(false)
                 .prepareTime(20)
                 .grade(4.0)
                 .reviewCount(1324)
-                .latitude("35.1595")
-                .longitude("126.8526")
+                .distance(100)
                 .foodTruckImageId(2L)
+                .isNew(false)
                 .build();
         List<FoodTruckItem> items = List.of(item1, item2);
 
@@ -147,18 +225,21 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .foodTruckItems(items)
                 .build();
 
-        given(foodTruckQueryService.getFoodTrucks(anyString(), anyString(), anyString()))
+        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/food-truck/client")
+                        get("/food-truck")
+                                .header("Authentication", "authentication")
                                 .param("categoryId", "")
                                 .param("keyword", "")
+                                .param("latitude", "")
+                                .param("longitude", "")
                                 .param("lastFoodTruckId", "")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("search-food-truck-client",
+                .andDo(document("search-food-truck-list",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
@@ -166,6 +247,10 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("카테고리 식별키"),
                                 parameterWithName("keyword")
                                         .description("푸드트럭/메뉴 이름"),
+                                parameterWithName("latitude")
+                                        .description("현재 사용자의 위도"),
+                                parameterWithName("longitude")
+                                        .description("현재 사용자의 경도"),
                                 parameterWithName("lastFoodTruckId")
                                         .description("마지막으로 조회된 푸드트럭 식별키")
                         ),
@@ -182,26 +267,26 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("푸드트럭 검색 결과 목록"),
                                 fieldWithPath("data.foodTruckItems[].categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 식별키"),
-                                fieldWithPath("data.foodTruckItems[].categoryName").type(JsonFieldType.STRING)
-                                        .description("카테고리 이름"),
                                 fieldWithPath("data.foodTruckItems[].foodTruckId").type(JsonFieldType.NUMBER)
                                         .description("푸드트럭 식별키"),
                                 fieldWithPath("data.foodTruckItems[].foodTruckName").type(JsonFieldType.STRING)
                                         .description("푸드트럭 이름"),
                                 fieldWithPath("data.foodTruckItems[].isOpen").type(JsonFieldType.BOOLEAN)
                                         .description("영업 상태"),
+                                fieldWithPath("data.foodTruckItems[].isLiked").type(JsonFieldType.BOOLEAN)
+                                        .description("찜 여부"),
                                 fieldWithPath("data.foodTruckItems[].prepareTime").type(JsonFieldType.NUMBER)
                                         .description("예상 준비 시간"),
                                 fieldWithPath("data.foodTruckItems[].grade").type(JsonFieldType.NUMBER)
                                         .description("평점"),
                                 fieldWithPath("data.foodTruckItems[].reviewCount").type(JsonFieldType.NUMBER)
                                         .description("리뷰 개수"),
-                                fieldWithPath("data.foodTruckItems[].latitude").type(JsonFieldType.STRING)
-                                        .description("위도"),
-                                fieldWithPath("data.foodTruckItems[].longitude").type(JsonFieldType.STRING)
-                                        .description("경도"),
+                                fieldWithPath("data.foodTruckItems[].distance").type(JsonFieldType.NUMBER)
+                                        .description("현재 사용자와의 거리"),
                                 fieldWithPath("data.foodTruckItems[].foodTruckImageId").type(JsonFieldType.NUMBER)
-                                        .description("푸드트럭 이미지 식별키")
+                                        .description("푸드트럭 이미지 식별키"),
+                                fieldWithPath("data.foodTruckItems[].isNew").type(JsonFieldType.BOOLEAN)
+                                        .description("신규 등록 여부")
                         )
                 ));
     }

@@ -10,13 +10,24 @@ include::{snippets}/create-food-truck/request-part-request-fields.adoc[]
 include::{snippets}/create-food-truck/http-response.adoc[]
 include::{snippets}/create-food-truck/response-fields.adoc[]
 
-[[search-food-truck-client]]
-=== 푸드트럭 검색
+[[search-food-truck-marker]]
+=== 푸드트럭 지도 위치(마커) 조회
 
 ==== HTTP Request
-include::{snippets}/search-food-truck-client/http-request.adoc[]
-include::{snippets}/search-food-truck-client/query-parameters.adoc[]
+include::{snippets}/search-food-truck-marker/http-request.adoc[]
+include::{snippets}/search-food-truck-marker/query-parameters.adoc[]
 
 ==== HTTP Response
-include::{snippets}/search-food-truck-client/http-response.adoc[]
-include::{snippets}/search-food-truck-client/response-fields.adoc[]
+include::{snippets}/search-food-truck-marker/http-response.adoc[]
+include::{snippets}/search-food-truck-marker/response-fields.adoc[]
+
+[[search-food-truck-list]]
+=== 푸드트럭 목록 조회
+
+==== HTTP Request
+include::{snippets}/search-food-truck-list/http-request.adoc[]
+include::{snippets}/search-food-truck-list/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-food-truck-list/http-response.adoc[]
+include::{snippets}/search-food-truck-list/response-fields.adoc[]

@@ -1,6 +1,8 @@
 package com.boyworld.carrot.api.service.foodtruck;
 
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckLikeResponse;
 import com.boyworld.carrot.api.service.foodtruck.dto.CreateFoodTruckDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckLikeDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.UpdateFoodTruckDto;
 import com.boyworld.carrot.domain.foodtruck.repository.FoodTruckRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +56,17 @@ public class FoodTruckService {
      * @return 삭제된 푸드트럭 식별키
      */
     public Long deleteFoodTruck(Long foodTruckId, String email) {
+        return null;
+    }
+
+    /**
+     * 푸드트럭 찜 API
+     *
+     * @param dto 푸드트럭 식별키
+     * @param email 로그인 중인 회원 이메일
+     * @return 푸드트럭 찜 정보
+     */
+    public FoodTruckLikeResponse foodTruckLike(FoodTruckLikeDto dto, String email) {
         return null;
     }
 }

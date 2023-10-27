@@ -2,17 +2,12 @@ package com.boyworld.carrot.docs.foodtruck;
 
 import com.boyworld.carrot.api.controller.foodtruck.FoodTruckController;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
+import com.boyworld.carrot.api.controller.foodtruck.request.FoodTruckLikeRequest;
 import com.boyworld.carrot.api.controller.foodtruck.request.UpdateFoodTruckRequest;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
+import com.boyworld.carrot.api.controller.foodtruck.response.*;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
-import com.boyworld.carrot.api.service.foodtruck.dto.CreateFoodTruckDto;
-import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckDetailDto;
-import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
-import com.boyworld.carrot.api.service.foodtruck.dto.UpdateFoodTruckDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.*;
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
 import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
@@ -610,6 +605,58 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NUMBER)
                                         .description("삭제된 푸드트럭 식별키")
+                        )
+                ));
+    }
+
+    @DisplayName("푸드트럭 찜 API")
+    @Test
+    @WithMockUser(roles = "CLIENT")
+    void foodTruckLike() throws Exception {
+
+        FoodTruckLikeRequest request = FoodTruckLikeRequest.builder()
+                .foodTruckId(1L)
+                .build();
+
+        FoodTruckLikeResponse response = FoodTruckLikeResponse.builder()
+                .foodTruckLikeId(1L)
+                .foodTruckId(1L)
+                .isLiked(true)
+                .build();
+
+        given(foodTruckService.foodTruckLike(any(FoodTruckLikeDto.class), anyString()))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        post("/food-truck/like")
+                                .header("Authentication", "authentication")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("food-truck-like",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("foodTruckId").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.foodTruckLikeId").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 찜 식별키"),
+                                fieldWithPath("data.foodTruckId").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 식별키"),
+                                fieldWithPath("data.isLiked").type(JsonFieldType.BOOLEAN)
+                                        .description("찜 여부")
                         )
                 ));
     }

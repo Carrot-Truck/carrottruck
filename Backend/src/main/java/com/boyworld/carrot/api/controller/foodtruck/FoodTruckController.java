@@ -2,8 +2,10 @@ package com.boyworld.carrot.api.controller.foodtruck;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
+import com.boyworld.carrot.api.controller.foodtruck.request.FoodTruckLikeRequest;
 import com.boyworld.carrot.api.controller.foodtruck.request.UpdateFoodTruckRequest;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckLikeResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
@@ -171,5 +173,25 @@ public class FoodTruckController {
         log.debug("deleteId={}", deleteId);
 
         return ApiResponse.found(deleteId);
+    }
+
+    /**
+     * 푸드트럭 찜 API
+     * 
+     * @param request 푸드트럭 식별키
+     * @return 푸드트럭 찜 정보
+     */
+    @PostMapping("/like")
+    public ApiResponse<FoodTruckLikeResponse> foodTruckLike(@Valid @RequestBody FoodTruckLikeRequest request) {
+        log.debug("FoodTruckController#foodTruckLike called");
+        log.debug("FoodTruckLikeRequest={}", request);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        FoodTruckLikeResponse response = foodTruckService.foodTruckLike(request.toFoodTruckLikeDto(), email);
+        log.debug("FoodTruckLikeResponse={}", response);
+
+        return ApiResponse.ok(response);
     }
 }

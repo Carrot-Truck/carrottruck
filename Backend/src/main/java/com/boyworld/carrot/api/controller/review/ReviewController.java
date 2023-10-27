@@ -53,7 +53,7 @@ public class ReviewController {
      * @param request reviewId, comment
      * @return review comment 등록 여부
      */
-    @PostMapping
+    @PostMapping("/comment")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Boolean> createComment(@Valid @RequestBody CommentRequest request) {
         log.debug("ReviewController#createComment called !!!");

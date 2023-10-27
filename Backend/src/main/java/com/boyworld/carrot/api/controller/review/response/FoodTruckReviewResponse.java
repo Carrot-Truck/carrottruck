@@ -13,7 +13,7 @@ public class FoodTruckReviewResponse {
     private Integer averageGrade;
 
     @Builder
-    public FoodTruckReviewResponse(List<FoodTruckReviewDto> foodTruckReviewDtoList){
+    private FoodTruckReviewResponse(List<FoodTruckReviewDto> foodTruckReviewDtoList){
         this.foodTruckReviewDtoList = foodTruckReviewDtoList;
         if(foodTruckReviewDtoList.size() != 0){
             for(FoodTruckReviewDto foodTruckReviewDto : foodTruckReviewDtoList){
@@ -21,5 +21,11 @@ public class FoodTruckReviewResponse {
             }
             this.averageGrade /= foodTruckReviewDtoList.size();
         }
+    }
+
+    public static FoodTruckReviewResponse of(List<FoodTruckReviewDto> foodTruckReviewDtoList){
+        return FoodTruckReviewResponse.builder()
+            .foodTruckReviewDtoList(foodTruckReviewDtoList)
+            .build();
     }
 }

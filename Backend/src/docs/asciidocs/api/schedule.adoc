@@ -1,0 +1,10 @@
+[[create-schedule]]
+=== 스케줄 등록
+
+==== HTTP Request
+include::{snippets}/create-schedule/http-request.adoc[]
+include::{snippets}/create-schedule/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-schedule/http-response.adoc[]
+include::{snippets}/create-schedule/response-fields.adoc[]

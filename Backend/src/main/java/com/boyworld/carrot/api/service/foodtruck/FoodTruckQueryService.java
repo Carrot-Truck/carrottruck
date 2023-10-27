@@ -27,9 +27,10 @@ public class FoodTruckQueryService {
      * 푸드트럭 지도 검색 API
      *
      * @param condition 검색 조건
+     * @param email 현재 로그인 중인 사용자 이메일
      * @return 푸드트럭 지도에 표시될 마커 정보
      */
-    public FoodTruckMarkerResponse getFoodTruckMarkers(SearchCondition condition) {
+    public FoodTruckMarkerResponse getFoodTruckMarkers(SearchCondition condition, String email) {
         return null;
     }
 

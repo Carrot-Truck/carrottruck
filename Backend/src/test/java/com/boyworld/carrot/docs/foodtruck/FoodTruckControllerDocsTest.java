@@ -126,6 +126,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("푸드트럭 지도 검색 API")
     @Test
+    @WithMockUser(roles = {"VENDOR", "CLIENT"})
     void getFoodTruckMarkers() throws Exception {
         FoodTruckMarkerItem info1 = FoodTruckMarkerItem.builder()
                 .categoryId(1L)
@@ -148,11 +149,12 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .markerItems(List.of(info1, info2))
                 .build();
 
-        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class)))
+        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
                         get("/food-truck/marker")
+                                .header("Authentication", "authentication")
                                 .param("categoryId", "")
                                 .param("keyword", "")
                                 .param("latitude", "")

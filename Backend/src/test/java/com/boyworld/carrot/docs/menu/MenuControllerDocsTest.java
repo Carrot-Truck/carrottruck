@@ -144,6 +144,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("메뉴 목록 조회 API")
     @Test
+    @WithMockUser(roles = {"VENDOR", "CLIENT"})
     void getMenus() throws Exception {
 
         long foodTruckId = 1L;
@@ -171,11 +172,12 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menus(List.of(menu1, menu2))
                 .build();
 
-        given(menuQueryService.getMenus(anyLong(), anyLong()))
+        given(menuQueryService.getMenus(anyLong(), anyLong(), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
                         get("/menu")
+                                .header("Authentication", "authentication")
                                 .param("foodTruckId", Long.toString(foodTruckId))
                                 .param("lastMenuId", "")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -220,6 +222,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("메뉴 상세 조회 API")
     @Test
+    @WithMockUser(roles = {"VENDOR", "CLIENT"})
     void getMenu() throws Exception {
 
         long menuId = 1L;
@@ -247,11 +250,12 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menuOptions(List.of(option1, option2))
                 .build();
 
-        given(menuQueryService.getMenu(anyLong()))
+        given(menuQueryService.getMenu(anyLong(), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
                         get("/menu/{menuId}", menuId)
+                                .header("Authentication", "authentication")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -299,6 +303,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("메뉴 수정 API")
     @Test
+    @WithMockUser(roles = "VENDOR")
     void editMenu() throws Exception {
         EditMenuRequest request = EditMenuRequest.builder()
                 .menuName("달콤짭짤한 밥도둑 된장 삼겹살 구이")
@@ -312,7 +317,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
         String jsonRequest = objectMapper.writeValueAsString(request);
         MockMultipartFile jsonRequestPart = new MockMultipartFile("request", "request.json", APPLICATION_JSON_VALUE, jsonRequest.getBytes(UTF_8));
 
-        given(menuService.editMenu(any(EditMenuDto.class), any(MultipartFile.class)))
+        given(menuService.editMenu(any(EditMenuDto.class), any(MultipartFile.class), anyString()))
                 .willReturn(menuId);
 
         // multipart 는 기본적으로 POST 요청을 위한 처리로만 사용되고 있으므로 아래와 같이 Override 해서 만들어줘야함
@@ -332,6 +337,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                         builder
                                 .file(file)
                                 .file(jsonRequestPart)
+                                .header("Authentication", "authentication")
                                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 )
                 .andDo(print())
@@ -369,14 +375,16 @@ public class MenuControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("메뉴 삭제 API")
     @Test
+    @WithMockUser(roles = "VENDOR")
     void deleteMenu() throws Exception {
         Long menuId = 1L;
 
-        given(menuService.deleteMenu(anyLong()))
+        given(menuService.deleteMenu(anyLong(), anyString()))
                 .willReturn(menuId);
 
         mockMvc.perform(
-                        delete("/menu/{menuId}", menuId)
+                delete("/menu/{menuId}", menuId)
+                        .header("Authentication", "authentication")
                 )
                 .andDo(print())
                 .andExpect(status().isFound())

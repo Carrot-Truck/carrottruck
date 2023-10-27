@@ -40,8 +40,7 @@ public class FoodTruckController {
      */
     @PostMapping("/vendor")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Long> createFoodTruck(@Valid @RequestPart(name = "request") CreateFoodTruckRequest request,
-                                             @RequestPart(required = false, name = "file") MultipartFile file) {
+    public ApiResponse<Long> createFoodTruck(@Valid @RequestPart(name = "request") CreateFoodTruckRequest request, @RequestPart(required = false, name = "file") MultipartFile file) {
         log.debug("FoodTruckController#createFoodTruck called");
         log.debug("CreateFoodTruckRequest={}", request);
         log.debug("MultipartFile={}", file);
@@ -65,17 +64,17 @@ public class FoodTruckController {
      * @return 푸드트럭 지도에 표시될 마커 정보
      */
     @GetMapping("/marker")
-    public ApiResponse<FoodTruckMarkerResponse> getFoodTruckMarkers(@RequestParam(required = false, defaultValue = "") String categoryId,
-                                                                    @RequestParam(required = false, defaultValue = "") String keyword,
-                                                                    @RequestParam(required = false, defaultValue = "") String longitude,
-                                                                    @RequestParam(required = false, defaultValue = "") String latitude) {
+    public ApiResponse<FoodTruckMarkerResponse> getFoodTruckMarkers(@RequestParam(required = false, defaultValue = "") String categoryId, @RequestParam(required = false, defaultValue = "") String keyword, @RequestParam(required = false, defaultValue = "") String longitude, @RequestParam(required = false, defaultValue = "") String latitude) {
         log.debug("FoodTruckController#getFoodTruckMarkers called");
         log.debug("categoryId={}", categoryId);
         log.debug("keyword={}", keyword);
         log.debug("latitude={}", latitude);
         log.debug("longitude={}", longitude);
 
-        FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(SearchCondition.of(categoryId, keyword, longitude, latitude));
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(SearchCondition.of(categoryId, keyword, longitude, latitude), email);
         log.debug("FoodTruckResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -92,11 +91,7 @@ public class FoodTruckController {
      * @return 식별키 리스트에 해당하는 푸드트럭 리스트 (거리순 정렬)
      */
     @GetMapping
-    public ApiResponse<FoodTruckResponse> getFoodTrucks(@RequestParam(required = false, defaultValue = "") String categoryId,
-                                                        @RequestParam(required = false, defaultValue = "") String keyword,
-                                                        @RequestParam(required = false, defaultValue = "") String longitude,
-                                                        @RequestParam(required = false, defaultValue = "") String latitude,
-                                                        @RequestParam(required = false, defaultValue = "") String lastFoodTruckId) {
+    public ApiResponse<FoodTruckResponse> getFoodTrucks(@RequestParam(required = false, defaultValue = "") String categoryId, @RequestParam(required = false, defaultValue = "") String keyword, @RequestParam(required = false, defaultValue = "") String longitude, @RequestParam(required = false, defaultValue = "") String latitude, @RequestParam(required = false, defaultValue = "") String lastFoodTruckId) {
         log.debug("FoodTruckController#getFoodTrucks called");
         log.debug("categoryId={}", categoryId);
         log.debug("keyword={}", keyword);
@@ -142,9 +137,7 @@ public class FoodTruckController {
      * @return 수정된 푸드트럭 식별키
      */
     @PatchMapping("/{foodTruckId}")
-    public ApiResponse<Long> editFoodTruck(@PathVariable Long foodTruckId,
-                                           @Valid @RequestPart(name = "request") UpdateFoodTruckRequest request,
-                                           @RequestPart(required = false, name = "file") MultipartFile file) {
+    public ApiResponse<Long> editFoodTruck(@PathVariable Long foodTruckId, @Valid @RequestPart(name = "request") UpdateFoodTruckRequest request, @RequestPart(required = false, name = "file") MultipartFile file) {
         log.debug("FoodTruckController#editFoodTruck called");
         log.debug("foodTruckId={}", foodTruckId);
         log.debug("UpdateFoodTruckRequest={}", request);

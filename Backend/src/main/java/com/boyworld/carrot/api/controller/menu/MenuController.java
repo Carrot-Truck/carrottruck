@@ -64,7 +64,10 @@ public class MenuController {
         log.debug("foodTruckId={}", foodTruckId);
         log.debug("lastMenuId={}", lastMenuId);
 
-        MenuResponse response = menuQueryService.getMenus(foodTruckId, lastMenuId);
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        MenuResponse response = menuQueryService.getMenus(foodTruckId, lastMenuId, email);
         log.debug("MenuResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -81,7 +84,10 @@ public class MenuController {
         log.debug("MenuController#getMenu called");
         log.debug("menuId={}", menuId);
 
-        MenuDetailResponse response = menuQueryService.getMenu(menuId);
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        MenuDetailResponse response = menuQueryService.getMenu(menuId, email);
         log.debug("MenuDetailResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -104,7 +110,10 @@ public class MenuController {
         log.debug("EditMenuRequest={}", request);
         log.debug("file={}", file);
 
-        Long editId = menuService.editMenu(request.toEditMenuDto(menuId), file);
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long editId = menuService.editMenu(request.toEditMenuDto(menuId), file, email);
         log.debug("editId={}", editId);
 
         return ApiResponse.ok(editId);
@@ -122,7 +131,10 @@ public class MenuController {
         log.debug("MenuController#editMenu called");
         log.debug("menuId={}", menuId);
 
-        Long deleteId = menuService.deleteMenu(menuId);
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long deleteId = menuService.deleteMenu(menuId, email);
         log.debug("deleteId={}", deleteId);
 
         return ApiResponse.found(deleteId);

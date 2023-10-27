@@ -26,9 +26,10 @@ public class MenuQueryService {
      *
      * @param foodTruckId 루드트럭 식별키
      * @param lastMenuId  마지막으로 조회된 메뉴 식별키
+     * @param email       현재 로그인 중인 사용자 이메일
      * @return 해당 푸드트럭의 메뉴 목록
      */
-    public MenuResponse getMenus(Long foodTruckId, Long lastMenuId) {
+    public MenuResponse getMenus(Long foodTruckId, Long lastMenuId, String email) {
         return null;
     }
 
@@ -36,9 +37,10 @@ public class MenuQueryService {
      * 메뉴 상세 조회 API
      *
      * @param menuId 메뉴 식별키
+     * @param email  현재 로그인 중인 사용자 이메일
      * @return 메뉴 상세 정보 (옵션 포함)
      */
-    public MenuDetailResponse getMenu(Long menuId) {
+    public MenuDetailResponse getMenu(Long menuId, String email) {
         return null;
     }
 }

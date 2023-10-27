@@ -36,8 +36,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -364,6 +363,38 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NUMBER)
                                         .description("수정된 메뉴 식별키")
+                        )
+                ));
+    }
+
+    @DisplayName("메뉴 삭제 API")
+    @Test
+    void deleteMenu() throws Exception {
+        Long menuId = 1L;
+
+        given(menuService.deleteMenu(anyLong()))
+                .willReturn(menuId);
+
+        mockMvc.perform(
+                        delete("/menu/{menuId}", menuId)
+                )
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andDo(document("delete-menu",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("menuId").description("메뉴 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("삭제된 메뉴 식별키")
                         )
                 ));
     }

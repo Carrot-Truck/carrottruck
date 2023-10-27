@@ -31,7 +31,7 @@ include::{snippets}/search-menu-detail/path-parameters.adoc[]
 include::{snippets}/search-menu-detail/http-response.adoc[]
 include::{snippets}/search-menu-detail/response-fields.adoc[]
 
-[[edit-menu-detail]]
+[[edit-menu]]
 === 메뉴 수정
 
 ==== HTTP Request
@@ -43,3 +43,14 @@ include::{snippets}/edit-menu/request-part-request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/edit-menu/http-response.adoc[]
 include::{snippets}/edit-menu/response-fields.adoc[]
+
+[[delete-menu]]
+=== 메뉴 삭제
+
+==== HTTP Request
+include::{snippets}/delete-menu/http-request.adoc[]
+include::{snippets}/delete-menu/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/delete-menu/http-response.adoc[]
+include::{snippets}/delete-menu/response-fields.adoc[]

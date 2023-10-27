@@ -5,6 +5,8 @@ import com.boyworld.carrot.api.controller.menu.MenuResponse;
 import com.boyworld.carrot.api.controller.menu.request.CreateMenuOptionRequest;
 import com.boyworld.carrot.api.controller.menu.request.CreateMenuRequest;
 import com.boyworld.carrot.api.controller.menu.response.CreateMenuResponse;
+import com.boyworld.carrot.api.controller.menu.response.MenuDetailResponse;
+import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
 import com.boyworld.carrot.api.service.menu.MenuQueryService;
 import com.boyworld.carrot.api.service.menu.MenuService;
 import com.boyworld.carrot.api.service.menu.dto.CreateMenuDto;
@@ -202,6 +204,85 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                         .description("품절 여부"),
                                 fieldWithPath("data.menus[].menuImageId").type(JsonFieldType.NUMBER)
                                         .description("메뉴 이미지 식별키")
+                        )
+                ));
+    }
+
+    @DisplayName("메뉴 상세 조회 API")
+    @Test
+    void getMenu() throws Exception {
+
+        long menuId = 1L;
+        MenuOptionResponse option1 = MenuOptionResponse.builder()
+                .menuOptionId(1L)
+                .menuOptionName("옵션1")
+                .menuOptionPrice(500)
+                .menuOptionDescription("설명1")
+                .build();
+
+        MenuOptionResponse option2 = MenuOptionResponse.builder()
+                .menuOptionId(2L)
+                .menuOptionName("옵션2")
+                .menuOptionPrice(300)
+                .menuOptionDescription("설명2")
+                .build();
+
+        MenuDetailResponse response = MenuDetailResponse.builder()
+                .menuId(2L)
+                .menuName("노른자 된장 삼겹살 덮밥")
+                .description("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
+                .price(6900)
+                .soldOut(false)
+                .menuImageId(2L)
+                .menuOptions(List.of(option1, option2))
+                .build();
+
+        given(menuQueryService.getMenu(anyLong()))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/menu/{menuId}", menuId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("search-menu-detail",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("menuId").description("메뉴 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("메뉴 상세 조회 결과"),
+                                fieldWithPath("data.menuId").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 식별키"),
+                                fieldWithPath("data.menuName").type(JsonFieldType.STRING)
+                                        .description("메뉴명"),
+                                fieldWithPath("data.price").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 가격"),
+                                fieldWithPath("data.description").type(JsonFieldType.STRING)
+                                        .description("메뉴 설명"),
+                                fieldWithPath("data.soldOut").type(JsonFieldType.BOOLEAN)
+                                        .description("품절 여부"),
+                                fieldWithPath("data.menuImageId").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 이미지 식별키"),
+                                fieldWithPath("data.menuOptions").type(JsonFieldType.ARRAY)
+                                        .description("메뉴 이미지 식별키"),
+                                fieldWithPath("data.menuOptions[].menuOptionId").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 옵션 식별키"),
+                                fieldWithPath("data.menuOptions[].menuOptionName").type(JsonFieldType.STRING)
+                                        .description("메뉴 옵션명"),
+                                fieldWithPath("data.menuOptions[].menuOptionPrice").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 옵션 가격"),
+                                fieldWithPath("data.menuOptions[].menuOptionDescription").type(JsonFieldType.STRING)
+                                        .description("메뉴 옵션 설명")
                         )
                 ));
     }

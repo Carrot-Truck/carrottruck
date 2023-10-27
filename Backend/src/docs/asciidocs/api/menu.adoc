@@ -19,3 +19,14 @@ include::{snippets}/search-menu/query-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/search-menu/http-response.adoc[]
 include::{snippets}/search-menu/response-fields.adoc[]
+
+[[search-menu-detail]]
+=== 메뉴 상세 조회
+
+==== HTTP Request
+include::{snippets}/search-menu-detail/http-request.adoc[]
+include::{snippets}/search-menu-detail/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-menu-detail/http-response.adoc[]
+include::{snippets}/search-menu-detail/response-fields.adoc[]

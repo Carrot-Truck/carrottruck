@@ -43,4 +43,14 @@ public class MenuService {
     public Long editMenu(EditMenuDto dto, MultipartFile file) {
         return null;
     }
+
+    /**
+     * 메뉴 삭제
+     *
+     * @param menuId 메뉴 식별키
+     * @return 삭제된 메뉴 식별키
+     */
+    public Long deleteMenu(Long menuId) {
+        return null;
+    }
 }

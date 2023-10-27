@@ -89,10 +89,10 @@ public class MenuController {
 
     /**
      * 메뉴 수정 API
-     * 
-     * @param menuId 메뉴 식별키
+     *
+     * @param menuId  메뉴 식별키
      * @param request 수정할 메뉴 정보
-     * @param file 수정할 메뉴 이미지
+     * @param file    수정할 메뉴 이미지
      * @return 수정된 메뉴 식별키
      */
     @PatchMapping("/{menuId}")
@@ -108,5 +108,23 @@ public class MenuController {
         log.debug("editId={}", editId);
 
         return ApiResponse.ok(editId);
+    }
+
+    /**
+     * 메뉴 삭제 API
+     *
+     * @param menuId 메뉴 식별키
+     * @return 삭제된 메뉴 식별키
+     */
+    @DeleteMapping("/{menuId}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ApiResponse<Long> deleteMenu(@PathVariable Long menuId) {
+        log.debug("MenuController#editMenu called");
+        log.debug("menuId={}", menuId);
+
+        Long deleteId = menuService.deleteMenu(menuId);
+        log.debug("deleteId={}", deleteId);
+
+        return ApiResponse.found(deleteId);
     }
 }

@@ -112,7 +112,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
     @Test
     void getMenus() throws Exception {
 
-        Long foodTruckId = 1L;
+        long foodTruckId = 1L;
 
         MenuDto menu1 = MenuDto.builder()
                 .menuId(1L)
@@ -120,6 +120,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .description("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
                 .price(8900)
                 .soldOut(false)
+                .menuImageId(1L)
                 .build();
 
         MenuDto menu2 = MenuDto.builder()
@@ -128,6 +129,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .description("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
                 .price(6900)
                 .soldOut(false)
+                .menuImageId(2L)
                 .build();
 
         MenuResponse response = MenuResponse.builder()
@@ -140,7 +142,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
 
         mockMvc.perform(
                         get("/menu")
-                                .param("foodTruckId", foodTruckId.toString())
+                                .param("foodTruckId", Long.toString(foodTruckId))
                                 .param("lastMenuId", "")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -175,7 +177,9 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.menus[].description").type(JsonFieldType.STRING)
                                         .description("메뉴 설명"),
                                 fieldWithPath("data.menus[].soldOut").type(JsonFieldType.BOOLEAN)
-                                        .description("품절 여부")
+                                        .description("품절 여부"),
+                                fieldWithPath("data.menus[].menuImageId").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 이미지 식별키")
                         )
                 ));
     }

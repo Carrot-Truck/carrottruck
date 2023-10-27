@@ -195,4 +195,60 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                         )
                 ));
     }
+
+    @DisplayName("푸드트럭 스케줄 상세 조회 API")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void getSchedule() throws Exception {
+        ScheduleDetailResponse response = ScheduleDetailResponse.builder()
+                .scheduleId(1L)
+                .address("광주광역시 광산구 장덕로 5번길 16")
+                .days("월요일")
+                .latitude("37.5665")
+                .longitude("126.9780")
+                .startTime("17:00")
+                .endTime("01:00")
+                .build();
+
+        given(scheduleQueryService.getSchedule(anyLong(), anyString()))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/schedule/{scheduleId}", 1L)
+                                .header("Authentication", "authentication")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("search-schedule-detail",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("scheduleId").description("푸드트럭 스케줄 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.scheduleId").type(JsonFieldType.NUMBER)
+                                        .description("스케줄 식별키"),
+                                fieldWithPath("data.address").type(JsonFieldType.STRING)
+                                        .description("주소"),
+                                fieldWithPath("data.latitude").type(JsonFieldType.STRING)
+                                        .description("위도"),
+                                fieldWithPath("data.longitude").type(JsonFieldType.STRING)
+                                        .description("경도"),
+                                fieldWithPath("data.days").type(JsonFieldType.STRING)
+                                        .description("요일"),
+                                fieldWithPath("data.startTime").type(JsonFieldType.STRING)
+                                        .description("시작 시간"),
+                                fieldWithPath("data.endTime").type(JsonFieldType.STRING)
+                                        .description("종료 시간")
+                        )
+                ));
+    }
 }

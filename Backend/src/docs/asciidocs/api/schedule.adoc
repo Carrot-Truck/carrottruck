@@ -19,3 +19,14 @@ include::{snippets}/search-schedule/query-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/search-schedule/http-response.adoc[]
 include::{snippets}/search-schedule/response-fields.adoc[]
+
+[[search-schedule-detail]]
+=== 스케줄 상세조회
+
+==== HTTP Request
+include::{snippets}/search-schedule-detail/http-request.adoc[]
+include::{snippets}/search-schedule-detail/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-schedule-detail/http-response.adoc[]
+include::{snippets}/search-schedule-detail/response-fields.adoc[]

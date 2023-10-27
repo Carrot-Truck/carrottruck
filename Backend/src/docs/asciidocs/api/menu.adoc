@@ -30,3 +30,16 @@ include::{snippets}/search-menu-detail/path-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/search-menu-detail/http-response.adoc[]
 include::{snippets}/search-menu-detail/response-fields.adoc[]
+
+[[edit-menu-detail]]
+=== 메뉴 수정
+
+==== HTTP Request
+include::{snippets}/edit-menu/http-request.adoc[]
+include::{snippets}/edit-menu/path-parameters.adoc[]
+include::{snippets}/edit-menu/request-parts.adoc[]
+include::{snippets}/edit-menu/request-part-request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/edit-menu/http-response.adoc[]
+include::{snippets}/edit-menu/response-fields.adoc[]

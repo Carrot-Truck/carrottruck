@@ -4,26 +4,37 @@ import com.boyworld.carrot.api.controller.menu.MenuController;
 import com.boyworld.carrot.api.controller.menu.MenuResponse;
 import com.boyworld.carrot.api.controller.menu.request.CreateMenuOptionRequest;
 import com.boyworld.carrot.api.controller.menu.request.CreateMenuRequest;
+import com.boyworld.carrot.api.controller.menu.request.EditMenuRequest;
 import com.boyworld.carrot.api.controller.menu.response.CreateMenuResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuDetailResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
 import com.boyworld.carrot.api.service.menu.MenuQueryService;
 import com.boyworld.carrot.api.service.menu.MenuService;
 import com.boyworld.carrot.api.service.menu.dto.CreateMenuDto;
+import com.boyworld.carrot.api.service.menu.dto.EditMenuDto;
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -283,6 +294,76 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                         .description("메뉴 옵션 가격"),
                                 fieldWithPath("data.menuOptions[].menuOptionDescription").type(JsonFieldType.STRING)
                                         .description("메뉴 옵션 설명")
+                        )
+                ));
+    }
+
+    @DisplayName("메뉴 수정 API")
+    @Test
+    void editMenu() throws Exception {
+        EditMenuRequest request = EditMenuRequest.builder()
+                .menuName("달콤짭짤한 밥도둑 된장 삼겹살 구이")
+                .menuPrice(8900)
+                .menuDescription("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
+                .build();
+        Long menuId = 1L;
+
+        MockMultipartFile file = new MockMultipartFile("file", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "image data".getBytes());
+
+        String jsonRequest = objectMapper.writeValueAsString(request);
+        MockMultipartFile jsonRequestPart = new MockMultipartFile("request", "request.json", APPLICATION_JSON_VALUE, jsonRequest.getBytes(UTF_8));
+
+        given(menuService.editMenu(any(EditMenuDto.class), any(MultipartFile.class)))
+                .willReturn(menuId);
+
+        // multipart 는 기본적으로 POST 요청을 위한 처리로만 사용되고 있으므로 아래와 같이 Override 해서 만들어줘야함
+        MockMultipartHttpServletRequestBuilder builder =
+                RestDocumentationRequestBuilders.
+                        multipart("/menu/{menuId}", menuId);
+
+        builder.with(new RequestPostProcessor() {
+            @Override
+            public @NotNull MockHttpServletRequest postProcessRequest(@NotNull MockHttpServletRequest request) {
+                request.setMethod("PATCH");
+                return request;
+            }
+        });
+
+        mockMvc.perform(
+                        builder
+                                .file(file)
+                                .file(jsonRequestPart)
+                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("edit-menu",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("menuId").description("메뉴 식별키")
+                        ),
+                        requestParts(
+                                partWithName("file").description("푸드트럭 이미지"),
+                                partWithName("request").description("푸드트럭 정보")
+                        ),
+                        requestPartFields("request",
+                                fieldWithPath("menuName").type(JsonFieldType.STRING)
+                                        .description("메뉴 이름"),
+                                fieldWithPath("menuPrice").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 가격"),
+                                fieldWithPath("menuDescription").type(JsonFieldType.STRING)
+                                        .description("메뉴 설명")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("수정된 메뉴 식별키")
                         )
                 ));
     }

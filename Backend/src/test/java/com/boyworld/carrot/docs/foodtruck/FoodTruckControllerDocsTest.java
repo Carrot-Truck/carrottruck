@@ -126,6 +126,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("푸드트럭 지도 검색 API")
     @Test
+    @WithMockUser(roles = {"VENDOR", "CLIENT"})
     void getFoodTruckMarkers() throws Exception {
         FoodTruckMarkerItem info1 = FoodTruckMarkerItem.builder()
                 .categoryId(1L)
@@ -148,11 +149,12 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .markerItems(List.of(info1, info2))
                 .build();
 
-        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class)))
+        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
                         get("/food-truck/marker")
+                                .header("Authentication", "authentication")
                                 .param("categoryId", "")
                                 .param("keyword", "")
                                 .param("latitude", "")
@@ -336,6 +338,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .description("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
                 .price(8900)
                 .soldOut(false)
+                .menuImageId(1L)
                 .build();
 
         MenuDto menu2 = MenuDto.builder()
@@ -344,6 +347,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .description("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
                 .price(6900)
                 .soldOut(false)
+                .menuImageId(2L)
                 .build();
 
         ScheduleDto schedule1 = ScheduleDto.builder()
@@ -463,6 +467,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("메뉴 설명"),
                                 fieldWithPath("data.menus[].soldOut").type(JsonFieldType.BOOLEAN)
                                         .description("품절 여부"),
+                                fieldWithPath("data.menus[].menuImageId").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 이미지 식별키"),
                                 fieldWithPath("data.schedules").type(JsonFieldType.ARRAY)
                                         .description("운영시간 리스트"),
                                 fieldWithPath("data.schedules[].scheduleId").type(JsonFieldType.NUMBER)

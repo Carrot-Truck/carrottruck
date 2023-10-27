@@ -1,10 +1,12 @@
-package com.boyworld.carrot.api.service.menu.dto;
+package com.boyworld.carrot.api.controller.menu.response;
 
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class MenuDto {
+public class MenuDetailResponse {
 
     private Long menuId;
     private String menuName;
@@ -12,14 +14,16 @@ public class MenuDto {
     private String description;
     private Boolean soldOut;
     private Long menuImageId;
+    private List<MenuOptionResponse> menuOptions;
 
     @Builder
-    public MenuDto(Long menuId, String menuName, Integer price, String description, Boolean soldOut, Long menuImageId) {
+    public MenuDetailResponse(Long menuId, String menuName, Integer price, String description, Boolean soldOut, Long menuImageId, List<MenuOptionResponse> menuOptions) {
         this.menuId = menuId;
         this.menuName = menuName;
         this.price = price;
         this.description = description;
         this.soldOut = soldOut;
         this.menuImageId = menuImageId;
+        this.menuOptions = menuOptions;
     }
 }

@@ -68,4 +68,24 @@ public class ScheduleController {
 
         return ApiResponse.ok(response);
     }
+
+    /**
+     * 푸드트럭 스케줄 상세 조회 API
+     *
+     * @param scheduleId 조회할 스케줄 식별키
+     * @return 해당 스케줄 상세 정보
+     */
+    @GetMapping("/{scheduleId}")
+    public ApiResponse<ScheduleDetailResponse> getSchedule(@PathVariable Long scheduleId) {
+        log.debug("ScheduleController#getSchedule called");
+        log.debug("scheduleId={}", scheduleId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        ScheduleDetailResponse response = scheduleQueryService.getSchedule(scheduleId, email);
+        log.debug("ScheduleDetailResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
 }

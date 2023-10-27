@@ -1,10 +1,12 @@
 package com.boyworld.carrot.api.controller.menu;
 
 import com.boyworld.carrot.api.ApiResponse;
+import com.boyworld.carrot.api.controller.menu.request.CreateMenuOptionRequest;
 import com.boyworld.carrot.api.controller.menu.request.CreateMenuRequest;
 import com.boyworld.carrot.api.controller.menu.request.EditMenuRequest;
 import com.boyworld.carrot.api.controller.menu.response.CreateMenuResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuDetailResponse;
+import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
 import com.boyworld.carrot.api.service.menu.MenuQueryService;
 import com.boyworld.carrot.api.service.menu.MenuService;
 import com.boyworld.carrot.security.SecurityUtil;
@@ -128,13 +130,56 @@ public class MenuController {
     @DeleteMapping("/{menuId}")
     @ResponseStatus(HttpStatus.FOUND)
     public ApiResponse<Long> deleteMenu(@PathVariable Long menuId) {
-        log.debug("MenuController#editMenu called");
+        log.debug("MenuController#deleteMenu called");
         log.debug("menuId={}", menuId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
         Long deleteId = menuService.deleteMenu(menuId, email);
+        log.debug("deleteId={}", deleteId);
+
+        return ApiResponse.found(deleteId);
+    }
+
+    /**
+     * 메뉴 옵션 등록 API
+     *
+     * @param request 메뉴 옵션 정보
+     * @return 등록된 메뉴 옵션 정보
+     */
+    @PostMapping("/{menuId}/option")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<MenuOptionResponse> createMenuOption(@PathVariable Long menuId,
+                                                            @Valid @RequestBody CreateMenuOptionRequest request) {
+        log.debug("MenuController#createMenuOption called");
+        log.debug("CreateMenuOptionRequest={}", request);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        MenuOptionResponse response = menuService.createMenuOption(request.toCreateMenuOptionDto(), email, menuId);
+        log.debug("MenuOptionResponse={}", response);
+
+        return ApiResponse.created(response);
+    }
+
+    /**
+     * 메뉴 옵션 삭제 API
+     *
+     * @param menuOptionId 삭제할 메뉴 옵션 식별키
+     * @return 삭제된 메뉴 옵션 식별키
+     */
+    @DeleteMapping("/option/{menuOptionId}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ApiResponse<Long> deleteMenuOption(@PathVariable Long menuOptionId) {
+        log.debug("MenuController#deleteMenuOption called");
+        log.debug("optionId={}", menuOptionId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long deleteId = menuService.deleteMenuOption(menuOptionId, email);
         log.debug("deleteId={}", deleteId);
 
         return ApiResponse.found(deleteId);

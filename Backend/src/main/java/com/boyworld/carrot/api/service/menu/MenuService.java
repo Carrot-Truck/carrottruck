@@ -1,7 +1,9 @@
 package com.boyworld.carrot.api.service.menu;
 
 import com.boyworld.carrot.api.controller.menu.response.CreateMenuResponse;
+import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
 import com.boyworld.carrot.api.service.menu.dto.CreateMenuDto;
+import com.boyworld.carrot.api.service.menu.dto.CreateMenuOptionDto;
 import com.boyworld.carrot.api.service.menu.dto.EditMenuDto;
 import com.boyworld.carrot.domain.menu.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +55,29 @@ public class MenuService {
      * @return 삭제된 메뉴 식별키
      */
     public Long deleteMenu(Long menuId, String email) {
+        return null;
+    }
+
+    /**
+     * 메뉴 옵션 등록
+     *
+     * @param dto    메뉴 옵션 정보
+     * @param email  현재 로그인 중인 회원 이메일
+     * @param menuId 메뉴 식별키
+     * @return 등록된 메뉴 옵션 정보
+     */
+    public MenuOptionResponse createMenuOption(CreateMenuOptionDto dto, String email, Long menuId) {
+        return null;
+    }
+
+    /**
+     * 메뉴 옵션 삭제
+     *
+     * @param menuOptionId 삭제할 메뉴 옵션 식별키
+     * @param email        현재 로그인 중인 회원 이메일
+     * @return 삭제된 메뉴 옵션 식별키
+     */
+    public Long deleteMenuOption(Long menuOptionId, String email) {
         return null;
     }
 }

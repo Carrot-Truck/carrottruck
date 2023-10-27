@@ -13,7 +13,7 @@ public class CreateMenuOptionDto {
     private String menuOptionDescription;
 
     @Builder
-    public CreateMenuOptionDto(String menuOptionName, Integer menuOptionPrice, String menuOptionDescription) {
+    public CreateMenuOptionDto(Long menuId, String menuOptionName, Integer menuOptionPrice, String menuOptionDescription) {
         this.menuOptionName = menuOptionName;
         this.menuOptionPrice = menuOptionPrice;
         this.menuOptionDescription = menuOptionDescription;

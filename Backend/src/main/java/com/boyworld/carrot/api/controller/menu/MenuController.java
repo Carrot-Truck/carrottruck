@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.controller.menu;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.menu.request.CreateMenuRequest;
+import com.boyworld.carrot.api.controller.menu.request.EditMenuRequest;
 import com.boyworld.carrot.api.controller.menu.response.CreateMenuResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuDetailResponse;
 import com.boyworld.carrot.api.service.menu.MenuQueryService;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 푸드트럭 API 컨트롤러
@@ -76,12 +78,35 @@ public class MenuController {
      */
     @GetMapping("/{menuId}")
     public ApiResponse<MenuDetailResponse> getMenu(@PathVariable Long menuId) {
-        log.debug("MenuController#getMenus called");
+        log.debug("MenuController#getMenu called");
         log.debug("menuId={}", menuId);
 
         MenuDetailResponse response = menuQueryService.getMenu(menuId);
         log.debug("MenuDetailResponse={}", response);
 
         return ApiResponse.ok(response);
+    }
+
+    /**
+     * 메뉴 수정 API
+     * 
+     * @param menuId 메뉴 식별키
+     * @param request 수정할 메뉴 정보
+     * @param file 수정할 메뉴 이미지
+     * @return 수정된 메뉴 식별키
+     */
+    @PatchMapping("/{menuId}")
+    public ApiResponse<Long> editMenu(@PathVariable Long menuId,
+                                      @Valid @RequestPart(name = "request") EditMenuRequest request,
+                                      @RequestPart(required = false, name = "file") MultipartFile file) {
+        log.debug("MenuController#editMenu called");
+        log.debug("menuId={}", menuId);
+        log.debug("EditMenuRequest={}", request);
+        log.debug("file={}", file);
+
+        Long editId = menuService.editMenu(request.toEditMenuDto(menuId), file);
+        log.debug("editId={}", editId);
+
+        return ApiResponse.ok(editId);
     }
 }

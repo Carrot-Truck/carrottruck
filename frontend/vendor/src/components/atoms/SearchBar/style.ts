@@ -11,7 +11,7 @@ export const SearchBarContainer = styled.div<ISearchBarContainerProps>`
   ${({ $color }) => SearchBarColorStyles[$color]};
 
   input {
-    padding: 0 60px 0 20px;
+    padding: 0 20px 0 60px;
     ${({ $size }) => SearchBarSizeStyles[$size]};
     border-radius: var(--radius-l);
     height: 40px;
@@ -19,10 +19,10 @@ export const SearchBarContainer = styled.div<ISearchBarContainerProps>`
   .confirm-search-btn-wrapper {
     position: absolute;
     top: 0;
-    right: 0;
+    left: 0;
     width: 45px;
     height: 100%;
-    border-radius: 0 var(--radius-l) var(--radius-l) 0;
+    border-radius: var(--radius-l) 0 0 var(--radius-l);
     display: flex;
     flex-direction: column;
     justify-content: center;

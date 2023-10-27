@@ -5,7 +5,7 @@ import { SearchBarContainer } from './style';
 interface ISearchBarProps {
   size: 's' | 'l' | 'full';
   value: string;
-  setValue: string;
+  setValue: Dispatch<SetStateAction<string>>;
   confirmSearch: () => void;
   placeholder: string;
   color: 'Primary' | 'SubFirst' | 'SubSecond';
@@ -15,10 +15,10 @@ function SearchBar(props: ISearchBarProps) {
 
   return (
     <SearchBarContainer $size={size} $color={color}>
-      {/* <input type="text" value={value} onChange={(e) => setValue(e.target.value)} placeholder={placeholder} /> */}
       <button type="button" className="confirm-search-btn-wrapper" onClick={confirmSearch}>
         <Search />
       </button>
+      <input type="text" value={value} onChange={(e) => setValue(e.target.value)} placeholder={placeholder} />
     </SearchBarContainer>
   );
 }

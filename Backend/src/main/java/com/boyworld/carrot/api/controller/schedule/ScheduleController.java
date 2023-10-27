@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.controller.schedule;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.schedule.request.CreateScheduleRequest;
+import com.boyworld.carrot.api.controller.schedule.request.EditScheduleRequest;
 import com.boyworld.carrot.api.controller.schedule.response.ScheduleDetailResponse;
 import com.boyworld.carrot.api.controller.schedule.response.ScheduleResponse;
 import com.boyworld.carrot.api.service.schedule.ScheduleQueryService;
@@ -87,5 +88,48 @@ public class ScheduleController {
         log.debug("ScheduleDetailResponse={}", response);
 
         return ApiResponse.ok(response);
+    }
+
+    /**
+     * 스케줄 수정 API
+     *
+     * @param scheduleId 수정할 스케줄 식별키
+     * @return 수정된 스케줄 정보
+     */
+    @PatchMapping("/{scheduleId}")
+    public ApiResponse<ScheduleDetailResponse> editSchedule(@PathVariable Long scheduleId,
+                                                            @Valid @RequestBody EditScheduleRequest request) {
+        log.debug("ScheduleController#editSchedule called");
+        log.debug("EditScheduleRequest={}", request);
+        log.debug("scheduleId={}", scheduleId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        ScheduleDetailResponse response = scheduleService.editSchedule(scheduleId, request.toEditScheduleDto(), email);
+        log.debug("ScheduleDetailResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 스케줄 삭제 API
+     *
+     * @param scheduleId 삭제할 스케줄 식별키
+     * @return 삭제된 스케줄 식별키
+     */
+    @DeleteMapping("/{scheduleId}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ApiResponse<Long> deleteSchedule(@PathVariable Long scheduleId) {
+        log.debug("ScheduleController#deleteSchedule called");
+        log.debug("scheduleId={}", scheduleId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long deleteId = scheduleService.deleteSchedule(scheduleId, email);
+        log.debug("deleteId={}", deleteId);
+
+        return ApiResponse.found(deleteId);
     }
 }

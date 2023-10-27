@@ -3,6 +3,7 @@ package com.boyworld.carrot.api.controller.menu;
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.menu.request.CreateMenuRequest;
 import com.boyworld.carrot.api.controller.menu.response.CreateMenuResponse;
+import com.boyworld.carrot.api.controller.menu.response.MenuDetailResponse;
 import com.boyworld.carrot.api.service.menu.MenuQueryService;
 import com.boyworld.carrot.api.service.menu.MenuService;
 import com.boyworld.carrot.security.SecurityUtil;
@@ -63,6 +64,23 @@ public class MenuController {
 
         MenuResponse response = menuQueryService.getMenus(foodTruckId, lastMenuId);
         log.debug("MenuResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 메뉴 상세 조회 API
+     *
+     * @param menuId 메뉴 식별키
+     * @return 메뉴 상세 정보 (옵션 포함)
+     */
+    @GetMapping("/{menuId}")
+    public ApiResponse<MenuDetailResponse> getMenu(@PathVariable Long menuId) {
+        log.debug("MenuController#getMenus called");
+        log.debug("menuId={}", menuId);
+
+        MenuDetailResponse response = menuQueryService.getMenu(menuId);
+        log.debug("MenuDetailResponse={}", response);
 
         return ApiResponse.ok(response);
     }

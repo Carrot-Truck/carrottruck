@@ -8,3 +8,14 @@ include::{snippets}/create-schedule/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/create-schedule/http-response.adoc[]
 include::{snippets}/create-schedule/response-fields.adoc[]
+
+[[search-schedule]]
+=== 스케줄 목록조회
+
+==== HTTP Request
+include::{snippets}/search-schedule/http-request.adoc[]
+include::{snippets}/search-schedule/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-schedule/http-response.adoc[]
+include::{snippets}/search-schedule/response-fields.adoc[]

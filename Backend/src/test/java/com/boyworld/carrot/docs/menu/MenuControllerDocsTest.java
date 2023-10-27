@@ -11,6 +11,7 @@ import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
 import com.boyworld.carrot.api.service.menu.MenuQueryService;
 import com.boyworld.carrot.api.service.menu.MenuService;
 import com.boyworld.carrot.api.service.menu.dto.CreateMenuDto;
+import com.boyworld.carrot.api.service.menu.dto.CreateMenuOptionDto;
 import com.boyworld.carrot.api.service.menu.dto.EditMenuDto;
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
@@ -288,7 +289,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.menuImageId").type(JsonFieldType.NUMBER)
                                         .description("메뉴 이미지 식별키"),
                                 fieldWithPath("data.menuOptions").type(JsonFieldType.ARRAY)
-                                        .description("메뉴 이미지 식별키"),
+                                        .description("메뉴 옵션 리스트"),
                                 fieldWithPath("data.menuOptions[].menuOptionId").type(JsonFieldType.NUMBER)
                                         .description("메뉴 옵션 식별키"),
                                 fieldWithPath("data.menuOptions[].menuOptionName").type(JsonFieldType.STRING)
@@ -404,6 +405,102 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NUMBER)
                                         .description("삭제된 메뉴 식별키")
+                        )
+                ));
+    }
+
+    @DisplayName("메뉴 옵션 등록")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void createMenuOption() throws Exception {
+
+        CreateMenuOptionRequest request = CreateMenuOptionRequest.builder()
+                .menuOptionName("옵션1")
+                .menuOptionPrice(500)
+                .menuOptionDescription("설명1")
+                .build();
+
+        MenuOptionResponse response = MenuOptionResponse.builder()
+                .menuOptionId(1L)
+                .menuOptionName("옵션1")
+                .menuOptionPrice(500)
+                .menuOptionDescription("설명1")
+                .build();
+
+        given(menuService.createMenuOption(any(CreateMenuOptionDto.class), anyString(), anyLong()))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        post("/menu/{menuId}/option", 1L)
+                                .header("Authentication", "authentication")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andDo(document("create-menu-option",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("menuOptionName").type(JsonFieldType.STRING)
+                                        .description("메뉴 옵션명"),
+                                fieldWithPath("menuOptionPrice").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 옵션 가격"),
+                                fieldWithPath("menuOptionDescription").type(JsonFieldType.STRING)
+                                        .description("메뉴 옵션 설명")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("응답 데이터"),
+                                fieldWithPath("data.menuOptionId").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 옵션 식별키"),
+                                fieldWithPath("data.menuOptionName").type(JsonFieldType.STRING)
+                                        .description("메뉴 옵션명"),
+                                fieldWithPath("data.menuOptionPrice").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 옵션 가격"),
+                                fieldWithPath("data.menuOptionDescription").type(JsonFieldType.STRING)
+                                        .description("메뉴 옵션 설명")
+                        )
+                ));
+    }
+
+    @DisplayName("메뉴 옵션 삭제 API")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void deleteMenuOption() throws Exception {
+
+        Long deleteId = 1L;
+
+        given(menuService.deleteMenuOption(anyLong(), anyString()))
+                .willReturn(deleteId);
+
+        mockMvc.perform(
+                        delete("/menu/option/{menuOptionId}", deleteId)
+                                .header("Authentication", "authentication")
+                )
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andDo(document("delete-menu-option",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("menuOptionId").description("메뉴 옵션 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("삭제된 메뉴 옵션 식별키")
                         )
                 ));
     }

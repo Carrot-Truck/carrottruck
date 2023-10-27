@@ -471,6 +471,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#search-food-truck-detail">푸드트럭 상세 조회</a></li>
 <li><a href="#edit-food-truck">푸드트럭 수정</a></li>
 <li><a href="#delete-food-truck">푸드트럭 삭제</a></li>
+<li><a href="#food-truck-like">푸드트럭 찜</a></li>
 </ul>
 </li>
 <li><a href="#Menu-API">Menu API</a>
@@ -2836,6 +2837,118 @@ Content-Length: 82
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="food-truck-like"><a class="link" href="#food-truck-like">푸드트럭 찜</a></h3>
+<div class="sect3">
+<h4 id="_http_request_17"><a class="link" href="#_http_request_17">HTTP Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /food-truck/like HTTP/1.1
+Content-Type: application/json
+Authentication: authentication
+Content-Length: 25
+Host: localhost:8080
+
+{
+  "foodTruckId" : 1
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foodTruckId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 식별키</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_17"><a class="link" href="#_http_response_17">HTTP Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 160
+
+{
+  "code" : 200,
+  "status" : "OK",
+  "message" : "SUCCESS",
+  "data" : {
+    "foodTruckLikeId" : 1,
+    "foodTruckId" : 1,
+    "isLiked" : true
+  }
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">코드</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">응답 데이터</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.foodTruckLikeId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 찜 식별키</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.foodTruckId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 식별키</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.isLiked</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">찜 여부</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2844,7 +2957,7 @@ Content-Length: 82
 <div class="sect2">
 <h3 id="create-menu"><a class="link" href="#create-menu">메뉴 등록</a></h3>
 <div class="sect3">
-<h4 id="_http_request_17"><a class="link" href="#_http_request_17">HTTP Request</a></h4>
+<h4 id="_http_request_18"><a class="link" href="#_http_request_18">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /menu HTTP/1.1
@@ -2928,7 +3041,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_17"><a class="link" href="#_http_response_17">HTTP Response</a></h4>
+<h4 id="_http_response_18"><a class="link" href="#_http_response_18">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
@@ -3015,7 +3128,7 @@ Content-Length: 321
 <div class="sect2">
 <h3 id="search-menu"><a class="link" href="#search-menu">메뉴 목록 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_18"><a class="link" href="#_http_request_18">HTTP Request</a></h4>
+<h4 id="_http_request_19"><a class="link" href="#_http_request_19">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /menu?foodTruckId=1&amp;lastMenuId= HTTP/1.1
@@ -3048,7 +3161,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_18"><a class="link" href="#_http_response_18">HTTP Response</a></h4>
+<h4 id="_http_response_19"><a class="link" href="#_http_response_19">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -3161,7 +3274,7 @@ Content-Length: 652
 <div class="sect2">
 <h3 id="search-menu-detail"><a class="link" href="#search-menu-detail">메뉴 상세 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_19"><a class="link" href="#_http_request_19">HTTP Request</a></h4>
+<h4 id="_http_request_20"><a class="link" href="#_http_request_20">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /menu/1 HTTP/1.1
@@ -3191,7 +3304,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_19"><a class="link" href="#_http_response_19">HTTP Response</a></h4>
+<h4 id="_http_response_20"><a class="link" href="#_http_response_20">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -3320,7 +3433,7 @@ Content-Length: 635
 <div class="sect2">
 <h3 id="edit-menu"><a class="link" href="#edit-menu">메뉴 수정</a></h3>
 <div class="sect3">
-<h4 id="_http_request_20"><a class="link" href="#_http_request_20">HTTP Request</a></h4>
+<h4 id="_http_request_21"><a class="link" href="#_http_request_21">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /menu/1 HTTP/1.1
@@ -3403,7 +3516,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_20"><a class="link" href="#_http_response_20">HTTP Response</a></h4>
+<h4 id="_http_response_21"><a class="link" href="#_http_response_21">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -3459,7 +3572,7 @@ Content-Length: 81
 <div class="sect2">
 <h3 id="delete-menu"><a class="link" href="#delete-menu">메뉴 삭제</a></h3>
 <div class="sect3">
-<h4 id="_http_request_21"><a class="link" href="#_http_request_21">HTTP Request</a></h4>
+<h4 id="_http_request_22"><a class="link" href="#_http_request_22">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /menu/1 HTTP/1.1
@@ -3488,7 +3601,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_21"><a class="link" href="#_http_response_21">HTTP Response</a></h4>
+<h4 id="_http_response_22"><a class="link" href="#_http_response_22">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
@@ -3544,7 +3657,7 @@ Content-Length: 82
 <div class="sect2">
 <h3 id="create-menu-option"><a class="link" href="#create-menu-option">메뉴 옵션 등록</a></h3>
 <div class="sect3">
-<h4 id="_http_request_22"><a class="link" href="#_http_request_22">HTTP Request</a></h4>
+<h4 id="_http_request_23"><a class="link" href="#_http_request_23">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /menu/1/option HTTP/1.1
@@ -3593,7 +3706,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_22"><a class="link" href="#_http_response_22">HTTP Response</a></h4>
+<h4 id="_http_response_23"><a class="link" href="#_http_response_23">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
@@ -3674,7 +3787,7 @@ Content-Length: 222
 <div class="sect2">
 <h3 id="delete-menu-option"><a class="link" href="#delete-menu-option">메뉴 옵션 삭제</a></h3>
 <div class="sect3">
-<h4 id="_http_request_23"><a class="link" href="#_http_request_23">HTTP Request</a></h4>
+<h4 id="_http_request_24"><a class="link" href="#_http_request_24">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /menu/option/1 HTTP/1.1
@@ -3703,7 +3816,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_23"><a class="link" href="#_http_response_23">HTTP Response</a></h4>
+<h4 id="_http_response_24"><a class="link" href="#_http_response_24">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found

@@ -1,23 +1,18 @@
 package com.boyworld.carrot.api.controller.schedule.response;
 
+import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class ScheduleResponse {
 
-    private Long scheduleId;
-    private String address;
-    private String days;
-    private String startTime;
-    private String endTime;
+    private List<ScheduleDto> schedules;
 
     @Builder
-    public ScheduleResponse(Long scheduleId, String address, String days, String startTime, String endTime) {
-        this.scheduleId = scheduleId;
-        this.address = address;
-        this.days = days;
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public ScheduleResponse(List<ScheduleDto> schedules) {
+        this.schedules = schedules;
     }
 }

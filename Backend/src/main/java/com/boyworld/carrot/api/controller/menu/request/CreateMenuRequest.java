@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 @NoArgsConstructor
 public class CreateMenuRequest {
@@ -13,13 +16,16 @@ public class CreateMenuRequest {
     private String menuName;
     private Integer price;
     private String description;
+    private List<CreateMenuOptionRequest> menuOptions;
 
     @Builder
-    public CreateMenuRequest(Long foodTruckId, String menuName, Integer price, String description) {
+    public CreateMenuRequest(Long foodTruckId, String menuName, Integer price, String description,
+                             List<CreateMenuOptionRequest> menuOptions) {
         this.foodTruckId = foodTruckId;
         this.menuName = menuName;
         this.price = price;
         this.description = description;
+        this.menuOptions = menuOptions;
     }
 
     public CreateMenuDto toCreateMenuDto() {
@@ -28,6 +34,9 @@ public class CreateMenuRequest {
                 .menuName(this.menuName)
                 .price(this.price)
                 .description(this.description)
+                .menuOptionDtos(this.menuOptions.stream()
+                        .map(CreateMenuOptionRequest::toCreateMenuOptionDto)
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

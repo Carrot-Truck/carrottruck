@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.service.member;
 
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.service.member.dto.LoginDto;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
@@ -40,11 +41,11 @@ class AuthServiceTest extends IntegrationTestSupport {
     @Test
     void loginSuccess() {
         // given
+        LoginDto dto = createLoginDto("CLIENT", "ssafy1234");
         Member member = createMember(Role.CLIENT);
 
         // when
-        String password = "ssafy1234";
-        TokenInfo tokenInfo = authService.login(member.getEmail(), password, member.getRole().toString());
+        TokenInfo tokenInfo = authService.login(dto, Role.CLIENT.toString());
         log.debug("tokenInfo={}", tokenInfo);
 
         // then
@@ -55,11 +56,12 @@ class AuthServiceTest extends IntegrationTestSupport {
     @Test
     void loginWithWrongPassword() {
         // given
+        LoginDto dto = createLoginDto("CLIENT", "ssafy123411");
         Member member = createMember(Role.CLIENT);
 
         // when // then
         String password = "ssafy123411";
-        assertThatThrownBy(() -> authService.login(member.getEmail(), password, member.getRole().toString()))
+        assertThatThrownBy(() -> authService.login(dto, Role.CLIENT.toString()))
                 .isInstanceOf(BadCredentialsException.class);
     }
 
@@ -67,12 +69,11 @@ class AuthServiceTest extends IntegrationTestSupport {
     @Test
     void loginWithWrongRole() {
         // given
+        LoginDto dto = createLoginDto("CLIENT", "ssafy1234");
         Member member = createMember(Role.VENDOR);
 
         // when // then
-        String password = "ssafy1234";
-        String role = "CLIENT";
-        assertThatThrownBy(() -> authService.login(member.getEmail(), password, role))
+        assertThatThrownBy(() -> authService.login(dto, "VENDOR"))
                 .isInstanceOf(InvalidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }
@@ -88,5 +89,13 @@ class AuthServiceTest extends IntegrationTestSupport {
                 .active(true)
                 .build();
         return memberRepository.save(member);
+    }
+
+    private LoginDto createLoginDto(String role, String password) {
+        return LoginDto.builder()
+                .email("ssafy@ssafy.com")
+                .password(password)
+                .role(role)
+                .build();
     }
 }

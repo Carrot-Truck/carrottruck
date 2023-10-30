@@ -97,4 +97,19 @@ public class Member extends TimeBaseEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    // == business logic == //
+
+    /**
+     * 회원 정보 변경
+     *
+     * @param name 변경할 이름
+     * @param nickname 변경할 닉네임
+     * @param phoneNumber 변경할 전화번호
+     */
+    public void editMemberInfo(String name, String nickname, String phoneNumber) {
+        this.name = name;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+    }
 }

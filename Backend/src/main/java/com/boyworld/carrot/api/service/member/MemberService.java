@@ -1,6 +1,9 @@
 package com.boyworld.carrot.api.service.member;
 
+import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
+import com.boyworld.carrot.api.controller.member.response.VendorResponse;
+import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
 import com.boyworld.carrot.api.service.member.error.DuplicateException;
 import com.boyworld.carrot.domain.member.Member;
@@ -11,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
 
 /**
  * 회원 서비스
@@ -67,6 +72,38 @@ public class MemberService {
         String encryptedPwd = passwordEncoder.encode(dto.getPassword());
         Member member = dto.toEntity(encryptedPwd);
         return memberRepository.save(member);
+    }
+
+    /**
+     * 일반 사용자 정보 수정
+     *
+     * @param dto 수정할 회원 정보
+     * @return 수정된 회원 정보
+     * @throws NoSuchElementException 이메일에 해당하는 회원이 존재하지 않을 경우
+     */
+    public ClientResponse editClient(EditMemberDto dto) {
+        Member findMember = memberRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+
+        findMember.editMemberInfo(dto.getName(), dto.getNickname(), dto.getPhoneNumber());
+
+        return ClientResponse.of(findMember);
+    }
+
+    /**
+     * 사업자 정보 수정
+     *
+     * @param dto 수정할 회원 정보
+     * @return 수정된 회원 정보
+     * @throws NoSuchElementException 이메일에 해당하는 사업자가 존재하지 않을 경우
+     */
+    public VendorResponse editVendor(EditMemberDto dto) {
+        Member findMember = memberRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+
+        findMember.editMemberInfo(dto.getName(), dto.getNickname(), dto.getPhoneNumber());
+
+        return memberQueryRepository.getVendorInfoByEmail(findMember.getEmail());
     }
 
     /**

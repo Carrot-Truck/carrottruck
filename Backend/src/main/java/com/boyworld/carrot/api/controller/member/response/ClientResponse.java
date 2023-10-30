@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.controller.member.response;
 
+import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import lombok.Builder;
 import lombok.Data;
@@ -24,5 +25,15 @@ public class ClientResponse {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.role = role.toString();
+    }
+
+    public static ClientResponse of(Member member) {
+        return ClientResponse.builder()
+                .name(member.getName())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .phoneNumber(member.getPhoneNumber())
+                .role(member.getRole())
+                .build();
     }
 }

@@ -40,7 +40,6 @@ public class AuthControllerDocsTest extends RestDocsSupport {
         LoginRequest request = LoginRequest.builder()
                 .email("ssafy@ssafy.com")
                 .password("ssafy1234")
-                .role("CLIENT")
                 .build();
 
         TokenInfo tokenInfo = TokenInfo.builder()
@@ -66,9 +65,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("email").type(JsonFieldType.STRING)
                                         .description("이메일"),
                                 fieldWithPath("password").type(JsonFieldType.STRING)
-                                        .description("비밀번호"),
-                                fieldWithPath("role").type(JsonFieldType.STRING)
-                                        .description("권한")
+                                        .description("비밀번호")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -95,7 +92,6 @@ public class AuthControllerDocsTest extends RestDocsSupport {
         LoginRequest request = LoginRequest.builder()
                 .email("ssafy@ssafy.com")
                 .password("ssafy1234")
-                .role("VENDOR")
                 .build();
 
         TokenInfo tokenInfo = TokenInfo.builder()
@@ -121,9 +117,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("email").type(JsonFieldType.STRING)
                                         .description("이메일"),
                                 fieldWithPath("password").type(JsonFieldType.STRING)
-                                        .description("비밀번호"),
-                                fieldWithPath("role").type(JsonFieldType.STRING)
-                                        .description("권한")
+                                        .description("비밀번호")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -149,12 +143,11 @@ public class AuthControllerDocsTest extends RestDocsSupport {
     void checkEmail() throws Exception {
         CheckEmailRequest request = CheckEmailRequest.builder()
                 .email("ssafy@ssafy.com")
-                .role("CLIENT")
                 .build();
 
         Boolean result = false;
 
-        given(authService.checkEmail(anyString(), anyString()))
+        given(authService.checkEmail(anyString()))
                 .willReturn(result);
 
         mockMvc.perform(
@@ -169,9 +162,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("email").type(JsonFieldType.STRING)
-                                        .description("이메일"),
-                                fieldWithPath("role").type(JsonFieldType.STRING)
-                                        .description("권한")
+                                        .description("이메일")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

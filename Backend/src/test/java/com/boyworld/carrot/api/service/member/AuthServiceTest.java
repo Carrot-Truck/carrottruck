@@ -1,7 +1,6 @@
 package com.boyworld.carrot.api.service.member;
 
 import com.boyworld.carrot.IntegrationTestSupport;
-import com.boyworld.carrot.api.controller.member.request.CheckEmailRequest;
 import com.boyworld.carrot.api.service.member.dto.LoginDto;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.member.Member;
@@ -42,7 +41,7 @@ class AuthServiceTest extends IntegrationTestSupport {
     @Test
     void loginSuccess() {
         // given
-        LoginDto dto = createLoginDto("CLIENT", "ssafy1234");
+        LoginDto dto = createLoginDto("ssafy1234");
         Member member = createMember(Role.CLIENT);
 
         // when
@@ -57,21 +56,20 @@ class AuthServiceTest extends IntegrationTestSupport {
     @Test
     void loginWithWrongPassword() {
         // given
-        LoginDto dto = createLoginDto("CLIENT", "ssafy123411");
+        LoginDto dto = createLoginDto("ssafy123411");
         Member member = createMember(Role.CLIENT);
 
         // when // then
-        String password = "ssafy123411";
         assertThatThrownBy(() -> authService.login(dto, Role.CLIENT.toString()))
                 .isInstanceOf(BadCredentialsException.class);
     }
 
-    @DisplayName("사용자와 사업자 간의 교차 로그인은 불가능하다.")
+    @DisplayName("사용자는 사업자로 로그인 할 수 없다.")
     @Test
     void loginWithWrongRole() {
         // given
-        LoginDto dto = createLoginDto("CLIENT", "ssafy1234");
-        Member member = createMember(Role.VENDOR);
+        LoginDto dto = createLoginDto("ssafy1234");
+        Member member = createMember(Role.CLIENT);
 
         // when // then
         assertThatThrownBy(() -> authService.login(dto, "VENDOR"))
@@ -89,7 +87,7 @@ class AuthServiceTest extends IntegrationTestSupport {
         Member member = createMember(Role.CLIENT);
 
         // when
-        Boolean result = authService.checkEmail(email, role);
+        Boolean result = authService.checkEmail(email);
         assertThat(result).isTrue();
     }
 
@@ -103,7 +101,7 @@ class AuthServiceTest extends IntegrationTestSupport {
         Member member = createMember(Role.CLIENT);
 
         // when
-        Boolean result = authService.checkEmail(email, role);
+        Boolean result = authService.checkEmail(email);
         assertThat(result).isFalse();
     }
 
@@ -120,11 +118,10 @@ class AuthServiceTest extends IntegrationTestSupport {
         return memberRepository.save(member);
     }
 
-    private LoginDto createLoginDto(String role, String password) {
+    private LoginDto createLoginDto(String password) {
         return LoginDto.builder()
                 .email("ssafy@ssafy.com")
                 .password(password)
-                .role(role)
                 .build();
     }
 }

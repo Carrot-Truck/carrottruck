@@ -55,12 +55,12 @@ class AccountServiceTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "CLIENT");
     }
 
-    @DisplayName("이메일에 해당하는 일반 사용자가 존재하지 않을 경우 예외가 발생한다.")
+    @DisplayName("이메일에 해당하는 회원이 존재하지 않을 경우 예외가 발생한다.")
     @Test
     void getNotExistClientInfo() {
         // given
         Member member = createMember(Role.VENDOR);
-        String email = "ssafy@ssafy.com";
+        String email = "ssafy@naver.com";
 
         // when // then
         assertThatThrownBy(() -> accountService.getClientInfo(email))

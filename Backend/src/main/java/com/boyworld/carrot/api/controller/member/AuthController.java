@@ -4,6 +4,7 @@ import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.member.request.CheckEmailRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
 import com.boyworld.carrot.api.service.member.AuthService;
+import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.security.TokenInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,29 @@ public class AuthController {
      * @param request 로그인할 아이디, 비밀번호
      * @return 로그인한 회원정보
      */
-    @PostMapping("/login")
-    public ApiResponse<TokenInfo> login(@Valid @RequestBody LoginRequest request) {
-        log.debug("AuthController#login called");
+    @PostMapping("/login/client")
+    public ApiResponse<TokenInfo> loginClient(@Valid @RequestBody LoginRequest request) {
+        log.debug("AuthController#loginClient called");
         log.debug("LoginRequest={}", request);
 
-        TokenInfo tokenInfo = authService.login(request.getEmail(), request.getPassword(), request.getRole());
+        TokenInfo tokenInfo = authService.login(request.toLoginDto(), Role.CLIENT.toString());
+        log.debug("TokenInfo={}", tokenInfo);
+
+        return ApiResponse.ok(tokenInfo);
+    }
+
+    /**
+     * 사업자 로그인 API
+     *
+     * @param request 로그인할 아이디, 비밀번호
+     * @return 로그인한 회원정보
+     */
+    @PostMapping("/login/vendor")
+    public ApiResponse<TokenInfo> loginVendor(@Valid @RequestBody LoginRequest request) {
+        log.debug("AuthController#loginVendor called");
+        log.debug("LoginRequest={}", request);
+
+        TokenInfo tokenInfo = authService.login(request.toLoginDto(), Role.VENDOR.toString());
         log.debug("TokenInfo={}", tokenInfo);
 
         return ApiResponse.ok(tokenInfo);

@@ -13,7 +13,7 @@ interface IFoodTruckMenuItemProps {
 function FoodTruckMenuItem(props: IFoodTruckMenuItemProps) {
   const menuName = '달콤짭짤한 밥도둑 된장 삼겹 구이';
   const menuDiscription = '동현 된장삼겹의 시그니쳐. 오직 된장 삽겹살 구이만!';
-  const menuPrice = 15000;
+  const menuPrice = 8900;
 
   return (
     <FoodTruckMenuItemWrapper>

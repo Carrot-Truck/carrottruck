@@ -29,7 +29,7 @@ public class Member extends TimeBaseEntity implements UserDetails {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(length = 100, nullable = false)
     private String email;
 
     @Column(length = 100, nullable = false)

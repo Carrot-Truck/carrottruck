@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.boyworld.carrot.api.controller.review.ReviewController;
 import com.boyworld.carrot.api.controller.review.request.CommentRequest;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
+import com.boyworld.carrot.api.controller.review.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.api.service.review.ReviewService;
@@ -26,6 +27,7 @@ import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
 import com.boyworld.carrot.api.service.review.dto.ReviewFoodTruckDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
+import com.boyworld.carrot.domain.member.Member;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -241,7 +243,45 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
                             .description("평균 리뷰")
                     ))
             );
-
     }
 
+    @DisplayName("리뷰 삭제 API")
+    @Test
+    @WithMockUser(roles = "CLIENT")
+    void withdrawal() throws  Exception{
+        Boolean result = true;
+        WithdrawalRequest withdrawalRequest = WithdrawalRequest.builder()
+            .reviewId(1L)
+            .email("ssafy@ssafy.com")
+            .build();
+
+        given(reviewService.withdrawal(withdrawalRequest.getEmail(), withdrawalRequest.getReviewId()))
+            .willReturn(result);
+
+        mockMvc.perform(
+          post("/review/withdrawal")
+              .content(objectMapper.writeValueAsString(withdrawalRequest))
+              .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(print())
+            .andExpect(status().isOk())
+            .andDo(
+                document("withdrawal-review",
+                    preprocessResponse(prettyPrint()),
+                    requestFields(
+                        fieldWithPath("reviewId").type(JsonFieldType.NUMBER).description("리뷰 ID"),
+                        fieldWithPath("email").type(JsonFieldType.STRING).description("계정 Email")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                            .description("코드"),
+                        fieldWithPath("status").type(JsonFieldType.STRING)
+                            .description("상태"),
+                        fieldWithPath("message").type(JsonFieldType.STRING)
+                            .description("메시지"),
+                        fieldWithPath("data").type(JsonFieldType.BOOLEAN)
+                            .description("삭제 성공 여부")
+                    )
+                )
+            );
+    }
 }

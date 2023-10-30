@@ -31,7 +31,7 @@ include::{snippets}/get-my-review/http-response.adoc[]
 include::{snippets}/get-my-review/response-fields.adoc[]
 
 [[get-food-truck-review]]
-=== 내 리뷰 조회
+=== 푸드트럭 리뷰 조회
 
 ==== HTTP Request
 include::{snippets}/get-food-truck-review/http-request.adoc[]
@@ -39,3 +39,14 @@ include::{snippets}/get-food-truck-review/http-request.adoc[]
 ==== HTTP Response
 include::{snippets}/get-food-truck-review/http-response.adoc[]
 include::{snippets}/get-food-truck-review/response-fields.adoc[]
+
+[[withdrawal-review]]
+=== 리뷰 삭제
+
+==== HTTP Request
+include::{snippets}/withdrawal-review/http-request.adoc[]
+include::{snippets}/withdrawal-review/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/withdrawal-review/http-response.adoc[]
+include::{snippets}/withdrawal-review/response-fields.adoc[]

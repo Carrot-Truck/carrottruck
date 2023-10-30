@@ -1,16 +1,19 @@
 package com.boyworld.carrot.api.service.member;
 
+import com.boyworld.carrot.api.service.member.dto.LoginDto;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.member.repository.MemberQueryRepository;
 import com.boyworld.carrot.security.JwtTokenProvider;
 import com.boyworld.carrot.security.TokenInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * 인증 서비스
@@ -30,15 +33,18 @@ public class AuthService {
     /**
      * 로그인
      *
-     * @param email    로그인 할 이메일
-     * @param password 로그인 할 비밀번호
-     * @param role     로그인 할 사용자 권한
+     * @param dto  로그인 정보
+     * @param role 로그인 할 사용자 권한
      * @return 로그인한 회원 정보
      */
-    public TokenInfo login(String email, String password, String role) {
-        checkValidAccess(email, role);
+    public TokenInfo login(LoginDto dto, String role) {
+        log.debug("AuthService#login called");
+        log.debug("LoginDto={}", dto);
+        log.debug("role={}", role);
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+        checkValidAccess(dto, role);
+
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
         Authentication authenticate = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         return jwtTokenProvider.generateToken(authenticate);
     }
@@ -54,15 +60,15 @@ public class AuthService {
     }
 
     /**
-     * 로그인하려는 email 와 role 이 존재하는지 확인
+     * 로그인하려는 role 과 매개변수 role 이 일치하는지 확인
      *
-     * @param email 로그인 할 이메일
+     * @param dto 로그인 정보
      * @param role  로그인 할 사용자 권한
-     * @throws InvalidAccessException 해당 이메일과 역할을 가진 회원이 존재하지 않을 경우
+     * @throws InvalidAccessException 두 역할이 일치하지 않는 경우
      */
-    private void checkValidAccess(String email, String role) {
-        Boolean validAccess = memberQueryRepository.isExistEmail(email, role);
-        if (!validAccess) {
+    private void checkValidAccess(LoginDto dto, String role) {
+        boolean result = StringUtils.hasText(role) && dto.getRole().equals(role);
+        if (!result) {
             throw new InvalidAccessException("잘못된 접근입니다.");
         }
     }

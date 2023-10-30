@@ -3,9 +3,13 @@ package com.boyworld.carrot.api.service.member;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
 import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
+import com.boyworld.carrot.security.JwtTokenProvider;
 import com.boyworld.carrot.security.TokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,18 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Slf4j
 @RequiredArgsConstructor
-public class MemberAccountService {
-
-    /**
-     * 로그인
-     *
-     * @param email    로그인 할 이메일
-     * @param password 로그인 할 비밀번호
-     * @return 로그인한 회원 정보
-     */
-    public TokenInfo login(String email, String password) {
-        return null;
-    }
+public class AccountService {
 
     /**
      * 로그인 중인 일반 사용자 회원 정보 조회

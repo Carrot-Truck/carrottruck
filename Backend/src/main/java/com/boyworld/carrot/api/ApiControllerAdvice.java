@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api;
 
+import com.boyworld.carrot.api.service.member.error.DuplicateException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -51,4 +52,13 @@ public class ApiControllerAdvice {
         );
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateException.class)
+    public ApiResponse<Object> duplicateException(DuplicateException e) {
+        return ApiResponse.of(
+                HttpStatus.BAD_REQUEST,
+                e.getMessage(),
+                null
+        );
+    }
 }

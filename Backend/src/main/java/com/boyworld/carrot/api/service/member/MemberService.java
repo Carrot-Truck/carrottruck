@@ -82,8 +82,7 @@ public class MemberService {
      * @throws NoSuchElementException 이메일에 해당하는 회원이 존재하지 않을 경우
      */
     public ClientResponse editClient(EditMemberDto dto) {
-        Member findMember = memberRepository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        Member findMember = findMemberByEmail(dto.getEmail());
 
         findMember.editMemberInfo(dto.getName(), dto.getNickname(), dto.getPhoneNumber());
 
@@ -98,8 +97,7 @@ public class MemberService {
      * @throws NoSuchElementException 이메일에 해당하는 사업자가 존재하지 않을 경우
      */
     public VendorResponse editVendor(EditMemberDto dto) {
-        Member findMember = memberRepository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        Member findMember = findMemberByEmail(dto.getEmail());
 
         findMember.editMemberInfo(dto.getName(), dto.getNickname(), dto.getPhoneNumber());
 
@@ -114,6 +112,35 @@ public class MemberService {
      * @return 탈퇴여부
      */
     public Boolean withdrawal(String email, String password) {
-        return true;
+        Member findMember = findMemberByEmail(email);
+
+        if (isMatchPassword(password, findMember.getEncryptedPwd())) {
+            findMember.deActivate();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 이메일로 회원 조회
+     *
+     * @param email 찾을 회원 이메일
+     * @return 이메일에 해당하는 회원
+     * @throws NoSuchElementException 이메일에 해당하는 회원이 없는 경우
+     */
+    private Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+    }
+
+    /**
+     * 비밀번호 일치 여부
+     *
+     * @param password 입력받은 비밀번호
+     * @param encryptedPwd 저장된 비밀번호
+     * @return 비밀번호 일치 여부
+     */
+    private boolean isMatchPassword(String password, String encryptedPwd) {
+        return passwordEncoder.matches(password, encryptedPwd);
     }
 }

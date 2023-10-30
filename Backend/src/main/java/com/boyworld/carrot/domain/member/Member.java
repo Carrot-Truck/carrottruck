@@ -112,4 +112,11 @@ public class Member extends TimeBaseEntity implements UserDetails {
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
     }
+
+    /**
+     * 회원 탈퇴
+     */
+    public void deActivate() {
+        this.active = false;
+    }
 }

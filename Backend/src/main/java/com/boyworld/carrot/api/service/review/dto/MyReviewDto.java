@@ -1,6 +1,5 @@
 package com.boyworld.carrot.api.service.review.dto;
 
-import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.review.Review;
 import java.time.LocalDateTime;
 import lombok.Builder;

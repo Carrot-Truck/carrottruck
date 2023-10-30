@@ -26,7 +26,6 @@ import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
 import com.boyworld.carrot.api.service.review.dto.ReviewFoodTruckDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
-import com.boyworld.carrot.domain.review.Review;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

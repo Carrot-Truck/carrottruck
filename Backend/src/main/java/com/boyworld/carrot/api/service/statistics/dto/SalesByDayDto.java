@@ -1,8 +1,18 @@
 package com.boyworld.carrot.api.service.statistics.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 public class SalesByDayDto {
-    // 요일별 매출통계
+
+    private String day;
+
+    private SalesDto salesDto;
+
+    @Builder
+    public SalesByDayDto(String day, SalesDto salesDto) {
+        this.day = day;
+        this.salesDto = salesDto;
+    }
 }

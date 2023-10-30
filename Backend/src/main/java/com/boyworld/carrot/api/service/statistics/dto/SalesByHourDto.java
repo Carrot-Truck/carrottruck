@@ -1,8 +1,18 @@
 package com.boyworld.carrot.api.service.statistics.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 public class SalesByHourDto {
-    // 시간대별 매출통계
+
+    private String startHour;
+
+    private SalesDto salesDto;
+
+    @Builder
+    public SalesByHourDto(String startHour, SalesDto salesDto) {
+        this.startHour = startHour;
+        this.salesDto = salesDto;
+    }
 }

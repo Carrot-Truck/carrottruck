@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.service.member;
 
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.controller.member.request.CheckEmailRequest;
 import com.boyworld.carrot.api.service.member.dto.LoginDto;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.member.Member;
@@ -76,6 +77,34 @@ class AuthServiceTest extends IntegrationTestSupport {
         assertThatThrownBy(() -> authService.login(dto, "VENDOR"))
                 .isInstanceOf(InvalidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
+    }
+
+    @DisplayName("이메일 중복 체크 시 존재하는 이메일일 경우 True 가 반환된다.")
+    @Test
+    void checkEmailWithTrue() {
+        // given
+        String email = "ssafy@ssafy.com";
+        String role = "CLIENT";
+
+        Member member = createMember(Role.CLIENT);
+
+        // when
+        Boolean result = authService.checkEmail(email, role);
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("이메일 중복 체크 시 존재하는 이메일이 없는 경우 False 가 반환된다.")
+    @Test
+    void checkEmailWithFalse() {
+        // given
+        String email = "ssafy@naver.com";
+        String role = "CLIENT";
+
+        Member member = createMember(Role.CLIENT);
+
+        // when
+        Boolean result = authService.checkEmail(email, role);
+        assertThat(result).isFalse();
     }
 
     private Member createMember(Role role) {

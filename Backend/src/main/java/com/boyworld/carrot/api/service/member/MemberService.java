@@ -124,9 +124,9 @@ public class MemberService {
 
     /**
      * 회원 주소 등록
-     * 
+     *
      * @param address 등록할 주소
-     * @param email 현재 로그인 중인 회원 이메일
+     * @param email   현재 로그인 중인 회원 이메일
      * @return 등록된 회원 주소 정보
      */
     public MemberAddressDetailResponse createMemberAddress(String address, String email) {
@@ -146,6 +146,17 @@ public class MemberService {
     }
 
     /**
+     * 회원 주소 삭제
+     *
+     * @param memberAddressId 삭제할 회원 주소
+     * @param email           로그인 중인 회원 이메일
+     * @return true: 삭제 완료 / false: 삭제 실패
+     */
+    public Boolean deleteMemberAddress(Long memberAddressId, String email) {
+        return false;
+    }
+
+    /**
      * 이메일로 회원 조회
      *
      * @param email 찾을 회원 이메일
@@ -160,7 +171,7 @@ public class MemberService {
     /**
      * 비밀번호 일치 여부
      *
-     * @param password 입력받은 비밀번호
+     * @param password     입력받은 비밀번호
      * @param encryptedPwd 저장된 비밀번호
      * @return 비밀번호 일치 여부
      */

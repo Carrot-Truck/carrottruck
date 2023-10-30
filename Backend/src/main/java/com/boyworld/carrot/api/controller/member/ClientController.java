@@ -164,4 +164,24 @@ public class ClientController {
 
         return ApiResponse.ok(response);
     }
+
+    /**
+     * 회원 주소 삭제
+     *
+     * @param memberAddressId 삭제할 회원 주소
+     * @return true: 삭제 완료 / false: 삭제 실패
+     */
+    @DeleteMapping("/address/{memberAddressId}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ApiResponse<Boolean> deleteMemberAddress(@PathVariable Long memberAddressId) {
+        log.debug("ClientController#deleteMemberAddress called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Boolean result = memberService.deleteMemberAddress(memberAddressId, email);
+        log.debug("result={}", result);
+
+        return ApiResponse.found(result);
+    }
 }

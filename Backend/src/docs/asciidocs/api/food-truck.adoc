@@ -67,3 +67,14 @@ include::{snippets}/delete-food-truck/path-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/delete-food-truck/http-response.adoc[]
 include::{snippets}/delete-food-truck/response-fields.adoc[]
+
+[[food-truck-like]]
+=== 푸드트럭 찜
+
+==== HTTP Request
+include::{snippets}/food-truck-like/http-request.adoc[]
+include::{snippets}/food-truck-like/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/food-truck-like/http-response.adoc[]
+include::{snippets}/food-truck-like/response-fields.adoc[]

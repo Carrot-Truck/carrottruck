@@ -82,7 +82,8 @@ public class MemberQueryRepository {
                         member.role
                 ))
                 .from(member)
-                .join(vendorInfo.member, member)
+                .join(vendorInfo.member)
+                .on(vendorInfo.member.eq(member))
                 .where(
                         isEqualEmail(email),
                         isEqualRole(Role.VENDOR.toString())

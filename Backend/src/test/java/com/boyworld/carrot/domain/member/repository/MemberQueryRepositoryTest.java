@@ -2,8 +2,10 @@ package com.boyworld.carrot.domain.member.repository;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
+import com.boyworld.carrot.api.controller.member.response.VendorResponse;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
+import com.boyworld.carrot.domain.member.VendorInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,9 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberQueryRepository memberQueryRepository;
+
+    @Autowired
+    private VendorInfoRepository vendorInfoRepository;
 
     @DisplayName("이미 등록된 이메일이라면 true 를 반환한다.")
     @Test
@@ -75,6 +80,20 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(response).isNull();
     }
 
+    @DisplayName("사업자 정보를 이메일로 조회한다.")
+    @Test
+    void getExistVendorInfo() {
+        Member member = createMember();
+        VendorInfo vendorInfo = createVendorInfo(member);
+
+        String email = "ssafy@ssafy.com";
+        VendorResponse response = memberQueryRepository.getVendorInfoByEmail(email);
+
+        assertThat(response).isNotNull();
+        assertThat(response).extracting("name", "nickname", "email", "phoneNumber", "role", "businessNumber")
+                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "CLIENT", "123456789");
+    }
+
     private Member createMember() {
         Member member = Member.builder()
                 .email("ssafy@ssafy.com")
@@ -85,5 +104,17 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
                 .active(true)
                 .build();
         return memberRepository.save(member);
+    }
+
+    private VendorInfo createVendorInfo(Member member) {
+        VendorInfo vendorInfo = VendorInfo.builder()
+                .tradeName("상호명")
+                .vendorName(member.getName())
+                .businessNumber("123456789")
+                .phoneNumber(member.getPhoneNumber())
+                .member(member)
+                .active(true)
+                .build();
+        return vendorInfoRepository.save(vendorInfo);
     }
 }

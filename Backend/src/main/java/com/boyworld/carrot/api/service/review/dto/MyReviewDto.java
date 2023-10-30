@@ -1,6 +1,5 @@
 package com.boyworld.carrot.api.service.review.dto;
 
-import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.review.Review;
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -16,7 +15,7 @@ public class MyReviewDto {
 
     private Long reviewId;
 
-    private FoodTruck foodTruck;
+    private ReviewFoodTruckDto reviewFoodTruckDto;
 
     private int grade;
 
@@ -25,9 +24,9 @@ public class MyReviewDto {
     private String content;
 
     @Builder
-    private MyReviewDto(Long reviewId, FoodTruck foodTruck, int grade, LocalDateTime createdDate, String content) {
+    private MyReviewDto(Long reviewId, ReviewFoodTruckDto reviewFoodTruckDto, int grade, LocalDateTime createdDate, String content) {
         this.reviewId = reviewId;
-        this.foodTruck = foodTruck;
+        this.reviewFoodTruckDto = reviewFoodTruckDto;
         this.grade = grade;
         this.content = content;
         this.createdDate = createdDate;
@@ -36,7 +35,10 @@ public class MyReviewDto {
     public static MyReviewDto of(Review review){
         return MyReviewDto.builder()
             .reviewId(review.getId())
-            .foodTruck(review.getFoodTruck())
+            .reviewFoodTruckDto(ReviewFoodTruckDto.builder()
+                .foodTruckId(review.getFoodTruck().getId())
+                .foodTruckName(review.getFoodTruck().getName())
+                .build())
             .grade(review.getGrade())
             .createdDate(review.getCreatedDate())
             .content(review.getContent())

@@ -1,0 +1,63 @@
+[[create-review]]
+=== 리뷰 등록
+
+==== HTTP Request
+include::{snippets}/create-review/http-request.adoc[]
+include::{snippets}/create-review/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-review/http-response.adoc[]
+include::{snippets}/create-review/response-fields.adoc[]
+
+[[create-comment]]
+=== 리뷰 답글 등록
+
+==== HTTP Request
+include::{snippets}/create-comment/http-request.adoc[]
+include::{snippets}/create-comment/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-comment/http-response.adoc[]
+include::{snippets}/create-comment/response-fields.adoc[]
+
+[[get-my-review]]
+=== 내 리뷰 조회
+
+==== HTTP Request
+include::{snippets}/get-my-review/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-my-review/http-response.adoc[]
+include::{snippets}/get-my-review/response-fields.adoc[]
+
+[[get-food-truck-review]]
+=== 푸드트럭 리뷰 조회
+
+==== HTTP Request
+include::{snippets}/get-food-truck-review/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-food-truck-review/http-response.adoc[]
+include::{snippets}/get-food-truck-review/response-fields.adoc[]
+
+[[withdrawal-review]]
+=== 리뷰 삭제
+
+==== HTTP Request
+include::{snippets}/withdrawal-review/http-request.adoc[]
+include::{snippets}/withdrawal-review/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/withdrawal-review/http-response.adoc[]
+include::{snippets}/withdrawal-review/response-fields.adoc[]
+
+[[report-review]]
+=== 리뷰 신고
+
+==== HTTP Request
+include::{snippets}/report-review/http-request.adoc[]
+include::{snippets}/report-review/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/report-review/http-response.adoc[]
+include::{snippets}/report-review/response-fields.adoc[]

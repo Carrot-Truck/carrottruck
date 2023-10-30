@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.service.member;
 
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
 import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
@@ -119,6 +120,17 @@ public class MemberService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 회원 주소 등록
+     * 
+     * @param address 등록할 주소
+     * @param email 현재 로그인 중인 회원 이메일
+     * @return 등록된 회원 주소 정보
+     */
+    public MemberAddressResponse createMemberAddress(String address, String email) {
+        return null;
     }
 
     /**

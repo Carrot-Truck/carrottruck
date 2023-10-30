@@ -3,9 +3,11 @@ package com.boyworld.carrot.api.controller.member;
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.member.request.EditMemberRequest;
 import com.boyworld.carrot.api.controller.member.request.JoinRequest;
+import com.boyworld.carrot.api.controller.member.request.MemberAddressRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
 import com.boyworld.carrot.api.service.member.AccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
 import com.boyworld.carrot.security.SecurityUtil;
@@ -98,6 +100,26 @@ public class ClientController {
 
         ClientResponse response = memberService.editClient(request.toEditMemberDto(email));
         log.debug("ClientResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 회원 주소 등록 API
+     *
+     * @param request 등록할 주소
+     * @return 등록된 회원 주소 정보
+     */
+    @PostMapping("/address")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<MemberAddressResponse> createMemberAddress(@Valid @RequestBody MemberAddressRequest request) {
+        log.debug("ClientController#createMemberAddress called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        MemberAddressResponse response = memberService.createMemberAddress(request.getAddress(), email);
+        log.debug("MemberAddressResponse={}", response);
 
         return ApiResponse.ok(response);
     }

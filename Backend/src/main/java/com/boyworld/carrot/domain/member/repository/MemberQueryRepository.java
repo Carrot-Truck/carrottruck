@@ -28,23 +28,22 @@ public class MemberQueryRepository {
      * 이메일 중복 검사
      *
      * @param email 조회할 이메일
-     * @param role  조회할 권한
      * @return true: 중복일 경우 / false: 중복이 없을 경우
      */
-    public Boolean isExistEmail(String email, String role) {
+    public Boolean isExistEmail(String email) {
         Integer result = queryFactory
                 .selectOne()
                 .from(member)
                 .where(
                         isEqualEmail(email),
-                        isEqualRole(role)
+                        isActiveMember()
                 )
                 .fetchFirst();
         return result != null;
     }
 
     /**
-     * email 로 일반 사용자 정보 조회
+     * 이메일로 일반 사용자 정보 조회
      *
      * @param email 현재 로그인 중인 회원 이메일
      * @return email 에 해당하는 사용자 정보
@@ -61,7 +60,7 @@ public class MemberQueryRepository {
                 .from(member)
                 .where(
                         isEqualEmail(email),
-                        isEqualRole(Role.CLIENT.toString())
+                        isActiveMember()
                 )
                 .fetchOne();
     }
@@ -74,19 +73,19 @@ public class MemberQueryRepository {
      */
     public VendorResponse getVendorInfoByEmail(String email) {
         return queryFactory.select(Projections.constructor(VendorResponse.class,
-                        member.name,
-                        member.nickname,
-                        member.email,
-                        member.phoneNumber,
+                        vendorInfo.member.name,
+                        vendorInfo.member.nickname,
+                        vendorInfo.member.email,
+                        vendorInfo.member.phoneNumber,
                         vendorInfo.businessNumber,
-                        member.role
+                        vendorInfo.member.role
                 ))
-                .from(member)
-                .join(vendorInfo.member)
-                .on(vendorInfo.member.eq(member))
+                .from(vendorInfo)
+                .join(vendorInfo.member, member)
                 .where(
                         isEqualEmail(email),
-                        isEqualRole(Role.VENDOR.toString())
+                        isVendor(),
+                        isActiveMember()
                 )
                 .fetchOne();
     }
@@ -95,7 +94,11 @@ public class MemberQueryRepository {
         return hasText(email) ? member.email.eq(email) : null;
     }
 
-    private BooleanExpression isEqualRole(String role) {
-        return hasText(role) ? member.role.eq(Role.valueOf(role)) : null;
+    private BooleanExpression isVendor() {
+        return member.role.eq(Role.VENDOR);
+    }
+
+    private BooleanExpression isActiveMember() {
+        return member.active.eq(true);
     }
 }

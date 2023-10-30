@@ -210,7 +210,6 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                 .name("박동현")
                 .nickname("매미킴123")
                 .phoneNumber("010-1234-5678")
-                .role("VENDOR")
                 .build();
 
         VendorResponse response = VendorResponse.builder()
@@ -222,7 +221,7 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                 .role(Role.VENDOR)
                 .build();
 
-        given(accountService.editVendor(any(EditMemberDto.class)))
+        given(memberService.editVendor(any(EditMemberDto.class)))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -242,9 +241,7 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("nickname").type(JsonFieldType.STRING)
                                         .description("닉네임"),
                                 fieldWithPath("phoneNumber").type(JsonFieldType.STRING)
-                                        .description("전화번호"),
-                                fieldWithPath("role").type(JsonFieldType.STRING)
-                                        .description("역할")
+                                        .description("전화번호")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

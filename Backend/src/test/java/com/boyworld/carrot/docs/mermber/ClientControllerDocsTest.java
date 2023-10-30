@@ -28,8 +28,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -417,6 +416,40 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                                         .description("주소 식별키"),
                                 fieldWithPath("data.address").type(JsonFieldType.STRING)
                                         .description("주소")
+                        )
+                ));
+    }
+
+    @DisplayName("회원 주소 삭제 API")
+    @Test
+    @WithMockUser(roles = {"CLIENT", "VENDOR"})
+    void deleteMemberAddress() throws Exception {
+
+        given(memberService.deleteMemberAddress(anyLong(), anyString()))
+                .willReturn(true);
+
+        mockMvc.perform(
+                        delete("/member/client/address/{memberAddressId}", 1)
+                                .header("Authentication", "authentication")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isFound())
+                .andDo(document("delete-address",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("memberAddressId").description("삭제할 주소 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.BOOLEAN)
+                                        .description("삭제여부")
                         )
                 ));
     }

@@ -88,3 +88,16 @@ include::{snippets}/edit-address/request-fields.adoc[]
 
 include::{snippets}/edit-address/http-response.adoc[]
 include::{snippets}/edit-address/response-fields.adoc[]
+
+[[delete-address]]
+=== 사용자 주소 삭제
+
+==== HTTP Request
+
+include::{snippets}/delete-address/http-request.adoc[]
+include::{snippets}/delete-address/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/delete-address/http-response.adoc[]
+include::{snippets}/delete-address/response-fields.adoc[]

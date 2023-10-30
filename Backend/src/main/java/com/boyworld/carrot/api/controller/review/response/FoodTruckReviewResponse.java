@@ -10,7 +10,7 @@ public class FoodTruckReviewResponse {
 
     private List<FoodTruckReviewDto> foodTruckReviewDtoList;
 
-    private int averageGrade;
+    private float averageGrade;
 
     @Builder
     private FoodTruckReviewResponse(List<FoodTruckReviewDto> foodTruckReviewDtoList){

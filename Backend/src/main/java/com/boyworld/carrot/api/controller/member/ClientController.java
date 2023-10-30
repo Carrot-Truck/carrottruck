@@ -132,13 +132,13 @@ public class ClientController {
      * @return 회원 주소 목록
      */
     @GetMapping("/address")
-    public ApiResponse<MemberAddressResponse> getMemberAddresses(@RequestParam(required = false) Long lastMemberAddressId) {
+    public ApiResponse<MemberAddressResponse> getMemberAddresses(@RequestParam(required = false, defaultValue = "") String lastMemberAddressId) {
         log.debug("ClientController#getMemberAddresses called");
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        MemberAddressResponse response = accountService.getMemberAddresses(email);
+        MemberAddressResponse response = accountService.getMemberAddresses(email, lastMemberAddressId);
         log.debug("MemberAddressResponse={}", response);
 
         return ApiResponse.ok(response);

@@ -8,6 +8,7 @@ import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
 import com.boyworld.carrot.api.service.member.AccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
 import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
@@ -21,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -29,6 +32,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -306,6 +311,61 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.memberAddressId").type(JsonFieldType.NUMBER)
                                         .description("주소 식별키"),
                                 fieldWithPath("data.address").type(JsonFieldType.STRING)
+                                        .description("주소")
+                        )
+                ));
+    }
+
+    @DisplayName("일반 사용자 정보조회 API")
+    @Test
+    @WithMockUser(roles = {"CLIENT", "VENDOR"})
+    void getMemberAddresses() throws Exception {
+        MemberAddressDetailResponse memberAddress1 = MemberAddressDetailResponse.builder()
+                .memberAddressId(1L)
+                .address("광주 광산구 장덕로 5번길 16")
+                .build();
+
+        MemberAddressDetailResponse memberAddress2 = MemberAddressDetailResponse.builder()
+                .memberAddressId(2L)
+                .address("광주 광산구 풍영로 223번안길")
+                .build();
+
+        MemberAddressResponse response = MemberAddressResponse.builder()
+                .hasNext(false)
+                .memberAddresses(List.of(memberAddress1, memberAddress2))
+                        .build();
+
+        given(accountService.getMemberAddresses(anyString(), anyString()))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/member/client/address")
+                                .header("Authentication", "authentication")
+                                .param("lastMemberAddressId", "")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("search-address",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("lastMemberAddressId")
+                                        .description("마지막으로 조회된 주소 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN)
+                                        .description("다음 페이지 존재 여부"),
+                                fieldWithPath("data.memberAddresses").type(JsonFieldType.ARRAY)
+                                        .description("회원 주소 목록"),
+                                fieldWithPath("data.memberAddresses[].memberAddressId").type(JsonFieldType.NUMBER)
+                                        .description("회원 주소 식별키"),
+                                fieldWithPath("data.memberAddresses[].address").type(JsonFieldType.STRING)
                                         .description("주소")
                         )
                 ));

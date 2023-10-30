@@ -53,9 +53,24 @@ include::{snippets}/edit-client/response-fields.adoc[]
 === 사용자 주소 등록
 
 ==== HTTP Request
+
 include::{snippets}/create-address/http-request.adoc[]
 include::{snippets}/create-address/request-fields.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/create-address/http-response.adoc[]
 include::{snippets}/create-address/response-fields.adoc[]
+
+[[search-address]]
+=== 사용자 주소 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/search-address/http-request.adoc[]
+include::{snippets}/search-address/query-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/search-address/http-response.adoc[]
+include::{snippets}/search-address/response-fields.adoc[]

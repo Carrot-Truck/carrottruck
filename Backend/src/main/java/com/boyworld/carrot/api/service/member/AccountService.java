@@ -63,10 +63,11 @@ public class AccountService {
     /**
      * 로그인 중인 사용자 주소 전체 조회
      *
-     * @param email 로그인 중인 회원 이메일
+     * @param email               로그인 중인 회원 이메일
+     * @param lastMemberAddressId 마지막으로 조회된 주소 식별키
      * @return 로그인 중인 사용자의 주소 목록
      */
-    public MemberAddressResponse getMemberAddresses(String email) {
+    public MemberAddressResponse getMemberAddresses(String email, String lastMemberAddressId) {
         return null;
     }
 }

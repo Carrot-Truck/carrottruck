@@ -1,13 +1,24 @@
-[[login]]
-=== 회원 로그인
+[[login-client]]
+=== 사용자 로그인
 
 ==== HTTP Request
-include::{snippets}/login/http-request.adoc[]
-include::{snippets}/login/request-fields.adoc[]
+include::{snippets}/login-client/http-request.adoc[]
+include::{snippets}/login-client/request-fields.adoc[]
 
 ==== HTTP Response
-include::{snippets}/login/http-response.adoc[]
-include::{snippets}/login/response-fields.adoc[]
+include::{snippets}/login-client/http-response.adoc[]
+include::{snippets}/login-client/response-fields.adoc[]
+
+[[login-vendor]]
+=== 사업자 로그인
+
+==== HTTP Request
+include::{snippets}/login-vendor/http-request.adoc[]
+include::{snippets}/login-vendor/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/login-vendor/http-response.adoc[]
+include::{snippets}/login-vendor/response-fields.adoc[]
 
 [[check-email]]
 === 이메일 중복 체크

@@ -50,3 +50,14 @@ include::{snippets}/withdrawal-review/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/withdrawal-review/http-response.adoc[]
 include::{snippets}/withdrawal-review/response-fields.adoc[]
+
+[[report-review]]
+=== 리뷰 신고
+
+==== HTTP Request
+include::{snippets}/report-review/http-request.adoc[]
+include::{snippets}/report-review/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/report-review/http-response.adoc[]
+include::{snippets}/report-review/response-fields.adoc[]

@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.boyworld.carrot.api.controller.review.ReviewController;
 import com.boyworld.carrot.api.controller.review.request.CommentRequest;
+import com.boyworld.carrot.api.controller.review.request.ReportRequest;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.api.controller.review.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
@@ -27,7 +28,6 @@ import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
 import com.boyworld.carrot.api.service.review.dto.ReviewFoodTruckDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
-import com.boyworld.carrot.domain.member.Member;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +102,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
     @DisplayName("리뷰 답글 등록 API")
     @Test
     @WithMockUser(roles = "VENDOR")
-    void createComment() throws Exception{
+    void createComment() throws Exception {
 
         CommentRequest request = CommentRequest.builder()
             .comment("리뷰 감사합니다.")
@@ -153,7 +153,8 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .grade(5)
             .content("여기 맛집이다!!")
             .createdDate(LocalDateTime.now())
-            .reviewFoodTruckDto(ReviewFoodTruckDto.builder().foodTruckId(1L).foodTruckName("내가만든푸드트럭").build())
+            .reviewFoodTruckDto(
+                ReviewFoodTruckDto.builder().foodTruckId(1L).foodTruckName("내가만든푸드트럭").build())
             .build());
         MyReviewResponse myReviewResponse = MyReviewResponse.builder()
             .myReviewDtoList(myReviewDtoList)
@@ -165,53 +166,61 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
 
         // API 요청 및 응답 검증
         mockMvc.perform(
-            get("/review")
-                .header("Authentication", "authentication")
-        ).andDo(print())
-        .andExpect(status().isFound())
-        .andDo(
-            document("get-my-review",
-                preprocessResponse(prettyPrint()),
-                responseFields(
-                    fieldWithPath("code").type(JsonFieldType.NUMBER)
-                        .description("코드"),
-                    fieldWithPath("status").type(JsonFieldType.STRING)
-                        .description("상태"),
-                    fieldWithPath("message").type(JsonFieldType.STRING)
-                        .description("메시지"),
-                    fieldWithPath("data").type(JsonFieldType.OBJECT)
-                        .description("응답 데이터"),
-                    fieldWithPath("data.myReviewDtoList").type(JsonFieldType.ARRAY)
-                        .description("내가 작성한 리뷰 정보 목록"),
-                    fieldWithPath("data.myReviewDtoList[].reviewId").type(JsonFieldType.NUMBER)
-                        .description("리뷰 ID"),
-                    fieldWithPath("data.myReviewDtoList[].reviewFoodTruckDto").type(JsonFieldType.OBJECT)
-                        .description("푸드 트럭 정보"),
-                    fieldWithPath("data.myReviewDtoList[].reviewFoodTruckDto.foodTruckId").type(JsonFieldType.NUMBER)
-                        .description("푸드 트럭 ID"),
-                    fieldWithPath("data.myReviewDtoList[].reviewFoodTruckDto.foodTruckName").type(JsonFieldType.STRING)
-                        .description("푸드 트럭 이름"),
-                    fieldWithPath("data.myReviewDtoList[].grade").type(JsonFieldType.NUMBER)
-                        .description("리뷰 평점"),
-                    fieldWithPath("data.myReviewDtoList[].createdDate").type(JsonFieldType.ARRAY)
-                        .description("리뷰 작성일"),
-                    fieldWithPath("data.myReviewDtoList[].content").type(JsonFieldType.STRING)
-                        .description("리뷰 내용")
-                ))
-        );
+                get("/review")
+                    .header("Authentication", "authentication")
+            ).andDo(print())
+            .andExpect(status().isFound())
+            .andDo(
+                document("get-my-review",
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                            .description("코드"),
+                        fieldWithPath("status").type(JsonFieldType.STRING)
+                            .description("상태"),
+                        fieldWithPath("message").type(JsonFieldType.STRING)
+                            .description("메시지"),
+                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                            .description("응답 데이터"),
+                        fieldWithPath("data.myReviewDtoList").type(JsonFieldType.ARRAY)
+                            .description("내가 작성한 리뷰 정보 목록"),
+                        fieldWithPath("data.myReviewDtoList[].reviewId").type(JsonFieldType.NUMBER)
+                            .description("리뷰 ID"),
+                        fieldWithPath("data.myReviewDtoList[].reviewFoodTruckDto").type(
+                                JsonFieldType.OBJECT)
+                            .description("푸드 트럭 정보"),
+                        fieldWithPath("data.myReviewDtoList[].reviewFoodTruckDto.foodTruckId").type(
+                                JsonFieldType.NUMBER)
+                            .description("푸드 트럭 ID"),
+                        fieldWithPath(
+                            "data.myReviewDtoList[].reviewFoodTruckDto.foodTruckName").type(
+                                JsonFieldType.STRING)
+                            .description("푸드 트럭 이름"),
+                        fieldWithPath("data.myReviewDtoList[].grade").type(JsonFieldType.NUMBER)
+                            .description("리뷰 평점"),
+                        fieldWithPath("data.myReviewDtoList[].createdDate").type(
+                                JsonFieldType.ARRAY)
+                            .description("리뷰 작성일"),
+                        fieldWithPath("data.myReviewDtoList[].content").type(JsonFieldType.STRING)
+                            .description("리뷰 내용")
+                    ))
+            );
     }
 
     @DisplayName("푸드트럭 리뷰 조회 API")
     @Test
     void getFoodTruckReview() throws Exception {
         List<FoodTruckReviewDto> list = new ArrayList<>();
-        list.add(FoodTruckReviewDto.builder().reviewId(1L).nickname("동혀니").grade(5).content("된장이 맛있어요").build());
+        list.add(
+            FoodTruckReviewDto.builder().reviewId(1L).nickname("동혀니").grade(5).content("된장이 맛있어요")
+                .build());
 
         FoodTruckReviewResponse foodTruckReviewResponse = FoodTruckReviewResponse.builder()
             .foodTruckReviewDtoList(list)
             .build();
 
-        given(reviewService.getFoodTruckReview(any(Long.class))).willReturn(foodTruckReviewResponse);
+        given(reviewService.getFoodTruckReview(any(Long.class))).willReturn(
+            foodTruckReviewResponse);
 
         mockMvc.perform(
                 get("/review/1")
@@ -231,13 +240,17 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
                             .description("응답 데이터"),
                         fieldWithPath("data.foodTruckReviewDtoList").type(JsonFieldType.ARRAY)
                             .description("푸드트럭 리뷰 정보 목록"),
-                        fieldWithPath("data.foodTruckReviewDtoList[].reviewId").type(JsonFieldType.NUMBER)
+                        fieldWithPath("data.foodTruckReviewDtoList[].reviewId").type(
+                                JsonFieldType.NUMBER)
                             .description("리뷰 ID"),
-                        fieldWithPath("data.foodTruckReviewDtoList[].nickname").type(JsonFieldType.STRING)
+                        fieldWithPath("data.foodTruckReviewDtoList[].nickname").type(
+                                JsonFieldType.STRING)
                             .description("리뷰 작성자 닉네임"),
-                        fieldWithPath("data.foodTruckReviewDtoList[].grade").type(JsonFieldType.NUMBER)
+                        fieldWithPath("data.foodTruckReviewDtoList[].grade").type(
+                                JsonFieldType.NUMBER)
                             .description("리뷰 평점"),
-                        fieldWithPath("data.foodTruckReviewDtoList[].content").type(JsonFieldType.STRING)
+                        fieldWithPath("data.foodTruckReviewDtoList[].content").type(
+                                JsonFieldType.STRING)
                             .description("리뷰 내용"),
                         fieldWithPath("data.averageGrade").type(JsonFieldType.NUMBER)
                             .description("평균 리뷰")
@@ -248,21 +261,22 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
     @DisplayName("리뷰 삭제 API")
     @Test
     @WithMockUser(roles = "CLIENT")
-    void withdrawal() throws  Exception{
+    void withdrawal() throws Exception {
         Boolean result = true;
         WithdrawalRequest withdrawalRequest = WithdrawalRequest.builder()
             .reviewId(1L)
             .email("ssafy@ssafy.com")
             .build();
 
-        given(reviewService.withdrawal(withdrawalRequest.getEmail(), withdrawalRequest.getReviewId()))
+        given(
+            reviewService.withdrawal(withdrawalRequest.getEmail(), withdrawalRequest.getReviewId()))
             .willReturn(result);
 
         mockMvc.perform(
-          post("/review/withdrawal")
-              .content(objectMapper.writeValueAsString(withdrawalRequest))
-              .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print())
+                post("/review/withdrawal")
+                    .content(objectMapper.writeValueAsString(withdrawalRequest))
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andDo(print())
             .andExpect(status().isOk())
             .andDo(
                 document("withdrawal-review",
@@ -280,6 +294,43 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
                             .description("메시지"),
                         fieldWithPath("data").type(JsonFieldType.BOOLEAN)
                             .description("삭제 성공 여부")
+                    )
+                )
+            );
+    }
+
+    @DisplayName("리뷰 신고 API")
+    @Test
+    void report() throws Exception {
+        Boolean result = true;
+        ReportRequest request = ReportRequest.builder()
+            .reviewId(1L)
+            .content("신고 내용")
+            .build();
+
+        given(reviewService.report(request.getReviewId(), request.getContent())).willReturn(result);
+
+        mockMvc.perform(
+                post("/review/report")
+                    .content(objectMapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andDo(print())
+            .andExpect(status().isOk())
+            .andDo(
+                document("report-review",
+                    requestFields(
+                        fieldWithPath("reviewId").type(JsonFieldType.NUMBER).description("리뷰 ID"),
+                        fieldWithPath("content").type(JsonFieldType.STRING).description("신고 내용")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                            .description("코드"),
+                        fieldWithPath("status").type(JsonFieldType.STRING)
+                            .description("상태"),
+                        fieldWithPath("message").type(JsonFieldType.STRING)
+                            .description("메시지"),
+                        fieldWithPath("data").type(JsonFieldType.BOOLEAN)
+                            .description("신고 성공 여부")
                     )
                 )
             );

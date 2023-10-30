@@ -10,14 +10,11 @@ public class WithdrawalRequest {
 
     private String email;
 
-    private String password;
-
-    private Long foodTruckId;
+    private Long reviewId;
 
     @Builder
-    public WithdrawalRequest(String email, String password, Long foodTruckId) {
+    public WithdrawalRequest(String email, Long reviewId) {
         this.email = email;
-        this.password = password;
-        this.foodTruckId = foodTruckId;
+        this.reviewId = reviewId;
     }
 }

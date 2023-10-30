@@ -12,6 +12,7 @@ import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.repository.MemberRepository;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
+import com.boyworld.carrot.security.SecurityUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -90,8 +91,12 @@ public class ReviewService {
     /*
      * delete my review API
      */
-    public Boolean withdrawal(String email, String password, Long foodTruckId) {
-        return true;
+    public Boolean withdrawal(String email, Long reviewId) {
+        if(email.equals(SecurityUtil.getCurrentLoginId())){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*

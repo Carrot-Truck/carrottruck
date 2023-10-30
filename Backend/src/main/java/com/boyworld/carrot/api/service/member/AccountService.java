@@ -47,6 +47,7 @@ public class AccountService {
      *
      * @param email 로그인 중인 회원 이메일
      * @return 로그인 중인 회원 정보
+     * @throws NoSuchElementException 존재하지 않는 사업자인 경우
      */
     public VendorResponse getVendorInfo(String email) {
         VendorResponse response = memberQueryRepository.getVendorInfoByEmail(email);

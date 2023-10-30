@@ -1,4 +1,4 @@
-package com.boyworld.carrot.api.controller.menu;
+package com.boyworld.carrot.api.controller.menu.response;
 
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
 import lombok.Builder;

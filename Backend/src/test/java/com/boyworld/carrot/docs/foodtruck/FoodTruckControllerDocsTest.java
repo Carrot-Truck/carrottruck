@@ -330,18 +330,18 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         MenuDto menu1 = MenuDto.builder()
                 .menuId(1L)
                 .menuName("달콤짭짤한 밥도둑 된장 삼겹살 구이")
-                .description("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
-                .price(8900)
-                .soldOut(false)
+                .menuDescription("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
+                .menuPrice(8900)
+                .menuSoldOut(false)
                 .menuImageId(1L)
                 .build();
 
         MenuDto menu2 = MenuDto.builder()
                 .menuId(2L)
                 .menuName("노른자 된장 삼겹살 덮밥")
-                .description("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
-                .price(6900)
-                .soldOut(false)
+                .menuDescription("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
+                .menuPrice(6900)
+                .menuSoldOut(false)
                 .menuImageId(2L)
                 .build();
 
@@ -456,11 +456,11 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("메뉴 식별키"),
                                 fieldWithPath("data.menus[].menuName").type(JsonFieldType.STRING)
                                         .description("메뉴명"),
-                                fieldWithPath("data.menus[].price").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.menus[].menuPrice").type(JsonFieldType.NUMBER)
                                         .description("메뉴 가격"),
-                                fieldWithPath("data.menus[].description").type(JsonFieldType.STRING)
+                                fieldWithPath("data.menus[].menuDescription").type(JsonFieldType.STRING)
                                         .description("메뉴 설명"),
-                                fieldWithPath("data.menus[].soldOut").type(JsonFieldType.BOOLEAN)
+                                fieldWithPath("data.menus[].menuSoldOut").type(JsonFieldType.BOOLEAN)
                                         .description("품절 여부"),
                                 fieldWithPath("data.menus[].menuImageId").type(JsonFieldType.NUMBER)
                                         .description("메뉴 이미지 식별키"),

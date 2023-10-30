@@ -1,6 +1,6 @@
 package com.boyworld.carrot.api.service.menu;
 
-import com.boyworld.carrot.api.controller.menu.MenuResponse;
+import com.boyworld.carrot.api.controller.menu.response.MenuResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuDetailResponse;
 import com.boyworld.carrot.domain.menu.repository.MenuQueryRepository;
 import lombok.RequiredArgsConstructor;

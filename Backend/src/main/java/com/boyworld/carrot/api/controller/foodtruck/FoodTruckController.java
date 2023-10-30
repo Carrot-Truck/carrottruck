@@ -2,8 +2,10 @@ package com.boyworld.carrot.api.controller.foodtruck;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
+import com.boyworld.carrot.api.controller.foodtruck.request.FoodTruckLikeRequest;
 import com.boyworld.carrot.api.controller.foodtruck.request.UpdateFoodTruckRequest;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckLikeResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
@@ -40,8 +42,7 @@ public class FoodTruckController {
      */
     @PostMapping("/vendor")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Long> createFoodTruck(@Valid @RequestPart(name = "request") CreateFoodTruckRequest request,
-                                             @RequestPart(required = false, name = "file") MultipartFile file) {
+    public ApiResponse<Long> createFoodTruck(@Valid @RequestPart(name = "request") CreateFoodTruckRequest request, @RequestPart(required = false, name = "file") MultipartFile file) {
         log.debug("FoodTruckController#createFoodTruck called");
         log.debug("CreateFoodTruckRequest={}", request);
         log.debug("MultipartFile={}", file);
@@ -65,17 +66,17 @@ public class FoodTruckController {
      * @return 푸드트럭 지도에 표시될 마커 정보
      */
     @GetMapping("/marker")
-    public ApiResponse<FoodTruckMarkerResponse> getFoodTruckMarkers(@RequestParam(required = false, defaultValue = "") String categoryId,
-                                                                    @RequestParam(required = false, defaultValue = "") String keyword,
-                                                                    @RequestParam(required = false, defaultValue = "") String longitude,
-                                                                    @RequestParam(required = false, defaultValue = "") String latitude) {
+    public ApiResponse<FoodTruckMarkerResponse> getFoodTruckMarkers(@RequestParam(required = false, defaultValue = "") String categoryId, @RequestParam(required = false, defaultValue = "") String keyword, @RequestParam(required = false, defaultValue = "") String longitude, @RequestParam(required = false, defaultValue = "") String latitude) {
         log.debug("FoodTruckController#getFoodTruckMarkers called");
         log.debug("categoryId={}", categoryId);
         log.debug("keyword={}", keyword);
         log.debug("latitude={}", latitude);
         log.debug("longitude={}", longitude);
 
-        FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(SearchCondition.of(categoryId, keyword, longitude, latitude));
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(SearchCondition.of(categoryId, keyword, longitude, latitude), email);
         log.debug("FoodTruckResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -92,11 +93,7 @@ public class FoodTruckController {
      * @return 식별키 리스트에 해당하는 푸드트럭 리스트 (거리순 정렬)
      */
     @GetMapping
-    public ApiResponse<FoodTruckResponse> getFoodTrucks(@RequestParam(required = false, defaultValue = "") String categoryId,
-                                                        @RequestParam(required = false, defaultValue = "") String keyword,
-                                                        @RequestParam(required = false, defaultValue = "") String longitude,
-                                                        @RequestParam(required = false, defaultValue = "") String latitude,
-                                                        @RequestParam(required = false, defaultValue = "") String lastFoodTruckId) {
+    public ApiResponse<FoodTruckResponse> getFoodTrucks(@RequestParam(required = false, defaultValue = "") String categoryId, @RequestParam(required = false, defaultValue = "") String keyword, @RequestParam(required = false, defaultValue = "") String longitude, @RequestParam(required = false, defaultValue = "") String latitude, @RequestParam(required = false, defaultValue = "") String lastFoodTruckId) {
         log.debug("FoodTruckController#getFoodTrucks called");
         log.debug("categoryId={}", categoryId);
         log.debug("keyword={}", keyword);
@@ -142,9 +139,7 @@ public class FoodTruckController {
      * @return 수정된 푸드트럭 식별키
      */
     @PatchMapping("/{foodTruckId}")
-    public ApiResponse<Long> editFoodTruck(@PathVariable Long foodTruckId,
-                                           @Valid @RequestPart(name = "request") UpdateFoodTruckRequest request,
-                                           @RequestPart(required = false, name = "file") MultipartFile file) {
+    public ApiResponse<Long> editFoodTruck(@PathVariable Long foodTruckId, @Valid @RequestPart(name = "request") UpdateFoodTruckRequest request, @RequestPart(required = false, name = "file") MultipartFile file) {
         log.debug("FoodTruckController#editFoodTruck called");
         log.debug("foodTruckId={}", foodTruckId);
         log.debug("UpdateFoodTruckRequest={}", request);
@@ -178,5 +173,25 @@ public class FoodTruckController {
         log.debug("deleteId={}", deleteId);
 
         return ApiResponse.found(deleteId);
+    }
+
+    /**
+     * 푸드트럭 찜 API
+     * 
+     * @param request 푸드트럭 식별키
+     * @return 푸드트럭 찜 정보
+     */
+    @PostMapping("/like")
+    public ApiResponse<FoodTruckLikeResponse> foodTruckLike(@Valid @RequestBody FoodTruckLikeRequest request) {
+        log.debug("FoodTruckController#foodTruckLike called");
+        log.debug("FoodTruckLikeRequest={}", request);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        FoodTruckLikeResponse response = foodTruckService.foodTruckLike(request.toFoodTruckLikeDto(), email);
+        log.debug("FoodTruckLikeResponse={}", response);
+
+        return ApiResponse.ok(response);
     }
 }

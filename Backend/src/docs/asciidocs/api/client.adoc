@@ -74,3 +74,17 @@ include::{snippets}/search-address/query-parameters.adoc[]
 
 include::{snippets}/search-address/http-response.adoc[]
 include::{snippets}/search-address/response-fields.adoc[]
+
+[[edit-address]]
+=== 사용자 주소 수정
+
+==== HTTP Request
+
+include::{snippets}/edit-address/http-request.adoc[]
+include::{snippets}/edit-address/path-parameters.adoc[]
+include::{snippets}/edit-address/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/edit-address/http-response.adoc[]
+include::{snippets}/edit-address/response-fields.adoc[]

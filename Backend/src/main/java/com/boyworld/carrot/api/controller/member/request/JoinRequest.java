@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.controller.member.request;
 
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
+import com.boyworld.carrot.domain.member.Role;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
@@ -45,6 +46,7 @@ public class JoinRequest {
                 .password(this.password)
                 .name(this.name)
                 .phoneNumber(this.phoneNumber)
+                .role(this.role)
                 .build();
     }
 }

@@ -10,12 +10,13 @@ public class FoodTruckReviewResponse {
 
     private List<FoodTruckReviewDto> foodTruckReviewDtoList;
 
-    private Integer averageGrade;
+    private float averageGrade;
 
     @Builder
     private FoodTruckReviewResponse(List<FoodTruckReviewDto> foodTruckReviewDtoList){
         this.foodTruckReviewDtoList = foodTruckReviewDtoList;
         if(foodTruckReviewDtoList.size() != 0){
+            averageGrade = 0;
             for(FoodTruckReviewDto foodTruckReviewDto : foodTruckReviewDtoList){
                 this.averageGrade += foodTruckReviewDto.getGrade();
             }

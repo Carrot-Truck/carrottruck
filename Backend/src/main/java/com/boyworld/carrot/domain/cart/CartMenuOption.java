@@ -26,7 +26,6 @@ public class CartMenuOption extends TimeBaseEntity {
     private Integer quantity;
 
     @Builder
-
     public CartMenuOption(Long id, Long cartMenuId, Long menuOptionId, Integer quantity) {
         this.id = id;
         this.cartMenuId = cartMenuId;

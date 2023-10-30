@@ -156,6 +156,14 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .reviewFoodTruckDto(
                 ReviewFoodTruckDto.builder().foodTruckId(1L).foodTruckName("내가만든푸드트럭").build())
             .build());
+        myReviewDtoList.add(MyReviewDto.builder()
+            .reviewId(2L)
+            .grade(1)
+            .content("여기 진짜 별로에요. 서비스도 최악이고 다신 안올거에요.")
+            .createdDate(LocalDateTime.now().minusDays(3))
+            .reviewFoodTruckDto(
+                ReviewFoodTruckDto.builder().foodTruckId(2L).foodTruckName("김동현 된장삼겹").build())
+            .build());
         MyReviewResponse myReviewResponse = MyReviewResponse.builder()
             .myReviewDtoList(myReviewDtoList)
             .build();
@@ -211,9 +219,8 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
     @Test
     void getFoodTruckReview() throws Exception {
         List<FoodTruckReviewDto> list = new ArrayList<>();
-        list.add(
-            FoodTruckReviewDto.builder().reviewId(1L).nickname("동혀니").grade(5).content("된장이 맛있어요")
-                .build());
+        list.add(FoodTruckReviewDto.builder().reviewId(1L).nickname("동혀니").grade(5).content("된장이 맛있어요").build());
+        list.add(FoodTruckReviewDto.builder().reviewId(2L).nickname("후후후").grade(2).content("맛있다고해서 왔는데 먹고 토했어요").build());
 
         FoodTruckReviewResponse foodTruckReviewResponse = FoodTruckReviewResponse.builder()
             .foodTruckReviewDtoList(list)

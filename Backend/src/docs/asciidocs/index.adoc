@@ -22,3 +22,11 @@ include::{docdir}/api/vendor.adoc[]
 [[FoodTruck-API]]
 == FoodTruck API
 include::{docdir}/api/food-truck.adoc[]
+
+[[Menu-API]]
+== Menu API
+include::{docdir}/api/menu.adoc[]
+
+[[Schedule-API]]
+== Schedule API
+include::{docdir}/api/schedule.adoc[]

@@ -19,9 +19,10 @@ export const GlobalStyles = createGlobalStyle`
         --gray-100 : #E8EBED;
 
         --black-500 : #000000;
-        --black-300 : #3B3B3B;
-        --black-100 : #2A2A2A;
-
+        --black-400 : #292D32;
+        --black-300 : #292D32;
+        --black-200 : #2A2A2A;
+        --black-100 : #333333;
         --footer-bg-color : #eceff3;
 
         /* radius */

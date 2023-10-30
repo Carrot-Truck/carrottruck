@@ -31,7 +31,8 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
 
         String email = "ssafy@ssafy.com";
 
-        Boolean result = memberQueryRepository.isExistEmail(email);
+        String role = member.getRole().toString();
+        Boolean result = memberQueryRepository.isExistEmail(email, role);
 
         assertThat(result).isTrue();
     }
@@ -43,7 +44,8 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
 
         String email = "ssafy@naver.com";
 
-        Boolean result = memberQueryRepository.isExistEmail(email);
+        String role = member.getRole().toString();
+        Boolean result = memberQueryRepository.isExistEmail(email, role);
 
         assertThat(result).isFalse();
     }

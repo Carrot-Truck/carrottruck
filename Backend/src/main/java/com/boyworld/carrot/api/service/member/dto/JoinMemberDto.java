@@ -18,10 +18,10 @@ public class JoinMemberDto {
 
     private String phoneNumber;
 
-    private Role role;
+    private String role;
 
     @Builder
-    public JoinMemberDto(String email, String nickname, String password, String name, String phoneNumber, Role role) {
+    public JoinMemberDto(String email, String nickname, String password, String name, String phoneNumber, String role) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
@@ -37,7 +37,7 @@ public class JoinMemberDto {
                 .encryptedPwd(encryptedPwd)
                 .name(this.name)
                 .phoneNumber(this.phoneNumber)
-                .role(this.role)
+                .role(Role.valueOf(this.role))
                 .active(true)
                 .build();
     }

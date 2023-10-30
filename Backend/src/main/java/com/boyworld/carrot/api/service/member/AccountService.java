@@ -22,23 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Slf4j
 @RequiredArgsConstructor
-public class MemberAccountService {
-
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final JwtTokenProvider jwtTokenProvider;
-
-    /**
-     * 로그인
-     *
-     * @param email    로그인 할 이메일
-     * @param password 로그인 할 비밀번호
-     * @return 로그인한 회원 정보
-     */
-    public TokenInfo login(String email, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
-        Authentication authenticate = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        return jwtTokenProvider.generateToken(authenticate);
-    }
+public class AccountService {
 
     /**
      * 로그인 중인 일반 사용자 회원 정보 조회

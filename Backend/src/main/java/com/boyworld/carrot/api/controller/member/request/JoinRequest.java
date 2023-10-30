@@ -46,7 +46,7 @@ public class JoinRequest {
                 .password(this.password)
                 .name(this.name)
                 .phoneNumber(this.phoneNumber)
-                .role(Role.valueOf(this.role))
+                .role(this.role)
                 .build();
     }
 }

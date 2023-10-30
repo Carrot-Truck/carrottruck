@@ -41,7 +41,7 @@ class MemberServiceTest extends IntegrationTestSupport {
                 .password("password")
                 .name("김동현")
                 .phoneNumber("010-1234-5678")
-                .role(Role.CLIENT)
+                .role("CLIENT")
                 .build();
         Member member = createMember();
 
@@ -61,7 +61,7 @@ class MemberServiceTest extends IntegrationTestSupport {
                 .password("password")
                 .name("김동현")
                 .phoneNumber("010-1234-5678")
-                .role(Role.CLIENT)
+                .role("CLIENT")
                 .build();
 
         // when

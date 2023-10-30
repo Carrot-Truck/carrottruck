@@ -37,7 +37,7 @@ public class MemberService {
      */
     public JoinMemberResponse join(JoinMemberDto dto) {
         // 중복체크
-        checkDuplicateEmail(dto.getEmail());
+        checkDuplicateEmail(dto.getEmail(), dto.getRole());
 
         Member saveMember = createMember(dto);
 
@@ -50,8 +50,8 @@ public class MemberService {
      * @param email 체크할 이메일
      * @throws DuplicateException 이미 사용중인 이메일일 경우
      */
-    private void checkDuplicateEmail(String email) {
-        Boolean isExistEmail = memberQueryRepository.isExistEmail(email);
+    private void checkDuplicateEmail(String email, String role) {
+        Boolean isExistEmail = memberQueryRepository.isExistEmail(email, role);
         if (isExistEmail) {
             throw new DuplicateException("이미 사용중인 이메일 입니다.");
         }

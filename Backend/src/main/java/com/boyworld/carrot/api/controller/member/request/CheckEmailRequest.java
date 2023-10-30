@@ -7,21 +7,17 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class LoginRequest {
+public class CheckEmailRequest {
 
     @NotBlank
     private String email;
 
     @NotBlank
-    private String password;
-
-    @NotBlank
     private String role;
 
     @Builder
-    public LoginRequest(String email, String password, String role) {
+    public CheckEmailRequest(String email, String role) {
         this.email = email;
-        this.password = password;
         this.role = role;
     }
 }

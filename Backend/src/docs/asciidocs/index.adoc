@@ -11,6 +11,10 @@ endif::[]
 
 include::overview.adoc[]
 
+[[Auth-API]]
+== Auth API
+include::{docdir}/api/auth.adoc[]
+
 [[Client-API]]
 == Client API
 include::{docdir}/api/client.adoc[]

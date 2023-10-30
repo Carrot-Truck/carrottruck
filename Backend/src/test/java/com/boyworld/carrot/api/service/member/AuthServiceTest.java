@@ -1,7 +1,7 @@
 package com.boyworld.carrot.api.service.member;
 
-
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.MemberRepository;
@@ -18,16 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-/**
- * 계정 서비스 테스트
- *
- * @author 최영환
- */
 @Slf4j
-class MemberAccountServiceTest extends IntegrationTestSupport {
-
+class AuthServiceTest extends IntegrationTestSupport {
     @Autowired
-    private MemberAccountService memberAccountService;
+    private AuthService authService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -46,36 +40,51 @@ class MemberAccountServiceTest extends IntegrationTestSupport {
     @Test
     void loginSuccess() {
         // given
-        Member member = createMember();
+        Member member = createMember(Role.CLIENT);
 
         // when
-        TokenInfo tokenInfo = memberAccountService.login(member.getEmail(), "ssafy1234");
+        String password = "ssafy1234";
+        TokenInfo tokenInfo = authService.login(member.getEmail(), password, member.getRole().toString());
         log.debug("tokenInfo={}", tokenInfo);
 
         // then
         assertThat(tokenInfo).isNotNull();
     }
 
-    @DisplayName("이메일이나 비밀번호가 일치하지 않으면 예외가 발생한다.")
+    @DisplayName("이메일과 비밀번호가 일치하지 않으면 예외가 발생한다.")
     @Test
-    void loginFail() {
+    void loginWithWrongPassword() {
         // given
-        Member member = createMember();
+        Member member = createMember(Role.CLIENT);
 
         // when // then
-        assertThatThrownBy(() -> memberAccountService.login(member.getEmail(), "ssafy123411"))
-                .isInstanceOf(BadCredentialsException.class)
-                .hasMessage("자격 증명에 실패하였습니다.");
+        String password = "ssafy123411";
+        assertThatThrownBy(() -> authService.login(member.getEmail(), password, member.getRole().toString()))
+                .isInstanceOf(BadCredentialsException.class);
     }
 
-    private Member createMember() {
+    @DisplayName("사용자와 사업자 간의 교차 로그인은 불가능하다.")
+    @Test
+    void loginWithWrongRole() {
+        // given
+        Member member = createMember(Role.VENDOR);
+
+        // when // then
+        String password = "ssafy1234";
+        String role = "CLIENT";
+        assertThatThrownBy(() -> authService.login(member.getEmail(), password, role))
+                .isInstanceOf(InvalidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+    }
+
+    private Member createMember(Role role) {
         Member member = Member.builder()
                 .email("ssafy@ssafy.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")
                 .phoneNumber("010-1234-5678")
-                .role(Role.CLIENT)
+                .role(role)
                 .active(true)
                 .build();
         return memberRepository.save(member);

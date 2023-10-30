@@ -1,5 +1,6 @@
 package com.boyworld.carrot.domain.member.repository;
 
+import com.boyworld.carrot.domain.member.DeviceToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @author 최영환
  */
 @Repository
-public interface DeviceTokenRepository extends JpaRepository<DeviceTokenRepository, Long> {
+public interface DeviceTokenRepository extends JpaRepository<DeviceToken, Long> {
 }

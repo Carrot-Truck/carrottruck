@@ -11,6 +11,7 @@ import com.boyworld.carrot.api.service.member.MemberService;
 import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
+import com.boyworld.carrot.domain.member.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -163,7 +164,7 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .nickname("매미킴")
                 .email("ssafy@ssafy.com")
                 .phoneNumber("010-1234-1234")
-                .role("CLIENT")
+                .role(Role.CLIENT)
                 .build();
 
         given(accountService.getClientInfo(anyString()))
@@ -214,7 +215,7 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .nickname("매미킴123")
                 .email("ssafy@ssafy.com")
                 .phoneNumber("010-1234-5678")
-                .role("CLIENT")
+                .role(Role.CLIENT)
                 .build();
 
         given(accountService.editClient(any(EditMemberDto.class)))

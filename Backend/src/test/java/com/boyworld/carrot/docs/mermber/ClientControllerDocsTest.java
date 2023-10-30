@@ -7,7 +7,7 @@ import com.boyworld.carrot.api.controller.member.request.MemberAddressRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
-import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
 import com.boyworld.carrot.api.service.member.AccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
 import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
@@ -272,7 +272,8 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .address("광주 광산구 장덕로 5번길 16")
                 .build();
 
-        MemberAddressResponse response = MemberAddressResponse.builder()
+        MemberAddressDetailResponse response = MemberAddressDetailResponse.builder()
+                .memberAddressId(1L)
                 .address("광주 광산구 장덕로 5번길 16")
                 .build();
 
@@ -302,6 +303,8 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                                         .description("응답데이터"),
+                                fieldWithPath("data.memberAddressId").type(JsonFieldType.NUMBER)
+                                        .description("주소 식별키"),
                                 fieldWithPath("data.address").type(JsonFieldType.STRING)
                                         .description("주소")
                         )

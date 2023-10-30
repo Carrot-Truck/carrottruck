@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.service.member;
 
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
 import com.boyworld.carrot.domain.member.repository.MemberQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +58,15 @@ public class AccountService {
         }
 
         return response;
+    }
+
+    /**
+     * 로그인 중인 사용자 주소 전체 조회
+     *
+     * @param email 로그인 중인 회원 이메일
+     * @return 로그인 중인 사용자의 주소 목록
+     */
+    public MemberAddressResponse getMemberAddresses(String email) {
+        return null;
     }
 }

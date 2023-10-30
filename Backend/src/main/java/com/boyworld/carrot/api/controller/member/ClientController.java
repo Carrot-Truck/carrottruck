@@ -7,6 +7,7 @@ import com.boyworld.carrot.api.controller.member.request.MemberAddressRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
 import com.boyworld.carrot.api.service.member.AccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
@@ -112,13 +113,32 @@ public class ClientController {
      */
     @PostMapping("/address")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<MemberAddressResponse> createMemberAddress(@Valid @RequestBody MemberAddressRequest request) {
+    public ApiResponse<MemberAddressDetailResponse> createMemberAddress(@Valid @RequestBody MemberAddressRequest request) {
         log.debug("ClientController#createMemberAddress called");
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        MemberAddressResponse response = memberService.createMemberAddress(request.getAddress(), email);
+        MemberAddressDetailResponse response = memberService.createMemberAddress(request.getAddress(), email);
+        log.debug("MemberDetailAddressResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 회원 주소 목록 조회
+     * 
+     * @param lastMemberAddressId 마지막으로 조회된 주소 식별키
+     * @return 회원 주소 목록
+     */
+    @GetMapping("/address")
+    public ApiResponse<MemberAddressResponse> getMemberAddresses(@RequestParam(required = false) Long lastMemberAddressId) {
+        log.debug("ClientController#getMemberAddresses called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        MemberAddressResponse response = accountService.getMemberAddresses(email);
         log.debug("MemberAddressResponse={}", response);
 
         return ApiResponse.ok(response);

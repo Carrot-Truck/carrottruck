@@ -8,3 +8,14 @@ include::{snippets}/create-survey/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/create-survey/http-response.adoc[]
 include::{snippets}/create-survey/response-fields.adoc[]
+
+[[search-survey-list]]
+=== 수요조사 리스트 조회
+
+==== HTTP Request
+include::{snippets}/search-survey-list/http-request.adoc[]
+include::{snippets}/search-survey-list//query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-survey-list//http-response.adoc[]
+include::{snippets}/search-survey-list//response-fields.adoc[]

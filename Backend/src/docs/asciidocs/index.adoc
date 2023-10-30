@@ -30,3 +30,7 @@ include::{docdir}/api/menu.adoc[]
 [[Schedule-API]]
 == Schedule API
 include::{docdir}/api/schedule.adoc[]
+
+[[Review-API]]
+== Review API
+include::{docdir}/api/review.adoc[]

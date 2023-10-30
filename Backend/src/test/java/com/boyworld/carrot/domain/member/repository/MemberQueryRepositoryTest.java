@@ -1,6 +1,7 @@
 package com.boyworld.carrot.domain.member.repository;
 
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,30 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         Boolean result = memberQueryRepository.isExistEmail(email, role);
 
         assertThat(result).isFalse();
+    }
+
+    @DisplayName("일반 사용자 정보를 이메일로 조회한다.")
+    @Test
+    void getExistClientInfo() {
+        Member member = createMember();
+
+        String email = "ssafy@ssafy.com";
+        ClientResponse response = memberQueryRepository.getClientInfoByEmail(email);
+
+        assertThat(response).isNotNull();
+        assertThat(response).extracting("name", "nickname", "email", "phoneNumber", "role")
+                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "CLIENT");
+    }
+
+    @DisplayName("해당 이메일을 가진 일반 사용자가 존재하지 않으면 null 이 반환된다.")
+    @Test
+    void getNotExistClientInfo() {
+        Member member = createMember();
+
+        String email = "ssafy@naver.com";
+        ClientResponse response = memberQueryRepository.getClientInfoByEmail(email);
+
+        assertThat(response).isNull();
     }
 
     private Member createMember() {

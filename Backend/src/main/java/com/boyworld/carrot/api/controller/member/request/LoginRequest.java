@@ -15,9 +15,13 @@ public class LoginRequest {
     @NotBlank
     private String password;
 
+    @NotBlank
+    private String role;
+
     @Builder
-    public LoginRequest(String email, String password) {
+    public LoginRequest(String email, String password, String role) {
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 }

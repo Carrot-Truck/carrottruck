@@ -2,49 +2,49 @@
 === 일반 사용자 회원가입
 
 ==== HTTP Request
+
 include::{snippets}/create-client/http-request.adoc[]
 include::{snippets}/create-client/request-fields.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/create-client/http-response.adoc[]
 include::{snippets}/create-client/response-fields.adoc[]
 
-
-[[login-client]]
-=== 일반 사용자 로그인
-==== HTTP Request
-include::{snippets}/login-client/http-request.adoc[]
-include::{snippets}/login-client/request-fields.adoc[]
-
-==== HTTP Response
-include::{snippets}/login-client/http-response.adoc[]
-include::{snippets}/login-client/response-fields.adoc[]
-
 [[remove-client]]
 === 일반 사용자 탈퇴
+
 ==== HTTP Request
+
 include::{snippets}/remove-client/http-request.adoc[]
 include::{snippets}/remove-client/request-fields.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/remove-client/http-response.adoc[]
 include::{snippets}/remove-client/response-fields.adoc[]
 
 [[search-client]]
 === 일반 사용자 정보 조회
+
 ==== HTTP Request
+
 include::{snippets}/search-client/http-request.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/search-client/http-response.adoc[]
 include::{snippets}/search-client/response-fields.adoc[]
 
 [[edit-client]]
 === 일반 사용자 정보 수정
+
 ==== HTTP Request
+
 include::{snippets}/edit-client/http-request.adoc[]
 include::{snippets}/edit-client/request-fields.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/edit-client/http-response.adoc[]
 include::{snippets}/edit-client/response-fields.adoc[]

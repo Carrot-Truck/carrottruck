@@ -1,0 +1,21 @@
+[[login]]
+=== 회원 로그인
+
+==== HTTP Request
+include::{snippets}/login/http-request.adoc[]
+include::{snippets}/login/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/login/http-response.adoc[]
+include::{snippets}/login/response-fields.adoc[]
+
+[[check-email]]
+=== 이메일 중복 체크
+
+==== HTTP Request
+include::{snippets}/check-email/http-request.adoc[]
+include::{snippets}/check-email/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/check-email/http-response.adoc[]
+include::{snippets}/check-email/response-fields.adoc[]

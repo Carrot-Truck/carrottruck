@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.controller.review.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReportRequest {
 
-    @NotBlank
+    @NotNull
     private Long reviewId;
 
     @NotBlank

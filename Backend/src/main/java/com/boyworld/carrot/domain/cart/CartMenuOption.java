@@ -9,27 +9,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisHash;
 
 /**
- * 장바구니-메뉴 엔티티
+ * 장바구니-메뉴옵션 엔티티
  *
  * @author 김동현
  */
 @Slf4j
 @Getter
 @NoArgsConstructor
-@RedisHash("cartMenu")
-public class CartMenu extends TimeBaseEntity {
+@RedisHash("cartMenuOption")
+public class CartMenuOption extends TimeBaseEntity {
 
     @Id
     private Long id;
-    private Long cartId;
-    private Long menuId;
+    private Long cartMenuId;
+    private Long menuOptionId;
     private Integer quantity;
 
     @Builder
-    public CartMenu(Long id, Long cartId, Long menuId, Integer quantity) {
+
+    public CartMenuOption(Long id, Long cartMenuId, Long menuOptionId, Integer quantity) {
         this.id = id;
-        this.cartId = cartId;
-        this.menuId = menuId;
+        this.cartMenuId = cartMenuId;
+        this.menuOptionId = menuOptionId;
         this.quantity = quantity;
     }
 }

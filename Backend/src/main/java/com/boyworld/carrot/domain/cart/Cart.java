@@ -7,21 +7,29 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisHash;
 
+/**
+ * 장바구니 엔티티
+ *
+ * @author 김동현
+ */
+@Slf4j
 @Getter
 @NoArgsConstructor
 @RedisHash("cart")
 public class Cart extends TimeBaseEntity {
     @Id
-    private Long id;
-    private Member member;
+    private Long memberId;
+    private Long foodTruckId;
     private Integer totalPrice;
 
     @Builder
-    private Cart(Long id, Member member, Integer totalPrice) {
-        this.id = id;
-        this.member = member;
+    public Cart(Long memberId, Long foodTruckId, Integer totalPrice) {
+        this.memberId = memberId;
+        this.foodTruckId = foodTruckId;
         this.totalPrice = totalPrice;
     }
+
 }

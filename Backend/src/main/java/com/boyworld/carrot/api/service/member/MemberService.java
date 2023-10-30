@@ -134,6 +134,18 @@ public class MemberService {
     }
 
     /**
+     * 회원 주소 수정
+     *
+     * @param memberAddressId 수정할 주소 식별키
+     * @param address         수정할 주소 정보
+     * @param email           로그인 중인 회원 이메일
+     * @return 수정된 주소 정보
+     */
+    public MemberAddressDetailResponse editMemberAddress(Long memberAddressId, String address, String email) {
+        return null;
+    }
+
+    /**
      * 이메일로 회원 조회
      *
      * @param email 찾을 회원 이메일

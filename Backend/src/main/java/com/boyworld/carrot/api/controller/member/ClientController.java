@@ -143,4 +143,25 @@ public class ClientController {
 
         return ApiResponse.ok(response);
     }
+
+    /**
+     * 회원 주소 수정 API
+     *
+     * @param memberAddressId 수정할 주소 식별키
+     * @param request         수정할 주소 정보
+     * @return 수정된 주소 정보
+     */
+    @PatchMapping("/address/{memberAddressId}")
+    public ApiResponse<MemberAddressDetailResponse> editMemberAddress(@PathVariable Long memberAddressId,
+                                                                      @Valid @RequestBody MemberAddressRequest request) {
+        log.debug("ClientController#editMemberAddress called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        MemberAddressDetailResponse response = memberService.editMemberAddress(memberAddressId, request.getAddress(), email);
+        log.debug("MemberAddressResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
 }

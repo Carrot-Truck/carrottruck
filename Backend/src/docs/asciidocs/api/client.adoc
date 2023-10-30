@@ -48,3 +48,14 @@ include::{snippets}/edit-client/request-fields.adoc[]
 
 include::{snippets}/edit-client/http-response.adoc[]
 include::{snippets}/edit-client/response-fields.adoc[]
+
+[[create-address]]
+=== 사용자 주소 등록
+
+==== HTTP Request
+include::{snippets}/create-address/http-request.adoc[]
+include::{snippets}/create-address/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-address/http-response.adoc[]
+include::{snippets}/create-address/response-fields.adoc[]

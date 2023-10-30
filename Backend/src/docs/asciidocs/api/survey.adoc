@@ -1,0 +1,10 @@
+[[create-survey]]
+=== 수요조사 등록
+
+==== HTTP Request
+include::{snippets}/create-survey/http-request.adoc[]
+include::{snippets}/create-survey/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-survey/http-response.adoc[]
+include::{snippets}/create-survey/response-fields.adoc[]

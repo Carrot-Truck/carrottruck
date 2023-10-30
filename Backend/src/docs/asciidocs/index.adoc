@@ -38,3 +38,7 @@ include::{docdir}/api/schedule.adoc[]
 [[Review-API]]
 == Review API
 include::{docdir}/api/review.adoc[]
+
+[[Survey-API]]
+== Survey API
+include::{docdir}/api/survey.adoc[]

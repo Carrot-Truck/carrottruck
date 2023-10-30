@@ -2,7 +2,7 @@ package com.boyworld.carrot.api.controller.analysis;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.analysis.response.StoreAnalysisResponse;
-import com.boyworld.carrot.api.service.analysis.AnalysisService;
+import com.boyworld.carrot.api.service.analysis.AnalysisQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 @RequestMapping("/analysis")
 public class AnalysisController {
 
-    private final AnalysisService analysisService;
+    private final AnalysisQueryService analysisService;
 
     /**
      * 상권분석 API

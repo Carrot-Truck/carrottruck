@@ -1,10 +1,10 @@
 package com.boyworld.carrot.api.service.statistics;
 
 import com.boyworld.carrot.api.controller.statistics.response.*;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -17,8 +17,8 @@ import java.time.LocalDate;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
-public class StatisticsService {
+@Transactional(readOnly = true)
+public class StatisticsQueryService {
 
     /**
      * 영업별 매출통계 리스트

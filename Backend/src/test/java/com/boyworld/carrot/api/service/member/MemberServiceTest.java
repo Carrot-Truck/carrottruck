@@ -124,6 +124,34 @@ class MemberServiceTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder("박동현", "매미킴123", "ssafy@ssafy.com", "010-5678-1234", "VENDOR", "123456789");
     }
 
+    @DisplayName("모든 사용자는 회원 탈퇴를 할 수 있다.")
+    @Test
+    void withdrawal() {
+        // given
+        Member member = createMember(Role.CLIENT);
+
+        // when
+        Boolean result = memberService.withdrawal(member.getEmail(), "ssafy1234");
+
+        // then
+        assertThat(result).isTrue();
+
+    }
+
+    @DisplayName("잘못된 비밀번호를 입력하면 탈퇴를 할 수 없다ㅏ.")
+    @Test
+    void withdrawalWithWrongPassword() {
+        // given
+        Member member = createMember(Role.CLIENT);
+
+        // when
+        Boolean result = memberService.withdrawal(member.getEmail(), "ssafy!");
+
+        // then
+        assertThat(result).isFalse();
+
+    }
+
     private Member createMember(Role role) {
         Member member = Member.builder()
                 .email("ssafy@ssafy.com")

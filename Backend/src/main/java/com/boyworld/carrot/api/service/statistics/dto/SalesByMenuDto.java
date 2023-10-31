@@ -13,9 +13,9 @@ public class SalesByMenuDto {
     private SalesDto salesDto;
 
     @Builder
-    public SalesByMenuDto(Long menuId, String menuName, SalesDto salesDto) {
+    public SalesByMenuDto(Long menuId, String menuName, Integer totalOrders, Integer totalSales) {
         this.menuId = menuId;
         this.menuName = menuName;
-        this.salesDto = salesDto;
+        this.salesDto = new SalesDto(totalOrders, totalSales);
     }
 }

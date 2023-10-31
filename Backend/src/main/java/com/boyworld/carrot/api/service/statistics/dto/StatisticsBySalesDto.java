@@ -19,13 +19,13 @@ public class StatisticsBySalesDto {
     private StatisticsDto statisticsDto;
 
     @Builder
-    public StatisticsBySalesDto(Long salesId, String date, String startTime, String endTime, String address, StatisticsDto statisticsDto) {
+    public StatisticsBySalesDto(Long salesId, String date, String startTime, String endTime, String address, Integer totalHours, Integer totalMinutes, Integer totalSales) {
         this.salesId = salesId;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.address = address;
-        this.statisticsDto = statisticsDto;
+        this.statisticsDto = new StatisticsDto(totalHours, totalMinutes, totalSales);
     }
 
     @Builder

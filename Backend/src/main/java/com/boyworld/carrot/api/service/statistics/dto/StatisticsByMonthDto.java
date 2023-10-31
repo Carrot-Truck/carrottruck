@@ -7,22 +7,18 @@ import lombok.NoArgsConstructor;
 @Data
 public class StatisticsByMonthDto {
 
-    private String year;
-
-    private String month;
+    private Integer month;
 
     private StatisticsDto statisticsDto;
 
     @Builder
-    public StatisticsByMonthDto(String year, String month, StatisticsDto statisticsDto) {
-        this.year = year;
+    public StatisticsByMonthDto(Integer month, Integer totalHours, Integer totalMinutes, Integer totalSales) {
         this.month = month;
-        this.statisticsDto = statisticsDto;
+        this.statisticsDto = new StatisticsDto(totalHours, totalMinutes, totalSales);
     }
 
     @Builder
     public StatisticsByMonthDto(StatisticsByMonthDto statisticsByMonthDto) {
-        this.year = statisticsByMonthDto.getYear();
         this.month = statisticsByMonthDto.getMonth();
         this.statisticsDto = statisticsByMonthDto.getStatisticsDto();
     }

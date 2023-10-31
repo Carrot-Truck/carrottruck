@@ -6,13 +6,13 @@ import lombok.Data;
 @Data
 public class SalesByHourDto {
 
-    private String startHour;
+    private Integer startHour;
 
     private SalesDto salesDto;
 
     @Builder
-    public SalesByHourDto(String startHour, SalesDto salesDto) {
+    public SalesByHourDto(Integer startHour, Integer totalOrders, Integer totalSales) {
         this.startHour = startHour;
-        this.salesDto = salesDto;
+        this.salesDto = new SalesDto(totalOrders, totalSales);
     }
 }

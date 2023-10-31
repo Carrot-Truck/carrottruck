@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class VendorInfoResponse {
 
+    private Long vendorInfoId;
+
     private String tradeName;
 
     private String vendorName;
@@ -15,7 +17,8 @@ public class VendorInfoResponse {
     private String phoneNumber;
 
     @Builder
-    public VendorInfoResponse(String tradeName, String vendorName, String businessNumber, String phoneNumber) {
+    public VendorInfoResponse(Long vendorInfoId, String tradeName, String vendorName, String businessNumber, String phoneNumber) {
+        this.vendorInfoId = vendorInfoId;
         this.tradeName = tradeName;
         this.vendorName = vendorName;
         this.businessNumber = businessNumber;

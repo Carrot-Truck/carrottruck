@@ -22,3 +22,16 @@ include::{snippets}/search-vendor-info/http-request.adoc[]
 
 include::{snippets}/search-vendor-info/http-response.adoc[]
 include::{snippets}/search-vendor-info/response-fields.adoc[]
+
+[[delete-vendor-info]]
+=== 사업자 정보 삭제
+
+==== HTTP Request
+
+include::{snippets}/delete-vendor-info/http-request.adoc[]
+include::{snippets}/delete-vendor-info/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/delete-vendor-info/http-response.adoc[]
+include::{snippets}/delete-vendor-info/response-fields.adoc[]

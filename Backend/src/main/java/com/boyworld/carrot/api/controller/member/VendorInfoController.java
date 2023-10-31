@@ -65,4 +65,24 @@ public class VendorInfoController {
 
         return ApiResponse.ok(response);
     }
+
+    /**
+     * 사업자 정보 삭제 API
+     * 
+     * @param vendorInfoId 사업자 정보 식별키
+     * @return 삭제 성공 여부
+     */
+    @DeleteMapping("/{vendorInfoId}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ApiResponse<Boolean> deleteVendorInfo(@PathVariable Long vendorInfoId) {
+        log.debug("VendorInfoController#deleteVendorInfo called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Boolean result = vendorInfoService.deleteVendorInfo(vendorInfoId, email);
+        log.debug("result={}", result);
+
+        return ApiResponse.found(result);
+    }
 }

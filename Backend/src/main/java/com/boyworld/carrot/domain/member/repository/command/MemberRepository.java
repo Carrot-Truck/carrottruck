@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.member.repository;
+package com.boyworld.carrot.domain.member.repository.command;
 
 import com.boyworld.carrot.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +14,5 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findByEmail(String loginId);
+    Optional<Member> findByEmail(String email);
 }

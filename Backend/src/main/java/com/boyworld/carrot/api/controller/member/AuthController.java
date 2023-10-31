@@ -3,7 +3,7 @@ package com.boyworld.carrot.api.controller.member;
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.member.request.CheckEmailRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
-import com.boyworld.carrot.api.service.member.AuthService;
+import com.boyworld.carrot.api.service.member.query.AuthService;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.security.TokenInfo;
 import jakarta.validation.Valid;
@@ -72,7 +72,7 @@ public class AuthController {
         log.debug("AuthController#checkEmail called");
         log.debug("CheckEmailRequest={}", request);
 
-        Boolean result = authService.checkEmail(request.getEmail(), request.getRole());
+        Boolean result = authService.checkEmail(request.getEmail());
         log.debug("result={}", result);
 
         return ApiResponse.ok(result);

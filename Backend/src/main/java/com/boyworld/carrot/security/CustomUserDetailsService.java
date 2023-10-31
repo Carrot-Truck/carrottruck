@@ -1,7 +1,7 @@
 package com.boyworld.carrot.security;
 
 import com.boyworld.carrot.domain.member.Member;
-import com.boyworld.carrot.domain.member.repository.MemberRepository;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +18,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        Optional<Member> findMember = memberRepository.findByEmail(loginId);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Member> findMember = memberRepository.findByEmail(email);
 
         return findMember
             .map(this::createMemberUserDetails)

@@ -6,11 +6,12 @@ import com.boyworld.carrot.api.controller.member.request.JoinRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
-import com.boyworld.carrot.api.service.member.AccountService;
-import com.boyworld.carrot.api.service.member.MemberService;
+import com.boyworld.carrot.api.service.member.query.AccountService;
+import com.boyworld.carrot.api.service.member.command.MemberService;
 import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
+import com.boyworld.carrot.domain.member.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,12 +19,11 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -163,7 +163,7 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .nickname("매미킴")
                 .email("ssafy@ssafy.com")
                 .phoneNumber("010-1234-1234")
-                .role("CLIENT")
+                .role(Role.CLIENT)
                 .build();
 
         given(accountService.getClientInfo(anyString()))
@@ -206,7 +206,6 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .name("박동현")
                 .nickname("매미킴123")
                 .phoneNumber("010-1234-5678")
-                .role("CLIENT")
                 .build();
 
         ClientResponse response = ClientResponse.builder()
@@ -214,10 +213,10 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .nickname("매미킴123")
                 .email("ssafy@ssafy.com")
                 .phoneNumber("010-1234-5678")
-                .role("CLIENT")
+                .role(Role.CLIENT)
                 .build();
 
-        given(accountService.editClient(any(EditMemberDto.class)))
+        given(memberService.editClient(any(EditMemberDto.class)))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -237,9 +236,7 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("nickname").type(JsonFieldType.STRING)
                                         .description("닉네임"),
                                 fieldWithPath("phoneNumber").type(JsonFieldType.STRING)
-                                        .description("전화번호"),
-                                fieldWithPath("role").type(JsonFieldType.STRING)
-                                        .description("역할")
+                                        .description("전화번호")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

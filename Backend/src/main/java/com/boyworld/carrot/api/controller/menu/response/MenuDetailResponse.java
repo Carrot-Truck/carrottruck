@@ -10,19 +10,19 @@ public class MenuDetailResponse {
 
     private Long menuId;
     private String menuName;
-    private Integer price;
-    private String description;
-    private Boolean soldOut;
+    private Integer menuPrice;
+    private String menuDescription;
+    private Boolean menuSoldOut;
     private Long menuImageId;
     private List<MenuOptionResponse> menuOptions;
 
     @Builder
-    public MenuDetailResponse(Long menuId, String menuName, Integer price, String description, Boolean soldOut, Long menuImageId, List<MenuOptionResponse> menuOptions) {
+    public MenuDetailResponse(Long menuId, String menuName, Integer menuPrice, String menuDescription, Boolean menuSoldOut, Long menuImageId, List<MenuOptionResponse> menuOptions) {
         this.menuId = menuId;
         this.menuName = menuName;
-        this.price = price;
-        this.description = description;
-        this.soldOut = soldOut;
+        this.menuPrice = menuPrice;
+        this.menuDescription = menuDescription;
+        this.menuSoldOut = menuSoldOut;
         this.menuImageId = menuImageId;
         this.menuOptions = menuOptions;
     }

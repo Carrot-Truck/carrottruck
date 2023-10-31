@@ -1,19 +1,22 @@
-package com.boyworld.carrot.api.service.member;
+package com.boyworld.carrot.api.service.member.query;
 
 import com.boyworld.carrot.api.service.member.dto.LoginDto;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
-import com.boyworld.carrot.domain.member.repository.MemberQueryRepository;
+import com.boyworld.carrot.domain.member.Member;
+import com.boyworld.carrot.domain.member.Role;
+import com.boyworld.carrot.domain.member.repository.query.MemberQueryRepository;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.security.JwtTokenProvider;
 import com.boyworld.carrot.security.TokenInfo;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+
+import java.util.NoSuchElementException;
 
 /**
  * 인증 서비스
@@ -26,6 +29,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -55,21 +59,25 @@ public class AuthService {
      * @param email 중복 체크할 이메일
      * @return 존재하면 true, 존재하지 않으면 false
      */
-    public Boolean checkEmail(String email, String role) {
-        return memberQueryRepository.isExistEmail(email, role);
+    public Boolean checkEmail(String email) {
+        return memberQueryRepository.isExistEmail(email);
     }
 
     /**
-     * 로그인하려는 role 과 매개변수 role 이 일치하는지 확인
+     * 사업자 로그인 요청 시 일반 사용자의 요청인지 확인
      *
-     * @param dto 로그인 정보
-     * @param role  로그인 할 사용자 권한
-     * @throws InvalidAccessException 두 역할이 일치하지 않는 경우
+     * @param dto  로그인 할 회원 정보
+     * @param role 로그인 할 권한
+     * @throws NoSuchElementException 이메일에 해당하는 사용자가 없을 경우
+     * @throws InvalidAccessException 사용자가 사업자 로그인을 시도한 경우
      */
     private void checkValidAccess(LoginDto dto, String role) {
-        boolean result = StringUtils.hasText(role) && dto.getRole().equals(role);
-        if (!result) {
-            throw new InvalidAccessException("잘못된 접근입니다.");
+        if (role.equals(Role.VENDOR.toString())) {
+            Member member = memberRepository.findByEmail(dto.getEmail())
+                    .orElseThrow(NoSuchElementException::new);
+            if (member.getRole().equals(Role.CLIENT)) {
+                throw new InvalidAccessException("잘못된 접근입니다.");
+            }
         }
     }
 }

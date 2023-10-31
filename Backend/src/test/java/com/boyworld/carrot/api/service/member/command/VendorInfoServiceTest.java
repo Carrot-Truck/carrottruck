@@ -7,6 +7,7 @@ import com.boyworld.carrot.api.service.member.dto.CreateVendorInfoDto;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
+import com.boyworld.carrot.domain.member.VendorInfo;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.member.repository.command.VendorInfoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -91,6 +92,46 @@ class VendorInfoServiceTest extends IntegrationTestSupport {
                 .hasMessage("존재하지 않는 회원입니다.");
     }
 
+    @DisplayName("사업자는 자신의 사업자 정보를 삭제할 수 있다.")
+    @Test
+    void deleteVendorInfo() {
+        // given
+        Member member = createMember(Role.VENDOR);
+        VendorInfo vendorInfo = createVendorInfo(member, true);
+
+        // when
+        Boolean result = vendorInfoService.deleteVendorInfo(vendorInfo.getId());
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("존재하지 않는 사업자 정보는 삭제할 수 없다.")
+    @Test
+    void deleteVendorInfoNotExisting() {
+        // given
+        Member member = createMember(Role.VENDOR);
+        VendorInfo vendorInfo = createVendorInfo(member, true);
+
+        // when // then
+        assertThatThrownBy(() -> vendorInfoService.deleteVendorInfo(0L))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("존재하지 않는 사업자 정보입니다.");
+    }
+
+    @DisplayName("이미 삭제된 사업자 정보는 삭제할 수 없다.")
+    @Test
+    void deleteVendorInfoAlreadyDeleted() {
+        // given
+        Member member = createMember(Role.VENDOR);
+        VendorInfo vendorInfo = createVendorInfo(member, false);
+
+        // when // then
+        assertThatThrownBy(() -> vendorInfoService.deleteVendorInfo(vendorInfo.getId()))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("이미 삭제된 사업자 정보입니다.");
+    }
+
     private Member createMember(Role role) {
         Member member = Member.builder()
                 .email("ssafy@ssafy.com")
@@ -102,5 +143,17 @@ class VendorInfoServiceTest extends IntegrationTestSupport {
                 .active(true)
                 .build();
         return memberRepository.save(member);
+    }
+
+    private VendorInfo createVendorInfo(Member member, boolean active) {
+        VendorInfo vendorInfo = VendorInfo.builder()
+                .tradeName("상호명")
+                .vendorName(member.getName())
+                .businessNumber("123456789")
+                .phoneNumber(member.getPhoneNumber())
+                .member(member)
+                .active(active)
+                .build();
+        return vendorInfoRepository.save(vendorInfo);
     }
 }

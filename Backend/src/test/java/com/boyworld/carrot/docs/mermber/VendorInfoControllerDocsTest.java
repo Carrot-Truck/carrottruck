@@ -28,8 +28,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(VendorInfoControllerTest.class)
-class VendorInfoControllerTest extends RestDocsSupport {
+@WebMvcTest(VendorInfoControllerDocsTest.class)
+class VendorInfoControllerDocsTest extends RestDocsSupport {
 
     private final VendorInfoService vendorInfoService = Mockito.mock(VendorInfoService.class);
     private final VendorInfoQueryService vendorInfoQueryService = Mockito.mock(VendorInfoQueryService.class);
@@ -51,6 +51,7 @@ class VendorInfoControllerTest extends RestDocsSupport {
                 .build();
 
         VendorInfoResponse response = VendorInfoResponse.builder()
+                .vendorInfoId(1L)
                 .tradeName("무적의 소년천지")
                 .businessNumber("1515-302-006031")
                 .vendorName("김동현")
@@ -89,6 +90,8 @@ class VendorInfoControllerTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                                         .description("응답데이터"),
+                                fieldWithPath("data.vendorInfoId").type(JsonFieldType.NUMBER)
+                                        .description("사업자 정보 식별키"),
                                 fieldWithPath("data.tradeName").type(JsonFieldType.STRING)
                                         .description("상호명"),
                                 fieldWithPath("data.businessNumber").type(JsonFieldType.STRING)
@@ -154,7 +157,7 @@ class VendorInfoControllerTest extends RestDocsSupport {
     @WithMockUser(roles = {"CLIENT", "VENDOR"})
     void deleteVendorInfo() throws Exception {
 
-        given(vendorInfoService.deleteVendorInfo(anyLong(), anyString()))
+        given(vendorInfoService.deleteVendorInfo(anyLong()))
                 .willReturn(true);
 
         mockMvc.perform(

@@ -7,9 +7,11 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+@EnableRedisRepositories
 @Configuration
 public class RedisConfig {
 
@@ -31,7 +33,6 @@ public class RedisConfig {
         redisConfiguration.setHostName(host);
         redisConfiguration.setPort(port);
         redisConfiguration.setPassword(pw);
-//        redisConfiguration.setPassword(password);
 
         return new LettuceConnectionFactory(redisConfiguration);
     }
@@ -46,7 +47,7 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
 
         // 값은 JSON 형식으로 직렬화하여 저장합니다.
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
 
         // Hash 자료구조를 사용할 때 필요한 설정입니다.
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());

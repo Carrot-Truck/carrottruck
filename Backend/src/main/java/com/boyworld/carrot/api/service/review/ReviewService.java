@@ -9,7 +9,7 @@ import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
-import com.boyworld.carrot.domain.member.repository.MemberRepository;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
 import com.boyworld.carrot.security.SecurityUtil;

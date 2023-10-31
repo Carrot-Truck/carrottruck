@@ -3,6 +3,7 @@ package com.boyworld.carrot.domain.member.repository;
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

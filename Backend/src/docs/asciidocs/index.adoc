@@ -19,6 +19,10 @@ include::{docdir}/api/auth.adoc[]
 == Client API
 include::{docdir}/api/client.adoc[]
 
+[[MemberAddress-API]]
+== MemberAddress API
+include::{docdir}/api/member-address.adoc[]
+
 [[Vendor-API]]
 == Vendor API
 include::{docdir}/api/vendor.adoc[]

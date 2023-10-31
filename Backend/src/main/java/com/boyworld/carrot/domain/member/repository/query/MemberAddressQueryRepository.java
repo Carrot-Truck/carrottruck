@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.member.repository;
+package com.boyworld.carrot.domain.member.repository.query;
 
 import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
 import com.querydsl.core.types.Projections;

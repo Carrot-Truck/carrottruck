@@ -1,31 +1,26 @@
-package com.boyworld.carrot.domain.member.repository;
+package com.boyworld.carrot.api.service.member;
 
 import com.boyworld.carrot.IntegrationTestSupport;
-import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
+import com.boyworld.carrot.api.service.member.query.MemberAddressQueryService;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.MemberAddress;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberAddressRepository;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
-import com.boyworld.carrot.domain.member.repository.query.MemberAddressQueryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
+public class MemberAddressQueryServiceTest extends IntegrationTestSupport {
 
     @Autowired
-    private MemberAddressQueryRepository memberAddressQueryRepository;
-
-    @Autowired
-    private MemberAddressRepository memberAddressRepository;
+    private MemberAddressQueryService memberAddressQueryService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -33,7 +28,10 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private MemberRepository memberRepository;
 
-    @DisplayName("사용자는 회원 주소 목록을 조회할 수 있다.")
+    @Autowired
+    private MemberAddressRepository memberAddressRepository;
+
+    @DisplayName("모든 사용자는 등록된 회원 주소 목록을 조회할 수 있다.")
     @Test
     void getMemberAddresses() {
         // given
@@ -42,25 +40,29 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
         MemberAddress memberAddress2 = createMemberAddress(member, "주소2");
 
         // when
-        List<MemberAddressDetailResponse> responses =
-                memberAddressQueryRepository.getMemberAddressesByEmail(member.getEmail(), 0L);
+        MemberAddressResponse response = memberAddressQueryService.getMemberAddresses(member.getEmail(), "");
+        log.debug("response={}", response);
 
         // then
-        assertThat(responses).hasSize(2);
+        assertThat(response).isNotNull();
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getMemberAddresses()).hasSize(2);
     }
 
-    @DisplayName("회원 주소가 없으면 빈 리스트가 반환된다.")
+    @DisplayName("등록된 주소가 없으면 빈 리스트가 반환된다.")
     @Test
-    void getMemberAddressesWithEmpty() {
+    void getEmptyMemberAddresses() {
         // given
         Member member = createMember(Role.CLIENT);
 
         // when
-        List<MemberAddressDetailResponse> responses =
-                memberAddressQueryRepository.getMemberAddressesByEmail(member.getEmail(), 0L);
+        MemberAddressResponse response = memberAddressQueryService.getMemberAddresses(member.getEmail(), "");
+        log.debug("response={}", response);
 
         // then
-        assertThat(responses).isEmpty();
+        assertThat(response).isNotNull();
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getMemberAddresses()).isEmpty();
     }
 
     private Member createMember(Role role) {

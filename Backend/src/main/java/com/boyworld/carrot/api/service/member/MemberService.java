@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * 회원 서비스
@@ -163,7 +164,23 @@ public class MemberService {
      * @return 수정된 주소 정보
      */
     public MemberAddressDetailResponse editMemberAddress(Long memberAddressId, String address, String email) {
-        return null;
+        MemberAddress memberAddress = getMemberAddressById(memberAddressId);
+
+        memberAddress.editAddress(address);
+
+        return MemberAddressDetailResponse.of(memberAddress);
+    }
+
+    /**
+     * 회원 주소 식별키로 식별키로 회원 주소 조회
+     *
+     * @param memberAddressId 회원 주소 식별키
+     * @return 회원 주소 엔티티
+     * @throws 회원 주소 식별키에 해당하는 회원 주소가 존재하지 않을 경우
+     */
+    private MemberAddress getMemberAddressById(Long memberAddressId) {
+        return memberAddressRepository.findById(memberAddressId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원 주소입니다."));
     }
 
     /**

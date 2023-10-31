@@ -38,4 +38,9 @@ public class MemberAddress extends TimeBaseEntity {
         this.active = active;
         this.member = member;
     }
+
+    // == business logic ==//
+    public void editAddress(String address) {
+        this.address = address;
+    }
 }

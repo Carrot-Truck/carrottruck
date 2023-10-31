@@ -45,7 +45,7 @@ public class SaleController {
      * @return 개시한 영업 정보
      */
     @PostMapping("/open")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<OpenSaleResponse> openSale(@Valid @RequestBody OpenSaleRequest request) {
         log.debug("SaleController#open called");
         log.debug("OpenSaleRequest={}", request);

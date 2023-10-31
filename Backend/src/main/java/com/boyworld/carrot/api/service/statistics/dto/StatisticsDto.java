@@ -7,13 +7,16 @@ import lombok.NoArgsConstructor;
 @Data
 public class StatisticsDto {
 
-    private String totalTime;
+    private Integer totalHours;
+
+    private Integer totalMinutes;
 
     private Integer totalSales;
 
     @Builder
-    protected StatisticsDto(String totalTime, Integer totalSales) {
-        this.totalTime = totalTime;
+    protected StatisticsDto(Integer totalHours, Integer totalMinutes, Integer totalSales) {
+        this.totalHours = totalHours;
+        this.totalMinutes = totalMinutes;
         this.totalSales = totalSales;
     }
 }

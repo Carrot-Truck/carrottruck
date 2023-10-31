@@ -2,7 +2,7 @@ package com.boyworld.carrot.api.controller.statistics;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.statistics.response.*;
-import com.boyworld.carrot.api.service.statistics.StatisticsService;
+import com.boyworld.carrot.api.service.statistics.StatisticsQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @RequestMapping("/statistics/{foodTruckId}")
 public class StatisticsController {
 
-    private final StatisticsService statisticsService;
+    private final StatisticsQueryService statisticsService;
 
     /**
      * 영업 매출 통계 리스트 API
@@ -42,7 +42,7 @@ public class StatisticsController {
         StatisticsBySalesResponse response = statisticsService.getStatisticsBySales(foodTruckId, year, page);
         log.debug("StatisticsBySalesResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -59,10 +59,10 @@ public class StatisticsController {
         log.debug("StatisticsController#getStatisticsBySalesDetails called !!!");
         log.debug("FoodTruckId={}, SalesID={}", foodTruckId, salesId);
 
-        StatisticsBySalesDetailsResponse response = statisticsService.getStatisticsBySalesDetails(salesId);
+        StatisticsBySalesDetailsResponse response = statisticsService.getStatisticsBySalesDetails(foodTruckId, salesId);
         log.debug("StatisticsBySalesDetailsResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -84,7 +84,7 @@ public class StatisticsController {
         StatisticsByWeekResponse response = statisticsService.getStatisticsByWeek(foodTruckId, year, page);
         log.debug("StatisticsByWeekResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -109,7 +109,7 @@ public class StatisticsController {
         StatisticsByWeekDetailsResponse response = statisticsService.getStatisticsByWeekDetails(foodTruckId, start, end);
         log.debug("StatisticsByWeekDetailsResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -129,7 +129,7 @@ public class StatisticsController {
         StatisticsByMonthResponse response = statisticsService.getStatisticsByMonth(foodTruckId, year);
         log.debug("StatisticsByMonthResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -151,6 +151,6 @@ public class StatisticsController {
         StatisticsByMonthDetailsResponse response = statisticsService.getStatisticsByMonthDetails(foodTruckId, year, month);
         log.debug("StatisticsByMonthDetailsResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 }

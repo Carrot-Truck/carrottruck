@@ -8,12 +8,12 @@ import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.api.service.review.ReviewService;
-import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,7 +41,7 @@ public class ReviewController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Boolean> createReview(@Valid @RequestBody ReviewRequest request) {
+    public ApiResponse<Boolean> createReview(@Valid @ModelAttribute ReviewRequest request) {
         log.debug("ReviewController#createReview called !!!");
         log.debug("review= {}", request);
 
@@ -71,9 +71,7 @@ public class ReviewController {
     public ApiResponse<MyReviewResponse> getMyReview() {
         log.debug("ReviewController#getMyReview called !!!");
 
-        String userEmail = SecurityUtil.getCurrentLoginId();
-        log.debug("id= {}", userEmail);
-        MyReviewResponse response = reviewService.getMyReview(userEmail);
+        MyReviewResponse response = reviewService.getMyReview();
         return ApiResponse.found(response);
     }
 
@@ -101,7 +99,7 @@ public class ReviewController {
         log.debug("ReviewController#withdrawal called !!!");
         log.debug("WithdrawalRequest={}", request);
 
-        Boolean result = reviewService.withdrawal(request.getEmail(), request.getReviewId());
+        Boolean result = reviewService.withdrawal(request.getReviewId());
         log.debug("result={}", result);
 
         return ApiResponse.ok(true);

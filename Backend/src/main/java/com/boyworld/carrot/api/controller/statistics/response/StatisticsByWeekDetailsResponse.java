@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 public class StatisticsByWeekDetailsResponse {
 
-    private StatisticsByWeekDto statisticsByWeekDto;
+    private StatisticsByWeekDto statisticsByWeek;
 
     private List<SalesByMenuDto> salesByMenu;
 

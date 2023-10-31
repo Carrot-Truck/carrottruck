@@ -9,10 +9,13 @@ import java.util.List;
 @Data
 public class StatisticsByWeekResponse {
 
+    private Integer year;
+
     private List<StatisticsByWeekDto> statisticsByWeek;
 
     @Builder
-    public StatisticsByWeekResponse(List<StatisticsByWeekDto> statisticsByWeek) {
+    public StatisticsByWeekResponse(Integer year, List<StatisticsByWeekDto> statisticsByWeek) {
+        this.year = year;
         this.statisticsByWeek = statisticsByWeek;
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class StatisticsBySalesDetailsResponse {
 
-    private StatisticsBySalesDto statisticsBySalesDto;
+    private StatisticsBySalesDto statisticsBySales;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal latitude;
@@ -26,8 +26,8 @@ public class StatisticsBySalesDetailsResponse {
     private List<SalesByHourDto> salesByHour;
 
     @Builder
-    public StatisticsBySalesDetailsResponse(StatisticsBySalesDto statisticsBySalesDto, BigDecimal latitude, BigDecimal longitude, List<SalesByMenuDto> salesByMenu, List<SalesByHourDto> salesByHour) {
-        this.statisticsBySalesDto = statisticsBySalesDto;
+    public StatisticsBySalesDetailsResponse(StatisticsBySalesDto statisticsBySales, BigDecimal latitude, BigDecimal longitude, List<SalesByMenuDto> salesByMenu, List<SalesByHourDto> salesByHour) {
+        this.statisticsBySales = statisticsBySales;
         this.latitude = latitude;
         this.longitude = longitude;
         this.salesByMenu = salesByMenu;

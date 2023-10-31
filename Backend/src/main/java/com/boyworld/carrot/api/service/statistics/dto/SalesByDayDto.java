@@ -11,8 +11,8 @@ public class SalesByDayDto {
     private SalesDto salesDto;
 
     @Builder
-    public SalesByDayDto(String day, SalesDto salesDto) {
+    public SalesByDayDto(String day, Integer totalOrders, Integer totalSales) {
         this.day = day;
-        this.salesDto = salesDto;
+        this.salesDto = new SalesDto(totalOrders, totalSales);
     }
 }

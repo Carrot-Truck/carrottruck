@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,18 +20,19 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadFiles(MultipartFile multipartFile, Long reviewId, String dirName) throws IOException {
+    public String uploadFiles(MultipartFile multipartFile, String dirName) throws IOException {
         File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
             .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-        return upload(uploadFile, reviewId, dirName);
+        return upload(uploadFile, dirName);
     }
 
-    public String upload(File uploadFile, Long reviewId, String filePath) {
-        String fileName = filePath + "/" + reviewId + "." + uploadFile.getName().split("\\.")[1];   // S3에 저장된 파일 이름
+    public String upload(File uploadFile, String filePath) {
+        String fileName = filePath + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
         String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
         removeNewFile(uploadFile);
         return uploadImageUrl;
     }
+
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {

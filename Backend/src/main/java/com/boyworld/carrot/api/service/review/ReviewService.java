@@ -65,11 +65,12 @@ public class ReviewService {
                 .active(true)
                 .build();
             // Save review
-            Review savedReview = reviewRepository.save(review);
+            reviewRepository.save(review);
 
             // Image upload at AWS S3
-            String uploadFileUrl = s3Uploader.uploadFiles(request.getImage(), savedReview.getId(), "review");
-            // Save info at ReviewImage
+            String uploadFileUrl = s3Uploader.uploadFiles(request.getImage(), "review");
+            log.debug("review image saved at {}", uploadFileUrl);
+//             Save info at ReviewImage
             ReviewImage reviewImage = ReviewImage.builder()
                     .review(review)
                     .saveFileName(uploadFileUrl)

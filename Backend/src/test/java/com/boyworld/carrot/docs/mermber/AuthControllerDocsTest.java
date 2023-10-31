@@ -3,7 +3,7 @@ package com.boyworld.carrot.docs.mermber;
 import com.boyworld.carrot.api.controller.member.AuthController;
 import com.boyworld.carrot.api.controller.member.request.CheckEmailRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
-import com.boyworld.carrot.api.service.member.AuthService;
+import com.boyworld.carrot.api.service.member.query.AuthService;
 import com.boyworld.carrot.api.service.member.dto.LoginDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import com.boyworld.carrot.security.TokenInfo;

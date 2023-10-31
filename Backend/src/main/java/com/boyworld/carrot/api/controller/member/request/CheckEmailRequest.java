@@ -12,12 +12,9 @@ public class CheckEmailRequest {
     @NotBlank
     private String email;
 
-    @NotBlank
-    private String role;
 
     @Builder
-    public CheckEmailRequest(String email, String role) {
+    public CheckEmailRequest(String email) {
         this.email = email;
-        this.role = role;
     }
 }

@@ -7,7 +7,6 @@ import com.boyworld.carrot.api.controller.survey.response.SurveyCountResponse;
 import com.boyworld.carrot.api.controller.survey.response.SurveyDetailsResponse;
 import com.boyworld.carrot.api.service.survey.SurveyQueryService;
 import com.boyworld.carrot.api.service.survey.SurveyService;
-import com.boyworld.carrot.api.service.survey.dto.CreateSurveyDto;
 import com.boyworld.carrot.api.service.survey.dto.SurveyCountDto;
 import com.boyworld.carrot.api.service.survey.dto.SurveyDetailDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
@@ -19,6 +18,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -182,7 +182,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                 .memberId(1L)
                 .nickname("당근당근")
                 .content("출근길에 아아가 있었으면 좋겠어요")
-                .createdTime(LocalDateTime.now().minusMonths(1))
+                .createdTime(LocalDateTime.now().minusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .build();
 
         SurveyDetailDto item2 = SurveyDetailDto.builder()
@@ -190,7 +190,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                 .memberId(25L)
                 .nickname("트럭")
                 .content("커피팔아주세요")
-                .createdTime(LocalDateTime.now().minusDays(1))
+                .createdTime(LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .build();
 
         SurveyDetailDto item3 = SurveyDetailDto.builder()
@@ -198,7 +198,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                 .memberId(30L)
                 .nickname("바니")
                 .content("붕어빵 먹고싶어요")
-                .createdTime(LocalDateTime.now())
+                .createdTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .build();
 
         List<SurveyDetailDto> items = List.of(item1, item2, item3);
@@ -259,7 +259,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                                         .description("작성자 닉네임"),
                                 fieldWithPath("data.surveyDetailDtoList[].content").type(JsonFieldType.STRING)
                                         .description("수요조사 상세내용"),
-                                fieldWithPath("data.surveyDetailDtoList[].createdTime").type(JsonFieldType.ARRAY)
+                                fieldWithPath("data.surveyDetailDtoList[].createdTime").type(JsonFieldType.STRING)
                                         .description("수요조사 작성시간")
                         )
                 ));

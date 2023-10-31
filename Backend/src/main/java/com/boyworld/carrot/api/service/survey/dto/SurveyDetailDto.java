@@ -16,10 +16,10 @@ public class SurveyDetailDto {
 
     private String content;
 
-    private LocalDateTime createdTime;
+    private String createdTime;
 
     @Builder
-    public SurveyDetailDto(Long surveyId, Long memberId, String nickname, String content, LocalDateTime createdTime) {
+    public SurveyDetailDto(Long surveyId, Long memberId, String nickname, String content, String createdTime) {
         this.surveyId = surveyId;
         this.memberId = memberId;
         this.nickname = nickname;

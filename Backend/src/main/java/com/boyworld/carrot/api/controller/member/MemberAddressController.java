@@ -80,7 +80,7 @@ public class MemberAddressController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        MemberAddressDetailResponse response = memberAddressQueryService.getMemberAddress(memberAddressId, email);
+        MemberAddressDetailResponse response = memberAddressQueryService.getMemberAddress(memberAddressId);
         log.debug("MemberAddressDetailResponse={}", response);
 
         return ApiResponse.ok(response);

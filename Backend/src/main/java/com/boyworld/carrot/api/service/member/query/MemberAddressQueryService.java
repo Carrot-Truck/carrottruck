@@ -72,10 +72,9 @@ public class MemberAddressQueryService {
      * 회원 주소 상세 조회
      *
      * @param memberAddressId 회원 주소 식별키
-     * @param email 현재 로그인한 사용자 이메일
      * @return 회원 주소 상세 정보
      */
-    public MemberAddressDetailResponse getMemberAddress(Long memberAddressId, String email) {
-        return null;
+    public MemberAddressDetailResponse getMemberAddress(Long memberAddressId) {
+        return memberAddressQueryRepository.getMemberAddressByEmailAndId(memberAddressId);
     }
 }

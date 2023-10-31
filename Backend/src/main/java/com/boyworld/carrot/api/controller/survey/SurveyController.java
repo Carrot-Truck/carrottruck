@@ -5,6 +5,7 @@ import com.boyworld.carrot.api.controller.survey.request.CreateSurveyRequest;
 import com.boyworld.carrot.api.controller.survey.response.CreateSurveyResponse;
 import com.boyworld.carrot.api.controller.survey.response.SurveyDetailsResponse;
 import com.boyworld.carrot.api.controller.survey.response.SurveyCountResponse;
+import com.boyworld.carrot.api.service.survey.SurveyQueryService;
 import com.boyworld.carrot.api.service.survey.SurveyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class SurveyController {
 
     private final SurveyService surveyService;
+    private final SurveyQueryService surveyQueryService;
 
     /**
      * 수요조사 제출 API
@@ -59,7 +61,7 @@ public class SurveyController {
         log.debug("SurveyController#getSurveyCount called !!!");
         log.debug("Address={} {} {}", sido, sigungu, dong);
 
-        SurveyCountResponse response = surveyService.getSurveyCount(sido, sigungu, dong);
+        SurveyCountResponse response = surveyQueryService.getSurveyCount(sido, sigungu, dong);
         log.debug("SurveyCountResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -85,7 +87,7 @@ public class SurveyController {
         log.debug("SurveyController#getSurveyDetails called !!!");
         log.debug("CategoryID={}, Address={} {} {}, Page={}", categoryId, sido, sigungu, dong, page);
 
-        SurveyDetailsResponse response = surveyService.getSurveyDetails(categoryId, sido, sigungu, dong, page);
+        SurveyDetailsResponse response = surveyQueryService.getSurveyDetails(categoryId, sido, sigungu, dong, page);
         log.debug("SurveyDetailsResponse={}", response);
 
         return ApiResponse.ok(response);

@@ -58,4 +58,8 @@ public class Survey extends TimeBaseEntity {
         this.content = content;
         this.active = active;
     }
+
+    public void delete() {
+        this.active = false;
+    }
 }

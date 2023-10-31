@@ -2,7 +2,7 @@ package com.boyworld.carrot.api.controller.statistics;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.statistics.response.*;
-import com.boyworld.carrot.api.service.statistics.StatisticsService;
+import com.boyworld.carrot.api.service.statistics.StatisticsQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @RequestMapping("/statistics/{foodTruckId}")
 public class StatisticsController {
 
-    private final StatisticsService statisticsService;
+    private final StatisticsQueryService statisticsService;
 
     /**
      * 영업 매출 통계 리스트 API

@@ -2,7 +2,6 @@ package com.boyworld.carrot.domain.review.repository;
 
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.member.Member;
-import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.review.Review;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +19,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<List<Review>> findByMember(Member memberId);
 
     Optional<List<Review>> findByFoodTruck(FoodTruck foodTruck);
+    Optional<List<Review>> findByFoodTruckAndActive(FoodTruck foodTruck, Boolean active);
 
-    Optional<Review> findByMemberAndOrder(Member member, Order order);
+    Optional<List<Review>> findByMemberAndActive(Member member, Boolean active);
 }

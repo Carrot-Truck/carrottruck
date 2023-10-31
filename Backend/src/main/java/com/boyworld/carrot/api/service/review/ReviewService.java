@@ -118,7 +118,7 @@ public class ReviewService {
         try {
             String userEmail = SecurityUtil.getCurrentLoginId();
             Member member = memberRepository.findByEmail(userEmail).orElseThrow();
-            List<Review> myReview = reviewRepository.findByMember(member).orElseThrow();
+            List<Review> myReview = reviewRepository.findByMemberAndActive(member, true).orElseThrow();
             return MyReviewResponse.of(
                 myReview.stream().map(MyReviewDto::of).collect(Collectors.toList()));
         } catch (Exception e) {
@@ -133,7 +133,7 @@ public class ReviewService {
     public FoodTruckReviewResponse getFoodTruckReview(Long foodTruckId) {
         try {
             FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId).orElseThrow();
-            List<Review> list = reviewRepository.findByFoodTruck(foodTruck).orElseThrow();
+            List<Review> list = reviewRepository.findByFoodTruckAndActive(foodTruck, true).orElseThrow();
             return FoodTruckReviewResponse.of(
                 list.stream().map(FoodTruckReviewDto::of).collect(Collectors.toList()));
         } catch (Exception e) {

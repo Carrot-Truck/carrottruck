@@ -12,8 +12,10 @@ import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.repository.MemberRepository;
 import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.repository.OrderRepository;
+import com.boyworld.carrot.domain.review.Comment;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.domain.review.ReviewImage;
+import com.boyworld.carrot.domain.review.repository.CommentRepository;
 import com.boyworld.carrot.domain.review.repository.ReviewImageRepository;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
 import com.boyworld.carrot.file.S3Uploader;
@@ -38,14 +40,15 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ReviewImageRepository reviewImageRepository;
+    private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final FoodTruckRepository foodTruckRepository;
     private final OrderRepository orderRepository;
     private final S3Uploader s3Uploader;
 
-    /*
+    /**
      *  write review API
-     * @param request
+     * @param request memberId, orderId, foodTruckId, content, grade, image
      * @return boolean
      */
     public Boolean createReview(ReviewRequest request) {
@@ -81,13 +84,26 @@ public class ReviewService {
         }
     }
 
-    /*
+    /**
      *  write comment API
-     * @param request
+     * @param request reviewId, comment
      * @return boolean
      */
     public Boolean createComment(CommentRequest request) {
         try {
+            String email = SecurityUtil.getCurrentLoginId();
+            // 만약 해당 리뷰가 달린 푸드트럭의 사업자의 email 과 답글을 남기려는 사업자의 이메일이 같지 않으면
+            if(!reviewRepository.findById(request.getReviewId()).orElseThrow().getFoodTruck().getVendor().getEmail().equals(email)){
+                return false;
+            }
+            // 답글 저장
+            Comment comment = Comment.builder()
+                .review(reviewRepository.findById(request.getReviewId()).orElseThrow())
+                .content(request.getComment())
+                .vendor(memberRepository.findByEmail(email).orElseThrow())
+                .active(true)
+                .build();
+            commentRepository.save(comment);
             return true;
         } catch (Exception e) {
             return false;

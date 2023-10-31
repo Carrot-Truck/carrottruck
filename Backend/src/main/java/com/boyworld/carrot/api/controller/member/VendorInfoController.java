@@ -47,4 +47,22 @@ public class VendorInfoController {
 
         return ApiResponse.created(response);
     }
+
+    /**
+     * 사업자 정보 조회 API
+     * 
+     * @return 현재 로그인한 사용자의 사업자 정보
+     */
+    @GetMapping
+    public ApiResponse<VendorInfoResponse> getVendorInfo() {
+        log.debug("VendorInfoController#getVendorInfo called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        VendorInfoResponse response = vendorInfoQueryService.getVendorInfo(email);
+        log.debug("VendorInfoResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
 }

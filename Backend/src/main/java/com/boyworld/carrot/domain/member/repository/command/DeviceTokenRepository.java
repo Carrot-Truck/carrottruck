@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.member.repository;
+package com.boyworld.carrot.domain.member.repository.command;
 
 import com.boyworld.carrot.domain.member.DeviceToken;
 import org.springframework.data.jpa.repository.JpaRepository;

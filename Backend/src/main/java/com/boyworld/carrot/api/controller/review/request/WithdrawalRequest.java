@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.controller.review.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,13 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WithdrawalRequest {
 
-    private String email;
-
+    @NotNull
     private Long reviewId;
 
     @Builder
-    public WithdrawalRequest(String email, Long reviewId) {
-        this.email = email;
+    public WithdrawalRequest(Long reviewId) {
         this.reviewId = reviewId;
     }
 }

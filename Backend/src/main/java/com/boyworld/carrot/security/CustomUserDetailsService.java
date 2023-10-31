@@ -1,7 +1,7 @@
 package com.boyworld.carrot.security;
 
 import com.boyworld.carrot.domain.member.Member;
-import com.boyworld.carrot.domain.member.repository.MemberRepository;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

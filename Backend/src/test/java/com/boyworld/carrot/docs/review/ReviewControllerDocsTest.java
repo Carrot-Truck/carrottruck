@@ -1,7 +1,6 @@
 package com.boyworld.carrot.docs.review;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -35,8 +34,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @WebMvcTest(ReviewControllerDocsTest.class)
 public class ReviewControllerDocsTest extends RestDocsSupport {
@@ -52,6 +53,8 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
     @Test
     @WithMockUser(roles = "CLIENT")
     void createReview() throws Exception {
+        //TODO : https://leeggmin.tistory.com/7 참고
+        MockMultipartFile image = new MockMultipartFile("image", "review1.png", "image/jpeg", "image file".getBytes());
 
         ReviewRequest request = ReviewRequest.builder()
             .memberId(1L)
@@ -59,17 +62,27 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .foodTruckId(1L)
             .grade(5)
             .content("너무 맛있어요~!")
+            .image(image)
             .build();
 
         Boolean result = true;
 
-        given(reviewService.createReview(any(ReviewRequest.class)))
+        given(reviewService.createReview(request))
             .willReturn(result);
 
         mockMvc.perform(
-                post("/review")
-                    .content(objectMapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON)
+//                MockMvcRequestBuilders.multipart("/review")
+//                    .file(image)
+//                    .flashAttr("reviewRequest", request)
+//                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                MockMvcRequestBuilders.multipart("/review")
+                    .file(image)
+                    .param("memberId", "1")
+                    .param("orderId", "1")
+                    .param("foodTruckId", "1")
+                    .param("grade", "5")
+                    .param("content", "너무 맛있어요~!")
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
             )
             .andDo(print())
             .andExpect(status().isCreated())
@@ -77,14 +90,15 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
                 document("create-review",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
-                    requestFields(
-                        fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("멤버 ID"),
-                        fieldWithPath("orderId").type(JsonFieldType.NUMBER).description("주문 ID"),
-                        fieldWithPath("foodTruckId").type(JsonFieldType.NUMBER)
-                            .description("푸드트럭 ID"),
-                        fieldWithPath("grade").type(JsonFieldType.NUMBER).description("평점 (최대 5점)"),
-                        fieldWithPath("content").type(JsonFieldType.STRING).description("리뷰 내용")
-                    ),
+//                    requestFields(
+//                        fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("멤버 ID"),
+//                        fieldWithPath("orderId").type(JsonFieldType.NUMBER).description("주문 ID"),
+//                        fieldWithPath("foodTruckId").type(JsonFieldType.NUMBER).description("푸드트럭 ID"),
+//                        fieldWithPath("grade").type(JsonFieldType.NUMBER).description("평점 (최대 5점)"),
+//                        fieldWithPath("content").type(JsonFieldType.STRING).description("리뷰 내용"),
+//                        fieldWithPath("image").type(JsonFieldType.VARIES)
+//                            .description("(optional) 리뷰 사진")
+//                    ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.NUMBER)
                             .description("코드"),
@@ -169,7 +183,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .build();
 
         // ReviewService의 getMyReview 메서드가 호출될 때 가짜 응답을 반환하도록 설정
-        given(reviewService.getMyReview(anyString()))
+        given(reviewService.getMyReview())
             .willReturn(myReviewResponse);
 
         // API 요청 및 응답 검증
@@ -272,11 +286,10 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
         Boolean result = true;
         WithdrawalRequest withdrawalRequest = WithdrawalRequest.builder()
             .reviewId(1L)
-            .email("ssafy@ssafy.com")
             .build();
 
         given(
-            reviewService.withdrawal(withdrawalRequest.getEmail(), withdrawalRequest.getReviewId()))
+            reviewService.withdrawal(withdrawalRequest.getReviewId()))
             .willReturn(result);
 
         mockMvc.perform(
@@ -289,8 +302,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
                 document("withdrawal-review",
                     preprocessResponse(prettyPrint()),
                     requestFields(
-                        fieldWithPath("reviewId").type(JsonFieldType.NUMBER).description("리뷰 ID"),
-                        fieldWithPath("email").type(JsonFieldType.STRING).description("계정 Email")
+                        fieldWithPath("reviewId").type(JsonFieldType.NUMBER).description("리뷰 ID")
                     ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.NUMBER)

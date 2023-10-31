@@ -1,9 +1,8 @@
-package com.boyworld.carrot.api.service.member;
+package com.boyworld.carrot.api.service.member.query;
 
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
-import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
-import com.boyworld.carrot.domain.member.repository.MemberQueryRepository;
+import com.boyworld.carrot.domain.member.repository.query.MemberQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,16 +57,5 @@ public class AccountService {
         }
 
         return response;
-    }
-
-    /**
-     * 로그인 중인 사용자 주소 전체 조회
-     *
-     * @param email               로그인 중인 회원 이메일
-     * @param lastMemberAddressId 마지막으로 조회된 주소 식별키
-     * @return 로그인 중인 사용자의 주소 목록
-     */
-    public MemberAddressResponse getMemberAddresses(String email, String lastMemberAddressId) {
-        return null;
     }
 }

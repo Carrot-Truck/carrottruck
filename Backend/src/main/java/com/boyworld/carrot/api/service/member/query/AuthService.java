@@ -1,11 +1,11 @@
-package com.boyworld.carrot.api.service.member;
+package com.boyworld.carrot.api.service.member.query;
 
 import com.boyworld.carrot.api.service.member.dto.LoginDto;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
-import com.boyworld.carrot.domain.member.repository.MemberQueryRepository;
-import com.boyworld.carrot.domain.member.repository.MemberRepository;
+import com.boyworld.carrot.domain.member.repository.query.MemberQueryRepository;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.security.JwtTokenProvider;
 import com.boyworld.carrot.security.TokenInfo;
 import lombok.RequiredArgsConstructor;

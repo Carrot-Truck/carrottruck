@@ -1,11 +1,11 @@
 package com.boyworld.carrot.domain.cart;
 
 import com.boyworld.carrot.domain.TimeBaseEntity;
-import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 /**
@@ -23,13 +23,17 @@ public class CartMenuOption extends TimeBaseEntity {
     private Long id;
     private Long cartMenuId;
     private Long menuOptionId;
-    private Integer quantity;
+    private String name;
+    private Integer price;
+    private Boolean soldOut;
 
     @Builder
-    public CartMenuOption(Long id, Long cartMenuId, Long menuOptionId, Integer quantity) {
+    public CartMenuOption(Long id, Long cartMenuId, Long menuOptionId, String name, Integer price, Boolean soldOut) {
         this.id = id;
         this.cartMenuId = cartMenuId;
         this.menuOptionId = menuOptionId;
-        this.quantity = quantity;
+        this.name = name;
+        this.price = price;
+        this.soldOut = soldOut;
     }
 }

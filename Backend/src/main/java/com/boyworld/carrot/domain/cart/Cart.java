@@ -3,11 +3,11 @@ package com.boyworld.carrot.domain.cart;
 
 import com.boyworld.carrot.domain.TimeBaseEntity;
 import com.boyworld.carrot.domain.member.Member;
-import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 /**
@@ -21,13 +21,13 @@ import org.springframework.data.redis.core.RedisHash;
 @RedisHash("cart")
 public class Cart extends TimeBaseEntity {
     @Id
-    private Long memberId;
+    private String id;
     private Long foodTruckId;
     private Integer totalPrice;
 
     @Builder
-    public Cart(Long memberId, Long foodTruckId, Integer totalPrice) {
-        this.memberId = memberId;
+    public Cart(String id, Long foodTruckId, Integer totalPrice) {
+        this.id = id;
         this.foodTruckId = foodTruckId;
         this.totalPrice = totalPrice;
     }

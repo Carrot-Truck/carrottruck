@@ -42,7 +42,7 @@ public class StatisticsController {
         StatisticsBySalesResponse response = statisticsService.getStatisticsBySales(foodTruckId, year, page);
         log.debug("StatisticsBySalesResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -59,10 +59,10 @@ public class StatisticsController {
         log.debug("StatisticsController#getStatisticsBySalesDetails called !!!");
         log.debug("FoodTruckId={}, SalesID={}", foodTruckId, salesId);
 
-        StatisticsBySalesDetailsResponse response = statisticsService.getStatisticsBySalesDetails(salesId);
+        StatisticsBySalesDetailsResponse response = statisticsService.getStatisticsBySalesDetails(foodTruckId, salesId);
         log.debug("StatisticsBySalesDetailsResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -84,7 +84,7 @@ public class StatisticsController {
         StatisticsByWeekResponse response = statisticsService.getStatisticsByWeek(foodTruckId, year, page);
         log.debug("StatisticsByWeekResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -109,7 +109,7 @@ public class StatisticsController {
         StatisticsByWeekDetailsResponse response = statisticsService.getStatisticsByWeekDetails(foodTruckId, start, end);
         log.debug("StatisticsByWeekDetailsResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -129,7 +129,7 @@ public class StatisticsController {
         StatisticsByMonthResponse response = statisticsService.getStatisticsByMonth(foodTruckId, year);
         log.debug("StatisticsByMonthResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -151,6 +151,6 @@ public class StatisticsController {
         StatisticsByMonthDetailsResponse response = statisticsService.getStatisticsByMonthDetails(foodTruckId, year, month);
         log.debug("StatisticsByMonthDetailsResponse={}", response);
 
-        return ApiResponse.ok(null);
+        return ApiResponse.ok(response);
     }
 }

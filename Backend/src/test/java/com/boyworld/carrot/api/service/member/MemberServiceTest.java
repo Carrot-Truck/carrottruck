@@ -3,6 +3,7 @@ package com.boyworld.carrot.api.service.member;
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
 import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
@@ -10,6 +11,7 @@ import com.boyworld.carrot.api.service.member.error.DuplicateException;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.VendorInfo;
+import com.boyworld.carrot.domain.member.repository.MemberAddressRepository;
 import com.boyworld.carrot.domain.member.repository.MemberRepository;
 import com.boyworld.carrot.domain.member.repository.VendorInfoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,9 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private MemberAddressRepository memberAddressRepository;
 
     @Autowired
     private VendorInfoRepository vendorInfoRepository;
@@ -150,6 +155,21 @@ class MemberServiceTest extends IntegrationTestSupport {
         // then
         assertThat(result).isFalse();
 
+    }
+
+    @DisplayName("사용자는 회원 주소를 등록할 수 있다.")
+    @Test
+    void createMemberAddressSuccess() {
+        // given
+        Member member = createMember(Role.CLIENT);
+
+        // when
+        MemberAddressDetailResponse response = memberService.createMemberAddress("주소", "ssafy@ssafy.com");
+        log.debug("response={}", response);
+
+        // then
+        assertThat(response).extracting("address")
+                .isEqualTo("주소");
     }
 
     private Member createMember(Role role) {

@@ -48,7 +48,7 @@ public class MemberAddressController {
     }
 
     /**
-     * 회원 주소 목록 조회
+     * 회원 주소 목록 조회 API
      *
      * @param lastMemberAddressId 마지막으로 조회된 주소 식별키
      * @return 회원 주소 목록
@@ -62,6 +62,26 @@ public class MemberAddressController {
 
         MemberAddressResponse response = memberAddressQueryService.getMemberAddresses(email, lastMemberAddressId);
         log.debug("MemberAddressResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 회원 주소 상세 조회 API
+     *
+     * @param memberAddressId 회원 주소 식별키
+     * @return 회원 주소 상세 정보
+     */
+    @GetMapping("/{memberAddressId}")
+    public ApiResponse<MemberAddressDetailResponse> getMemberAddress(@PathVariable Long memberAddressId) {
+        log.debug("MemberAddressController#getMemberAddress called");
+        log.debug("memberAddressId={}", memberAddressId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        MemberAddressDetailResponse response = memberAddressQueryService.getMemberAddress(memberAddressId);
+        log.debug("MemberAddressDetailResponse={}", response);
 
         return ApiResponse.ok(response);
     }
@@ -88,7 +108,7 @@ public class MemberAddressController {
     }
 
     /**
-     * 회원 주소 삭제
+     * 회원 주소 삭제 API
      *
      * @param memberAddressId 삭제할 회원 주소
      * @return true: 삭제 완료 / false: 삭제 실패
@@ -101,7 +121,7 @@ public class MemberAddressController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        Boolean result = memberAddressService.deleteMemberAddress(memberAddressId, email);
+        Boolean result = memberAddressService.deleteMemberAddress(memberAddressId);
         log.debug("result={}", result);
 
         return ApiResponse.found(result);

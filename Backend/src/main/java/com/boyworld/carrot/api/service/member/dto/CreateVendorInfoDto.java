@@ -1,5 +1,7 @@
 package com.boyworld.carrot.api.service.member.dto;
 
+import com.boyworld.carrot.domain.member.Member;
+import com.boyworld.carrot.domain.member.VendorInfo;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +24,16 @@ public class CreateVendorInfoDto {
         this.vendorName = vendorName;
         this.businessNumber = businessNumber;
         this.phoneNumber = phoneNumber;
+    }
+
+    public VendorInfo toEntity(Member member) {
+        return VendorInfo.builder()
+                .vendorName(this.vendorName)
+                .tradeName(this.tradeName)
+                .businessNumber(this.businessNumber)
+                .phoneNumber(this.phoneNumber)
+                .member(member)
+                .active(true)
+                .build();
     }
 }

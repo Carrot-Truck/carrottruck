@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.member.repository;
+package com.boyworld.carrot.domain.member.repository.command;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.domain.member.Member;

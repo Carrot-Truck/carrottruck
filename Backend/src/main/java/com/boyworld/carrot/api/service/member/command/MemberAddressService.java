@@ -35,9 +35,11 @@ public class MemberAddressService {
      * @return 등록된 회원 주소 정보
      */
     public MemberAddressDetailResponse createMemberAddress(String address, String email) {
-        Member findMember = findMemberByEmail(email);
+        Member member = findMemberByEmail(email);
 
-        MemberAddress savedMemberAddress = saveMemberAddress(address, findMember);
+        checkActiveMember(member);
+
+        MemberAddress savedMemberAddress = saveMemberAddress(address, member);
 
         return MemberAddressDetailResponse.of(savedMemberAddress);
     }
@@ -52,6 +54,18 @@ public class MemberAddressService {
     private Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+    }
+
+    /**
+     * 회원 탈퇴 여부 확인
+     *
+     * @param member 회원 엔티티
+     * @throws NoSuchElementException 이미 탈퇴한 회원인 경우
+     */
+    private void checkActiveMember(Member member) {
+        if (!member.getActive()) {
+            throw new NoSuchElementException("이미 탈퇴한 회원입니다.");
+        }
     }
 
     /**
@@ -90,10 +104,9 @@ public class MemberAddressService {
      * 회원 주소 삭제
      *
      * @param memberAddressId 삭제할 회원 주소
-     * @param email           로그인 중인 회원 이메일
      * @return true: 삭제 완료 / false: 삭제 실패
      */
-    public Boolean deleteMemberAddress(Long memberAddressId, String email) {
+    public Boolean deleteMemberAddress(Long memberAddressId) {
         MemberAddress memberAddress = getMemberAddressById(memberAddressId);
 
         memberAddress.deActivate();

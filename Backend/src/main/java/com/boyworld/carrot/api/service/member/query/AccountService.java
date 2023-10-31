@@ -31,12 +31,9 @@ public class AccountService {
      * @throws NoSuchElementException 해당 이메일 회원 정보가 존재하지 않는 경우
      */
     public ClientResponse getClientInfo(String email) {
-        ClientResponse response = memberQueryRepository.getClientInfoByEmail(email);
+        ClientResponse response = memberQueryRepository.getClientInfoByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
         log.debug("ClientResponse={}", response);
-
-        if (response == null) {
-            throw new NoSuchElementException("존재하지 않는 회원입니다.");
-        }
 
         return response;
     }
@@ -49,12 +46,9 @@ public class AccountService {
      * @throws NoSuchElementException 존재하지 않는 사업자인 경우
      */
     public VendorResponse getVendorInfo(String email) {
-        VendorResponse response = memberQueryRepository.getVendorInfoByEmail(email);
+        VendorResponse response = memberQueryRepository.getVendorInfoByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
         log.debug("VendorResponse={}", response);
-
-        if (response == null) {
-            throw new NoSuchElementException("존재하지 않는 회원입니다.");
-        }
 
         return response;
     }

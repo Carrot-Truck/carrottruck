@@ -1,0 +1,11 @@
+[[open-sale]]
+== 영업 개시
+
+==== HttpRequest
+include::{snippets}/open-sale/http-request.adoc[]
+include::{snippets}/open-sale/request-fields.adoc[]
+include::{snippets}/open-sale/request-body.adoc[]
+
+==== HTTP Response
+include::{snippets}/open-sale/http-response.adoc[]
+include::{snippets}/open-sale/response-fields.adoc[]

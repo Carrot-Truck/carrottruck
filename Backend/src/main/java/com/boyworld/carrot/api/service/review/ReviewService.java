@@ -112,7 +112,7 @@ public class ReviewService {
 
     /**
      * read my review-list API
-     *
+     * from SecurityUtil.getCurrentLoginId()
      */
     public MyReviewResponse getMyReview() {
         try {
@@ -126,8 +126,9 @@ public class ReviewService {
         }
     }
 
-    /*
+    /**
      * read food truck's review-list API
+     * from footTruckId, get list of reviews
      */
     public FoodTruckReviewResponse getFoodTruckReview(Long foodTruckId) {
         try {
@@ -140,15 +141,24 @@ public class ReviewService {
         }
     }
 
-    /*
+    /**
      * delete my review API
      */
-    public Boolean withdrawal(String email, Long reviewId) {
-        if (email.equals(SecurityUtil.getCurrentLoginId())) {
+    public Boolean withdrawal(Long reviewId) {
+        try{
+            String email = SecurityUtil.getCurrentLoginId();
+            Review review = reviewRepository.findById(reviewId).orElseThrow();
+            // 만약 삭제하고자 하는 댓글의 email과 현재 로그인한 email이 동일하다면
+            if(review.getMember().getEmail().equals(email)){
+                review.setActive(false); // 비활성화
+            } else {
+                return false;
+            }
             return true;
-        } else {
+        } catch (Exception e){
             return false;
         }
+
     }
 
     /*

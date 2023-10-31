@@ -286,11 +286,10 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
         Boolean result = true;
         WithdrawalRequest withdrawalRequest = WithdrawalRequest.builder()
             .reviewId(1L)
-            .email("ssafy@ssafy.com")
             .build();
 
         given(
-            reviewService.withdrawal(withdrawalRequest.getEmail(), withdrawalRequest.getReviewId()))
+            reviewService.withdrawal(withdrawalRequest.getReviewId()))
             .willReturn(result);
 
         mockMvc.perform(
@@ -303,8 +302,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
                 document("withdrawal-review",
                     preprocessResponse(prettyPrint()),
                     requestFields(
-                        fieldWithPath("reviewId").type(JsonFieldType.NUMBER).description("리뷰 ID"),
-                        fieldWithPath("email").type(JsonFieldType.STRING).description("계정 Email")
+                        fieldWithPath("reviewId").type(JsonFieldType.NUMBER).description("리뷰 ID")
                     ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.NUMBER)

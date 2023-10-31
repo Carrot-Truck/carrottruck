@@ -99,7 +99,7 @@ public class ReviewController {
         log.debug("ReviewController#withdrawal called !!!");
         log.debug("WithdrawalRequest={}", request);
 
-        Boolean result = reviewService.withdrawal(request.getEmail(), request.getReviewId());
+        Boolean result = reviewService.withdrawal(request.getReviewId());
         log.debug("result={}", result);
 
         return ApiResponse.ok(true);

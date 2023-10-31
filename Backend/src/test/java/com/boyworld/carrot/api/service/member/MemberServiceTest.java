@@ -206,6 +206,35 @@ class MemberServiceTest extends IntegrationTestSupport {
                 .hasMessage("존재하지 않는 회원 주소입니다.");
     }
 
+    @DisplayName("사용자는 회원 주소를 삭제할 수 있다.")
+    @Test
+    void deleteMemberAddress() {
+        // given
+        Member member = createMember(Role.CLIENT);
+        MemberAddress memberAddress = createMemberaddress(member);
+
+        // when
+        Boolean result = memberService.deleteMemberAddress(memberAddress.getId(), member.getEmail());
+        log.debug("result={}", result);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("회원 주소 삭제 시 잘못된 식별키로 요청하면 예외가 발생한다.")
+    @Test
+    void deleteMemberAddressWithWrongId() {
+        // given
+        Member member = createMember(Role.CLIENT);
+        MemberAddress memberAddress = createMemberaddress(member);
+
+        // when // then
+        assertThatThrownBy(() ->
+                memberService.deleteMemberAddress(2L, member.getEmail()))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("존재하지 않는 회원 주소입니다.");
+    }
+
     private Member createMember(Role role) {
         Member member = Member.builder()
                 .email("ssafy@ssafy.com")

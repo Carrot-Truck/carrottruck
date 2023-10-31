@@ -3,15 +3,15 @@ package com.boyworld.carrot.api.controller.member;
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.member.request.EditMemberRequest;
 import com.boyworld.carrot.api.controller.member.request.JoinRequest;
-import com.boyworld.carrot.api.controller.member.request.LoginRequest;
+import com.boyworld.carrot.api.controller.member.request.MemberAddressRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
 import com.boyworld.carrot.api.service.member.AccountService;
-import com.boyworld.carrot.api.service.member.AuthService;
 import com.boyworld.carrot.api.service.member.MemberService;
 import com.boyworld.carrot.security.SecurityUtil;
-import com.boyworld.carrot.security.TokenInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -99,9 +99,89 @@ public class ClientController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        ClientResponse response = accountService.editClient(request.toEditMemberDto(email));
+        ClientResponse response = memberService.editClient(request.toEditMemberDto(email));
         log.debug("ClientResponse={}", response);
 
         return ApiResponse.ok(response);
+    }
+
+    /**
+     * 회원 주소 등록 API
+     *
+     * @param request 등록할 주소
+     * @return 등록된 회원 주소 정보
+     */
+    @PostMapping("/address")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<MemberAddressDetailResponse> createMemberAddress(@Valid @RequestBody MemberAddressRequest request) {
+        log.debug("ClientController#createMemberAddress called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        MemberAddressDetailResponse response = memberService.createMemberAddress(request.getAddress(), email);
+        log.debug("MemberDetailAddressResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 회원 주소 목록 조회
+     * 
+     * @param lastMemberAddressId 마지막으로 조회된 주소 식별키
+     * @return 회원 주소 목록
+     */
+    @GetMapping("/address")
+    public ApiResponse<MemberAddressResponse> getMemberAddresses(@RequestParam(required = false, defaultValue = "") String lastMemberAddressId) {
+        log.debug("ClientController#getMemberAddresses called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        MemberAddressResponse response = accountService.getMemberAddresses(email, lastMemberAddressId);
+        log.debug("MemberAddressResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 회원 주소 수정 API
+     *
+     * @param memberAddressId 수정할 주소 식별키
+     * @param request         수정할 주소 정보
+     * @return 수정된 주소 정보
+     */
+    @PatchMapping("/address/{memberAddressId}")
+    public ApiResponse<MemberAddressDetailResponse> editMemberAddress(@PathVariable Long memberAddressId,
+                                                                      @Valid @RequestBody MemberAddressRequest request) {
+        log.debug("ClientController#editMemberAddress called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        MemberAddressDetailResponse response = memberService.editMemberAddress(memberAddressId, request.getAddress(), email);
+        log.debug("MemberAddressResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 회원 주소 삭제
+     *
+     * @param memberAddressId 삭제할 회원 주소
+     * @return true: 삭제 완료 / false: 삭제 실패
+     */
+    @DeleteMapping("/address/{memberAddressId}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ApiResponse<Boolean> deleteMemberAddress(@PathVariable Long memberAddressId) {
+        log.debug("ClientController#deleteMemberAddress called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Boolean result = memberService.deleteMemberAddress(memberAddressId, email);
+        log.debug("result={}", result);
+
+        return ApiResponse.found(result);
     }
 }

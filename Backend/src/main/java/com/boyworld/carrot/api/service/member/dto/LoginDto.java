@@ -12,12 +12,10 @@ public class LoginDto {
 
     private String password;
 
-    private String role;
 
     @Builder
-    public LoginDto(String email, String password, String role) {
+    public LoginDto(String email, String password) {
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 }

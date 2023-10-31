@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.controller.member.response;
 
+import com.boyworld.carrot.domain.member.Role;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,12 +15,12 @@ public class VendorResponse {
     private String role;
 
     @Builder
-    public VendorResponse(String name, String nickname, String email, String phoneNumber, String businessNumber, String role) {
+    public VendorResponse(String name, String nickname, String email, String phoneNumber, String businessNumber, Role role) {
         this.name = name;
         this.nickname = nickname;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.businessNumber = businessNumber;
-        this.role = role;
+        this.role = role.toString();
     }
 }

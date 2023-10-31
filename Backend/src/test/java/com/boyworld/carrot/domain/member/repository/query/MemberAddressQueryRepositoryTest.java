@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.member.repository;
+package com.boyworld.carrot.domain.member.repository.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
@@ -7,7 +7,6 @@ import com.boyworld.carrot.domain.member.MemberAddress;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberAddressRepository;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
-import com.boyworld.carrot.domain.member.repository.query.MemberAddressQueryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,8 +18,12 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * 회원 주소 조회용 레포지토리 테스트
+ *
+ * @author 최영환
+ */
 @Slf4j
 class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
 

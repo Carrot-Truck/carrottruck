@@ -1,9 +1,8 @@
-package com.boyworld.carrot.api.service.member;
+package com.boyworld.carrot.api.service.member.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
-import com.boyworld.carrot.api.service.member.query.MemberAddressQueryService;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.MemberAddress;
 import com.boyworld.carrot.domain.member.Role;
@@ -16,11 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * 회원 주소 조회 서비스 테스트
+ *
+ * @author 최영환
+ */
 @Slf4j
 public class MemberAddressQueryServiceTest extends IntegrationTestSupport {
 

@@ -238,7 +238,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = {"CLIENT", "VENDOR"})
     void deleteMemberAddress() throws Exception {
 
-        given(memberAddressService.deleteMemberAddress(anyLong(), anyString()))
+        given(memberAddressService.deleteMemberAddress(anyLong()))
                 .willReturn(true);
 
         mockMvc.perform(

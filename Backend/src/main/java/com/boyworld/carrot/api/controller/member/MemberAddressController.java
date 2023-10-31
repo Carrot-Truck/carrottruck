@@ -121,7 +121,7 @@ public class MemberAddressController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        Boolean result = memberAddressService.deleteMemberAddress(memberAddressId, email);
+        Boolean result = memberAddressService.deleteMemberAddress(memberAddressId);
         log.debug("result={}", result);
 
         return ApiResponse.found(result);

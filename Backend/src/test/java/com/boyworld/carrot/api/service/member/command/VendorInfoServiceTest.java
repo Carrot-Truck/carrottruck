@@ -21,6 +21,11 @@ import java.util.NoSuchElementException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * 사업자 정보 CUD 서비스 테스트
+ *
+ * @author 최영환
+ */
 @Slf4j
 class VendorInfoServiceTest extends IntegrationTestSupport {
 

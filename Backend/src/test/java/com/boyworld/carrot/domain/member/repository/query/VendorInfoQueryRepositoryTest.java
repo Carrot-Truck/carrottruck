@@ -8,7 +8,6 @@ import com.boyworld.carrot.domain.member.VendorInfo;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.member.repository.command.VendorInfoRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,11 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * 사업자 정보 조회용 레포지토리 테스트
+ *
+ * @author 최영환
+ */
 @Slf4j
 class VendorInfoQueryRepositoryTest extends IntegrationTestSupport {
     @Autowired

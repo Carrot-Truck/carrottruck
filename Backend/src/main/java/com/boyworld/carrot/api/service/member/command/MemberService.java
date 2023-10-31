@@ -7,9 +7,8 @@ import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
 import com.boyworld.carrot.api.service.member.error.DuplicateException;
 import com.boyworld.carrot.domain.member.Member;
-import com.boyworld.carrot.domain.member.repository.command.MemberAddressRepository;
-import com.boyworld.carrot.domain.member.repository.query.MemberQueryRepository;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.member.repository.query.MemberQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,7 +30,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
-    private final MemberAddressRepository memberAddressRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -41,7 +39,6 @@ public class MemberService {
      * @return 가입한 회원 정보
      */
     public JoinMemberResponse join(JoinMemberDto dto) {
-        // 중복체크
         checkDuplicateEmail(dto.getEmail());
 
         Member saveMember = createMember(dto);
@@ -82,11 +79,13 @@ public class MemberService {
      * @throws NoSuchElementException 이메일에 해당하는 회원이 존재하지 않을 경우
      */
     public ClientResponse editClient(EditMemberDto dto) {
-        Member findMember = findMemberByEmail(dto.getEmail());
+        Member member = findMemberByEmail(dto.getEmail());
 
-        findMember.editMemberInfo(dto.getName(), dto.getNickname(), dto.getPhoneNumber());
+        checkActiveMember(member);
 
-        return ClientResponse.of(findMember);
+        member.editMemberInfo(dto.getName(), dto.getNickname(), dto.getPhoneNumber());
+
+        return ClientResponse.of(member);
     }
 
     /**
@@ -94,14 +93,29 @@ public class MemberService {
      *
      * @param dto 수정할 회원 정보
      * @return 수정된 회원 정보
-     * @throws NoSuchElementException 이메일에 해당하는 사업자가 존재하지 않을 경우
      */
     public VendorResponse editVendor(EditMemberDto dto) {
-        Member findMember = findMemberByEmail(dto.getEmail());
+        Member member = findMemberByEmail(dto.getEmail());
 
-        findMember.editMemberInfo(dto.getName(), dto.getNickname(), dto.getPhoneNumber());
+        checkActiveMember(member);
 
-        return memberQueryRepository.getVendorInfoByEmail(findMember.getEmail());
+        member.editMemberInfo(dto.getName(), dto.getNickname(), dto.getPhoneNumber());
+
+        return getVendorResponseByEmail(member);
+    }
+
+    /**
+     * 이메일에 해당하는 사업자 정보 조회
+     *
+     * @param member 회원 엔티티
+     * @return 이메일에 해당하는 사업자 정보
+     * @throws NoSuchElementException 이메일에 해당하는 사업자가 존재하지 않을 경우
+     */
+    private VendorResponse getVendorResponseByEmail(Member member) {
+        VendorResponse response = memberQueryRepository.getVendorInfoByEmail(member.getEmail())
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+        log.debug("VendorResponse={}", response);
+        return response;
     }
 
     /**
@@ -112,10 +126,12 @@ public class MemberService {
      * @return 탈퇴여부
      */
     public Boolean withdrawal(String email, String password) {
-        Member findMember = findMemberByEmail(email);
+        Member member = findMemberByEmail(email);
 
-        if (isMatchPassword(password, findMember.getEncryptedPwd())) {
-            findMember.deActivate();
+        checkActiveMember(member);
+
+        if (isMatchPassword(password, member.getEncryptedPwd())) {
+            member.deActivate();
             return true;
         }
         return false;
@@ -142,5 +158,17 @@ public class MemberService {
      */
     private boolean isMatchPassword(String password, String encryptedPwd) {
         return passwordEncoder.matches(password, encryptedPwd);
+    }
+
+    /**
+     * 회원 탈퇴 여부 확인
+     *
+     * @param member 회원 엔티티
+     * @throws NoSuchElementException 이미 탈퇴한 회원인 경우
+     */
+    private void checkActiveMember(Member member) {
+        if (!member.getActive()) {
+            throw new NoSuchElementException("이미 탈퇴한 회원입니다.");
+        }
     }
 }

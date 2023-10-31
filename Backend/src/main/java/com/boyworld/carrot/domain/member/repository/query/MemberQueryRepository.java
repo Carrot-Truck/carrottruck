@@ -9,6 +9,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 import static com.boyworld.carrot.domain.member.QMember.member;
 import static com.boyworld.carrot.domain.member.QVendorInfo.vendorInfo;
 import static org.springframework.util.StringUtils.hasText;
@@ -35,8 +37,7 @@ public class MemberQueryRepository {
                 .selectOne()
                 .from(member)
                 .where(
-                        isEqualEmail(email),
-                        isActiveMember()
+                        isEqualEmail(email)
                 )
                 .fetchFirst();
         return result != null;
@@ -48,8 +49,8 @@ public class MemberQueryRepository {
      * @param email 현재 로그인 중인 회원 이메일
      * @return email 에 해당하는 사용자 정보
      */
-    public ClientResponse getClientInfoByEmail(String email) {
-        return queryFactory
+    public Optional<ClientResponse> getClientInfoByEmail(String email) {
+        return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(ClientResponse.class,
                         member.name,
                         member.nickname,
@@ -62,7 +63,7 @@ public class MemberQueryRepository {
                         isEqualEmail(email),
                         isActiveMember()
                 )
-                .fetchOne();
+                .fetchOne());
     }
 
     /**
@@ -71,8 +72,8 @@ public class MemberQueryRepository {
      * @param email 현재 로그인 중인 회원 이메일
      * @return 이메일에 해당하는 사업자 정보
      */
-    public VendorResponse getVendorInfoByEmail(String email) {
-        return queryFactory.select(Projections.constructor(VendorResponse.class,
+    public Optional<VendorResponse> getVendorInfoByEmail(String email) {
+        return Optional.ofNullable(queryFactory.select(Projections.constructor(VendorResponse.class,
                         vendorInfo.member.name,
                         vendorInfo.member.nickname,
                         vendorInfo.member.email,
@@ -87,7 +88,7 @@ public class MemberQueryRepository {
                         isVendor(),
                         isActiveMember()
                 )
-                .fetchOne();
+                .fetchOne());
     }
 
     private BooleanExpression isEqualEmail(String email) {

@@ -8,7 +8,6 @@ import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.VendorInfo;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.member.repository.command.VendorInfoRepository;
-import com.boyworld.carrot.domain.member.repository.query.VendorInfoQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,6 @@ import java.util.NoSuchElementException;
 public class VendorInfoService {
 
     private final VendorInfoRepository vendorInfoRepository;
-    private final VendorInfoQueryRepository vendorInfoQueryRepository;
     private final MemberRepository memberRepository;
 
     /**
@@ -73,6 +71,7 @@ public class VendorInfoService {
 
     /**
      * 회원 권한이 CLIENT 인지 여부 판별
+     *
      * @param role 회원 권한
      * @return true : CLIENT 인 경우 false: 그 외 경우
      */
@@ -98,7 +97,7 @@ public class VendorInfoService {
 
     /**
      * 사업자 정보 식별키로 사업자 정보 조회
-     * 
+     *
      * @param vendorInfoId 사업자 정보 식별키
      * @return 사업자 정보 엔티티
      * @throws NoSuchElementException 존재하지 않는 사업자 정보인 경우
@@ -110,7 +109,7 @@ public class VendorInfoService {
 
     /**
      * 삭제여부 확인
-     * 
+     *
      * @param vendorInfo 사업자 정보 엔티티
      * @throws NoSuchElementException 삭제된 사업자 정보인 경우
      */

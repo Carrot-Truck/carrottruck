@@ -1,4 +1,4 @@
-package com.boyworld.carrot.api.service.member;
+package com.boyworld.carrot.api.service.member.query;
 
 
 import com.boyworld.carrot.IntegrationTestSupport;

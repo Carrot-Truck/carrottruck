@@ -80,7 +80,7 @@ public class VendorInfoController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        Boolean result = vendorInfoService.deleteVendorInfo(vendorInfoId, email);
+        Boolean result = vendorInfoService.deleteVendorInfo(vendorInfoId);
         log.debug("result={}", result);
 
         return ApiResponse.found(result);

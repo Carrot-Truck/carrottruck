@@ -50,7 +50,7 @@ public class VendorInfoService {
 
     /**
      * 이메일로 회원 엔티티 조회
-     * 
+     *
      * @param email 현재 로그인한 사용자 이메일
      * @return 이메일에 해당하는 회원 엔티티
      */
@@ -61,7 +61,7 @@ public class VendorInfoService {
 
     /**
      * 접근 유효성 판별
-     * 
+     *
      * @param member 회원 엔티티
      * @throws InvalidAccessException 해당 회원의 권한이 CLIENT 이거나 비활성화 상태인 경우
      */
@@ -84,11 +84,39 @@ public class VendorInfoService {
      * 사업자 정보 삭제
      *
      * @param vendorInfoId 사업자 정보 식별키
-     * @param email        현재 로그인한 사용자 이메일
      * @return true : 삭제 성공 / false : 삭제 실패
+     */
+    public Boolean deleteVendorInfo(Long vendorInfoId) {
+        VendorInfo vendorInfo = getVendorInfoById(vendorInfoId);
+
+        checkActive(vendorInfo);
+
+        vendorInfo.deActivate();
+
+        return true;
+    }
+
+    /**
+     * 사업자 정보 식별키로 사업자 정보 조회
+     * 
+     * @param vendorInfoId 사업자 정보 식별키
+     * @return 사업자 정보 엔티티
      * @throws NoSuchElementException 존재하지 않는 사업자 정보인 경우
      */
-    public Boolean deleteVendorInfo(Long vendorInfoId, String email) {
-        return null;
+    private VendorInfo getVendorInfoById(Long vendorInfoId) {
+        return vendorInfoRepository.findById(vendorInfoId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 사업자 정보입니다."));
+    }
+
+    /**
+     * 삭제여부 확인
+     * 
+     * @param vendorInfo 사업자 정보 엔티티
+     * @throws NoSuchElementException 삭제된 사업자 정보인 경우
+     */
+    private void checkActive(VendorInfo vendorInfo) {
+        if (!vendorInfo.getActive()) {
+            throw new NoSuchElementException("이미 삭제된 사업자 정보입니다.");
+        }
     }
 }

@@ -72,9 +72,7 @@ public class ReviewController {
     public ApiResponse<MyReviewResponse> getMyReview() {
         log.debug("ReviewController#getMyReview called !!!");
 
-        String userEmail = SecurityUtil.getCurrentLoginId();
-        log.debug("id= {}", userEmail);
-        MyReviewResponse response = reviewService.getMyReview(userEmail);
+        MyReviewResponse response = reviewService.getMyReview();
         return ApiResponse.found(response);
     }
 

@@ -110,12 +110,13 @@ public class ReviewService {
         }
     }
 
-    /*
+    /**
      * read my review-list API
      *
      */
-    public MyReviewResponse getMyReview(String userEmail) {
+    public MyReviewResponse getMyReview() {
         try {
+            String userEmail = SecurityUtil.getCurrentLoginId();
             Member member = memberRepository.findByEmail(userEmail).orElseThrow();
             List<Review> myReview = reviewRepository.findByMember(member).orElseThrow();
             return MyReviewResponse.of(

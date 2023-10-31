@@ -40,7 +40,7 @@ public class StatisticsQueryService {
      * @param salesId 영업 ID
      * @return 매출통계 상세
      */
-    public StatisticsBySalesDetailsResponse getStatisticsBySalesDetails(Long salesId) {
+    public StatisticsBySalesDetailsResponse getStatisticsBySalesDetails(Long foodTruckId, Long salesId) {
         return null;
     }
 

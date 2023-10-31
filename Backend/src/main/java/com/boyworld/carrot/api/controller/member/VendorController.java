@@ -3,14 +3,12 @@ package com.boyworld.carrot.api.controller.member;
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.member.request.EditMemberRequest;
 import com.boyworld.carrot.api.controller.member.request.JoinRequest;
-import com.boyworld.carrot.api.controller.member.request.LoginRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
-import com.boyworld.carrot.api.service.member.MemberAccountService;
+import com.boyworld.carrot.api.service.member.AccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
 import com.boyworld.carrot.security.SecurityUtil;
-import com.boyworld.carrot.security.TokenInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class VendorController {
 
     private final MemberService memberService;
-    private final MemberAccountService memberAccountService;
+    private final AccountService accountService;
 
     /**
      * 일반 사용자 가입 API
@@ -40,30 +38,13 @@ public class VendorController {
     @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<JoinMemberResponse> join(@Valid @RequestBody JoinRequest request) {
-        log.debug("ClientController#join called !!!");
+        log.debug("ClientController#join called");
         log.debug("JoinRequest={}", request);
 
         JoinMemberResponse response = memberService.join(request.toJoinMemberDto());
         log.debug("JoinMemberResponse={}", response);
 
         return ApiResponse.created(response);
-    }
-
-    /**
-     * 로그인 API
-     *
-     * @param request 로그인할 아이디, 비밀번호
-     * @return 로그인한 회원정보
-     */
-    @PostMapping("/login")
-    public ApiResponse<TokenInfo> login(@Valid @RequestBody LoginRequest request) {
-        log.debug("VendorController#login called !!!");
-        log.debug("LoginRequest={}", request);
-
-        TokenInfo tokenInfo = memberAccountService.login(request.getEmail(), request.getPassword());
-        log.debug("TokenInfo={}", tokenInfo);
-
-        return ApiResponse.ok(tokenInfo);
     }
 
     /**
@@ -96,7 +77,7 @@ public class VendorController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        VendorResponse response = memberAccountService.getVendorInfo(email);
+        VendorResponse response = accountService.getVendorInfo(email);
         log.debug("MemberResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -115,7 +96,7 @@ public class VendorController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        VendorResponse response = memberAccountService.editVendor(request.toEditMemberDto(email));
+        VendorResponse response = memberService.editVendor(request.toEditMemberDto(email));
         log.debug("ClientResponse={}", response);
 
         return ApiResponse.ok(response);

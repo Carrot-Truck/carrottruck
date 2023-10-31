@@ -2,6 +2,7 @@ package com.boyworld.carrot.domain.member.repository;
 
 import com.boyworld.carrot.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
@@ -10,7 +11,8 @@ import java.util.Optional;
  *
  * @author 최영환
  */
+@Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findByEmail(String loginId);
+    Optional<Member> findByEmail(String email);
 }

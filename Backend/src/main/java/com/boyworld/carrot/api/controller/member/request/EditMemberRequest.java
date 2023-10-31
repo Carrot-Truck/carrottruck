@@ -15,23 +15,21 @@ public class EditMemberRequest {
 
     private String phoneNumber;
 
-    private String role;
 
     @Builder
-    public EditMemberRequest(String name, String nickname, String phoneNumber, String role) {
+    public EditMemberRequest(String name, String nickname, String phoneNumber) {
         this.name = name;
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
-        this.role = role;
     }
 
 
     public EditMemberDto toEditMemberDto(String email) {
         return EditMemberDto.builder()
                 .name(this.name)
+                .email(email)
                 .nickname(this.nickname)
                 .phoneNumber(this.phoneNumber)
-                .role(role)
                 .build();
     }
 }

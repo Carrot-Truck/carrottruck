@@ -18,8 +18,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        Optional<Member> findMember = memberRepository.findByEmail(loginId);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Member> findMember = memberRepository.findByEmail(email);
 
         return findMember
             .map(this::createMemberUserDetails)

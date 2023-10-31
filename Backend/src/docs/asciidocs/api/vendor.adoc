@@ -2,48 +2,49 @@
 === 사업자 회원가입
 
 ==== HTTP Request
+
 include::{snippets}/create-vendor/http-request.adoc[]
 include::{snippets}/create-vendor/request-fields.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/create-vendor/http-response.adoc[]
 include::{snippets}/create-vendor/response-fields.adoc[]
 
-[[login-vendor]]
-=== 사업자 로그인
-==== HTTP Request
-include::{snippets}/login-client/http-request.adoc[]
-include::{snippets}/login-vendor/request-fields.adoc[]
-
-==== HTTP Response
-include::{snippets}/login-vendor/http-response.adoc[]
-include::{snippets}/login-vendor/response-fields.adoc[]
-
 [[remove-vendor]]
 === 사업자 탈퇴
+
 ==== HTTP Request
+
 include::{snippets}/remove-vendor/http-request.adoc[]
 include::{snippets}/remove-vendor/request-fields.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/remove-vendor/http-response.adoc[]
 include::{snippets}/remove-vendor/response-fields.adoc[]
 
 [[search-vendor]]
 === 사업자 정보 조회
+
 ==== HTTP Request
+
 include::{snippets}/search-vendor/http-request.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/search-vendor/http-response.adoc[]
 include::{snippets}/search-vendor/response-fields.adoc[]
 
 [[edit-vendor]]
 === 사업자 정보 수정
+
 ==== HTTP Request
+
 include::{snippets}/edit-vendor/http-request.adoc[]
 include::{snippets}/edit-vendor/request-fields.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/edit-vendor/http-response.adoc[]
 include::{snippets}/edit-vendor/response-fields.adoc[]

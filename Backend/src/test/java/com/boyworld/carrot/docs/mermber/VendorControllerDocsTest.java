@@ -3,16 +3,15 @@ package com.boyworld.carrot.docs.mermber;
 import com.boyworld.carrot.api.controller.member.VendorController;
 import com.boyworld.carrot.api.controller.member.request.EditMemberRequest;
 import com.boyworld.carrot.api.controller.member.request.JoinRequest;
-import com.boyworld.carrot.api.controller.member.request.LoginRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
-import com.boyworld.carrot.api.service.member.MemberAccountService;
+import com.boyworld.carrot.api.service.member.AccountService;
 import com.boyworld.carrot.api.service.member.MemberService;
 import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
-import com.boyworld.carrot.security.TokenInfo;
+import com.boyworld.carrot.domain.member.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -37,11 +36,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class VendorControllerDocsTest extends RestDocsSupport {
 
     private final MemberService memberService = mock(MemberService.class);
-    private final MemberAccountService memberAccountService = mock(MemberAccountService.class);
+    private final AccountService accountService = mock(AccountService.class);
 
     @Override
     protected Object initController() {
-        return new VendorController(memberService, memberAccountService);
+        return new VendorController(memberService, accountService);
     }
 
     @DisplayName("사업자 회원가입 API")
@@ -114,58 +113,6 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    @DisplayName("사업자 로그인 API")
-    @Test
-    void login() throws Exception {
-        LoginRequest request = LoginRequest.builder()
-                .email("ssafy@ssafy.com")
-                .password("ssafy1234")
-                .build();
-
-        TokenInfo tokenInfo = TokenInfo.builder()
-                .grantType("Bearer")
-                .accessToken("accessToken")
-                .refreshToken("refreshToken")
-                .build();
-
-        given(memberAccountService.login(anyString(), anyString()))
-                .willReturn(tokenInfo);
-
-        mockMvc.perform(
-                        post("/member/vendor/login")
-                                .content(objectMapper.writeValueAsString(request))
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(document("login-vendor",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("email").type(JsonFieldType.STRING)
-                                        .description("이메일"),
-                                fieldWithPath("password").type(JsonFieldType.STRING)
-                                        .description("비밀번호")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(JsonFieldType.NUMBER)
-                                        .description("코드"),
-                                fieldWithPath("status").type(JsonFieldType.STRING)
-                                        .description("상태"),
-                                fieldWithPath("message").type(JsonFieldType.STRING)
-                                        .description("메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT)
-                                        .description("응답데이터"),
-                                fieldWithPath("data.grantType").type(JsonFieldType.STRING)
-                                        .description("grantType"),
-                                fieldWithPath("data.accessToken").type(JsonFieldType.STRING)
-                                        .description("accessToken"),
-                                fieldWithPath("data.refreshToken").type(JsonFieldType.STRING)
-                                        .description("refreshToken")
-                        )
-                ));
-    }
-
     @DisplayName("사업자 회원탈퇴 API")
     @Test
     void withdrawal() throws Exception {
@@ -218,10 +165,10 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                 .email("ssafy@ssafy.com")
                 .phoneNumber("010-1234-1234")
                 .businessNumber("123456789")
-                .role("VENDOR")
+                .role(Role.VENDOR)
                 .build();
 
-        given(memberAccountService.getVendorInfo(anyString()))
+        given(accountService.getVendorInfo(anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -263,7 +210,6 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                 .name("박동현")
                 .nickname("매미킴123")
                 .phoneNumber("010-1234-5678")
-                .role("VENDOR")
                 .build();
 
         VendorResponse response = VendorResponse.builder()
@@ -272,10 +218,10 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                 .email("ssafy@ssafy.com")
                 .phoneNumber("010-1234-5678")
                 .businessNumber("123456789")
-                .role("VENDOR")
+                .role(Role.VENDOR)
                 .build();
 
-        given(memberAccountService.editVendor(any(EditMemberDto.class)))
+        given(memberService.editVendor(any(EditMemberDto.class)))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -295,9 +241,7 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("nickname").type(JsonFieldType.STRING)
                                         .description("닉네임"),
                                 fieldWithPath("phoneNumber").type(JsonFieldType.STRING)
-                                        .description("전화번호"),
-                                fieldWithPath("role").type(JsonFieldType.STRING)
-                                        .description("역할")
+                                        .description("전화번호")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

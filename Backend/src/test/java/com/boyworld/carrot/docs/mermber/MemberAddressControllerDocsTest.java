@@ -151,7 +151,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                 .address("광주 광산구 장덕로 5번길 16")
                 .build();
 
-        given(memberAddressQueryService.getMemberAddress(anyLong(), anyString()))
+        given(memberAddressQueryService.getMemberAddress(anyLong()))
                 .willReturn(response);
 
         mockMvc.perform(

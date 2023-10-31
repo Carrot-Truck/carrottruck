@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.service.member;
 
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
 import com.boyworld.carrot.api.service.member.query.MemberAddressQueryService;
 import com.boyworld.carrot.domain.member.Member;
@@ -14,7 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 public class MemberAddressQueryServiceTest extends IntegrationTestSupport {
@@ -63,6 +68,35 @@ public class MemberAddressQueryServiceTest extends IntegrationTestSupport {
         assertThat(response).isNotNull();
         assertThat(response.getHasNext()).isFalse();
         assertThat(response.getMemberAddresses()).isEmpty();
+    }
+
+    @DisplayName("사용자는 회원 주소 하나를 조회할 수 있다.")
+    @Test
+    void getExistingMemberAddress() {
+        // given
+        Member member = createMember(Role.CLIENT);
+        MemberAddress memberAddress = createMemberAddress(member, "주소1");
+
+        // when
+        MemberAddressDetailResponse response =
+                memberAddressQueryService.getMemberAddress(memberAddress.getId());
+
+        // then
+        assertThat(response).extracting("address")
+                .isEqualTo("주소1");
+    }
+
+    @DisplayName("존재하지 않는 회원 주소를 조회하면 예외가 발생한다.")
+    @Test
+    void getNotExistingMemberAddress() {
+        // given
+        Member member = createMember(Role.CLIENT);
+        MemberAddress memberAddress = createMemberAddress(member, "주소1");
+
+        // when // then
+        assertThatThrownBy(() -> memberAddressQueryService.getMemberAddress(2L))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("존재하지 않는 회원 주소입니다.");
     }
 
     private Member createMember(Role role) {

@@ -8,6 +8,8 @@ import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
 import com.boyworld.carrot.api.service.member.error.DuplicateException;
 import com.boyworld.carrot.domain.member.Member;
+import com.boyworld.carrot.domain.member.MemberAddress;
+import com.boyworld.carrot.domain.member.repository.MemberAddressRepository;
 import com.boyworld.carrot.domain.member.repository.MemberQueryRepository;
 import com.boyworld.carrot.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +32,8 @@ import java.util.NoSuchElementException;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
     private final MemberQueryRepository memberQueryRepository;
-
+    private final MemberAddressRepository memberAddressRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -130,7 +131,27 @@ public class MemberService {
      * @return 등록된 회원 주소 정보
      */
     public MemberAddressDetailResponse createMemberAddress(String address, String email) {
-        return null;
+        Member findMember = findMemberByEmail(email);
+
+        MemberAddress savedMemberAddress = saveMemberAddress(address, findMember);
+
+        return MemberAddressDetailResponse.of(savedMemberAddress);
+    }
+
+    /**
+     * 회원 주소 저장
+     *
+     * @param address 등록할 주소
+     * @param member  회원 엔티티
+     * @return 저장된 회원 엔티티
+     */
+    private MemberAddress saveMemberAddress(String address, Member member) {
+        MemberAddress memberAddress = MemberAddress.builder()
+                .address(address)
+                .member(member)
+                .active(true)
+                .build();
+        return memberAddressRepository.save(memberAddress);
     }
 
     /**

@@ -172,6 +172,21 @@ public class MemberService {
     }
 
     /**
+     * 회원 주소 삭제
+     *
+     * @param memberAddressId 삭제할 회원 주소
+     * @param email           로그인 중인 회원 이메일
+     * @return true: 삭제 완료 / false: 삭제 실패
+     */
+    public Boolean deleteMemberAddress(Long memberAddressId, String email) {
+        MemberAddress memberAddress = getMemberAddressById(memberAddressId);
+
+        memberAddress.deActivate();
+
+        return true;
+    }
+
+    /**
      * 회원 주소 식별키로 식별키로 회원 주소 조회
      *
      * @param memberAddressId 회원 주소 식별키
@@ -181,17 +196,6 @@ public class MemberService {
     private MemberAddress getMemberAddressById(Long memberAddressId) {
         return memberAddressRepository.findById(memberAddressId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원 주소입니다."));
-    }
-
-    /**
-     * 회원 주소 삭제
-     *
-     * @param memberAddressId 삭제할 회원 주소
-     * @param email           로그인 중인 회원 이메일
-     * @return true: 삭제 완료 / false: 삭제 실패
-     */
-    public Boolean deleteMemberAddress(Long memberAddressId, String email) {
-        return false;
     }
 
     /**

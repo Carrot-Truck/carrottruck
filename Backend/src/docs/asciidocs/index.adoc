@@ -13,19 +13,23 @@ include::overview.adoc[]
 
 [[Auth-API]]
 == Auth API
-include::{docdir}/api/auth.adoc[]
+include::{docdir}/api/member/auth.adoc[]
 
 [[Client-API]]
 == Client API
-include::{docdir}/api/client.adoc[]
+include::{docdir}/api/member/client.adoc[]
 
 [[MemberAddress-API]]
 == MemberAddress API
-include::{docdir}/api/member-address.adoc[]
+include::{docdir}/api/member/member-address.adoc[]
 
 [[Vendor-API]]
 == Vendor API
-include::{docdir}/api/vendor.adoc[]
+include::{docdir}/api/member/vendor.adoc[]
+
+[[Vendor-Info-API]]
+== Vendor Info Api
+include::{docdir}/api/member/vendor-info.adoc[]
 
 [[FoodTruck-API]]
 == FoodTruck API

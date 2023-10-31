@@ -1,0 +1,12 @@
+[[create-vendor]]
+=== 사업자 정보 등록
+
+==== HTTP Request
+
+include::{snippets}/create-vendor-info/http-request.adoc[]
+include::{snippets}/create-vendor-info/request-fields.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/create-vendor-info/http-response.adoc[]
+include::{snippets}/create-vendor-info/response-fields.adoc[]

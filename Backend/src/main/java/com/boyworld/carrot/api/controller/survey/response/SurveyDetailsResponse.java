@@ -11,11 +11,14 @@ public class SurveyDetailsResponse {
 
     private Long categoryId;
 
+    private String categoryName;
+
     private List<SurveyDetailDto> surveyDetailDtoList;
 
     @Builder
-    public SurveyDetailsResponse(Long categoryId, List<SurveyDetailDto> surveyDetailDtoList) {
+    public SurveyDetailsResponse(Long categoryId, String categoryName, List<SurveyDetailDto> surveyDetailDtoList) {
         this.categoryId = categoryId;
+        this.categoryName = categoryName;
         this.surveyDetailDtoList = surveyDetailDtoList;
     }
 }

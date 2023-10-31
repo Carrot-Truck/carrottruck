@@ -14,8 +14,31 @@ include::{snippets}/create-survey/response-fields.adoc[]
 
 ==== HTTP Request
 include::{snippets}/search-survey-list/http-request.adoc[]
-include::{snippets}/search-survey-list//query-parameters.adoc[]
+include::{snippets}/search-survey-list/query-parameters.adoc[]
 
 ==== HTTP Response
 include::{snippets}/search-survey-list//http-response.adoc[]
-include::{snippets}/search-survey-list//response-fields.adoc[]
+include::{snippets}/search-survey-list/response-fields.adoc[]
+
+[[search-survey-detail]]
+=== 수요조사 카테고리별 리스트 조회
+
+==== HTTP Request
+include::{snippets}/search-survey-detail/http-request.adoc[]
+include::{snippets}/search-survey-detail/path-parameters.adoc[]
+include::{snippets}/search-survey-detail/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/search-survey-detail/http-response.adoc[]
+include::{snippets}/search-survey-detail/response-fields.adoc[]
+
+[[delete-survey]]
+=== 수요조사 삭제
+
+==== HTTP Request
+include::{snippets}/delete-survey/http-request.adoc[]
+include::{snippets}/delete-survey/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/delete-survey/http-response.adoc[]
+include::{snippets}/delete-survey/response-fields.adoc[]

@@ -25,11 +25,10 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -183,7 +182,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                 .memberId(1L)
                 .nickname("당근당근")
                 .content("출근길에 아아가 있었으면 좋겠어요")
-                .createdTime(LocalDateTime.now())
+                .createdTime(LocalDateTime.now().minusMonths(1))
                 .build();
 
         SurveyDetailDto item2 = SurveyDetailDto.builder()
@@ -191,7 +190,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                 .memberId(25L)
                 .nickname("트럭")
                 .content("커피팔아주세요")
-                .createdTime(LocalDateTime.now())
+                .createdTime(LocalDateTime.now().minusDays(1))
                 .build();
 
         SurveyDetailDto item3 = SurveyDetailDto.builder()
@@ -204,9 +203,11 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
 
         List<SurveyDetailDto> items = List.of(item1, item2, item3);
         Long cid = 9L;
+        String cname = "카페/베이커리";
 
         SurveyDetailsResponse response = SurveyDetailsResponse.builder()
                 .categoryId(cid)
+                .categoryName(cname)
                 .surveyDetailDtoList(items)
                 .build();
 
@@ -222,11 +223,11 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("search-survey-list",
+                .andDo(document("search-survey-detail",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("categotyId")
+                                parameterWithName("categoryId")
                                         .description("카테고리 아이디")
                         ),
                         queryParameters(
@@ -235,7 +236,9 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                                 parameterWithName("sigungu")
                                         .description("시군구"),
                                 parameterWithName("dong")
-                                        .description("읍면동")
+                                        .description("읍면동"),
+                                parameterWithName("page")
+                                        .description("페이지")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -244,14 +247,55 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                                         .description("상태"),
                                 fieldWithPath("message").type(JsonFieldType.STRING)
                                         .description("메시지"),
-                                fieldWithPath("data.surveyCountDtoList[].categoryId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 아이디"),
-                                fieldWithPath("data.surveyCountDtoList[].categoryName").type(JsonFieldType.STRING)
+                                fieldWithPath("data.categoryName").type(JsonFieldType.STRING)
                                         .description("카테고리 이름"),
-                                fieldWithPath("data.surveyCountDtoList[].surveyCount").type(JsonFieldType.NUMBER)
-                                        .description("수요조사 갯수")
+                                fieldWithPath("data.surveyDetailDtoList[].surveyId").type(JsonFieldType.NUMBER)
+                                        .description("수요조사 ID"),
+                                fieldWithPath("data.surveyDetailDtoList[].memberId").type(JsonFieldType.NUMBER)
+                                        .description("작성자 ID"),
+                                fieldWithPath("data.surveyDetailDtoList[].nickname").type(JsonFieldType.STRING)
+                                        .description("작성자 닉네임"),
+                                fieldWithPath("data.surveyDetailDtoList[].content").type(JsonFieldType.STRING)
+                                        .description("수요조사 상세내용"),
+                                fieldWithPath("data.surveyDetailDtoList[].createdTime").type(JsonFieldType.ARRAY)
+                                        .description("수요조사 작성시간")
                         )
                 ));
     }
 
+    @DisplayName("수요조사 삭제 API")
+    @Test
+    void deleteSurvey() throws Exception {
+        Long sid = 11L;
+
+        given(surveyService.deleteSurvey(anyLong()))
+                .willReturn(sid);
+
+        mockMvc.perform(
+                        delete("/survey/remove/{surveyId}", sid)
+                                .header("Authentication", "authentication")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("delete-survey",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("surveyId")
+                                        .description("수요조사 아이디")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("수요조사 아이디")
+                        )
+                ));
+    }
 }

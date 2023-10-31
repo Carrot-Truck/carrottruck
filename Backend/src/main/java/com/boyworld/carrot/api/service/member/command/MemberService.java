@@ -1,15 +1,15 @@
-package com.boyworld.carrot.api.service.member;
+package com.boyworld.carrot.api.service.member.command;
 
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
-import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
 import com.boyworld.carrot.api.service.member.dto.EditMemberDto;
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
 import com.boyworld.carrot.api.service.member.error.DuplicateException;
 import com.boyworld.carrot.domain.member.Member;
-import com.boyworld.carrot.domain.member.repository.MemberQueryRepository;
-import com.boyworld.carrot.domain.member.repository.MemberRepository;
+import com.boyworld.carrot.domain.member.repository.command.MemberAddressRepository;
+import com.boyworld.carrot.domain.member.repository.query.MemberQueryRepository;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,9 +30,8 @@ import java.util.NoSuchElementException;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
     private final MemberQueryRepository memberQueryRepository;
-
+    private final MemberAddressRepository memberAddressRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -119,40 +118,6 @@ public class MemberService {
             findMember.deActivate();
             return true;
         }
-        return false;
-    }
-
-    /**
-     * 회원 주소 등록
-     *
-     * @param address 등록할 주소
-     * @param email   현재 로그인 중인 회원 이메일
-     * @return 등록된 회원 주소 정보
-     */
-    public MemberAddressDetailResponse createMemberAddress(String address, String email) {
-        return null;
-    }
-
-    /**
-     * 회원 주소 수정
-     *
-     * @param memberAddressId 수정할 주소 식별키
-     * @param address         수정할 주소 정보
-     * @param email           로그인 중인 회원 이메일
-     * @return 수정된 주소 정보
-     */
-    public MemberAddressDetailResponse editMemberAddress(Long memberAddressId, String address, String email) {
-        return null;
-    }
-
-    /**
-     * 회원 주소 삭제
-     *
-     * @param memberAddressId 삭제할 회원 주소
-     * @param email           로그인 중인 회원 이메일
-     * @return true: 삭제 완료 / false: 삭제 실패
-     */
-    public Boolean deleteMemberAddress(Long memberAddressId, String email) {
         return false;
     }
 

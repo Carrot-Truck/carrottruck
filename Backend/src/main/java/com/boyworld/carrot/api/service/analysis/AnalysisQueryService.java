@@ -1,10 +1,10 @@
 package com.boyworld.carrot.api.service.analysis;
 
 import com.boyworld.carrot.api.controller.analysis.response.StoreAnalysisResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -16,8 +16,8 @@ import java.math.BigDecimal;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
-public class AnalysisService {
+@Transactional(readOnly = true)
+public class AnalysisQueryService {
 
     /**
      * 상권분석 서비스

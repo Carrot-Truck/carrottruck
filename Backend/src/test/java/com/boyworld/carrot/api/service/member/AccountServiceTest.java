@@ -4,12 +4,13 @@ package com.boyworld.carrot.api.service.member;
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
+import com.boyworld.carrot.api.service.member.query.AccountService;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.VendorInfo;
-import com.boyworld.carrot.domain.member.repository.MemberQueryRepository;
-import com.boyworld.carrot.domain.member.repository.MemberRepository;
-import com.boyworld.carrot.domain.member.repository.VendorInfoRepository;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.member.repository.command.VendorInfoRepository;
+import com.boyworld.carrot.domain.member.repository.query.MemberQueryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,6 @@ class AccountServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
 
     @Autowired
     private MemberQueryRepository memberQueryRepository;

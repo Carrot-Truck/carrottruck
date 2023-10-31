@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,22 +41,13 @@ public class ReviewImage extends TimeBaseEntity {
     private String saveFileName;
 
     @Column(nullable = false)
-    private LocalDateTime createdDate;
-
-    @Column(nullable = false)
-    private LocalDateTime modifiedDate;
-
-    @Column(nullable = false)
     private Boolean active;
 
     @Builder
-    private ReviewImage(Review review, String uploadFileName, String saveFileName,
-        LocalDateTime createdDate, LocalDateTime modifiedDate, Boolean active) {
+    private ReviewImage(Review review, String uploadFileName, String saveFileName, Boolean active) {
         this.review = review;
         this.uploadFileName = uploadFileName;
         this.saveFileName = saveFileName;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
         this.active = active;
     }
 }

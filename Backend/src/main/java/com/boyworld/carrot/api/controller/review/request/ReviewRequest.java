@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -27,13 +28,16 @@ public class ReviewRequest {
     @Max(value = 5)
     private int grade;
 
+    private MultipartFile image;
+
     @Builder
-    public ReviewRequest(Long memberId, Long foodTruckId, Long orderId, String content, int grade){
+    public ReviewRequest(Long memberId, Long foodTruckId, Long orderId, String content, int grade, MultipartFile image){
         this.memberId = memberId;
         this.foodTruckId = foodTruckId;
         this.orderId = orderId;
         this.content = content;
         this.grade = grade;
+        this.image = image;
     }
 
 }

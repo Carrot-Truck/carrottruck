@@ -3,7 +3,7 @@
 
 ==== HTTP Request
 include::{snippets}/create-review/http-request.adoc[]
-include::{snippets}/create-review/request-fields.adoc[]
+include::{snippets}/create-review/httpie-request.adoc[]
 
 ==== HTTP Response
 include::{snippets}/create-review/http-response.adoc[]

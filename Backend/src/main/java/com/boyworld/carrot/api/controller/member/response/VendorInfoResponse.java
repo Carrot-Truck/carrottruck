@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.controller.member.response;
 
+import com.boyworld.carrot.domain.member.VendorInfo;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,5 +24,15 @@ public class VendorInfoResponse {
         this.vendorName = vendorName;
         this.businessNumber = businessNumber;
         this.phoneNumber = phoneNumber;
+    }
+
+    public static VendorInfoResponse of(VendorInfo vendorInfo) {
+        return VendorInfoResponse.builder()
+                .vendorInfoId(vendorInfo.getId())
+                .tradeName(vendorInfo.getTradeName())
+                .vendorName(vendorInfo.getVendorName())
+                .businessNumber(vendorInfo.getBusinessNumber())
+                .phoneNumber(vendorInfo.getPhoneNumber())
+                .build();
     }
 }

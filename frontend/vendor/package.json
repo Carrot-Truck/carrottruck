@@ -1,6 +1,7 @@
 {
   "name": "vendor",
   "version": "0.1.0",
+  "homepage": "/vendor",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",

@@ -9,7 +9,6 @@ function App() {
     <div className="App">
       <GlobalStyles />
       <header className="App-header">
-        <img src={logo}></img>
         <RouteLink></RouteLink>
       </header>
     </div>

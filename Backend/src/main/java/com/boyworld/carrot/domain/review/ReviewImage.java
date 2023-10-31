@@ -42,22 +42,13 @@ public class ReviewImage extends TimeBaseEntity {
     private String saveFileName;
 
     @Column(nullable = false)
-    private LocalDateTime createdDate;
-
-    @Column(nullable = false)
-    private LocalDateTime modifiedDate;
-
-    @Column(nullable = false)
     private Boolean active;
 
     @Builder
-    private ReviewImage(Review review, String uploadFileName, String saveFileName,
-        LocalDateTime createdDate, LocalDateTime modifiedDate, Boolean active) {
+    private ReviewImage(Review review, String uploadFileName, String saveFileName, Boolean active) {
         this.review = review;
         this.uploadFileName = uploadFileName;
         this.saveFileName = saveFileName;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
         this.active = active;
     }
 }

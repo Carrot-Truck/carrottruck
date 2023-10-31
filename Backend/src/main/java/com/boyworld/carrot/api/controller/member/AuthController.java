@@ -72,7 +72,7 @@ public class AuthController {
         log.debug("AuthController#checkEmail called");
         log.debug("CheckEmailRequest={}", request);
 
-        Boolean result = authService.checkEmail(request.getEmail(), request.getRole());
+        Boolean result = authService.checkEmail(request.getEmail());
         log.debug("result={}", result);
 
         return ApiResponse.ok(result);

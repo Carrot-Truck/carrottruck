@@ -8,18 +8,18 @@ public class MenuDto {
 
     private Long menuId;
     private String menuName;
-    private Integer price;
-    private String description;
-    private Boolean soldOut;
+    private Integer menuPrice;
+    private String menuDescription;
+    private Boolean menuSoldOut;
     private Long menuImageId;
 
     @Builder
-    public MenuDto(Long menuId, String menuName, Integer price, String description, Boolean soldOut, Long menuImageId) {
+    public MenuDto(Long menuId, String menuName, Integer menuPrice, String menuDescription, Boolean menuSoldOut, Long menuImageId) {
         this.menuId = menuId;
         this.menuName = menuName;
-        this.price = price;
-        this.description = description;
-        this.soldOut = soldOut;
+        this.menuPrice = menuPrice;
+        this.menuDescription = menuDescription;
+        this.menuSoldOut = menuSoldOut;
         this.menuImageId = menuImageId;
     }
 }

@@ -16,21 +16,17 @@ public class LoginRequest {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String role;
 
     @Builder
-    public LoginRequest(String email, String password, String role) {
+    public LoginRequest(String email, String password) {
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     public LoginDto toLoginDto() {
         return LoginDto.builder()
                 .email(this.email)
                 .password(this.password)
-                .role(this.role)
                 .build();
     }
 }

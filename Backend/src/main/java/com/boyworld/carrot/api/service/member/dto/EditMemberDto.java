@@ -7,18 +7,15 @@ import lombok.Data;
 public class EditMemberDto {
 
     private String name;
-
+    private String email;
     private String nickname;
-
     private String phoneNumber;
 
-    private String role;
-
     @Builder
-    public EditMemberDto(String name, String nickname, String phoneNumber, String role) {
+    public EditMemberDto(String name, String email, String nickname, String phoneNumber) {
         this.name = name;
+        this.email = email;
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
-        this.role = role;
     }
 }

@@ -2429,7 +2429,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 2264
+Content-Length: 2288
 
 {
   "code" : 200,
@@ -2458,16 +2458,16 @@ Content-Length: 2264
     "menus" : [ {
       "menuId" : 1,
       "menuName" : "달콤짭짤한 밥도둑 된장 삼겹살 구이",
-      "price" : 8900,
-      "description" : "동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!",
-      "soldOut" : false,
+      "menuPrice" : 8900,
+      "menuDescription" : "동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!",
+      "menuSoldOut" : false,
       "menuImageId" : 1
     }, {
       "menuId" : 2,
       "menuName" : "노른자 된장 삼겹살 덮밥",
-      "price" : 6900,
-      "description" : "감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥",
-      "soldOut" : false,
+      "menuPrice" : 6900,
+      "menuDescription" : "감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥",
+      "menuSoldOut" : false,
       "menuImageId" : 2
     } ],
     "schedules" : [ {
@@ -2644,17 +2644,17 @@ Content-Length: 2264
 <td class="tableblock halign-left valign-top"><p class="tableblock">메뉴명</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].price</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].menuPrice</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">메뉴 가격</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].menuDescription</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">메뉴 설명</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].soldOut</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].menuSoldOut</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">품절 여부</p></td>
 </tr>
@@ -3295,7 +3295,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 652
+Content-Length: 676
 
 {
   "code" : 200,
@@ -3306,16 +3306,16 @@ Content-Length: 652
     "menus" : [ {
       "menuId" : 1,
       "menuName" : "달콤짭짤한 밥도둑 된장 삼겹살 구이",
-      "price" : 8900,
-      "description" : "동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!",
-      "soldOut" : false,
+      "menuPrice" : 8900,
+      "menuDescription" : "동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!",
+      "menuSoldOut" : false,
       "menuImageId" : 1
     }, {
       "menuId" : 2,
       "menuName" : "노른자 된장 삼겹살 덮밥",
-      "price" : 6900,
-      "description" : "감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥",
-      "soldOut" : false,
+      "menuPrice" : 6900,
+      "menuDescription" : "감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥",
+      "menuSoldOut" : false,
       "menuImageId" : 2
     } ]
   }
@@ -3377,17 +3377,17 @@ Content-Length: 652
 <td class="tableblock halign-left valign-top"><p class="tableblock">메뉴명</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].price</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].menuPrice</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">메뉴 가격</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].menuDescription</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">메뉴 설명</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].soldOut</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menus[].menuSoldOut</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">품절 여부</p></td>
 </tr>
@@ -3438,7 +3438,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 635
+Content-Length: 647
 
 {
   "code" : 200,
@@ -3447,9 +3447,9 @@ Content-Length: 635
   "data" : {
     "menuId" : 2,
     "menuName" : "노른자 된장 삼겹살 덮밥",
-    "price" : 6900,
-    "description" : "감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥",
-    "soldOut" : false,
+    "menuPrice" : 6900,
+    "menuDescription" : "감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥",
+    "menuSoldOut" : false,
     "menuImageId" : 2,
     "menuOptions" : [ {
       "menuOptionId" : 1,
@@ -3511,17 +3511,17 @@ Content-Length: 635
 <td class="tableblock halign-left valign-top"><p class="tableblock">메뉴명</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.price</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menuPrice</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">메뉴 가격</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menuDescription</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">메뉴 설명</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.soldOut</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.menuSoldOut</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">품절 여부</p></td>
 </tr>

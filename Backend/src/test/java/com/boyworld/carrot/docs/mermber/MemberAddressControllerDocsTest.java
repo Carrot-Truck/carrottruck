@@ -4,13 +4,14 @@ import com.boyworld.carrot.api.controller.member.MemberAddressController;
 import com.boyworld.carrot.api.controller.member.request.MemberAddressRequest;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
-import com.boyworld.carrot.api.service.member.query.MemberAddressQueryService;
 import com.boyworld.carrot.api.service.member.command.MemberAddressService;
+import com.boyworld.carrot.api.service.member.query.MemberAddressQueryService;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 
@@ -23,12 +24,8 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -140,6 +137,46 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.memberAddresses[].memberAddressId").type(JsonFieldType.NUMBER)
                                         .description("회원 주소 식별키"),
                                 fieldWithPath("data.memberAddresses[].address").type(JsonFieldType.STRING)
+                                        .description("주소")
+                        )
+                ));
+    }
+
+    @DisplayName("회원 주소 상세 조회 API")
+    @Test
+    @WithMockUser(roles = {"CLIENT", "VENDOR"})
+    void getMemberAddress() throws Exception {
+        MemberAddressDetailResponse response = MemberAddressDetailResponse.builder()
+                .memberAddressId(1L)
+                .address("광주 광산구 장덕로 5번길 16")
+                .build();
+
+        given(memberAddressQueryService.getMemberAddress(anyLong(), anyString()))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/member/address/{memberAddressId}", 1)
+                                .header("Authentication", "authentication")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("search-detail-address",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("memberAddressId")
+                                        .description("주소 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data.memberAddressId").type(JsonFieldType.NUMBER)
+                                        .description("회원 주소 식별키"),
+                                fieldWithPath("data.address").type(JsonFieldType.STRING)
                                         .description("주소")
                         )
                 ));

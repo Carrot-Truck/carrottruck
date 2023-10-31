@@ -10,8 +10,13 @@ import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.repository.MemberRepository;
+import com.boyworld.carrot.domain.order.Order;
+import com.boyworld.carrot.domain.order.repository.OrderRepository;
 import com.boyworld.carrot.domain.review.Review;
+import com.boyworld.carrot.domain.review.ReviewImage;
+import com.boyworld.carrot.domain.review.repository.ReviewImageRepository;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
+import com.boyworld.carrot.file.S3Uploader;
 import com.boyworld.carrot.security.SecurityUtil;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,8 +37,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final ReviewImageRepository reviewImageRepository;
     private final MemberRepository memberRepository;
     private final FoodTruckRepository foodTruckRepository;
+    private final OrderRepository orderRepository;
+    private final S3Uploader s3Uploader;
 
     /*
      *  write review API
@@ -42,6 +50,31 @@ public class ReviewService {
      */
     public Boolean createReview(ReviewRequest request) {
         try {
+            Member member = memberRepository.findById(request.getMemberId()).orElseThrow();
+            Order order = orderRepository.findById(request.getOrderId()).orElseThrow();
+            FoodTruck foodTruck = foodTruckRepository.findById(request.getFoodTruckId()).orElseThrow();
+            Review review = Review.builder()
+                .grade(request.getGrade())
+                .member(member)
+                .order(order)
+                .foodTruck(foodTruck)
+                .content(request.getContent())
+                .active(true)
+                .build();
+            // Save review
+            Review savedReview = reviewRepository.save(review);
+
+            // Image upload at AWS S3
+            String uploadFileUrl = s3Uploader.uploadFiles(request.getImage(), savedReview.getId(), "review");
+            // Save info at ReviewImage
+            ReviewImage reviewImage = ReviewImage.builder()
+                    .review(review)
+                    .saveFileName(uploadFileUrl)
+                    .uploadFileName(request.getImage().getOriginalFilename())
+                    .active(true)
+                    .build();
+            reviewImageRepository.save(reviewImage);
+
             return true;
         } catch (Exception e) {
             return false;
@@ -69,7 +102,8 @@ public class ReviewService {
         try {
             Member member = memberRepository.findByEmail(userEmail).orElseThrow();
             List<Review> myReview = reviewRepository.findByMember(member).orElseThrow();
-            return MyReviewResponse.of(myReview.stream().map(MyReviewDto::of).collect(Collectors.toList()));
+            return MyReviewResponse.of(
+                myReview.stream().map(MyReviewDto::of).collect(Collectors.toList()));
         } catch (Exception e) {
             return null;
         }
@@ -82,7 +116,8 @@ public class ReviewService {
         try {
             FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId).orElseThrow();
             List<Review> list = reviewRepository.findByFoodTruck(foodTruck).orElseThrow();
-            return FoodTruckReviewResponse.of(list.stream().map(FoodTruckReviewDto::of).collect(Collectors.toList()));
+            return FoodTruckReviewResponse.of(
+                list.stream().map(FoodTruckReviewDto::of).collect(Collectors.toList()));
         } catch (Exception e) {
             return null;
         }
@@ -92,7 +127,7 @@ public class ReviewService {
      * delete my review API
      */
     public Boolean withdrawal(String email, Long reviewId) {
-        if(email.equals(SecurityUtil.getCurrentLoginId())){
+        if (email.equals(SecurityUtil.getCurrentLoginId())) {
             return true;
         } else {
             return false;

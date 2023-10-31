@@ -15,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
@@ -61,6 +64,38 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
 
         // then
         assertThat(responses).isEmpty();
+    }
+
+    @DisplayName("사용자는 회원 주소 하나를 조회할 수 있다.")
+    @Test
+    void getExistingMemberAddress() {
+        // given
+        Member member = createMember(Role.CLIENT);
+        MemberAddress memberAddress = createMemberAddress(member, "주소1");
+
+        // when
+        MemberAddressDetailResponse response =
+                memberAddressQueryRepository.getMemberAddressById(memberAddress.getId())
+                        .orElseThrow(NoSuchElementException::new);
+
+        // then
+        assertThat(response).extracting("address")
+                .isEqualTo("주소1");
+    }
+
+    @DisplayName("존재하지 않는 회원 주소를 조회하면 빈 객체가 반환된다.")
+    @Test
+    void getNotExistingMemberAddress() {
+        // given
+        Member member = createMember(Role.CLIENT);
+        MemberAddress memberAddress = createMemberAddress(member, "주소1");
+
+        // when
+        Optional<MemberAddressDetailResponse> response =
+                memberAddressQueryRepository.getMemberAddressById(2L);
+
+        // then
+        assertThat(response.isEmpty()).isTrue();
     }
 
     private Member createMember(Role role) {

@@ -7,14 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CheckEmailRequest {
+public class MemberAddressRequest {
 
     @NotBlank
-    private String email;
-
+    private String address;
 
     @Builder
-    public CheckEmailRequest(String email) {
-        this.email = email;
+    public MemberAddressRequest(String address) {
+        this.address = address;
     }
 }

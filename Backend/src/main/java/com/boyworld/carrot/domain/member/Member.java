@@ -29,7 +29,7 @@ public class Member extends TimeBaseEntity implements UserDetails {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String email;
 
     @Column(length = 100, nullable = false)
@@ -96,5 +96,27 @@ public class Member extends TimeBaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    // == business logic == //
+
+    /**
+     * 회원 정보 변경
+     *
+     * @param name 변경할 이름
+     * @param nickname 변경할 닉네임
+     * @param phoneNumber 변경할 전화번호
+     */
+    public void editMemberInfo(String name, String nickname, String phoneNumber) {
+        this.name = name;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    public void deActivate() {
+        this.active = false;
     }
 }

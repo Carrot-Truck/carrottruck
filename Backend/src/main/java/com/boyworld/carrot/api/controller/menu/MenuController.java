@@ -7,6 +7,7 @@ import com.boyworld.carrot.api.controller.menu.request.EditMenuRequest;
 import com.boyworld.carrot.api.controller.menu.response.CreateMenuResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuDetailResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
+import com.boyworld.carrot.api.controller.menu.response.MenuResponse;
 import com.boyworld.carrot.api.service.menu.MenuQueryService;
 import com.boyworld.carrot.api.service.menu.MenuService;
 import com.boyworld.carrot.security.SecurityUtil;

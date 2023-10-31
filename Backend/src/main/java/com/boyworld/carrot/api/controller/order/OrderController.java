@@ -75,7 +75,7 @@ public class OrderController {
      * @return 주문 상세 정보
      */
 
-    @GetMapping("/{orderId}}")
+    @GetMapping("/{orderId}")
     public ApiResponse<OrderDetailResponse> getOrder(@PathVariable Long orderId) {
         log.debug("OrderController#getOrder called");
         log.debug("orderId={}", orderId);

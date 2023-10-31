@@ -44,22 +44,13 @@ public class Comment extends TimeBaseEntity {
     private String content;
 
     @Column(nullable = false)
-    private LocalDateTime createdDate;
-
-    @Column(nullable = false)
-    private LocalDateTime modifiedDate;
-
-    @Column(nullable = false)
     private Boolean active;
 
     @Builder
-    private Comment(Review review, Member vendor, String content, LocalDateTime createdDate,
-        LocalDateTime modifiedDate, Boolean active) {
+    private Comment(Review review, Member vendor, String content, Boolean active) {
         this.review = review;
         this.vendor = vendor;
         this.content = content;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
         this.active = active;
     }
 }

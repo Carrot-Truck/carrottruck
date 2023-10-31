@@ -13,15 +13,23 @@ include::overview.adoc[]
 
 [[Auth-API]]
 == Auth API
-include::{docdir}/api/auth.adoc[]
+include::{docdir}/api/member/auth.adoc[]
 
 [[Client-API]]
 == Client API
-include::{docdir}/api/client.adoc[]
+include::{docdir}/api/member/client.adoc[]
+
+[[MemberAddress-API]]
+== MemberAddress API
+include::{docdir}/api/member/member-address.adoc[]
 
 [[Vendor-API]]
 == Vendor API
-include::{docdir}/api/vendor.adoc[]
+include::{docdir}/api/member/vendor.adoc[]
+
+[[Vendor-Info-API]]
+== Vendor Info ApI
+include::{docdir}/api/member/vendor-info.adoc[]
 
 [[FoodTruck-API]]
 == FoodTruck API
@@ -42,3 +50,15 @@ include::{docdir}/api/review.adoc[]
 [[Sale-API]]
 == Sale API
 include::{docdir}/api/sale.adoc[]
+
+[[Survey-API]]
+== Survey API
+include::{docdir}/api/survey.adoc[]
+
+[[Statistics-API]]
+== Statistics API
+include::{docdir}/api/statistics.adoc[]
+
+[[Analysis-API]]
+== Analysis API
+include::{docdir}/api/analysis.adoc[]

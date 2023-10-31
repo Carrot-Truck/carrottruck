@@ -9,10 +9,13 @@ import java.util.List;
 @Data
 public class StatisticsByMonthResponse {
 
+    private Integer year;
+
     private List<StatisticsByMonthDto> statisticsByMonth;
 
     @Builder
-    StatisticsByMonthResponse(List<StatisticsByMonthDto> statisticsByMonth) {
+    StatisticsByMonthResponse(Integer year, List<StatisticsByMonthDto> statisticsByMonth) {
+        this.year = year;
         this.statisticsByMonth = statisticsByMonth;
     }
 }

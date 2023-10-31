@@ -16,4 +16,11 @@ public class MemberAddressResponse {
         this.hasNext = hasNext;
         this.memberAddresses = memberAddresses;
     }
+
+    public static MemberAddressResponse of(List<MemberAddressDetailResponse> memberAddresses, boolean hasNext) {
+        return MemberAddressResponse.builder()
+                .hasNext(hasNext)
+                .memberAddresses(memberAddresses)
+                .build();
+    }
 }

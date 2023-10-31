@@ -49,4 +49,9 @@ public class VendorInfo {
         this.active = active;
         this.member = member;
     }
+
+    //== business logic ==//
+    public void deActivate() {
+        this.active = false;
+    }
 }

@@ -1,0 +1,70 @@
+[[get-statistics-sales-list]]
+=== 영업 매출 통계 리스트 조회
+
+==== HTTP Request
+include::{snippets}/get-statistics-sales-list/http-request.adoc[]
+include::{snippets}/get-statistics-sales-list/path-parameters.adoc[]
+include::{snippets}/get-statistics-sales-list/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-statistics-sales-list//http-response.adoc[]
+include::{snippets}/get-statistics-sales-list/response-fields.adoc[]
+
+[[get-statistics-sales-details]]
+=== 영업 매출 통계 상세 조회
+
+==== HTTP Request
+include::{snippets}/get-statistics-sales-details/http-request.adoc[]
+include::{snippets}/get-statistics-sales-details/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-statistics-sales-details//http-response.adoc[]
+include::{snippets}/get-statistics-sales-details/response-fields.adoc[]
+
+[[get-statistics-weekly-list]]
+=== 주별 매출 통계 리스트 조회
+
+==== HTTP Request
+include::{snippets}/get-statistics-weekly-list/http-request.adoc[]
+include::{snippets}/get-statistics-weekly-list/path-parameters.adoc[]
+include::{snippets}/get-statistics-weekly-list/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-statistics-weekly-list//http-response.adoc[]
+include::{snippets}/get-statistics-weekly-list/response-fields.adoc[]
+
+[[get-statistics-weekly-details]]
+=== 주별 매출 통계 상세 조회
+
+==== HTTP Request
+include::{snippets}/get-statistics-weekly-details/http-request.adoc[]
+include::{snippets}/get-statistics-weekly-details/path-parameters.adoc[]
+include::{snippets}/get-statistics-weekly-details/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-statistics-weekly-details//http-response.adoc[]
+include::{snippets}/get-statistics-weekly-details/response-fields.adoc[]
+
+[[get-statistics-monthly-list]]
+=== 월별 매출 통계 리스트 조회
+
+==== HTTP Request
+include::{snippets}/get-statistics-monthly-list/http-request.adoc[]
+include::{snippets}/get-statistics-monthly-list/path-parameters.adoc[]
+include::{snippets}/get-statistics-monthly-list/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-statistics-monthly-list//http-response.adoc[]
+include::{snippets}/get-statistics-monthly-list/response-fields.adoc[]
+
+[[get-statistics-weekly-details]]
+=== 월별 매출 통계 상세 조회
+
+==== HTTP Request
+include::{snippets}/get-statistics-monthly-details/http-request.adoc[]
+include::{snippets}/get-statistics-monthly-details/path-parameters.adoc[]
+include::{snippets}/get-statistics-monthly-details/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-statistics-monthly-details//http-response.adoc[]
+include::{snippets}/get-statistics-monthly-details/response-fields.adoc[]

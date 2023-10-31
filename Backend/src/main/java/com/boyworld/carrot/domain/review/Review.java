@@ -62,4 +62,8 @@ public class Review extends TimeBaseEntity {
         this.grade = grade;
         this.active = active;
     }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }

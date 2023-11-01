@@ -18,8 +18,8 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.boyworld.carrot.api.controller.order.response.ClientOrderResponse;
-import com.boyworld.carrot.api.controller.order.response.VendorOrderResponse;
+import com.boyworld.carrot.api.controller.order.response.OrderResponse;
+import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.controller.sale.SaleController;
 import com.boyworld.carrot.api.controller.sale.request.AcceptOrderRequest;
 import com.boyworld.carrot.api.controller.sale.request.DeclineOrderRequest;
@@ -27,8 +27,7 @@ import com.boyworld.carrot.api.controller.sale.request.OpenSaleRequest;
 import com.boyworld.carrot.api.controller.sale.response.CloseSaleResponse;
 import com.boyworld.carrot.api.controller.sale.response.OpenSaleResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
-import com.boyworld.carrot.api.service.order.dto.ClientOrderItem;
-import com.boyworld.carrot.api.service.order.dto.VendorOrderItem;
+import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.sale.SaleService;
 import com.boyworld.carrot.api.service.sale.dto.SaleMenuItem;
 import com.boyworld.carrot.docs.RestDocsSupport;
@@ -133,8 +132,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = "VENDOR")
     void getProcessingOrders() throws Exception {
 
-        List<VendorOrderItem> vendorOrderItems = new ArrayList<>();
-        vendorOrderItems.add(VendorOrderItem.builder()
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(OrderItem.builder()
             .orderId(1L)
             .status(Status.PROCESSING)
             .createdTime(LocalDateTime.of(2023, 10, 30, 17, 25))
@@ -142,7 +141,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .totalPrice(10000)
             .build()
         );
-        vendorOrderItems.add(VendorOrderItem.builder()
+        orderItems.add(OrderItem.builder()
             .orderId(2L)
             .status(Status.PENDING)
             .createdTime(LocalDateTime.of(2023, 10, 30, 17, 35))
@@ -150,8 +149,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .totalPrice(20000)
             .build()
         );
-        VendorOrderResponse response = VendorOrderResponse.builder()
-            .vendorOrderItems(vendorOrderItems)
+        OrdersResponse response = OrdersResponse.builder()
+            .orderItems(orderItems)
             .build();
 
         given(orderService.getProcessingOrders(anyLong(), anyString()))
@@ -196,8 +195,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = "VENDOR")
     void getCompleteOrders() throws Exception {
 
-        List<VendorOrderItem> vendorOrderItems = new ArrayList<>();
-        vendorOrderItems.add(VendorOrderItem.builder()
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(OrderItem.builder()
             .orderId(3L)
             .status(Status.COMPLETE)
             .createdTime(LocalDateTime.of(2023, 11, 1, 15, 25))
@@ -205,7 +204,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .totalPrice(30000)
             .build()
         );
-        vendorOrderItems.add(VendorOrderItem.builder()
+        orderItems.add(OrderItem.builder()
             .orderId(4L)
             .status(Status.CANCELLED)
             .createdTime(LocalDateTime.of(2023, 11, 1, 15, 35))
@@ -213,7 +212,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .totalPrice(40000)
             .build()
         );
-        vendorOrderItems.add(VendorOrderItem.builder()
+        orderItems.add(OrderItem.builder()
             .orderId(5L)
             .status(Status.DECLINED)
             .createdTime(LocalDateTime.of(2023, 11, 1, 15, 45))
@@ -221,8 +220,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .totalPrice(50000)
             .build()
         );
-        VendorOrderResponse response = VendorOrderResponse.builder()
-            .vendorOrderItems(vendorOrderItems)
+        OrdersResponse response = OrdersResponse.builder()
+            .orderItems(orderItems)
             .build();
 
         given(orderService.getCompleteOrders(anyLong(), anyString()))

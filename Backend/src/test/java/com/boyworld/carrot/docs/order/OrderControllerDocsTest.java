@@ -21,11 +21,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.boyworld.carrot.api.controller.order.OrderController;
 import com.boyworld.carrot.api.controller.order.request.CreateOrderRequest;
-import com.boyworld.carrot.api.controller.order.response.ClientOrderResponse;
+import com.boyworld.carrot.api.controller.order.response.OrderResponse;
+import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
-import com.boyworld.carrot.api.service.order.dto.ClientOrderItem;
+import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.docs.RestDocsSupport;
+import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.order.Status;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -78,8 +80,8 @@ public class OrderControllerDocsTest extends RestDocsSupport {
             .menuOptionIdList(menuOptionIdList3)
             .build());
 
-        List<ClientOrderItem> clientOrderItems = new ArrayList<>();
-        clientOrderItems.add(com.boyworld.carrot.api.service.order.dto.ClientOrderItem.builder()
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(OrderItem.builder()
             .orderId(1L)
             .orderCnt(0)
             .status(Status.COMPLETE)
@@ -89,7 +91,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
             .orderMenuItems(orderMenuItems1)
             .build()
         );
-        clientOrderItems.add(com.boyworld.carrot.api.service.order.dto.ClientOrderItem.builder()
+        orderItems.add(OrderItem.builder()
             .orderId(2L)
             .orderCnt(1)
             .status(Status.PROCESSING)
@@ -99,8 +101,8 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                 .orderMenuItems(orderMenuItems2)
             .build()
         );
-        ClientOrderResponse response = ClientOrderResponse.builder()
-            .clientOrderItems(clientOrderItems)
+        OrdersResponse response = OrdersResponse.builder()
+            .orderItems(orderItems)
             .build();
 
         given(orderService.getOrders(anyString()))
@@ -193,7 +195,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("고객 - 주문 상세 조회 API")
     @Test
-    @WithMockUser(roles = {"CLIENT", "VENDOR"})
+    @WithMockUser(roles = "CLIENT")
     void getOrderByClient() throws Exception {
 
         List<OrderMenuItem> orderMenuItems = new ArrayList<>();
@@ -203,33 +205,76 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                 .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
             .build());
 
-        ClientOrderResponse response = ClientOrderResponse.builder()
-            .orderId(1L)
-            .memberId(1L)
-            .totalPrice(10000)
-            .status(Status.COMPLETE)
-            .createdTime(LocalDateTime.of(2023, 10, 30, 15, 35))
-            .expectTime(LocalDateTime.of(2023, 10, 30, 15, 55))
-            .orderMenuItems(orderMenuItems)
-            .build();
+        OrderResponse response = OrderResponse.builder()
+            .orderItem(OrderItem.builder()
+                .orderId(1L)
+                .memberId(1L)
+                .totalPrice(10000)
+                .status(Status.COMPLETE)
+                .createdTime(LocalDateTime.of(2023, 10, 30, 15, 35))
+                .expectTime(LocalDateTime.of(2023, 10, 30, 15, 55))
+                .orderMenuItems(orderMenuItems)
+                .build()).build();
 
-        given(orderService.getOrder(anyLong(), anyString()))
+        given(orderService.getOrder(anyLong(), anyString(), Role.valueOf(anyString())))
             .willReturn(response);
 
         mockMvc.perform(
-            get("/order/1")
+            get("/order/client/1")
                 .header("Authentication", "authentication")
             )
             .andDo(print())
             .andExpect(status().isOk())
             .andDo(
-                document("get-order",
+                document("get-order-client",
                     preprocessResponse(prettyPrint()),
                     responseFields(
 
                     )
                 )
             );
+    }
+
+    @DisplayName("고객 - 주문 상세 조회 API")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void getOrderByVendor() throws Exception {
+
+        List<OrderMenuItem> orderMenuItems = new ArrayList<>();
+
+        orderMenuItems.add(OrderMenuItem.builder()
+                .quantity(1)
+                .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+                .build());
+
+        OrderResponse response = OrderResponse.builder()
+            .orderItem(OrderItem.builder()
+                .orderId(1L)
+                .memberId(1L)
+                .totalPrice(10000)
+                .status(Status.COMPLETE)
+                .createdTime(LocalDateTime.of(2023, 10, 30, 15, 35))
+                .expectTime(LocalDateTime.of(2023, 10, 30, 15, 55))
+                .orderMenuItems(orderMenuItems)
+                .build()).build();
+
+        given(orderService.getOrder(anyLong(), anyString(), Role.valueOf(anyString())))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/order/vendor/1")
+                                .header("Authentication", "authentication")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(
+                        document("get-order-vendor",
+                                preprocessResponse(prettyPrint()),
+                                responseFields(
+
+                                )
+                        )
+                );
     }
 
     @DisplayName("주문 생성 API")

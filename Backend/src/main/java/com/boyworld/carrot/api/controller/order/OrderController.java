@@ -2,9 +2,10 @@ package com.boyworld.carrot.api.controller.order;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.order.request.CreateOrderRequest;
-import com.boyworld.carrot.api.controller.order.response.ClientOrderResponse;
-import com.boyworld.carrot.api.controller.order.response.VendorOrderResponse;
+import com.boyworld.carrot.api.controller.order.response.OrderResponse;
+import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
+import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,13 +38,13 @@ public class OrderController {
      * @return 사용자 전체 주문 내역
      */
     @GetMapping
-    public ApiResponse<ClientOrderResponse> getOrders() {
+    public ApiResponse<OrdersResponse> getOrders() {
         log.debug("OrderController:getOrders called");
         
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
         
-        ClientOrderResponse response = orderService.getOrders(email);
+        OrdersResponse response = orderService.getOrders(email);
         log.debug("ClientOrderResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -76,35 +77,35 @@ public class OrderController {
      */
 
     @GetMapping("/client/{orderId}")
-    public ApiResponse<ClientOrderResponse> getOrderByClient(@PathVariable Long orderId) {
+    public ApiResponse<OrderResponse> getOrderByClient(@PathVariable Long orderId) {
         log.debug("OrderController#getOrder called");
         log.debug("orderId={}", orderId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        ClientOrderResponse response = orderService.getOrderByClient(orderId, email);
+        OrderResponse response = orderService.getOrder(orderId, email, Role.CLIENT);
         log.debug("ClientOrderResponseDetail={}", response);
 
         return ApiResponse.ok(response);
     }
 
     /**
-     * 사업자 - 주문 상세 조회 API
+     * 주문 상세 조회 API
      *
      * @param orderId 주문 식별키
      * @return 주문 상세 정보
      */
 
     @GetMapping("/vendor/{orderId}")
-    public ApiResponse<VendorOrderResponse> getOrderByVendor(@PathVariable Long orderId) {
+    public ApiResponse<OrderResponse> getOrderByVendor(@PathVariable Long orderId) {
         log.debug("OrderController#getOrder called");
         log.debug("orderId={}", orderId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        VendorOrderResponse response = orderService.getOrderByVendor(orderId, email);
+        OrderResponse response = orderService.getOrder(orderId, email, Role.VENDOR);
         log.debug("ClientOrderResponseDetail={}", response);
 
         return ApiResponse.ok(response);

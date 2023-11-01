@@ -24,7 +24,7 @@ public class AnalysisController {
     private final AnalysisQueryService analysisService;
 
     /**
-     * 상권분석 API
+     * 카테고리별 상권분석 API
      *
      * @param categoryId 검색 카테고리
      * @param latitude 위도

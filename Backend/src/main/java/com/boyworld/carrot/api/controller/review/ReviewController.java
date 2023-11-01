@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -93,7 +94,7 @@ public class ReviewController {
      * @param request email, password, reviewId
      * @return Boolean
      */
-    @PostMapping("/withdrawal")
+    @PutMapping("/withdrawal")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Boolean> withdrawal(@Valid @RequestBody WithdrawalRequest request) {
         log.debug("ReviewController#withdrawal called !!!");

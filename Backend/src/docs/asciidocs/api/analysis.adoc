@@ -1,0 +1,11 @@
+[[get-analysis-store-category]]
+=== 카테고리별 상권분석
+
+==== HTTP Request
+include::{snippets}/get-analysis-store-category/http-request.adoc[]
+include::{snippets}/get-analysis-store-category/path-parameters.adoc[]
+include::{snippets}/get-analysis-store-category/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-analysis-store-category/http-response.adoc[]
+include::{snippets}/get-analysis-store-category/response-fields.adoc[]

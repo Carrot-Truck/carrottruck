@@ -23,13 +23,14 @@ public class Cart extends TimeBaseEntity {
     @Id
     private String id;
     private Long foodTruckId;
+    private String foodTruckName;
     private Integer totalPrice;
 
     @Builder
-    public Cart(String id, Long foodTruckId, Integer totalPrice) {
+    public Cart(String id, Long foodTruckId, String foodTruckName, Integer totalPrice) {
         this.id = id;
         this.foodTruckId = foodTruckId;
+        this.foodTruckName = foodTruckName;
         this.totalPrice = totalPrice;
     }
-
 }

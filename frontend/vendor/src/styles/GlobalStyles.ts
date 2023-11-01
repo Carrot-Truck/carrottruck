@@ -39,7 +39,7 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     body{
-        font-family: 'Pretendard';
+        font-family: 'NanumSquareNeo';
         padding: 0;
         margin: 0;
         overflow-y: scroll;

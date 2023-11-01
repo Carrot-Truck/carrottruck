@@ -320,8 +320,9 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .reviewCount(1324)
                 .distance(123)
                 .address("광주 광산구 장덕로 5번길 16")
-                .foodTruckImageId(1L)
+                .foodTruckImageUrl("imageUrl")
                 .isNew(true)
+                .selected(true)
                 .vendorName("김동현")
                 .tradeName("동현 된장삼겹")
                 .businessNumber("123-45-23523")
@@ -333,7 +334,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .menuDescription("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
                 .menuPrice(8900)
                 .menuSoldOut(false)
-                .menuImageId(1L)
+                .menuImageUrl("imageUrl")
                 .build();
 
         MenuDto menu2 = MenuDto.builder()
@@ -342,7 +343,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .menuDescription("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
                 .menuPrice(6900)
                 .menuSoldOut(false)
-                .menuImageId(2L)
+                .menuImageUrl("imageUrl")
                 .build();
 
         ScheduleDto schedule1 = ScheduleDto.builder()
@@ -440,10 +441,12 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("현재 사용자와의 거리"),
                                 fieldWithPath("data.foodTruckDetail.address").type(JsonFieldType.STRING)
                                         .description("푸드트럭 주소"),
-                                fieldWithPath("data.foodTruckDetail.foodTruckImageId").type(JsonFieldType.NUMBER)
-                                        .description("푸드트럭 이미지 식별키"),
+                                fieldWithPath("data.foodTruckDetail.foodTruckImageUrl").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 이미지 저장 경로"),
                                 fieldWithPath("data.foodTruckDetail.isNew").type(JsonFieldType.BOOLEAN)
                                         .description("신규 등록 여부"),
+                                fieldWithPath("data.foodTruckDetail.selected").type(JsonFieldType.BOOLEAN)
+                                        .description("현재 선택 푸드트럭 여부"),
                                 fieldWithPath("data.foodTruckDetail.vendorName").type(JsonFieldType.STRING)
                                         .description("대표자명"),
                                 fieldWithPath("data.foodTruckDetail.tradeName").type(JsonFieldType.STRING)
@@ -462,8 +465,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("메뉴 설명"),
                                 fieldWithPath("data.menus[].menuSoldOut").type(JsonFieldType.BOOLEAN)
                                         .description("품절 여부"),
-                                fieldWithPath("data.menus[].menuImageId").type(JsonFieldType.NUMBER)
-                                        .description("메뉴 이미지 식별키"),
+                                fieldWithPath("data.menus[].menuImageUrl").type(JsonFieldType.STRING)
+                                        .description("메뉴 이미지 저장 경로"),
                                 fieldWithPath("data.schedules").type(JsonFieldType.ARRAY)
                                         .description("운영시간 리스트"),
                                 fieldWithPath("data.schedules[].scheduleId").type(JsonFieldType.NUMBER)
@@ -485,7 +488,10 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.reviews[].grade").type(JsonFieldType.NUMBER)
                                         .description("만족도"),
                                 fieldWithPath("data.reviews[].content").type(JsonFieldType.STRING)
-                                        .description("리뷰 내용")
+                                        .description("리뷰 내용"),
+                                fieldWithPath("data.reviews[].imageUrl").type(JsonFieldType.STRING)
+                                        .description("리뷰 사진 url").optional()
+
                         )
                 ));
     }

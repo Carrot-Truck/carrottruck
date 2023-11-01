@@ -3,10 +3,10 @@ import { css } from 'styled-components';
 // SearchBar
 export const SearchBarSizeStyles = {
   s: css`
-    width: 15rem;
+    width: 10rem;
   `,
   l: css`
-    width: 25rem;
+    width: 20rem;
   `,
   full: css`
     width: 100%;

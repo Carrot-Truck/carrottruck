@@ -51,7 +51,7 @@ public class MemberAddressQueryService {
      */
     private Long getLastMemberAddressId(String lastMemberAddressId) {
         if (lastMemberAddressId.isBlank()) {
-            return 0L;
+            return null;
         }
         return Long.parseLong(lastMemberAddressId);
     }

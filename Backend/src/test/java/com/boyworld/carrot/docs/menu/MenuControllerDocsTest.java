@@ -156,7 +156,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menuDescription("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
                 .menuPrice(8900)
                 .menuSoldOut(false)
-                .menuImageId(1L)
+                .menuImageUrl("imageUrl")
                 .build();
 
         MenuDto menu2 = MenuDto.builder()
@@ -165,7 +165,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menuDescription("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
                 .menuPrice(6900)
                 .menuSoldOut(false)
-                .menuImageId(2L)
+                .menuImageUrl("imageUrl")
                 .build();
 
         MenuResponse response = MenuResponse.builder()
@@ -215,8 +215,8 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                         .description("메뉴 설명"),
                                 fieldWithPath("data.menus[].menuSoldOut").type(JsonFieldType.BOOLEAN)
                                         .description("품절 여부"),
-                                fieldWithPath("data.menus[].menuImageId").type(JsonFieldType.NUMBER)
-                                        .description("메뉴 이미지 식별키")
+                                fieldWithPath("data.menus[].menuImageUrl").type(JsonFieldType.STRING)
+                                        .description("메뉴 이미지 저장 경로")
                         )
                 ));
     }

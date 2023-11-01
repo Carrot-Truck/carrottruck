@@ -44,8 +44,8 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
     void getMemberAddresses() {
         // given
         Member member = createMember(Role.CLIENT);
-        MemberAddress memberAddress1 = createMemberAddress(member, "주소1");
-        MemberAddress memberAddress2 = createMemberAddress(member, "주소2");
+        MemberAddress memberAddress1 = createMemberAddress(member, "주소1", true, true);
+        MemberAddress memberAddress2 = createMemberAddress(member, "주소2", false, true);
 
         // when
         List<MemberAddressDetailResponse> responses =
@@ -74,7 +74,7 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
     void getExistingMemberAddress() {
         // given
         Member member = createMember(Role.CLIENT);
-        MemberAddress memberAddress = createMemberAddress(member, "주소1");
+        MemberAddress memberAddress = createMemberAddress(member, "주소1", true, true);
 
         // when
         MemberAddressDetailResponse response =
@@ -91,7 +91,7 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
     void getNotExistingMemberAddress() {
         // given
         Member member = createMember(Role.CLIENT);
-        MemberAddress memberAddress = createMemberAddress(member, "주소1");
+        MemberAddress memberAddress = createMemberAddress(member, "주소1", true, true);
 
         // when
         Optional<MemberAddressDetailResponse> response =
@@ -99,6 +99,33 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
 
         // then
         assertThat(response.isEmpty()).isTrue();
+    }
+
+    @DisplayName("이메일로 선택된 회원 주소의 개수를 반환한다.")
+    @Test
+    void getSelectedCountByEmail() {
+        // given
+        Member member = createMember(Role.CLIENT);
+        MemberAddress memberAddress = createMemberAddress(member, "주소1", true, true);
+
+        // when
+        Long result = memberAddressQueryRepository.getSelectedCountByEmail("ssafy@ssafy.com");
+
+        // then
+        assertThat(result).isEqualTo(1);
+    }
+
+    @DisplayName("이메일로 선택된 회원 주소가 없으면 null 을 반환한다.")
+    @Test
+    void getSelectedCountByEmailWithoutSelected() {
+        // given
+        Member member = createMember(Role.CLIENT);
+
+        // when
+        Long result = memberAddressQueryRepository.getSelectedCountByEmail("ssafy@ssafy.com");
+
+        // then
+        assertThat(result).isZero();
     }
 
     private Member createMember(Role role) {
@@ -114,11 +141,12 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
         return memberRepository.save(member);
     }
 
-    private MemberAddress createMemberAddress(Member member, String address) {
+    private MemberAddress createMemberAddress(Member member, String address, boolean selected, boolean active) {
         MemberAddress memberAddress = MemberAddress.builder()
                 .member(member)
                 .address(address)
-                .active(true)
+                .selected(selected)
+                .active(active)
                 .build();
         return memberAddressRepository.save(memberAddress);
     }

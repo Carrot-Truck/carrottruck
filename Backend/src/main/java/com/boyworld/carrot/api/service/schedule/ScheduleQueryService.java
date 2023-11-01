@@ -2,7 +2,7 @@ package com.boyworld.carrot.api.service.schedule;
 
 import com.boyworld.carrot.api.controller.schedule.response.ScheduleDetailResponse;
 import com.boyworld.carrot.api.controller.schedule.response.ScheduleResponse;
-import com.boyworld.carrot.domain.foodtruck.repository.ScheduleQueryRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.query.ScheduleQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

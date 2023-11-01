@@ -4,7 +4,7 @@ import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckLikeRespon
 import com.boyworld.carrot.api.service.foodtruck.dto.CreateFoodTruckDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckLikeDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.UpdateFoodTruckDto;
-import com.boyworld.carrot.domain.foodtruck.repository.FoodTruckRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +33,12 @@ public class FoodTruckService {
      * @return 등록된 푸드트럭 식별키
      */
     public Long createFoodTruck(CreateFoodTruckDto dto, String email, MultipartFile file) {
+        // 현재 사용자가 사업자인지 확인
+
+        // DTO Entity 로 변환
+
+        // file 저장
+
         return null;
     }
 

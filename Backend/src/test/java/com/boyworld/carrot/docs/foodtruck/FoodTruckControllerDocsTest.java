@@ -197,8 +197,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("푸드트럭 검색 결과 목록 조회 API")
     @Test
-    @WithMockUser(roles = "CLIENT")
-    void getFoodTrucks() throws Exception {
+    @WithMockUser(roles = {"CLIENT", "VENDOR"})
+    void getSearchedFoodTrucks() throws Exception {
         FoodTruckItem item1 = FoodTruckItem.builder()
                 .categoryId(1L)
                 .foodTruckId(1L)
@@ -230,10 +230,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .build();
         List<FoodTruckItem> items = List.of(item1, item2);
 
-        FoodTruckResponse response = FoodTruckResponse.builder()
-                .hasNext(false)
-                .foodTruckItems(items)
-                .build();
+        FoodTruckResponse<List<FoodTruckItem>> response = FoodTruckResponse.of(false, items);
 
         given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), anyString(), anyString()))
                 .willReturn(response);
@@ -273,32 +270,83 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN)
                                         .description("다음 페이지 존재 여부"),
-                                fieldWithPath("data.foodTruckItems").type(JsonFieldType.ARRAY)
+                                fieldWithPath("data.items").type(JsonFieldType.ARRAY)
                                         .description("푸드트럭 검색 결과 목록"),
-                                fieldWithPath("data.foodTruckItems[].categoryId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.items[].categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 식별키"),
-                                fieldWithPath("data.foodTruckItems[].foodTruckId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.items[].foodTruckId").type(JsonFieldType.NUMBER)
                                         .description("푸드트럭 식별키"),
-                                fieldWithPath("data.foodTruckItems[].foodTruckName").type(JsonFieldType.STRING)
+                                fieldWithPath("data.items[].foodTruckName").type(JsonFieldType.STRING)
                                         .description("푸드트럭 이름"),
-                                fieldWithPath("data.foodTruckItems[].isOpen").type(JsonFieldType.BOOLEAN)
+                                fieldWithPath("data.items[].isOpen").type(JsonFieldType.BOOLEAN)
                                         .description("영업 상태"),
-                                fieldWithPath("data.foodTruckItems[].isLiked").type(JsonFieldType.BOOLEAN)
+                                fieldWithPath("data.items[].isLiked").type(JsonFieldType.BOOLEAN)
                                         .description("찜 여부"),
-                                fieldWithPath("data.foodTruckItems[].prepareTime").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.items[].prepareTime").type(JsonFieldType.NUMBER)
                                         .description("예상 준비 시간"),
-                                fieldWithPath("data.foodTruckItems[].grade").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.items[].grade").type(JsonFieldType.NUMBER)
                                         .description("평점"),
-                                fieldWithPath("data.foodTruckItems[].reviewCount").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.items[].reviewCount").type(JsonFieldType.NUMBER)
                                         .description("리뷰 개수"),
-                                fieldWithPath("data.foodTruckItems[].distance").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.items[].distance").type(JsonFieldType.NUMBER)
                                         .description("현재 사용자와의 거리"),
-                                fieldWithPath("data.foodTruckItems[].address").type(JsonFieldType.STRING)
+                                fieldWithPath("data.items[].address").type(JsonFieldType.STRING)
                                         .description("푸드트럭 주소"),
-                                fieldWithPath("data.foodTruckItems[].foodTruckImageId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.items[].foodTruckImageId").type(JsonFieldType.NUMBER)
                                         .description("푸드트럭 이미지 식별키"),
-                                fieldWithPath("data.foodTruckItems[].isNew").type(JsonFieldType.BOOLEAN)
+                                fieldWithPath("data.items[].isNew").type(JsonFieldType.BOOLEAN)
                                         .description("신규 등록 여부")
+                        )
+                ));
+    }
+
+    @DisplayName("보유 푸드트럭 목록 조회 API")
+    @Test
+    @WithMockUser(roles = {"VENDOR"})
+    void getFoodTruckOverviews() throws Exception {
+        FoodTruckOverview item1 = FoodTruckOverview.builder()
+                .foodTruckId(1L)
+                .foodTruckName("동현 된장삼겹")
+                .selected(true)
+                .build();
+
+        FoodTruckOverview item2 = FoodTruckOverview.builder()
+                .foodTruckId(2L)
+                .foodTruckName("팔천순대")
+                .selected(false)
+                .build();
+        List<FoodTruckOverview> items = List.of(item1, item2);
+
+        FoodTruckResponse<List<FoodTruckOverview>> response = FoodTruckResponse.of(false, items);
+
+        given(foodTruckQueryService.getFoodTruckOverviews(anyString()))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/food-truck/overview")
+                                .header("Authentication", "authentication")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("search-food-truck-overview",
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN)
+                                        .description("다음 페이지 존재 여부"),
+                                fieldWithPath("data.items").type(JsonFieldType.ARRAY)
+                                        .description("보유 푸드트럭 목록"),
+                                fieldWithPath("data.items[].foodTruckId").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 식별키"),
+                                fieldWithPath("data.items[].foodTruckName").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 이름"),
+                                fieldWithPath("data.items[].selected").type(JsonFieldType.BOOLEAN)
+                                        .description("선택 푸드트럭 여부")
                         )
                 ));
     }

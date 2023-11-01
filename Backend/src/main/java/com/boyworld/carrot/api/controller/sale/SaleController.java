@@ -1,7 +1,7 @@
 package com.boyworld.carrot.api.controller.sale;
 
 import com.boyworld.carrot.api.ApiResponse;
-import com.boyworld.carrot.api.controller.order.response.OrderResponse;
+import com.boyworld.carrot.api.controller.order.response.VendorOrderResponse;
 import com.boyworld.carrot.api.controller.sale.request.AcceptOrderRequest;
 import com.boyworld.carrot.api.controller.sale.request.DeclineOrderRequest;
 import com.boyworld.carrot.api.controller.sale.request.OpenSaleRequest;
@@ -63,7 +63,7 @@ public class SaleController {
      * @return 진행 중인 주문 정보
      */
     @GetMapping("/processing/{foodTruckId}")
-    public ApiResponse<OrderResponse> getProcessingOrders(@PathVariable Long foodTruckId) {
+    public ApiResponse<VendorOrderResponse> getProcessingOrders(@PathVariable Long foodTruckId) {
         log.debug("SaleController#getProcessingOrders called");
         log.debug("foodTruckId={}", foodTruckId);
 
@@ -71,7 +71,7 @@ public class SaleController {
         log.debug("email={}", email);
 
         // 입력받은 푸드트럭 id로 해당 푸드트럭의 현재 영업 id 조회
-        OrderResponse response = orderService.getProcessingOrders(foodTruckId, email);
+        VendorOrderResponse response = orderService.getProcessingOrders(foodTruckId, email);
         log.debug("OrderResponse={}", response);
         // 해당 영업 id의 (pending & processing) 상태인 order 정보 반환
 
@@ -85,7 +85,7 @@ public class SaleController {
      * @return 완료된 주문 정보
      */
     @GetMapping("/complete/{foodTruckId}")
-    public ApiResponse<OrderResponse> getCompleteOrders(@PathVariable Long foodTruckId) {
+    public ApiResponse<VendorOrderResponse> getCompleteOrders(@PathVariable Long foodTruckId) {
         log.debug("SaleController#getCompleteOrders called");
         log.debug("foodTruckId={}", foodTruckId);
 
@@ -93,7 +93,7 @@ public class SaleController {
         log.debug("email={}", email);
 
         // 입력받은 푸드트럭 id로 해당 푸드트럭의 현재 영업 id 조회
-        OrderResponse response = orderService.getCompleteOrders(foodTruckId, email);
+        VendorOrderResponse response = orderService.getCompleteOrders(foodTruckId, email);
         log.debug("OrderResponse={}", response);
 
         // 해당 영업 id의 complete 상태인 order 정보 반환
@@ -187,7 +187,7 @@ public class SaleController {
      * @param foodTruckId 종료할 푸드트럭 id
      * @return 종료한 영업 정보
      */
-    @GetMapping("/close/{foodTruckId}")
+    @PutMapping("/close/{foodTruckId}")
     public ApiResponse<CloseSaleResponse> closeSale(@PathVariable Long foodTruckId) {
         log.debug("SaleController#close called");
         log.debug("foodTruckId={}", foodTruckId);

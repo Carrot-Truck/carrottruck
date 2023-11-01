@@ -1,7 +1,7 @@
 package com.boyworld.carrot.api.service.order;
 
-import com.boyworld.carrot.api.controller.order.response.OrderDetailResponse;
-import com.boyworld.carrot.api.controller.order.response.OrderResponse;
+import com.boyworld.carrot.api.controller.order.response.ClientOrderResponse;
+import com.boyworld.carrot.api.controller.order.response.VendorOrderResponse;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.domain.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class OrderService {
      * @param email     현재 로그인 중인 사용자 이메일
      * @return 사용자의 전체 주문 내역
      */
-    public OrderResponse getOrders(String email) {
+    public ClientOrderResponse getOrders(String email) {
         return null;
     }
 
@@ -39,7 +39,7 @@ public class OrderService {
      * @param email         현재 로그인 중인 사용자 이메일
      * @return 진행 중인 주문 내역
      */
-    public OrderResponse getProcessingOrders(Long foodTruckId, String email) {
+    public VendorOrderResponse getProcessingOrders(Long foodTruckId, String email) {
         return null;
     }
 
@@ -50,7 +50,7 @@ public class OrderService {
      * @param email         현재 로그인 중인 사용자 이메일
      * @return 완료된 주문 내역
      */
-    public OrderResponse getCompleteOrders(Long foodTruckId, String email) {
+    public VendorOrderResponse getCompleteOrders(Long foodTruckId, String email) {
         return null;
     }
 
@@ -66,13 +66,24 @@ public class OrderService {
     }
 
     /**
-     * 주문 상세 조회 API
+     * 고객 - 주문 상세 조회 API
      *
      * @param orderId   조회할 주문 식별키
      * @param email     현재 로그인 중인 사용자 이메일
      * @return 주문 상세 정보
      */
-    public OrderDetailResponse getOrder(Long orderId, String email) {
+    public ClientOrderResponse getOrderByClient(Long orderId, String email) {
+        return null;
+    }
+
+    /**
+     * 사업자 - 주문 상세 조회 API
+     *
+     * @param orderId   조회할 주문 식별키
+     * @param email     현재 로그인 중인 사용자 이메일
+     * @return 주문 상세 정보
+     */
+    public VendorOrderResponse getOrderByVendor(Long orderId, String email) {
         return null;
     }
 

@@ -19,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 /**
  * 푸드트럭 관련 API 컨트롤러
  *
@@ -42,7 +44,8 @@ public class FoodTruckController {
      */
     @PostMapping("/vendor")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Long> createFoodTruck(@Valid @RequestPart(name = "request") CreateFoodTruckRequest request, @RequestPart(required = false, name = "file") MultipartFile file) {
+    public ApiResponse<Long> createFoodTruck(@Valid @RequestPart(name = "request") CreateFoodTruckRequest request,
+                                             @RequestPart(required = false, name = "file") MultipartFile file) throws IOException {
         log.debug("FoodTruckController#createFoodTruck called");
         log.debug("CreateFoodTruckRequest={}", request);
         log.debug("MultipartFile={}", file);

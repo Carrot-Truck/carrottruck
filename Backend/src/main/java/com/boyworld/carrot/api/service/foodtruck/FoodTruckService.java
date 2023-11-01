@@ -71,6 +71,17 @@ public class FoodTruckService {
     }
 
     /**
+     * 이메일로 회원 엔티티 조회
+     *
+     * @param email 현재 로그인한 사용자 이메일
+     * @return 이메일에 해당하는 회원 엔티티
+     */
+    private Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+    }
+
+    /**
      * 접근 유효성 판별
      *
      * @param member 회원 엔티티
@@ -90,17 +101,6 @@ public class FoodTruckService {
      */
     private boolean isClient(Role role) {
         return role.equals(Role.CLIENT);
-    }
-
-    /**
-     * 이메일로 회원 엔티티 조회
-     *
-     * @param email 현재 로그인한 사용자 이메일
-     * @return 이메일에 해당하는 회원 엔티티
-     */
-    private Member getMemberByEmail(String email) {
-        return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
     }
 
     /**

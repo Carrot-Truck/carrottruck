@@ -63,3 +63,14 @@ include::{snippets}/delete-address/path-parameters.adoc[]
 
 include::{snippets}/delete-address/http-response.adoc[]
 include::{snippets}/delete-address/response-fields.adoc[]
+
+[[edit-selected-address]]
+=== 선택된 주소 변경
+
+==== HTTP Request
+include::{snippets}/edit-selected-address/http-request.adoc[]
+include::{snippets}/edit-selected-address/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/edit-selected-address/http-response.adoc[]
+include::{snippets}/edit-selected-address/response-fields.adoc[]

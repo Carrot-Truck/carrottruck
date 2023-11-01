@@ -1,10 +1,12 @@
 package com.boyworld.carrot.api.service.member.command;
 
 import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
+import com.boyworld.carrot.api.service.member.dto.SelectedMemberAddressDto;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.MemberAddress;
 import com.boyworld.carrot.domain.member.repository.command.MemberAddressRepository;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.member.repository.query.MemberAddressQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ public class MemberAddressService {
 
     private final MemberRepository memberRepository;
 
+    private final MemberAddressQueryRepository memberAddressQueryRepository;
+
     /**
      * 회원 주소 등록
      *
@@ -39,7 +43,9 @@ public class MemberAddressService {
 
         checkActiveMember(member);
 
-        MemberAddress savedMemberAddress = saveMemberAddress(address, member);
+        boolean selected = checkSelected(email);
+
+        MemberAddress savedMemberAddress = saveMemberAddress(address, member, selected);
 
         return MemberAddressDetailResponse.of(savedMemberAddress);
     }
@@ -69,16 +75,28 @@ public class MemberAddressService {
     }
 
     /**
+     * 선택 주소 여부 판별
+     *
+     * @param email 현재 로그인 중인 회원 이메일
+     * @return true: 해당 회원의 회원 주소 중 선택된 주소가 없는 경우 / false: 선택된 주소가 이미 존재하는 경우
+     */
+    private boolean checkSelected(String email) {
+        Long selectedCount = memberAddressQueryRepository.getSelectedCountByEmail(email);
+        return selectedCount == null || selectedCount == 0L;
+    }
+
+    /**
      * 회원 주소 저장
      *
      * @param address 등록할 주소
      * @param member  회원 엔티티
      * @return 저장된 회원 엔티티
      */
-    private MemberAddress saveMemberAddress(String address, Member member) {
+    private MemberAddress saveMemberAddress(String address, Member member, boolean selected) {
         MemberAddress memberAddress = MemberAddress.builder()
                 .address(address)
                 .member(member)
+                .selected(selected)
                 .active(true)
                 .build();
         return memberAddressRepository.save(memberAddress);
@@ -112,6 +130,22 @@ public class MemberAddressService {
         memberAddress.deActivate();
 
         return true;
+    }
+
+    /**
+     * 선택된 주소 변경 API
+     *
+     * @param dto 기존에 선택된 주소와 새로 선택할 주소 식별키
+     * @return 새로 선택된 주소 식별키
+     */
+    public Long editSelectedAddress(SelectedMemberAddressDto dto) {
+        MemberAddress selectedAddress = getMemberAddressById(dto.getSelectedMemberAddressId());
+        selectedAddress.unSelect();
+
+        MemberAddress targetAddress = getMemberAddressById(dto.getTargetMemberAddressId());
+        targetAddress.select();
+
+        return targetAddress.getId();
     }
 
     /**

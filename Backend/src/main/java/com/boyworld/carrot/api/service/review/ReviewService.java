@@ -6,7 +6,6 @@ import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewRespons
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
-import com.boyworld.carrot.api.service.review.dto.ReviewFoodTruckDto;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
@@ -23,7 +22,6 @@ import com.boyworld.carrot.file.S3Uploader;
 import com.boyworld.carrot.security.SecurityUtil;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

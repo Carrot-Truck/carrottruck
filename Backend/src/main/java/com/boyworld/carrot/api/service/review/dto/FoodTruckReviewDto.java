@@ -3,7 +3,6 @@ package com.boyworld.carrot.api.service.review.dto;
 import com.boyworld.carrot.domain.review.Review;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * To show Review entity

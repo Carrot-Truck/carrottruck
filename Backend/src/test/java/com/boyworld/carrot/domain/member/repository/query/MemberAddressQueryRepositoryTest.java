@@ -115,7 +115,7 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(result).isEqualTo(1);
     }
 
-    @DisplayName("이메일로 선택된 회원 주소가 없으면 null 을 반환한다.")
+    @DisplayName("이메일로 선택된 회원 주소가 없으면 0 을 반환한다.")
     @Test
     void getSelectedCountByEmailWithoutSelected() {
         // given

@@ -1,14 +1,14 @@
 package com.boyworld.carrot.api.service.foodtruck;
 
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
-import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
+import com.boyworld.carrot.api.controller.foodtruck.response.*;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
+import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 푸드트럭 조회 서비스
@@ -41,7 +41,11 @@ public class FoodTruckQueryService {
      * @param email     현재 로그인 중인 사용자 이메일
      * @return 식별키 리스트에 해당하는 푸드트럭 리스트 (거리순 정렬)
      */
-    public FoodTruckResponse getFoodTrucks(SearchCondition condition, String lastFoodTruckId, String email) {
+    public FoodTruckResponse<List<FoodTruckItem>> getFoodTrucks(SearchCondition condition, String lastFoodTruckId, String email) {
+        return null;
+    }
+
+    public FoodTruckResponse<List<FoodTruckOverview>> getFoodTruckOverviews(String email) {
         return null;
     }
 

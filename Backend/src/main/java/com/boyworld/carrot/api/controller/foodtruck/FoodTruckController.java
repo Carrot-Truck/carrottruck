@@ -4,10 +4,7 @@ import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
 import com.boyworld.carrot.api.controller.foodtruck.request.FoodTruckLikeRequest;
 import com.boyworld.carrot.api.controller.foodtruck.request.UpdateFoodTruckRequest;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckLikeResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
+import com.boyworld.carrot.api.controller.foodtruck.response.*;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 푸드트럭 관련 API 컨트롤러
@@ -86,7 +84,7 @@ public class FoodTruckController {
     }
 
     /**
-     * 푸드트럭 목록 조회 API
+     * 푸드트럭 검색 결과 목록 조회 API
      *
      * @param categoryId      카테고리 식별키
      * @param keyword         검색어(푸드트럭 이름 / 메뉴 이름)
@@ -96,7 +94,13 @@ public class FoodTruckController {
      * @return 식별키 리스트에 해당하는 푸드트럭 리스트 (거리순 정렬)
      */
     @GetMapping
-    public ApiResponse<FoodTruckResponse> getFoodTrucks(@RequestParam(required = false, defaultValue = "") String categoryId, @RequestParam(required = false, defaultValue = "") String keyword, @RequestParam(required = false, defaultValue = "") String longitude, @RequestParam(required = false, defaultValue = "") String latitude, @RequestParam(required = false, defaultValue = "") String lastFoodTruckId) {
+    public ApiResponse<FoodTruckResponse<List<FoodTruckItem>>> getSearchedFoodTrucks(
+            @RequestParam(required = false, defaultValue = "") String categoryId,
+            @RequestParam(required = false, defaultValue = "") String keyword,
+            @RequestParam(required = false, defaultValue = "") String longitude,
+            @RequestParam(required = false, defaultValue = "") String latitude,
+            @RequestParam(required = false, defaultValue = "") String lastFoodTruckId) {
+
         log.debug("FoodTruckController#getFoodTrucks called");
         log.debug("categoryId={}", categoryId);
         log.debug("keyword={}", keyword);
@@ -107,12 +111,29 @@ public class FoodTruckController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        FoodTruckResponse response = foodTruckQueryService.getFoodTrucks(SearchCondition.of(categoryId, keyword, longitude, latitude), lastFoodTruckId, email);
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService
+                .getFoodTrucks(SearchCondition.of(categoryId, keyword, longitude, latitude), lastFoodTruckId, email);
         log.debug("FoodTruckResponse={}", response);
 
         return ApiResponse.ok(response);
     }
 
+    /**
+     * 보유 푸드트럭 목록 조회 API
+     *
+     * @return 보유한 푸드트럭 목록
+     */
+    @GetMapping("/overview")
+    public ApiResponse<FoodTruckResponse<List<FoodTruckOverview>>> getFoodTruckOverviews() {
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        FoodTruckResponse<List<FoodTruckOverview>> response = foodTruckQueryService
+                .getFoodTruckOverviews(email);
+        log.debug("response={}", response);
+
+        return ApiResponse.ok(response);
+    }
 
     /**
      * 푸드트럭 상세조회 API
@@ -180,7 +201,7 @@ public class FoodTruckController {
 
     /**
      * 푸드트럭 찜 API
-     * 
+     *
      * @param request 푸드트럭 식별키
      * @return 푸드트럭 찜 정보
      */

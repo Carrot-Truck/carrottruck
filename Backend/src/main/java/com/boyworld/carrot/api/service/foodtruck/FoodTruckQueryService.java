@@ -3,7 +3,7 @@ package com.boyworld.carrot.api.service.foodtruck;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
-import com.boyworld.carrot.domain.foodtruck.repository.FoodTruckQueryRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

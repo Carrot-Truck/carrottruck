@@ -18,14 +18,18 @@ public class FoodTruckDetailDto {
     private Integer reviewCount;
     private Integer distance;
     private String address;
-    private Long foodTruckImageId;
+    private String foodTruckImageUrl;
+    private Boolean selected;
     private Boolean isNew;
     private String vendorName;
     private String tradeName;
     private String businessNumber;
 
     @Builder
-    public FoodTruckDetailDto(Long foodTruckId, String foodTruckName, String phoneNumber, String content, String originInfo, Boolean isOpen, Boolean isLiked, Integer prepareTime, Double grade, Integer reviewCount, Integer distance, String address, Long foodTruckImageId, Boolean isNew, String vendorName, String tradeName, String businessNumber) {
+    public FoodTruckDetailDto(Long foodTruckId, String foodTruckName, String phoneNumber, String content,
+                              String originInfo, Boolean isOpen, Boolean isLiked, Integer prepareTime, Double grade,
+                              Integer reviewCount, Integer distance, String address, String foodTruckImageUrl,
+                              Boolean isNew, Boolean selected, String vendorName, String tradeName, String businessNumber) {
         this.foodTruckId = foodTruckId;
         this.foodTruckName = foodTruckName;
         this.phoneNumber = phoneNumber;
@@ -38,8 +42,9 @@ public class FoodTruckDetailDto {
         this.reviewCount = reviewCount;
         this.distance = distance;
         this.address = address;
-        this.foodTruckImageId = foodTruckImageId;
+        this.foodTruckImageUrl = foodTruckImageUrl;
         this.isNew = isNew;
+        this.selected = selected;
         this.vendorName = vendorName;
         this.tradeName = tradeName;
         this.businessNumber = businessNumber;

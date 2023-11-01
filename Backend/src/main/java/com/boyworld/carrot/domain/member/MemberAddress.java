@@ -26,6 +26,9 @@ public class MemberAddress extends TimeBaseEntity {
     private String address;
 
     @Column(nullable = false)
+    private Boolean selected;
+
+    @Column(nullable = false)
     private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -33,8 +36,9 @@ public class MemberAddress extends TimeBaseEntity {
     private Member member;
 
     @Builder
-    private MemberAddress(String address, Boolean active, Member member) {
+    private MemberAddress(String address, Boolean selected, Boolean active, Member member) {
         this.address = address;
+        this.selected = selected;
         this.active = active;
         this.member = member;
     }

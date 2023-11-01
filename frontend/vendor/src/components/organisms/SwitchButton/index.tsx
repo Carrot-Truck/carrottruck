@@ -13,14 +13,14 @@ function SwitchButton() {
     <SwitchButtonContainer>
       <Button
         size="m"
-        radius="m"
+        radius="l"
         color={selectedButton === 1 ? 'Primary' : 'SubFirst'}
         text="로그인"
         handleClick={() => handleClick(1)}
       />
       <Button
         size="m"
-        radius="m"
+        radius="l"
         color={selectedButton === 2 ? 'Primary' : 'SubFirst'}
         text="회원가입"
         handleClick={() => handleClick(2)}

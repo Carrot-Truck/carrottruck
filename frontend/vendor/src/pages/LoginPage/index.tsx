@@ -3,6 +3,7 @@ import { LoginPageLayout } from './style';
 import Button from 'components/atoms/Button';
 import SwitchButton from 'components/organisms/SwitchButton';
 import useMovePage from 'hooks/useMovePage';
+import BackSpace from 'components/atoms/BackSpace';
 
 function LoginPage() {
   const [movePage] = useMovePage();
@@ -12,9 +13,7 @@ function LoginPage() {
 
   return (
     <LoginPageLayout>
-      <Button size="s" radius="s" color="Normal" handleClick={() => handleBackClick()}>
-        뒤로가기
-      </Button>
+      <BackSpace></BackSpace>
       <SwitchButton></SwitchButton>
     </LoginPageLayout>
   );

@@ -19,7 +19,7 @@ function MainPage() {
     <MainPageLayout>
       <Button size="full" radius="m" color="Primary" text="어우 귀찮아..." handleClick={handleClick}></Button>
       <SearchBar
-        size="l"
+        size="full"
         confirmSearch={() => {}}
         value={searchValue}
         setValue={setSearchValue}

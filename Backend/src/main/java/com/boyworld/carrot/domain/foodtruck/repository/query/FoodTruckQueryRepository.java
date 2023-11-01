@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruck.foodTruck;
 import static com.boyworld.carrot.domain.member.QMember.member;
 import static org.springframework.util.StringUtils.hasText;
@@ -60,6 +61,7 @@ public class FoodTruckQueryRepository {
                         isGreaterThanLastId(lastFoodTruckId),
                         isActiveFoodTruck()
                 )
+                .limit(PAGE_SIZE + 1)
                 .fetch();
 
         if (ids == null || ids.isEmpty()) {

@@ -35,11 +35,12 @@ public class StatisticsController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<StatisticsBySalesResponse> getStatisticsBySales(@PathVariable Long foodTruckId,
                                                                        @RequestParam Integer year,
+                                                                       @RequestParam Integer month,
                                                                        @RequestParam(defaultValue = "1") Integer page) {
         log.debug("StatisticsController#getStatisticsBySales called !!!");
-        log.debug("FoodTruckID={}, year={}, Page={}", foodTruckId, year, page);
+        log.debug("FoodTruckID={}, year={}, month={}, Page={}", foodTruckId, year, month, page);
 
-        StatisticsBySalesResponse response = statisticsService.getStatisticsBySales(foodTruckId, year, page);
+        StatisticsBySalesResponse response = statisticsService.getStatisticsBySales(foodTruckId, year, month, page);
         log.debug("StatisticsBySalesResponse={}", response);
 
         return ApiResponse.ok(response);

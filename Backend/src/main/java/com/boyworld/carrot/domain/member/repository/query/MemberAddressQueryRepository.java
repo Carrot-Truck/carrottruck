@@ -54,7 +54,8 @@ public class MemberAddressQueryRepository {
         return queryFactory
                 .select(Projections.constructor(MemberAddressDetailResponse.class,
                         memberAddress.id,
-                        memberAddress.address
+                        memberAddress.address,
+                        memberAddress.selected
                 ))
                 .from(memberAddress)
                 .where(
@@ -73,7 +74,8 @@ public class MemberAddressQueryRepository {
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(MemberAddressDetailResponse.class,
                         memberAddress.id,
-                        memberAddress.address
+                        memberAddress.address,
+                        memberAddress.selected
                 ))
                 .from(memberAddress)
                 .where(
@@ -81,6 +83,24 @@ public class MemberAddressQueryRepository {
                         isActiveMemberAddress()
                 )
                 .fetchOne());
+    }
+
+    /**
+     * 사용자 이메일로 선택된 회원 주소의 개수 조회 쿼리
+     *
+     * @param email 사용자 이메일
+     * @return 해당 사용자의 선택된 회원 주소 개수
+     */
+    public Long getSelectedCountByEmail(String email) {
+        return queryFactory
+                .select(memberAddress.count())
+                .from(memberAddress)
+                .join(memberAddress.member, member)
+                .where(
+                        isEqualEmail(email),
+                        isActiveMemberAddress()
+                )
+                .fetchOne();
     }
 
     private BooleanExpression isEqualEmail(String email) {

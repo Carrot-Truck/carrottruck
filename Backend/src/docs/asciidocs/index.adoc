@@ -20,7 +20,7 @@ include::{docdir}/api/member/auth.adoc[]
 include::{docdir}/api/member/client.adoc[]
 
 [[MemberAddress-API]]
-== MemberAddress API
+== Member Address API
 include::{docdir}/api/member/member-address.adoc[]
 
 [[Vendor-API]]

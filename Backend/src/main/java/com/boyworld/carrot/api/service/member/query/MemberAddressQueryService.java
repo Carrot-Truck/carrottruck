@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
 
@@ -66,5 +68,16 @@ public class MemberAddressQueryService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 회원 주소 상세 조회
+     *
+     * @param memberAddressId 회원 주소 식별키
+     * @return 회원 주소 상세 정보
+     */
+    public MemberAddressDetailResponse getMemberAddress(Long memberAddressId) {
+        return memberAddressQueryRepository.getMemberAddressById(memberAddressId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원 주소입니다."));
     }
 }

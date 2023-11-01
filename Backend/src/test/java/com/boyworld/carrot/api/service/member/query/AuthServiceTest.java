@@ -1,9 +1,8 @@
-package com.boyworld.carrot.api.service.member;
+package com.boyworld.carrot.api.service.member.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.service.member.dto.LoginDto;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
-import com.boyworld.carrot.api.service.member.query.AuthService;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
@@ -20,6 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * 인증 서비스 테스트
+ *
+ * @author 최영환
+ */
 @Slf4j
 class AuthServiceTest extends IntegrationTestSupport {
     @Autowired

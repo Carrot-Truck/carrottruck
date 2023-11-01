@@ -4,8 +4,8 @@ import com.boyworld.carrot.api.service.member.dto.LoginDto;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
-import com.boyworld.carrot.domain.member.repository.query.MemberQueryRepository;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.member.repository.query.MemberQueryRepository;
 import com.boyworld.carrot.security.JwtTokenProvider;
 import com.boyworld.carrot.security.TokenInfo;
 import lombok.RequiredArgsConstructor;
@@ -68,16 +68,59 @@ public class AuthService {
      *
      * @param dto  로그인 할 회원 정보
      * @param role 로그인 할 권한
-     * @throws NoSuchElementException 이메일에 해당하는 사용자가 없을 경우
-     * @throws InvalidAccessException 사용자가 사업자 로그인을 시도한 경우
      */
     private void checkValidAccess(LoginDto dto, String role) {
-        if (role.equals(Role.VENDOR.toString())) {
-            Member member = memberRepository.findByEmail(dto.getEmail())
-                    .orElseThrow(NoSuchElementException::new);
-            if (member.getRole().equals(Role.CLIENT)) {
-                throw new InvalidAccessException("잘못된 접근입니다.");
-            }
+        if (isVendor(role)) {
+            Member member = getMemberByEmail(dto.getEmail());
+
+            checkActiveMember(member);
+
+            checkInvalidAccess(member);
+        }
+    }
+
+    /**
+     * 요청한 서비스가 사업자 서비스인지 판별
+     *
+     * @param role 요청 서비스 권한
+     * @return true: 사업자 서비스인 경우 false: 사업자 서비스가 아닌 경우
+     */
+    private boolean isVendor(String role) {
+        return role.equals(Role.VENDOR.toString());
+    }
+
+    /**
+     * 이메일로 회원 조회
+     *
+     * @param email 현재 로그인한 사용자의 이메일
+     * @return 회원 엔티티
+     */
+    private Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    /**
+     * 회원 탈퇴 여부 확인
+     *
+     * @param member 회원 엔티티
+     * @throws NoSuchElementException 이미 탈퇴한 회원인 경우
+     */
+    private void checkActiveMember(Member member) {
+        if (!member.getActive()) {
+            throw new NoSuchElementException("이미 탈퇴한 회원입니다.");
+        }
+    }
+
+    /**
+     * 사업자 서비스에 접근하는게 일반 사용자인지 판별
+     *
+     * @param member 회원 엔티티
+     * @throws InvalidAccessException 일반 사용자가 사업자 서비스에 접근하는 경우
+     */
+    private void checkInvalidAccess(Member member) {
+        if (member.getRole().equals(Role.CLIENT)) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
         }
     }
 }

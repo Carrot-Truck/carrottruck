@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
 import static com.boyworld.carrot.domain.member.QMember.member;
@@ -62,12 +63,36 @@ public class MemberAddressQueryRepository {
                 .fetch();
     }
 
+    /**
+     * 회원주소 식별키와 이메일로 회원 주소 정보 조회
+     *
+     * @param memberAddressId 회원 주소 식별키
+     * @return 해당하는 회원 주소 정보
+     */
+    public Optional<MemberAddressDetailResponse> getMemberAddressById(Long memberAddressId) {
+        return Optional.ofNullable(queryFactory
+                .select(Projections.constructor(MemberAddressDetailResponse.class,
+                        memberAddress.id,
+                        memberAddress.address
+                ))
+                .from(memberAddress)
+                .where(
+                        isMemberAddressId(memberAddressId),
+                        isActiveMemberAddress()
+                )
+                .fetchOne());
+    }
+
     private BooleanExpression isEqualEmail(String email) {
         return hasText(email) ? memberAddress.member.email.eq(email) : null;
     }
 
     private BooleanExpression isGreaterThanLastId(Long lastMemberAddressId) {
         return lastMemberAddressId != null ? memberAddress.id.gt(lastMemberAddressId) : null;
+    }
+
+    private BooleanExpression isMemberAddressId(Long memberAddressId) {
+        return memberAddressId != null ? memberAddress.id.eq(memberAddressId) : null;
     }
 
     private BooleanExpression isActiveMemberAddress() {

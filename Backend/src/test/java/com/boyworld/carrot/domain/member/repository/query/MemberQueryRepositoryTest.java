@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.member.repository;
+package com.boyworld.carrot.domain.member.repository.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
@@ -8,11 +8,12 @@ import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.VendorInfo;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.member.repository.command.VendorInfoRepository;
-import com.boyworld.carrot.domain.member.repository.query.MemberQueryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -95,10 +96,11 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         String email = "ssafy@ssafy.com";
 
         // when
-        ClientResponse response = memberQueryRepository.getClientInfoByEmail(email);
+        Optional<ClientResponse> response = memberQueryRepository.getClientInfoByEmail(email);
 
         // then
-        assertThat(response).extracting("name", "nickname", "email", "phoneNumber", "role")
+        assertThat(response.isPresent()).isTrue();
+        assertThat(response.get()).extracting("name", "nickname", "email", "phoneNumber", "role")
                 .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "CLIENT");
     }
 
@@ -110,14 +112,15 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         String email = "ssafy@ssafy.com";
 
         // when
-        ClientResponse response = memberQueryRepository.getClientInfoByEmail(email);
+        Optional<ClientResponse> response = memberQueryRepository.getClientInfoByEmail(email);
 
         // then
-        assertThat(response).extracting("name", "nickname", "email", "phoneNumber", "role")
+        assertThat(response.isPresent()).isTrue();
+        assertThat(response.get()).extracting("name", "nickname", "email", "phoneNumber", "role")
                 .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "VENDOR");
     }
 
-    @DisplayName("해당 이메일을 가진 일반 사용자가 존재하지 않으면 null 이 반환된다.")
+    @DisplayName("해당 이메일을 가진 일반 사용자가 존재하지 않으면 빈 객체가 반환된다.")
     @Test
     void getNotExistClientInfo() {
         // given
@@ -125,10 +128,10 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         String email = "ssafy@naver.com";
 
         // when
-        ClientResponse response = memberQueryRepository.getClientInfoByEmail(email);
+        Optional<ClientResponse> response = memberQueryRepository.getClientInfoByEmail(email);
 
         // then
-        assertThat(response).isNull();
+        assertThat(response).isEmpty();
     }
 
     @DisplayName("사업자 정보를 이메일로 조회한다.")
@@ -140,15 +143,15 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         String email = "ssafy@ssafy.com";
 
         // when
-        VendorResponse response = memberQueryRepository.getVendorInfoByEmail(email);
+        Optional<VendorResponse> response = memberQueryRepository.getVendorInfoByEmail(email);
 
         // then
-        assertThat(response).isNotNull();
-        assertThat(response).extracting("name", "nickname", "email", "phoneNumber", "role", "businessNumber")
+        assertThat(response).isPresent();
+        assertThat(response.get()).extracting("name", "nickname", "email", "phoneNumber", "role", "businessNumber")
                 .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "VENDOR", "123456789");
     }
 
-    @DisplayName("해당 이메일을 가진 사업자가 존재하지 않으면 null 이 반환된다.")
+    @DisplayName("해당 이메일을 가진 사업자가 존재하지 않으면 빈 객체가 반환된다.")
     @Test
     void getVendorInfoByClientEmail() {
         // given
@@ -157,10 +160,10 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         String email = "ssafy@ssafy.com";
 
         // when
-        VendorResponse response = memberQueryRepository.getVendorInfoByEmail(email);
+        Optional<VendorResponse> response = memberQueryRepository.getVendorInfoByEmail(email);
 
         // then
-        assertThat(response).isNull();
+        assertThat(response).isEmpty();
     }
 
     private Member createMember(Role role, String email) {

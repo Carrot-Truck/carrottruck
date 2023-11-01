@@ -1,8 +1,7 @@
-package com.boyworld.carrot.api.service.member;
+package com.boyworld.carrot.api.service.member.command;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
-import com.boyworld.carrot.api.service.member.command.MemberAddressService;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.MemberAddress;
 import com.boyworld.carrot.domain.member.Role;
@@ -19,6 +18,11 @@ import java.util.NoSuchElementException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * 회원 주소 CUD 서비스 테스트
+ *
+ * @author 최영환
+ */
 @Slf4j
 public class MemberAddressServiceTest extends IntegrationTestSupport {
 
@@ -38,7 +42,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
     @Test
     void createMemberAddressSuccess() {
         // given
-        Member member = createMember(Role.CLIENT);
+        Member member = createMember(Role.CLIENT, true);
 
         // when
         MemberAddressDetailResponse response = memberAddressService.createMemberAddress("주소", "ssafy@ssafy.com");
@@ -49,11 +53,23 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
                 .isEqualTo("주소");
     }
 
+    @DisplayName("이미 탈퇴한 사용자는 주소 등록 요청을 보낼 수 없다.")
+    @Test
+    void createMemberAddressWithNonActiveMember() {
+        // given
+        Member member = createMember(Role.CLIENT, false);
+
+        // when // then
+        assertThatThrownBy(() -> memberAddressService.createMemberAddress("주소", "ssafy@ssafy.com"))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("이미 탈퇴한 회원입니다.");
+    }
+
     @DisplayName("사용자는 회원 주소를 수정할 수 있다.")
     @Test
     void editMemberAddress() {
         // given
-        Member member = createMember(Role.CLIENT);
+        Member member = createMember(Role.CLIENT, true);
         MemberAddress memberAddress = createMemberaddress(member);
 
         // when
@@ -70,7 +86,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
     @Test
     void editMemberAddressWithWrongId() {
         // given
-        Member member = createMember(Role.CLIENT);
+        Member member = createMember(Role.CLIENT, true);
         MemberAddress memberAddress = createMemberaddress(member);
 
         // when // then
@@ -84,11 +100,11 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
     @Test
     void deleteMemberAddress() {
         // given
-        Member member = createMember(Role.CLIENT);
+        Member member = createMember(Role.CLIENT, true);
         MemberAddress memberAddress = createMemberaddress(member);
 
         // when
-        Boolean result = memberAddressService.deleteMemberAddress(memberAddress.getId(), member.getEmail());
+        Boolean result = memberAddressService.deleteMemberAddress(memberAddress.getId());
         log.debug("result={}", result);
 
         // then
@@ -99,17 +115,17 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
     @Test
     void deleteMemberAddressWithWrongId() {
         // given
-        Member member = createMember(Role.CLIENT);
+        Member member = createMember(Role.CLIENT, true);
         MemberAddress memberAddress = createMemberaddress(member);
 
         // when // then
         assertThatThrownBy(() ->
-                memberAddressService.deleteMemberAddress(2L, member.getEmail()))
+                memberAddressService.deleteMemberAddress(2L))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("존재하지 않는 회원 주소입니다.");
     }
 
-    private Member createMember(Role role) {
+    private Member createMember(Role role, boolean active) {
         Member member = Member.builder()
                 .email("ssafy@ssafy.com")
                 .nickname("매미킴")
@@ -117,7 +133,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
                 .name("김동현")
                 .phoneNumber("010-1234-5678")
                 .role(role)
-                .active(true)
+                .active(active)
                 .build();
         return memberRepository.save(member);
     }

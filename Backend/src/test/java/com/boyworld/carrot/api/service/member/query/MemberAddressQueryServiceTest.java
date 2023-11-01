@@ -48,7 +48,7 @@ public class MemberAddressQueryServiceTest extends IntegrationTestSupport {
         MemberAddress memberAddress2 = createMemberAddress(member, "주소2", false, true);
 
         // when
-        MemberAddressResponse response = memberAddressQueryService.getMemberAddresses(member.getEmail(), "");
+        MemberAddressResponse response = memberAddressQueryService.getMemberAddresses(member.getEmail(), null);
         log.debug("response={}", response);
 
         // then
@@ -64,7 +64,7 @@ public class MemberAddressQueryServiceTest extends IntegrationTestSupport {
         Member member = createMember(Role.CLIENT);
 
         // when
-        MemberAddressResponse response = memberAddressQueryService.getMemberAddresses(member.getEmail(), "");
+        MemberAddressResponse response = memberAddressQueryService.getMemberAddresses(member.getEmail(), null);
         log.debug("response={}", response);
 
         // then

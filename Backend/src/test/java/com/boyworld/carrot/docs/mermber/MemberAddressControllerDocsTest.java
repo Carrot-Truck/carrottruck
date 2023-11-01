@@ -111,7 +111,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                 .memberAddresses(List.of(memberAddress1, memberAddress2))
                 .build();
 
-        given(memberAddressQueryService.getMemberAddresses(anyString(), anyString()))
+        given(memberAddressQueryService.getMemberAddresses(anyString(), nullable(Long.class)))
                 .willReturn(response);
 
         mockMvc.perform(

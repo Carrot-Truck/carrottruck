@@ -55,7 +55,7 @@ public class MemberAddressController {
      * @return 회원 주소 목록
      */
     @GetMapping
-    public ApiResponse<MemberAddressResponse> getMemberAddresses(@RequestParam(required = false, defaultValue = "") String lastMemberAddressId) {
+    public ApiResponse<MemberAddressResponse> getMemberAddresses(@RequestParam(required = false) Long lastMemberAddressId) {
         log.debug("MemberAddressController#getMemberAddresses called");
 
         String email = SecurityUtil.getCurrentLoginId();

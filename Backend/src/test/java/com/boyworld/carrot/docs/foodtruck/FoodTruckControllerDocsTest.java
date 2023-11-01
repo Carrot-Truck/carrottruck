@@ -319,17 +319,23 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
 
         FoodTruckResponse<List<FoodTruckOverview>> response = FoodTruckResponse.of(false, items);
 
-        given(foodTruckQueryService.getFoodTruckOverviews(anyString()))
+        given(foodTruckQueryService.getFoodTruckOverviews(anyLong(), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
                         get("/food-truck/overview")
                                 .header("Authentication", "authentication")
+                                .param("lastFoodTruckId", "")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("search-food-truck-overview",
+                        preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("lastFoodTruckId")
+                                        .description("마지막으로 조회된 푸드트럭 식별키")
+                        ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
                                         .description("코드"),

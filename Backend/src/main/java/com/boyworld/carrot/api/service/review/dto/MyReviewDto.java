@@ -4,6 +4,7 @@ import com.boyworld.carrot.domain.review.Review;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * To show Review entity
@@ -11,6 +12,7 @@ import lombok.Data;
  * @author Gunhoo Park
  */
 @Data
+@NoArgsConstructor
 public class MyReviewDto {
 
     private Long reviewId;
@@ -23,13 +25,16 @@ public class MyReviewDto {
 
     private String content;
 
+    private String imageUrl;
+
     @Builder
-    private MyReviewDto(Long reviewId, ReviewFoodTruckDto reviewFoodTruckDto, int grade, LocalDateTime createdDate, String content) {
+    private MyReviewDto(Long reviewId, ReviewFoodTruckDto reviewFoodTruckDto, int grade, LocalDateTime createdDate, String content, String imageUrl) {
         this.reviewId = reviewId;
         this.reviewFoodTruckDto = reviewFoodTruckDto;
         this.grade = grade;
         this.content = content;
         this.createdDate = createdDate;
+        this.imageUrl = imageUrl;
     }
 
     public static MyReviewDto of(Review review){

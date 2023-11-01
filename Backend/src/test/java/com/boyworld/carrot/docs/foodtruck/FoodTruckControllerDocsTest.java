@@ -485,7 +485,10 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.reviews[].grade").type(JsonFieldType.NUMBER)
                                         .description("만족도"),
                                 fieldWithPath("data.reviews[].content").type(JsonFieldType.STRING)
-                                        .description("리뷰 내용")
+                                        .description("리뷰 내용"),
+                                fieldWithPath("data.reviews[].imageUrl").type(JsonFieldType.STRING)
+                                        .description("리뷰 사진 url").optional()
+
                         )
                 ));
     }

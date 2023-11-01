@@ -433,6 +433,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .build();
 
         FoodTruckDetailResponse response = FoodTruckDetailResponse.builder()
+                .isOwner(true)
                 .foodTruckDetail(foodTruckDetail)
                 .menus(List.of(menu1, menu2))
                 .schedules(List.of(schedule1, schedule2, schedule3))
@@ -463,6 +464,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                                         .description("푸드트럭 상세 조회 결과"),
+                                fieldWithPath("data.isOwner").type(JsonFieldType.BOOLEAN)
+                                        .description("푸드트럭 사업자 여부"),
                                 fieldWithPath("data.foodTruckDetail").type(JsonFieldType.OBJECT)
                                         .description("푸드트럭 상세 정보"),
                                 fieldWithPath("data.foodTruckDetail.foodTruckId").type(JsonFieldType.NUMBER)

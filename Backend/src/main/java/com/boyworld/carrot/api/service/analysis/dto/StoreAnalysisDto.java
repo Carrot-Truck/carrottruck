@@ -23,10 +23,14 @@ public class StoreAnalysisDto {
 
     private String middleClassCode;
 
+    private String middleClassName;
+
     private String smallClassCode;
 
+    private String smallClassName;
+
     @Builder
-    public StoreAnalysisDto(String storeName, BigDecimal latitude, BigDecimal longitude, String sido, String sigungu, String dong, String middleClassCode, String smallClassCode) {
+    public StoreAnalysisDto(String storeName, BigDecimal latitude, BigDecimal longitude, String sido, String sigungu, String dong, String middleClassCode, String middleClassName, String smallClassCode, String smallClassName) {
         this.storeName = storeName;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -34,6 +38,8 @@ public class StoreAnalysisDto {
         this.sigungu = sigungu;
         this.dong = dong;
         this.middleClassCode = middleClassCode;
+        this.middleClassName = middleClassName;
         this.smallClassCode = smallClassCode;
+        this.smallClassName = smallClassName;
     }
 }

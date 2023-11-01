@@ -51,4 +51,12 @@ public class MemberAddress extends TimeBaseEntity {
     public void deActivate() {
         this.active = false;
     }
+
+    public void select() {
+        this.selected = true;
+    }
+
+    public void unSelect() {
+        this.selected = false;
+    }
 }

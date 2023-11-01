@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.service.member.command;
 
 import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
+import com.boyworld.carrot.api.service.member.dto.SelectedMemberAddressDto;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.MemberAddress;
 import com.boyworld.carrot.domain.member.repository.command.MemberAddressRepository;
@@ -129,6 +130,22 @@ public class MemberAddressService {
         memberAddress.deActivate();
 
         return true;
+    }
+
+    /**
+     * 선택된 주소 변경 API
+     *
+     * @param dto 기존에 선택된 주소와 새로 선택할 주소 식별키
+     * @return 새로 선택된 주소 식별키
+     */
+    public Long editSelectedAddress(SelectedMemberAddressDto dto) {
+        MemberAddress selectedAddress = getMemberAddressById(dto.getSelectedMemberAddressId());
+        selectedAddress.unSelect();
+
+        MemberAddress targetAddress = getMemberAddressById(dto.getTargetMemberAddressId());
+        targetAddress.select();
+
+        return targetAddress.getId();
     }
 
     /**

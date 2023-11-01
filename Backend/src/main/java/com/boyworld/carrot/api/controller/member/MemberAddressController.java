@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.controller.member;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.member.request.MemberAddressRequest;
+import com.boyworld.carrot.api.controller.member.request.SelectedMemberAddressRequest;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressResponse;
 import com.boyworld.carrot.api.service.member.command.MemberAddressService;
@@ -105,6 +106,25 @@ public class MemberAddressController {
         log.debug("MemberAddressResponse={}", response);
 
         return ApiResponse.ok(response);
+    }
+
+    /**
+     * 선택된 주소 변경 API
+     *
+     * @param request 기존에 선택된 주소와 새로 선택할 주소 식별키
+     * @return 새로 선택된 주소 식별키
+     */
+    @PatchMapping("/selected")
+    public ApiResponse<Long> editSelected(@Valid @RequestBody SelectedMemberAddressRequest request) {
+        log.debug("MemberAddressController#editSelected called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long result = memberAddressService.editSelectedAddress(request.toSelectedMemberAddressDto());
+        log.debug("result={}", result);
+
+        return ApiResponse.ok(result);
     }
 
     /**

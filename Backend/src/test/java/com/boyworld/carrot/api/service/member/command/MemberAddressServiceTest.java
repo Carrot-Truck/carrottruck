@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.service.member.command;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.member.response.MemberAddressDetailResponse;
+import com.boyworld.carrot.api.service.member.dto.SelectedMemberAddressDto;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.MemberAddress;
 import com.boyworld.carrot.domain.member.Role;
@@ -139,6 +140,28 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
                 memberAddressService.deleteMemberAddress(2L))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("존재하지 않는 회원 주소입니다.");
+    }
+
+    @DisplayName("사용자는 현재 선택된 주소를 변경할 수 있다.")
+    @Test
+    void editSelected() {
+        // given
+        Member member = createMember(Role.CLIENT, true);
+        MemberAddress selectedMemberAddress = createMemberaddress(member, true);
+        MemberAddress tragetMemberAddress = createMemberaddress(member, false);
+
+        SelectedMemberAddressDto dto = SelectedMemberAddressDto.builder()
+                .selectedMemberAddressId(selectedMemberAddress.getId())
+                .targetMemberAddressId(tragetMemberAddress.getId())
+                .build();
+
+        // when
+        Long result = memberAddressService.editSelectedAddress(dto);
+
+        // then
+        assertThat(result).isEqualTo(tragetMemberAddress.getId());
+        assertThat(selectedMemberAddress.getSelected()).isFalse();
+        assertThat(tragetMemberAddress.getSelected()).isTrue();
     }
 
     private Member createMember(Role role, boolean active) {

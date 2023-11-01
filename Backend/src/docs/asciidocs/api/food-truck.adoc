@@ -44,6 +44,7 @@ include::{snippets}/search-food-truck-list/response-fields.adoc[]
 ==== HTTP Request
 
 include::{snippets}/search-food-truck-overview/http-request.adoc[]
+include::{snippets}/search-food-truck-overview/query-parameters.adoc[]
 
 ==== HTTP Response
 

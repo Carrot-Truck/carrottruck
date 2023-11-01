@@ -319,7 +319,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
 
         FoodTruckResponse<List<FoodTruckOverview>> response = FoodTruckResponse.of(false, items);
 
-        given(foodTruckQueryService.getFoodTruckOverviews(anyLong(), anyString()))
+        given(foodTruckQueryService.getFoodTruckOverviews(anyString(), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(

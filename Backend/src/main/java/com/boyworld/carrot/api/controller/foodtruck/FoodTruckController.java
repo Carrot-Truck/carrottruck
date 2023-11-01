@@ -125,7 +125,7 @@ public class FoodTruckController {
      */
     @GetMapping("/overview")
     public ApiResponse<FoodTruckResponse<List<FoodTruckOverview>>> getFoodTruckOverviews(
-            @RequestParam(required = false, defaultValue = "") Long lastFoodTruckId) {
+            @RequestParam(required = false, defaultValue = "") String lastFoodTruckId) {
         log.debug("lastFoodTruckId={}", lastFoodTruckId);
 
         String email = SecurityUtil.getCurrentLoginId();

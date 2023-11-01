@@ -61,12 +61,12 @@ public class FoodTruckQueryService {
      * @param email           현재 로그인 중인 사용자 이메일
      * @return 보유한 푸드트럭 목록
      */
-    public FoodTruckResponse<List<FoodTruckOverview>> getFoodTruckOverviews(String lastFoodTruckId, String email) {
+    public FoodTruckResponse<List<FoodTruckOverview>> getFoodTruckOverviews(Long lastFoodTruckId, String email) {
         Member member = getMemberByEmail(email);
         checkValidAccess(member);
 
         List<FoodTruckOverview> overviews =
-                foodTruckQueryRepository.getFoodTruckOverviewsByEmail(getLastFoodTruckId(lastFoodTruckId), email);
+                foodTruckQueryRepository.getFoodTruckOverviewsByEmail(lastFoodTruckId, email);
 
         return FoodTruckResponse.of(checkHasNext(overviews), overviews);
     }
@@ -102,19 +102,6 @@ public class FoodTruckQueryService {
      */
     private boolean isClient(Role role) {
         return role.equals(Role.CLIENT);
-    }
-
-    /**
-     * 마지막으로 조회된 푸드트럭 식별키 변환
-     * 
-     * @param lastFoodTruckId 마지막으로 조회된 푸드트럭 식별키
-     * @return Long 으로 변환된 식별키
-     */
-    private Long getLastFoodTruckId(String lastFoodTruckId) {
-        if (lastFoodTruckId.isBlank()) {
-            return null;
-        }
-        return Long.parseLong(lastFoodTruckId);
     }
 
     /**

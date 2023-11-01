@@ -319,13 +319,13 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
 
         FoodTruckResponse<List<FoodTruckOverview>> response = FoodTruckResponse.of(false, items);
 
-        given(foodTruckQueryService.getFoodTruckOverviews(anyString(), anyString()))
+        given(foodTruckQueryService.getFoodTruckOverviews(nullable(Long.class), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
                         get("/food-truck/overview")
                                 .header("Authentication", "authentication")
-                                .param("lastFoodTruckId", "")
+                                .param("lastFoodTruckId", (String) null)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())

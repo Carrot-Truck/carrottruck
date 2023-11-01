@@ -61,7 +61,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
 
         // when
         FoodTruckResponse<List<FoodTruckOverview>> response =
-                foodTruckQueryService.getFoodTruckOverviews("", "ssafy@ssafy.com");
+                foodTruckQueryService.getFoodTruckOverviews(null, "ssafy@ssafy.com");
 
         // then
         assertThat(response).isNotNull();
@@ -79,7 +79,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
 
         // when
         FoodTruckResponse<List<FoodTruckOverview>> response =
-                foodTruckQueryService.getFoodTruckOverviews("", "ssafy@ssafy.com");
+                foodTruckQueryService.getFoodTruckOverviews(null, "ssafy@ssafy.com");
 
         // then
         assertThat(response).isNotNull();
@@ -95,7 +95,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         Category category = createCategory();
 
         // when // then
-        assertThatThrownBy(() -> foodTruckQueryService.getFoodTruckOverviews("", "ssafy@ssafy.com"))
+        assertThatThrownBy(() -> foodTruckQueryService.getFoodTruckOverviews(null, "ssafy@ssafy.com"))
                 .isInstanceOf(InvalidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }

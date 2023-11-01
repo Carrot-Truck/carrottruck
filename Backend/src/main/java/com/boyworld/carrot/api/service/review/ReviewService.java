@@ -51,6 +51,7 @@ public class ReviewService {
      * @param request memberId, orderId, foodTruckId, content, grade, image
      * @return boolean
      */
+    @Transactional
     public Boolean createReview(ReviewRequest request) {
         try {
             Member member = memberRepository.findById(request.getMemberId()).orElseThrow();
@@ -90,6 +91,7 @@ public class ReviewService {
      * @param request reviewId, comment
      * @return boolean
      */
+    @Transactional
     public Boolean createComment(CommentRequest request) {
         try {
             String email = SecurityUtil.getCurrentLoginId();
@@ -145,6 +147,7 @@ public class ReviewService {
     /**
      * delete my review API
      */
+    @Transactional
     public Boolean withdrawal(Long reviewId) {
         try{
             String email = SecurityUtil.getCurrentLoginId();

@@ -8,9 +8,12 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ClientOrderItem {
+public class OrderItem {
 
     private Long orderId;
+    private Long memberId;
+    private String nickname;
+    private String phoneNumber;
     private Integer orderCnt;
     private Status status;
     private Integer totalPrice;

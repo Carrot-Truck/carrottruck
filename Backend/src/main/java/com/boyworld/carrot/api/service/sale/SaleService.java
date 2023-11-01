@@ -82,6 +82,8 @@ public class SaleService {
      * @return 품절 등록한 메뉴 식별키
      */
     public Long soldOutMenu(Long menuId, String email) {
+        // email에 해당하는 회원이 실제 해당 메뉴를 갖고 있는
+        // 푸드트럭의 보유자인지 확인하는 로직 필요
         return null;
     }
 

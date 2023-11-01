@@ -203,6 +203,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
         MemberAddressDetailResponse response = MemberAddressDetailResponse.builder()
                 .memberAddressId(1L)
                 .address("광주 광산구 풍영로 223번안길")
+                .selected(true)
                 .build();
 
         given(memberAddressService.editMemberAddress(anyLong(), anyString(), anyString()))

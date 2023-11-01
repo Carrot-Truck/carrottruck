@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -293,7 +294,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .willReturn(result);
 
         mockMvc.perform(
-                post("/review/withdrawal")
+                put("/review/withdrawal")
                     .content(objectMapper.writeValueAsString(withdrawalRequest))
                     .contentType(MediaType.APPLICATION_JSON)
             ).andDo(print())

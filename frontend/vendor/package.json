@@ -1,6 +1,7 @@
 {
   "name": "vendor",
   "version": "0.1.0",
+  "homepage": "/vendor",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
@@ -61,6 +62,8 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.29"
+    "@types/styled-components": "^5.1.29",
+    "eslint": "^8.52.0",
+    "eslint-config-airbnb-typescript": "^17.1.0"
   }
 }

@@ -35,7 +35,7 @@ export const MenuTextWrapper = styled.div`
   p: nth-child(3) {
     font-size: 1rem;
     font-color: var(--black-300);
-    font-weight: 500;
+    font-weight: 400;
     width: 100%;
   }
 `;

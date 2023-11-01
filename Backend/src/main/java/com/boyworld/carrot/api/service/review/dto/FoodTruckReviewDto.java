@@ -22,15 +22,15 @@ public class FoodTruckReviewDto {
 
     private String content;
 
-    private MultipartFile image;
+    private String imageUrl;
 
     @Builder
-    private FoodTruckReviewDto(Long reviewId, int grade, String content, String nickname, MultipartFile image) {
+    private FoodTruckReviewDto(Long reviewId, int grade, String content, String nickname, String imageUrl) {
         this.reviewId = reviewId;
         this.grade = grade;
         this.content = content;
         this.nickname = nickname;
-        this.image = image;
+        this.imageUrl = imageUrl;
     }
 
     public static FoodTruckReviewDto of(Review review){

@@ -147,9 +147,18 @@ public class ReviewService {
     public FoodTruckReviewResponse getFoodTruckReview(Long foodTruckId) {
         try {
             FoodTruck foodTruck = foodTruckRepository.findById(foodTruckId).orElseThrow();
-            List<Review> list = reviewRepository.findByFoodTruckAndActive(foodTruck, true).orElseThrow();
-            return FoodTruckReviewResponse.of(
-                list.stream().map(FoodTruckReviewDto::of).collect(Collectors.toList()));
+            List<Review> foodTruckReviewList = reviewRepository.findByFoodTruckAndActive(foodTruck, true).orElseThrow();
+            List<FoodTruckReviewDto> response = new ArrayList<>();
+
+            for(Review review : foodTruckReviewList){ // 조회된 모든 foodTruckReviewList에 대해
+                FoodTruckReviewDto foodTruckReviewDto = FoodTruckReviewDto.of(review);
+                // 만약 리뷰 Repository 에서 해당 리뷰의 사진이 존재하면 추가
+                if(reviewImageRepository.findByReviewId(review.getId()).isPresent()){
+                    foodTruckReviewDto.setImageUrl(reviewImageRepository.findByReviewId(review.getId()).get().getUploadFileName());
+                }
+                response.add(foodTruckReviewDto);
+            }
+            return FoodTruckReviewResponse.of(response);
         } catch (Exception e) {
             return null;
         }

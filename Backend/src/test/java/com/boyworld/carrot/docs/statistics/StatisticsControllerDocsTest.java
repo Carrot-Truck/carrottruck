@@ -77,10 +77,11 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
 
         StatisticsBySalesResponse response = StatisticsBySalesResponse.builder()
                 .year(LocalDate.now().getYear())
+                .year(LocalDate.now().getMonthValue())
                 .statisticsBySales(items)
                 .build();
 
-        given(statisticsQueryService.getStatisticsBySales(anyLong(), anyInt(), anyInt()))
+        given(statisticsQueryService.getStatisticsBySales(anyLong(), anyInt(), anyInt(), anyInt()))
                 .willReturn(response);
 
         Long fid = 1L;
@@ -88,6 +89,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         mockMvc.perform(
                         get("/statistics/{foodTruckId}/sales", fid)
                                 .param("year", "2023")
+                                .param("month", "11")
                                 .param("page", "1")
                                 .header("Authentication", "authentication")
                 )
@@ -103,6 +105,8 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                         queryParameters(
                                 parameterWithName("year")
                                         .description("연도"),
+                                parameterWithName("month")
+                                        .description("월"),
                                 parameterWithName("page")
                                         .description("페이지")
                         ),

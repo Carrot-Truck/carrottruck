@@ -27,10 +27,11 @@ public class StatisticsQueryService {
      *
      * @param foodTruckId 푸드트럭 ID
      * @param year 조회 연도
+     * @param month 조회 월
      * @param page 페이지
      * @return 매출통계 리스트
      */
-    public StatisticsBySalesResponse getStatisticsBySales(Long foodTruckId, Integer year, Integer page) {
+    public StatisticsBySalesResponse getStatisticsBySales(Long foodTruckId, Integer year, Integer month, Integer page) {
         return null;
     }
 

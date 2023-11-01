@@ -6,6 +6,7 @@ import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewRespons
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
+import com.boyworld.carrot.api.service.review.dto.ReviewFoodTruckDto;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
@@ -20,6 +21,7 @@ import com.boyworld.carrot.domain.review.repository.ReviewImageRepository;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
 import com.boyworld.carrot.file.S3Uploader;
 import com.boyworld.carrot.security.SecurityUtil;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -122,8 +124,17 @@ public class ReviewService {
             String userEmail = SecurityUtil.getCurrentLoginId();
             Member member = memberRepository.findByEmail(userEmail).orElseThrow();
             List<Review> myReview = reviewRepository.findByMemberAndActive(member, true).orElseThrow();
-            return MyReviewResponse.of(
-                myReview.stream().map(MyReviewDto::of).collect(Collectors.toList()));
+            List<MyReviewDto> response = new ArrayList<>();
+
+            for(Review review : myReview){ // 조회된 모든 myReview에 대해
+                MyReviewDto myReviewDto = MyReviewDto.of(review);
+                // 만약 리뷰 Repository 에서 해당 리뷰의 사진이 존재하면 추가
+                if(reviewImageRepository.findByReviewId(review.getId()).isPresent()){
+                    myReviewDto.setImageUrl(reviewImageRepository.findByReviewId(review.getId()).get().getUploadFileName());
+                }
+                response.add(myReviewDto);
+            }
+            return MyReviewResponse.of(response);
         } catch (Exception e) {
             return null;
         }

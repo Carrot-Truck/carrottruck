@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.png';
 import './App.css';
 import RouteLink from './routes/Route';
 import { GlobalStyles } from 'styles/GlobalStyles';

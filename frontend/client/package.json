@@ -60,6 +60,8 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.29"
+    "@types/styled-components": "^5.1.29",
+    "eslint": "^8.52.0",
+    "eslint-config-airbnb-typescript": "^17.1.0"
   }
 }

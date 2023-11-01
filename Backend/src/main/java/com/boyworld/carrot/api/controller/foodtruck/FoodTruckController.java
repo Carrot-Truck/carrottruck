@@ -124,12 +124,15 @@ public class FoodTruckController {
      * @return 보유한 푸드트럭 목록
      */
     @GetMapping("/overview")
-    public ApiResponse<FoodTruckResponse<List<FoodTruckOverview>>> getFoodTruckOverviews() {
+    public ApiResponse<FoodTruckResponse<List<FoodTruckOverview>>> getFoodTruckOverviews(
+            @RequestParam(required = false, defaultValue = "") Long lastFoodTruckId) {
+        log.debug("lastFoodTruckId={}", lastFoodTruckId);
+
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
         FoodTruckResponse<List<FoodTruckOverview>> response = foodTruckQueryService
-                .getFoodTruckOverviews(email);
+                .getFoodTruckOverviews(lastFoodTruckId, email);
         log.debug("response={}", response);
 
         return ApiResponse.ok(response);

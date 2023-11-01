@@ -1,6 +1,6 @@
 {
   "short_name": "Carrot",
-  "name": "당근트럭 사업자",
+  "name": "CarrotVendor",
   "icons": [
     {
       "src": "playstore.ico",
@@ -18,8 +18,8 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/vendor",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff"
 }

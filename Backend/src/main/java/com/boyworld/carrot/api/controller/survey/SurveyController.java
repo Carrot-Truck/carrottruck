@@ -7,6 +7,7 @@ import com.boyworld.carrot.api.controller.survey.response.SurveyDetailsResponse;
 import com.boyworld.carrot.api.controller.survey.response.SurveyCountResponse;
 import com.boyworld.carrot.api.service.survey.SurveyQueryService;
 import com.boyworld.carrot.api.service.survey.SurveyService;
+import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -105,7 +106,9 @@ public class SurveyController {
         log.debug("SurveyController#deleteSurvey called !!!");
         log.debug("SurveyID={}", surveyId);
 
-        Long response = surveyService.deleteSurvey(surveyId);
+        String email = SecurityUtil.getCurrentLoginId();
+
+        Long response = surveyService.deleteSurvey(surveyId, email);
         log.debug("DeletedID={}", response);
 
         return ApiResponse.ok(response);

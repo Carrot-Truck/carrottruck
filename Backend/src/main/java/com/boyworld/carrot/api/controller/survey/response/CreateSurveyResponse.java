@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.controller.survey.response;
 
+import com.boyworld.carrot.domain.survey.Survey;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,5 +24,15 @@ public class CreateSurveyResponse {
         this.sido = sido;
         this.sigungu = sigungu;
         this.dong = dong;
+    }
+
+    public static CreateSurveyResponse of(Survey survey) {
+        return CreateSurveyResponse.builder()
+                .categoryName(survey.getCategory().getName())
+                .nickname(survey.getMember().getNickname())
+                .sido(survey.getSido())
+                .sigungu(survey.getSigungu())
+                .dong(survey.getDong())
+                .build();
     }
 }

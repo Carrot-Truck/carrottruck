@@ -270,7 +270,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
     void deleteSurvey() throws Exception {
         Long sid = 11L;
 
-        given(surveyService.deleteSurvey(anyLong()))
+        given(surveyService.deleteSurvey(anyLong(), anyString()))
                 .willReturn(sid);
 
         mockMvc.perform(

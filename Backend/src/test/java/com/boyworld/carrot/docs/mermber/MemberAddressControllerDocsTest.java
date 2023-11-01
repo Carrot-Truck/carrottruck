@@ -51,6 +51,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
         MemberAddressDetailResponse response = MemberAddressDetailResponse.builder()
                 .memberAddressId(1L)
                 .address("광주 광산구 장덕로 5번길 16")
+                .selected(true)
                 .build();
 
         given(memberAddressService.createMemberAddress(anyString(), anyString()))
@@ -82,7 +83,9 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.memberAddressId").type(JsonFieldType.NUMBER)
                                         .description("주소 식별키"),
                                 fieldWithPath("data.address").type(JsonFieldType.STRING)
-                                        .description("주소")
+                                        .description("주소"),
+                                fieldWithPath("data.selected").type(JsonFieldType.BOOLEAN)
+                                        .description("현재 선택된 주소 여부")
                         )
                 ));
     }
@@ -94,11 +97,13 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
         MemberAddressDetailResponse memberAddress1 = MemberAddressDetailResponse.builder()
                 .memberAddressId(1L)
                 .address("광주 광산구 장덕로 5번길 16")
+                .selected(true)
                 .build();
 
         MemberAddressDetailResponse memberAddress2 = MemberAddressDetailResponse.builder()
                 .memberAddressId(2L)
                 .address("광주 광산구 풍영로 223번안길")
+                .selected(false)
                 .build();
 
         MemberAddressResponse response = MemberAddressResponse.builder()
@@ -137,7 +142,9 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.memberAddresses[].memberAddressId").type(JsonFieldType.NUMBER)
                                         .description("회원 주소 식별키"),
                                 fieldWithPath("data.memberAddresses[].address").type(JsonFieldType.STRING)
-                                        .description("주소")
+                                        .description("주소"),
+                                fieldWithPath("data.memberAddresses[].selected").type(JsonFieldType.BOOLEAN)
+                                        .description("현재 선택된 주소 여부")
                         )
                 ));
     }
@@ -149,6 +156,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
         MemberAddressDetailResponse response = MemberAddressDetailResponse.builder()
                 .memberAddressId(1L)
                 .address("광주 광산구 장덕로 5번길 16")
+                .selected(true)
                 .build();
 
         given(memberAddressQueryService.getMemberAddress(anyLong()))
@@ -177,7 +185,9 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.memberAddressId").type(JsonFieldType.NUMBER)
                                         .description("회원 주소 식별키"),
                                 fieldWithPath("data.address").type(JsonFieldType.STRING)
-                                        .description("주소")
+                                        .description("주소"),
+                                fieldWithPath("data.selected").type(JsonFieldType.BOOLEAN)
+                                        .description("현재 선택된 주소 여부")
                         )
                 ));
     }
@@ -228,7 +238,9 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.memberAddressId").type(JsonFieldType.NUMBER)
                                         .description("주소 식별키"),
                                 fieldWithPath("data.address").type(JsonFieldType.STRING)
-                                        .description("주소")
+                                        .description("주소"),
+                                fieldWithPath("data.selected").type(JsonFieldType.BOOLEAN)
+                                        .description("현재 선택된 주소 여부")
                         )
                 ));
     }

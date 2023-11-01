@@ -40,7 +40,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
 
     @DisplayName("사용자는 회원 주소를 등록할 수 있다.")
     @Test
-    void createMemberAddressSuccess() {
+    void createMemberAddressFirst() {
         // given
         Member member = createMember(Role.CLIENT, true);
 
@@ -49,8 +49,24 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
         log.debug("response={}", response);
 
         // then
-        assertThat(response).extracting("address")
-                .isEqualTo("주소");
+        assertThat(response.getAddress()).isEqualTo("주소");
+        assertThat(response.getSelected()).isTrue();
+    }
+
+    @DisplayName("이미 등록된 주소가 있는 경우 선택 여부는 false 로 들어간다.")
+    @Test
+    void createMemberAddressNotFirst() {
+        // given
+        Member member = createMember(Role.CLIENT, true);
+        MemberAddress memberAddress = createMemberaddress(member, true);
+
+        // when
+        MemberAddressDetailResponse response = memberAddressService.createMemberAddress("주소", "ssafy@ssafy.com");
+        log.debug("response={}", response);
+
+        // then
+        assertThat(response.getAddress()).isEqualTo("주소");
+        assertThat(response.getSelected()).isFalse();
     }
 
     @DisplayName("이미 탈퇴한 사용자는 주소 등록 요청을 보낼 수 없다.")
@@ -70,7 +86,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
     void editMemberAddress() {
         // given
         Member member = createMember(Role.CLIENT, true);
-        MemberAddress memberAddress = createMemberaddress(member);
+        MemberAddress memberAddress = createMemberaddress(member, true);
 
         // when
         MemberAddressDetailResponse response = memberAddressService.editMemberAddress(memberAddress.getId(),
@@ -87,7 +103,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
     void editMemberAddressWithWrongId() {
         // given
         Member member = createMember(Role.CLIENT, true);
-        MemberAddress memberAddress = createMemberaddress(member);
+        MemberAddress memberAddress = createMemberaddress(member, true);
 
         // when // then
         assertThatThrownBy(() ->
@@ -101,7 +117,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
     void deleteMemberAddress() {
         // given
         Member member = createMember(Role.CLIENT, true);
-        MemberAddress memberAddress = createMemberaddress(member);
+        MemberAddress memberAddress = createMemberaddress(member, true);
 
         // when
         Boolean result = memberAddressService.deleteMemberAddress(memberAddress.getId());
@@ -116,7 +132,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
     void deleteMemberAddressWithWrongId() {
         // given
         Member member = createMember(Role.CLIENT, true);
-        MemberAddress memberAddress = createMemberaddress(member);
+        MemberAddress memberAddress = createMemberaddress(member, true);
 
         // when // then
         assertThatThrownBy(() ->
@@ -138,10 +154,11 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
         return memberRepository.save(member);
     }
 
-    private MemberAddress createMemberaddress(Member member) {
+    private MemberAddress createMemberaddress(Member member, Boolean selected) {
         MemberAddress memberAddress = MemberAddress.builder()
                 .member(member)
                 .address("주소")
+                .selected(selected)
                 .active(true)
                 .build();
 

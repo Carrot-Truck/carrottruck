@@ -44,8 +44,8 @@ public class MemberAddressQueryServiceTest extends IntegrationTestSupport {
     void getMemberAddresses() {
         // given
         Member member = createMember(Role.CLIENT);
-        MemberAddress memberAddress1 = createMemberAddress(member, "주소1");
-        MemberAddress memberAddress2 = createMemberAddress(member, "주소2");
+        MemberAddress memberAddress1 = createMemberAddress(member, "주소1", true, true);
+        MemberAddress memberAddress2 = createMemberAddress(member, "주소2", false, true);
 
         // when
         MemberAddressResponse response = memberAddressQueryService.getMemberAddresses(member.getEmail(), "");
@@ -78,7 +78,7 @@ public class MemberAddressQueryServiceTest extends IntegrationTestSupport {
     void getExistingMemberAddress() {
         // given
         Member member = createMember(Role.CLIENT);
-        MemberAddress memberAddress = createMemberAddress(member, "주소1");
+        MemberAddress memberAddress = createMemberAddress(member, "주소1", true, true);
 
         // when
         MemberAddressDetailResponse response =
@@ -94,7 +94,6 @@ public class MemberAddressQueryServiceTest extends IntegrationTestSupport {
     void getNotExistingMemberAddress() {
         // given
         Member member = createMember(Role.CLIENT);
-        MemberAddress memberAddress = createMemberAddress(member, "주소1");
 
         // when // then
         assertThatThrownBy(() -> memberAddressQueryService.getMemberAddress(2L))
@@ -115,11 +114,12 @@ public class MemberAddressQueryServiceTest extends IntegrationTestSupport {
         return memberRepository.save(member);
     }
 
-    private MemberAddress createMemberAddress(Member member, String address) {
+    private MemberAddress createMemberAddress(Member member, String address, boolean selected, boolean active) {
         MemberAddress memberAddress = MemberAddress.builder()
                 .member(member)
                 .address(address)
-                .active(true)
+                .selected(selected)
+                .active(active)
                 .build();
         return memberAddressRepository.save(memberAddress);
     }

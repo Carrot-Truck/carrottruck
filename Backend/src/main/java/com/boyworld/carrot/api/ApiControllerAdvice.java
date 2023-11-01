@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -55,6 +56,16 @@ public class ApiControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DuplicateException.class)
     public ApiResponse<Object> duplicateException(DuplicateException e) {
+        return ApiResponse.of(
+                HttpStatus.BAD_REQUEST,
+                e.getMessage(),
+                null
+        );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IOException.class)
+    public ApiResponse<Object> ioException(IOException e) {
         return ApiResponse.of(
                 HttpStatus.BAD_REQUEST,
                 e.getMessage(),

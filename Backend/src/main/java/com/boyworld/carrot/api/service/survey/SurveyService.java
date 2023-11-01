@@ -2,7 +2,7 @@ package com.boyworld.carrot.api.service.survey;
 
 import com.boyworld.carrot.api.controller.survey.request.CreateSurveyRequest;
 import com.boyworld.carrot.api.controller.survey.response.CreateSurveyResponse;
-import com.boyworld.carrot.api.service.GeocodingUtil;
+import com.boyworld.carrot.api.service.geocoding.GeocodingService;
 import com.boyworld.carrot.domain.survey.Survey;
 import com.boyworld.carrot.domain.survey.repository.SurveyRepository;
 import com.boyworld.carrot.security.SecurityUtil;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * 수요조사 서비스
@@ -26,6 +27,8 @@ public class SurveyService {
 
     private final SurveyRepository surveyRepository;
 
+    private final GeocodingService geocodingService;
+
     /**
      * 설문 제출
      *
@@ -36,7 +39,7 @@ public class SurveyService {
         BigDecimal latitude = request.getLatitude();
         BigDecimal longitude = request.getLongitude();
 
-        String result = GeocodingUtil.geocoding(latitude, longitude);
+        Map<String, String> result = geocodingService.reverseGeocoding(latitude, longitude, "");
 
         return null;
     }

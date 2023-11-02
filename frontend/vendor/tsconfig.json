@@ -6,8 +6,8 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "baseUrl": "src",
-
-    /* Bundler mode */
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
@@ -21,6 +21,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src"]
 }

@@ -40,7 +40,10 @@ public class SurveyController {
         log.debug("SurveyController#submitSurvey called !!!");
         log.debug("CreateSurveyRequest={}", request);
 
-        CreateSurveyResponse response = surveyService.createSurvey(request);
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug(email);
+
+        CreateSurveyResponse response = surveyService.createSurvey(request.toCreateSurveyDto(), email);
         log.debug("CreateSurveyResponse={}", response);
 
         return ApiResponse.created(response);

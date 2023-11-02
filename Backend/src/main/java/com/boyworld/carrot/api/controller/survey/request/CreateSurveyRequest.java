@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.controller.survey.request;
 
+import com.boyworld.carrot.api.service.survey.dto.CreateSurveyDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -16,9 +17,6 @@ public class CreateSurveyRequest {
     private Long categoryId;
 
     @NotNull
-    private Long memberId;
-
-    @NotNull
     private BigDecimal latitude;
 
     @NotNull
@@ -28,11 +26,19 @@ public class CreateSurveyRequest {
     private String content;
 
     @Builder
-    public CreateSurveyRequest(Long categoryId, Long memberId, BigDecimal latitude, BigDecimal longitude, String content) {
+    public CreateSurveyRequest(Long categoryId, BigDecimal latitude, BigDecimal longitude, String content) {
         this.categoryId = categoryId;
-        this.memberId = memberId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.content = content;
+    }
+
+    public CreateSurveyDto toCreateSurveyDto() {
+        return CreateSurveyDto.builder()
+                .categoryId(this.categoryId)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .content(this.content)
+                .build();
     }
 }

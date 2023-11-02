@@ -6,46 +6,39 @@ import com.boyworld.carrot.domain.survey.Survey;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class CreateSurveyDto {
 
-    private Long id;
+    private Long categoryId;
 
-    private Category category;
+    private BigDecimal latitude;
 
-    private Member member;
-
-    private String sido;
-
-    private String sigungu;
-
-    private String dong;
+    private BigDecimal longitude;
 
     private String content;
 
     private Boolean active;
 
     @Builder
-    public CreateSurveyDto(Long id, Category category, Member member, String sido, String sigungu, String dong, String content, Boolean active) {
-        this.id = id;
-        this.category = category;
-        this.member = member;
-        this.sido = sido;
-        this.sigungu = sigungu;
-        this.dong = dong;
+    public CreateSurveyDto(Long categoryId, BigDecimal latitude, BigDecimal longitude, String content, Boolean active) {
+        this.categoryId = categoryId;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.content = content;
         this.active = active;
     }
 
-//    public Survey toEntity() {
-//        return Survey.builder()
-//                .category()
-//                .member()
-//                .sido()
-//                .sigungu()
-//                .dong()
-//                .content()
-//                .active()
-//                .build();
-//    }
+    public Survey toEntity(Category category, Member member, String sido, String sigungu, String dong) {
+        return Survey.builder()
+                .category(category)
+                .member(member)
+                .sido(sido)
+                .sigungu(sigungu)
+                .dong(dong)
+                .content(this.content)
+                .active(true)
+                .build();
+    }
 }

@@ -23,4 +23,11 @@ public class CartService {
         return null;
     }
 
+    public Long editCartMenu(Long cartMenuId, String email) {
+        return null;
+    }
+
+    public Long removeCartMenu(Long cartMenuId, String email) {
+        return null;
+    }
 }

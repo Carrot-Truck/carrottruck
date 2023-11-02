@@ -51,7 +51,31 @@ public class CartController {
     }
 
     // 장바구니 수정
-    // 장바구니 삭제
+    @PatchMapping("/{cartMenuId}")
+    public ApiResponse<Long> editCartMenu(@PathVariable Long cartMenuId) {
+        log.debug("CartController#editCart called");
 
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email = {}", email);
+
+        Long editId = cartService.editCartMenu(cartMenuId, email);
+        log.debug("editId = {}", editId);
+
+        return ApiResponse.ok(editId);
+    }
+    // 장바구니 삭제
+    @DeleteMapping("/{cartMenuId}")
+    public ApiResponse<Long> removeCartMenu(@PathVariable Long cartMenuId) {
+        log.debug("CartController#removeCart called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email = {}", email);
+
+        Long removeCartId = cartService.removeCartMenu(cartMenuId, email);
+        log.debug("removeCartId = {}", removeCartId);
+
+        return ApiResponse.ok(removeCartId);
+    }
+    // 주문하기 페이지 이동
 
 }

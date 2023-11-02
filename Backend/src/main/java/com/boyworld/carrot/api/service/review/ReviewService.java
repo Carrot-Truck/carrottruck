@@ -68,10 +68,13 @@ public class ReviewService {
             // Save review
             reviewRepository.save(review);
 
+            // 이미지 없이 등록한 리뷰라면 바로 종료
+            if(request.getImage() == null || request.getImage().isEmpty()) return true;
+
             // Image upload at AWS S3
             String uploadFileUrl = s3Uploader.uploadFiles(request.getImage(), "review");
             log.debug("review image saved at {}", uploadFileUrl);
-//             Save info at ReviewImage
+            // Save info at ReviewImage
             ReviewImage reviewImage = ReviewImage.builder()
                     .review(review)
                     .saveFileName(uploadFileUrl)

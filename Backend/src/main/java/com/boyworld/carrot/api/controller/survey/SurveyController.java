@@ -75,7 +75,7 @@ public class SurveyController {
      * @param sido 시도
      * @param sigungu 시군구
      * @param dong 읍면동
-     * @param page 페이지
+     * @param lastSurveyId 마지막으로 조회한 수요조사 아이디
      * @return 수요조사 상세내용 리스트(최근 6개월)
      */
     @GetMapping("/list/{categoryId}")
@@ -84,11 +84,11 @@ public class SurveyController {
                                                                @RequestParam String sido,
                                                                @RequestParam String sigungu,
                                                                @RequestParam String dong,
-                                                               @RequestParam(defaultValue = "1") Integer page) {
+                                                               @RequestParam(defaultValue = "0") Long lastSurveyId) {
         log.debug("SurveyController#getSurveyDetails called !!!");
-        log.debug("CategoryID={}, Address={} {} {}, Page={}", categoryId, sido, sigungu, dong, page);
+        log.debug("CategoryID={}, Address={} {} {}, LastSurveyId={}", categoryId, sido, sigungu, dong, lastSurveyId);
 
-        SurveyDetailsResponse response = surveyQueryService.getSurveyDetails(categoryId, sido, sigungu, dong, page);
+        SurveyDetailsResponse response = surveyQueryService.getSurveyDetails(categoryId, sido, sigungu, dong, lastSurveyId);
         log.debug("SurveyDetailsResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -100,7 +100,7 @@ public class SurveyController {
      * @param surveyId 삭제할 수요조사 ID
      * @return 삭제한 수요조사 ID
      */
-    @DeleteMapping("/remove/{surveyId}")
+    @PutMapping("/remove/{surveyId}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Long> deleteSurvey(@PathVariable Long surveyId) {
         log.debug("SurveyController#deleteSurvey called !!!");

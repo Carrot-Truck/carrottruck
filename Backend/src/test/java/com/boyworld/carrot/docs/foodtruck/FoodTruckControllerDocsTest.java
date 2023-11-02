@@ -144,7 +144,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .markerItems(List.of(info1, info2))
                 .build();
 
-        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class), anyString()))
+        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class)))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -152,8 +152,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                 .header("Authentication", "authentication")
                                 .param("categoryId", "")
                                 .param("keyword", "")
-                                .param("latitude", "")
-                                .param("longitude", "")
+                                .param("latitude", "35.1595")
+                                .param("longitude", "126.8526")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -232,7 +232,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
 
         FoodTruckResponse<List<FoodTruckItem>> response = FoodTruckResponse.of(false, items);
 
-        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), anyString(), anyString()))
+        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), nullable(Long.class), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -240,8 +240,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                 .header("Authentication", "authentication")
                                 .param("categoryId", "")
                                 .param("keyword", "")
-                                .param("latitude", "")
-                                .param("longitude", "")
+                                .param("latitude", "35.1595")
+                                .param("longitude", "126.8526")
                                 .param("lastFoodTruckId", "")
                 )
                 .andDo(print())

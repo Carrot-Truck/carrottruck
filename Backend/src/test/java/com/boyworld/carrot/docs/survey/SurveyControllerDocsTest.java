@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -208,10 +209,11 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
         SurveyDetailsResponse response = SurveyDetailsResponse.builder()
                 .categoryId(cid)
                 .categoryName(cname)
-                .surveyDetailDtoList(items)
+                .surveyDetails(items)
+                .hasNext(false)
                 .build();
 
-        given(surveyQueryService.getSurveyDetails(anyLong(), anyString(), anyString(), anyString(), anyInt()))
+        given(surveyQueryService.getSurveyDetails(anyLong(), anyString(), anyString(), anyString(), anyLong()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -219,7 +221,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                                 .param("sido", "광주광역시")
                                 .param("sigungu", "광산구")
                                 .param("dong", "장덕동")
-                                .param("page", "1")
+                                .param("lastSurveyId", "0")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -237,8 +239,8 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                                         .description("시군구"),
                                 parameterWithName("dong")
                                         .description("읍면동"),
-                                parameterWithName("page")
-                                        .description("페이지")
+                                parameterWithName("lastSurveyId")
+                                        .description("마지막으로 조회한 수요조사 아이디")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -251,30 +253,33 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                                         .description("카테고리 아이디"),
                                 fieldWithPath("data.categoryName").type(JsonFieldType.STRING)
                                         .description("카테고리 이름"),
-                                fieldWithPath("data.surveyDetailDtoList[].surveyId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.surveyDetails[].surveyId").type(JsonFieldType.NUMBER)
                                         .description("수요조사 ID"),
-                                fieldWithPath("data.surveyDetailDtoList[].memberId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.surveyDetails[].memberId").type(JsonFieldType.NUMBER)
                                         .description("작성자 ID"),
-                                fieldWithPath("data.surveyDetailDtoList[].nickname").type(JsonFieldType.STRING)
+                                fieldWithPath("data.surveyDetails[].nickname").type(JsonFieldType.STRING)
                                         .description("작성자 닉네임"),
-                                fieldWithPath("data.surveyDetailDtoList[].content").type(JsonFieldType.STRING)
+                                fieldWithPath("data.surveyDetails[].content").type(JsonFieldType.STRING)
                                         .description("수요조사 상세내용"),
-                                fieldWithPath("data.surveyDetailDtoList[].createdTime").type(JsonFieldType.STRING)
-                                        .description("수요조사 작성시간")
+                                fieldWithPath("data.surveyDetails[].createdTime").type(JsonFieldType.STRING)
+                                        .description("수요조사 작성시간"),
+                                fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN)
+                                        .description("다음 페이지 존재 여부")
                         )
                 ));
     }
 
     @DisplayName("수요조사 삭제 API")
     @Test
+    @WithMockUser(roles = "CLIENT")
     void deleteSurvey() throws Exception {
         Long sid = 11L;
 
-        given(surveyService.deleteSurvey(anyLong()))
+        given(surveyService.deleteSurvey(anyLong(), anyString()))
                 .willReturn(sid);
 
         mockMvc.perform(
-                        delete("/survey/remove/{surveyId}", sid)
+                        put("/survey/remove/{surveyId}", sid)
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())

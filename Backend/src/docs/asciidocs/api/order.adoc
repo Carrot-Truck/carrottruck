@@ -1,0 +1,64 @@
+[[get-orders]]
+=== 전체 주문 내역 조회
+
+==== HTTP Request
+include::{snippets}/get-orders/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-orders/response-body.adoc[]
+include::{snippets}/get-orders/response-fields.adoc[]
+
+[[get-order-by-client]]
+=== 고객 - 주문 상세 조회 API
+
+==== HTTP Request
+include::{snippets}/get-order-by-client/http-request.adoc[]
+include::{snippets}/get-order-by-client/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-order-by-client/response-body.adoc[]
+include::{snippets}/get-order-by-client/response-fields.adoc[]
+
+[[get-order-by-vendor]]
+=== 사업자 - 주문 상세 조회 API
+
+==== HTTP Request
+include::{snippets}/get-order-by-vendor/http-request.adoc[]
+include::{snippets}/get-order-by-vendor/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-order-by-vendor/response-body.adoc[]
+include::{snippets}/get-order-by-vendor/response-fields.adoc[]
+
+[[create-order]]
+=== 주문 생성 API
+
+==== HTTP Request
+include::{snippets}/create-order/http-request.adoc[]
+include::{snippets}/create-order/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-order/response-body.adoc[]
+include::{snippets}/create-order/response-fields.adoc[]
+
+[[cancel-order]]
+=== 주문 취소 API
+
+==== HTTP Request
+include::{snippets}/cancel-order/http-request.adoc[]
+include::{snippets}/cancel-order/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/cancel-order/response-body.adoc[]
+include::{snippets}/cancel-order/response-fields.adoc[]
+
+[[delete-order]]
+=== 주문 내역 삭제 API
+
+==== HTTP Request
+include::{snippets}/delete-order/http-request.adoc[]
+include::{snippets}/delete-order/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/delete-order/response-body.adoc[]
+include::{snippets}/delete-order/response-fields.adoc[]

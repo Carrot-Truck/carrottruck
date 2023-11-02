@@ -2,7 +2,6 @@ package com.boyworld.carrot.domain.cart;
 
 
 import com.boyworld.carrot.domain.TimeBaseEntity;
-import com.boyworld.carrot.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,13 +22,14 @@ public class Cart extends TimeBaseEntity {
     @Id
     private String id;
     private Long foodTruckId;
+    private String foodTruckName;
     private Integer totalPrice;
 
     @Builder
-    public Cart(String id, Long foodTruckId, Integer totalPrice) {
-        this.id = id;
-        this.foodTruckId = foodTruckId;
-        this.totalPrice = totalPrice;
+    public Cart(String id, Long foodTruckId, String foodTruckName, Integer totalPrice) {
+            this.id = id;
+            this.foodTruckId = foodTruckId;
+            this.foodTruckName = foodTruckName;
+            this.totalPrice = totalPrice;
+        }
     }
-
-}

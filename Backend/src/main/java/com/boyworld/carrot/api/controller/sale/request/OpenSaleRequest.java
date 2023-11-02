@@ -5,7 +5,11 @@ import com.boyworld.carrot.api.service.sale.dto.SaleMenuItem;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
 public class OpenSaleRequest {
 
     Long foodTruckId;

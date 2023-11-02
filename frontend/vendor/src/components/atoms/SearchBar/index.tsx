@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { ReactComponent as Search } from '../../../assets/icons/search.svg';
 import { SearchBarContainer } from './style';
 

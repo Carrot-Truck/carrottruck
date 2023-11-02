@@ -13,9 +13,12 @@ public class StatisticsByWeekResponse {
 
     private List<StatisticsByWeekDto> statisticsByWeek;
 
+    private Boolean hasNext;
+
     @Builder
-    public StatisticsByWeekResponse(Integer year, List<StatisticsByWeekDto> statisticsByWeek) {
+    public StatisticsByWeekResponse(Integer year, List<StatisticsByWeekDto> statisticsByWeek, Boolean hasNext) {
         this.year = year;
         this.statisticsByWeek = statisticsByWeek;
+        this.hasNext = hasNext;
     }
 }

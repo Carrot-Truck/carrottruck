@@ -28,7 +28,7 @@ public class StatisticsController {
      *
      * @param foodTruckId 푸드트럭 ID
      * @param year 연도
-     * @param page 페이지
+     * @param lastSalesId 마지막으로 조회한 영업 ID
      * @return 영업별 매출 통계 요약 리스트
      */
     @GetMapping("/sales")
@@ -36,11 +36,11 @@ public class StatisticsController {
     public ApiResponse<StatisticsBySalesResponse> getStatisticsBySales(@PathVariable Long foodTruckId,
                                                                        @RequestParam Integer year,
                                                                        @RequestParam Integer month,
-                                                                       @RequestParam(defaultValue = "1") Integer page) {
+                                                                       @RequestParam Integer lastSalesId) {
         log.debug("StatisticsController#getStatisticsBySales called !!!");
-        log.debug("FoodTruckID={}, year={}, month={}, Page={}", foodTruckId, year, month, page);
+        log.debug("FoodTruckID={}, year={}, month={}, LastSalesId={}", foodTruckId, year, month, lastSalesId);
 
-        StatisticsBySalesResponse response = statisticsService.getStatisticsBySales(foodTruckId, year, month, page);
+        StatisticsBySalesResponse response = statisticsService.getStatisticsBySales(foodTruckId, year, month, lastSalesId);
         log.debug("StatisticsBySalesResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -71,18 +71,20 @@ public class StatisticsController {
      *
      * @param foodTruckId 푸드트럭 ID
      * @param year 연도
-     * @param page 페이지
+     * @param lastStartDate 마지막으로 조회한 시작일
      * @return 주별 매출 통계 요약 리스트
      */
     @GetMapping("/weekly")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<StatisticsByWeekResponse> getStatisticsByWeek(@PathVariable Long foodTruckId,
                                                                      @RequestParam Integer year,
-                                                                     @RequestParam(defaultValue = "1") Integer page) {
+                                                                     @RequestParam(required = false) String lastStartDate) {
         log.debug("StatisticsController#getStatisticsByWeek called !!!");
-        log.debug("FoodTruckID={}, year={}, Page={}", foodTruckId, year, page);
+        log.debug("FoodTruckID={}, year={}, LastStartDate={}", foodTruckId, year, lastStartDate);
 
-        StatisticsByWeekResponse response = statisticsService.getStatisticsByWeek(foodTruckId, year, page);
+        LocalDate last = LocalDate.parse(lastStartDate);
+
+        StatisticsByWeekResponse response = statisticsService.getStatisticsByWeek(foodTruckId, year, last);
         log.debug("StatisticsByWeekResponse={}", response);
 
         return ApiResponse.ok(response);

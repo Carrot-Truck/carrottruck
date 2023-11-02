@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
 
@@ -34,26 +33,13 @@ public class MemberAddressQueryService {
      * @param lastMemberAddressId 마지막으로 조회된 주소 식별키
      * @return 로그인 중인 사용자의 주소 목록
      */
-    public MemberAddressResponse getMemberAddresses(String email, String lastMemberAddressId) {
+    public MemberAddressResponse getMemberAddresses(String email, Long lastMemberAddressId) {
         List<MemberAddressDetailResponse> memberAddresses = memberAddressQueryRepository
-                .getMemberAddressesByEmail(email, getLastMemberAddressId(lastMemberAddressId));
+                .getMemberAddressesByEmail(email, lastMemberAddressId);
 
         boolean hasNext = checkHasNext(memberAddresses);
 
         return MemberAddressResponse.of(memberAddresses, hasNext);
-    }
-
-    /**
-     * 마지막으로 조회된 회원 주소 식별키 변환
-     *
-     * @param lastMemberAddressId 마지막으로 조회된 주소 식별키
-     * @return Long 타입으로 변환된 식별키 값
-     */
-    private Long getLastMemberAddressId(String lastMemberAddressId) {
-        if (lastMemberAddressId.isBlank()) {
-            return null;
-        }
-        return Long.parseLong(lastMemberAddressId);
     }
 
     /**

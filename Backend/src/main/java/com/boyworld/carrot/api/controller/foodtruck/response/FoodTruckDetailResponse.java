@@ -12,13 +12,16 @@ import java.util.List;
 @Data
 public class FoodTruckDetailResponse {
 
+    private Boolean isOwner;
     private FoodTruckDetailDto foodTruckDetail;
     private List<MenuDto> menus;
     private List<ScheduleDto> schedules;
     private List<FoodTruckReviewDto> reviews;
 
     @Builder
-    public FoodTruckDetailResponse(FoodTruckDetailDto foodTruckDetail, List<MenuDto> menus, List<ScheduleDto> schedules, List<FoodTruckReviewDto> reviews) {
+    public FoodTruckDetailResponse(Boolean isOwner, FoodTruckDetailDto foodTruckDetail, List<MenuDto> menus,
+                                   List<ScheduleDto> schedules, List<FoodTruckReviewDto> reviews) {
+        this.isOwner = isOwner;
         this.foodTruckDetail = foodTruckDetail;
         this.menus = menus;
         this.schedules = schedules;

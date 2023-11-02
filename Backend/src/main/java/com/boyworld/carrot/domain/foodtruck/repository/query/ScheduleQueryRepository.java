@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.foodtruck.repository;
+package com.boyworld.carrot.domain.foodtruck.repository.query;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

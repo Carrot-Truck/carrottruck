@@ -170,6 +170,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .createdDate(LocalDateTime.now())
             .reviewFoodTruckDto(
                 ReviewFoodTruckDto.builder().foodTruckId(1L).foodTruckName("내가만든푸드트럭").build())
+            .imageUrl("https://carrottruck.s3.ap-northeast-2.amazonaws.com/review/7e46bb52-07de-4077-b382-feee759e89a7%EC%A7%B1%EA%B5%AC.jpg")
             .build());
         myReviewDtoList.add(MyReviewDto.builder()
             .reviewId(2L)
@@ -178,6 +179,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .createdDate(LocalDateTime.now().minusDays(3))
             .reviewFoodTruckDto(
                 ReviewFoodTruckDto.builder().foodTruckId(2L).foodTruckName("김동현 된장삼겹").build())
+//            .imageUrl(null)
             .build());
         MyReviewResponse myReviewResponse = MyReviewResponse.builder()
             .myReviewDtoList(myReviewDtoList)
@@ -225,7 +227,9 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
                                 JsonFieldType.ARRAY)
                             .description("리뷰 작성일"),
                         fieldWithPath("data.myReviewDtoList[].content").type(JsonFieldType.STRING)
-                            .description("리뷰 내용")
+                            .description("리뷰 내용"),
+                        fieldWithPath("data.myReviewDtoList[].imageUrl").type(JsonFieldType.STRING)
+                            .description("리뷰 사진 내용").optional()
                     ))
             );
     }
@@ -274,6 +278,9 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
                         fieldWithPath("data.foodTruckReviewDtoList[].content").type(
                                 JsonFieldType.STRING)
                             .description("리뷰 내용"),
+                        fieldWithPath("data.foodTruckReviewDtoList[].imageUrl").type(
+                                JsonFieldType.STRING)
+                            .description("리뷰 사진 url").optional(),
                         fieldWithPath("data.averageGrade").type(JsonFieldType.NUMBER)
                             .description("평균 리뷰")
                     ))

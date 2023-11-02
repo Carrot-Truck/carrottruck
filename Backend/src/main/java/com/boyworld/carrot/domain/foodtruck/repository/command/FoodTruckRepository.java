@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.foodtruck.repository;
+package com.boyworld.carrot.domain.foodtruck.repository.command;
 
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -28,10 +28,10 @@ public class StatisticsQueryService {
      * @param foodTruckId 푸드트럭 ID
      * @param year 조회 연도
      * @param month 조회 월
-     * @param page 페이지
+     * @param lastSalesId 마지막으로 조회한 영업 ID
      * @return 매출통계 리스트
      */
-    public StatisticsBySalesResponse getStatisticsBySales(Long foodTruckId, Integer year, Integer month, Integer page) {
+    public StatisticsBySalesResponse getStatisticsBySales(Long foodTruckId, Integer year, Integer month, Integer lastSalesId) {
         return null;
     }
 
@@ -52,10 +52,10 @@ public class StatisticsQueryService {
      *
      * @param foodTruckId 푸드트럭 ID
      * @param year 조회 연도
-     * @param page 페이지
+     * @param lastStartDate 마지막으로 조회한 영업 시작일
      * @return 매출통계 리스트
      */
-    public StatisticsByWeekResponse getStatisticsByWeek(Long foodTruckId, Integer year, Integer page) {
+    public StatisticsByWeekResponse getStatisticsByWeek(Long foodTruckId, Integer year, LocalDate lastStartDate) {
         return null;
     }
 

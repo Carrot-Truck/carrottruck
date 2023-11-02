@@ -13,9 +13,12 @@ public class StatisticsBySalesResponse {
 
     private List<StatisticsBySalesDto> statisticsBySales;
 
+    private Boolean hasNext;
+
     @Builder
-    public StatisticsBySalesResponse(Integer year, List<StatisticsBySalesDto> statisticsBySales) {
+    public StatisticsBySalesResponse(Integer year, List<StatisticsBySalesDto> statisticsBySales, Boolean hasNext) {
         this.year = year;
         this.statisticsBySales = statisticsBySales;
+        this.hasNext = hasNext;
     }
 }

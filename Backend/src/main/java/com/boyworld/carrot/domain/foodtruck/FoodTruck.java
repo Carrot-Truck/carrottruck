@@ -38,6 +38,9 @@ public class FoodTruck extends TimeBaseEntity {
     @Column(nullable = false)
     private Integer prepareTime;
 
+    @Column(nullable = false)
+    private Boolean selected;
+
     private int waitLimits;
 
     @Column(nullable = false)
@@ -52,12 +55,14 @@ public class FoodTruck extends TimeBaseEntity {
     private Category category;
 
     @Builder
-    private FoodTruck(String name, String phoneNumber, String content, String originInfo, Integer prepareTime, int waitLimits, Boolean active, Member vendor, Category category) {
+    private FoodTruck(String name, String phoneNumber, String content, String originInfo, Integer prepareTime,
+                      Boolean selected, int waitLimits, Boolean active, Member vendor, Category category) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.content = content;
         this.originInfo = originInfo;
         this.prepareTime = prepareTime;
+        this.selected = selected;
         this.waitLimits = waitLimits;
         this.active = active;
         this.vendor = vendor;

@@ -116,6 +116,6 @@ public class MemberAddressQueryRepository {
     }
 
     private BooleanExpression isActiveMemberAddress() {
-        return memberAddress.active.eq(true);
+        return memberAddress.active.isTrue();
     }
 }

@@ -8,7 +8,7 @@ import FoodTruckMenu from 'components/organisms/FoodTruckMenu';
 function MainPage() {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate('/vendor/login');
+    navigate('/login');
   };
   const [searchValue, setSearchValue] = useState('');
 

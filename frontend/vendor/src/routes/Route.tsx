@@ -7,8 +7,8 @@ function RouteLink() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/vendor/" element={<MainPage />} />
-        <Route path="/vendor/login" element={<LoginPage />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -6,7 +6,7 @@ import useMovePage from 'hooks/useMovePage';
 function BackSpace() {
   const [movePage] = useMovePage();
   const handleBackClick = () => {
-    movePage('/vendor');
+    movePage('/');
   };
 
   return (

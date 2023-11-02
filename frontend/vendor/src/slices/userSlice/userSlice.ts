@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
+// import { persistReducer } from 'redux-persist';
 
 const initialState = {
   token: sessionStorage.getItem('accessToken'),
@@ -7,6 +7,7 @@ const initialState = {
   nickname: '',
   phoneNumber: '',
   role: '',
+  isAuthenticated: false,
   active: ''
 };
 
@@ -29,11 +30,14 @@ const userSlice = createSlice({
     setRole(state, action) {
       state.role = action.payload;
     },
+    setIsAuthenticated(state, action) {
+      state.isAuthenticated = action.payload;
+    },
     setActive(state, action) {
       state.active = action.payload;
     },
     logoutUser(state) {
-      return initialState;
+      state.isAuthenticated = false;
     }
   }
 });

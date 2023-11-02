@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.controller.cart;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.cart.request.CreateCartMenuRequest;
+import com.boyworld.carrot.api.controller.cart.response.CartOrderResponse;
 import com.boyworld.carrot.api.controller.cart.response.CartResponse;
 import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.security.SecurityUtil;
@@ -65,6 +66,7 @@ public class CartController {
     }
     // 장바구니 삭제
     @DeleteMapping("/{cartMenuId}")
+    @ResponseStatus(HttpStatus.FOUND)
     public ApiResponse<Long> removeCartMenu(@PathVariable Long cartMenuId) {
         log.debug("CartController#removeCart called");
 
@@ -74,8 +76,19 @@ public class CartController {
         Long removeCartId = cartService.removeCartMenu(cartMenuId, email);
         log.debug("removeCartId = {}", removeCartId);
 
-        return ApiResponse.ok(removeCartId);
+        return ApiResponse.found(removeCartId);
     }
-    // 주문하기 페이지 이동
+    // 주문하기 페이지 조회
+    @GetMapping("/order")
+    public ApiResponse<CartOrderResponse> getCartOrder() {
+        log.debug("CartController#getCartOrder called");
 
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email = {}", email);
+
+        CartOrderResponse response = cartService.getCartOrder(email);
+        log.debug("CartOrderResponse = {}", response);
+
+        return ApiResponse.ok(response);
+    }
 }

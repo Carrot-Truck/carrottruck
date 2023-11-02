@@ -9,10 +9,16 @@ import java.util.List;
 @Data
 public class SurveyCountResponse {
 
-    private List<SurveyCountDto> surveyCountDtoList;
+    private List<SurveyCountDto> surveyCounts;
 
     @Builder
-    public SurveyCountResponse(List<SurveyCountDto> surveyCountDtoList) {
-        this.surveyCountDtoList = surveyCountDtoList;
+    public SurveyCountResponse(List<SurveyCountDto> surveyCounts) {
+        this.surveyCounts = surveyCounts;
+    }
+
+    public static SurveyCountResponse of(List<SurveyCountDto> surveyCounts) {
+        return SurveyCountResponse.builder()
+                .surveyCounts(surveyCounts)
+                .build();
     }
 }

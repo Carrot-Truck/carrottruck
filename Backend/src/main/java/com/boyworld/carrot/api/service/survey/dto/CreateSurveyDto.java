@@ -19,15 +19,12 @@ public class CreateSurveyDto {
 
     private String content;
 
-    private Boolean active;
-
     @Builder
-    public CreateSurveyDto(Long categoryId, BigDecimal latitude, BigDecimal longitude, String content, Boolean active) {
+    public CreateSurveyDto(Long categoryId, BigDecimal latitude, BigDecimal longitude, String content) {
         this.categoryId = categoryId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.content = content;
-        this.active = true;
     }
 
     public Survey toEntity(Category category, Member member, String sido, String sigungu, String dong) {

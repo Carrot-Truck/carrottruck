@@ -83,9 +83,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("longitude").type(JsonFieldType.NUMBER)
                                         .description("경도"),
                                 fieldWithPath("content").type(JsonFieldType.STRING)
-                                        .description("상세 내용"),
-                                fieldWithPath("active").type(JsonFieldType.BOOLEAN)
-                                        .description("설문활성화")
+                                        .description("상세 내용")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

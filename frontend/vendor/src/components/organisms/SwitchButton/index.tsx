@@ -1,10 +1,13 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+// import React, { ReactNode, useEffect, useState } from 'react';
 import Button from 'components/atoms/Button';
 import { SwitchButtonContainer } from './style';
 
-function SwitchButton() {
-  const [selectedButton, setSelectedButton] = useState<number | null>(1);
+interface ISwitchButtonProps {
+  selectedButton: number;
+  setSelectedButton: (value: number) => void;
+}
 
+function SwitchButton({ selectedButton, setSelectedButton }: ISwitchButtonProps) {
   const handleClick = (buttonNumber: number) => {
     setSelectedButton(buttonNumber);
   };

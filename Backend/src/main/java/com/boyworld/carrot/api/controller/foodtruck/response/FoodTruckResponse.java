@@ -1,20 +1,21 @@
 package com.boyworld.carrot.api.controller.foodtruck.response;
 
-import lombok.Builder;
 import lombok.Data;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Data
-public class FoodTruckResponse {
+@NoArgsConstructor
+public class FoodTruckResponse<T> {
 
     private Boolean hasNext;
-    private List<FoodTruckItem> foodTruckItems = new ArrayList<>();
+    private T items;
 
-    @Builder
-    public FoodTruckResponse(Boolean hasNext, List<FoodTruckItem> foodTruckItems) {
+    public FoodTruckResponse(Boolean hasNext, T items) {
         this.hasNext = hasNext;
-        this.foodTruckItems = foodTruckItems;
+        this.items = items;
+    }
+
+    public static <T> FoodTruckResponse<T> of(Boolean hasNext, T items) {
+        return new FoodTruckResponse<>(hasNext, items);
     }
 }

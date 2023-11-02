@@ -7,7 +7,7 @@ import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
-import com.boyworld.carrot.domain.foodtruck.repository.FoodTruckRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.repository.OrderRepository;

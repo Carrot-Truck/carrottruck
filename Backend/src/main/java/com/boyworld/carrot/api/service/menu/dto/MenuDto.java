@@ -11,15 +11,15 @@ public class MenuDto {
     private Integer menuPrice;
     private String menuDescription;
     private Boolean menuSoldOut;
-    private Long menuImageId;
+    private String menuImageUrl;
 
     @Builder
-    public MenuDto(Long menuId, String menuName, Integer menuPrice, String menuDescription, Boolean menuSoldOut, Long menuImageId) {
+    public MenuDto(Long menuId, String menuName, Integer menuPrice, String menuDescription, Boolean menuSoldOut, String menuImageUrl) {
         this.menuId = menuId;
         this.menuName = menuName;
         this.menuPrice = menuPrice;
         this.menuDescription = menuDescription;
         this.menuSoldOut = menuSoldOut;
-        this.menuImageId = menuImageId;
+        this.menuImageUrl = menuImageUrl;
     }
 }

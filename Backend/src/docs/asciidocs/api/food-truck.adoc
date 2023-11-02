@@ -2,11 +2,13 @@
 === 푸드트럭 등록
 
 ==== HTTP Request
+
 include::{snippets}/create-food-truck/http-request.adoc[]
 include::{snippets}/create-food-truck/request-parts.adoc[]
 include::{snippets}/create-food-truck/request-part-request-fields.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/create-food-truck/http-response.adoc[]
 include::{snippets}/create-food-truck/response-fields.adoc[]
 
@@ -14,32 +16,51 @@ include::{snippets}/create-food-truck/response-fields.adoc[]
 === 푸드트럭 지도 위치(마커) 조회
 
 ==== HTTP Request
+
 include::{snippets}/search-food-truck-marker/http-request.adoc[]
 include::{snippets}/search-food-truck-marker/query-parameters.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/search-food-truck-marker/http-response.adoc[]
 include::{snippets}/search-food-truck-marker/response-fields.adoc[]
 
 [[search-food-truck-list]]
-=== 푸드트럭 목록 조회
+=== 푸드트럭 검색 결과 목록 조회
 
 ==== HTTP Request
+
 include::{snippets}/search-food-truck-list/http-request.adoc[]
 include::{snippets}/search-food-truck-list/query-parameters.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/search-food-truck-list/http-response.adoc[]
 include::{snippets}/search-food-truck-list/response-fields.adoc[]
+
+[[search-food-truck-overview]]
+=== 보유 푸드트럭 목록 조회
+
+==== HTTP Request
+
+include::{snippets}/search-food-truck-overview/http-request.adoc[]
+include::{snippets}/search-food-truck-overview/query-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/search-food-truck-overview/http-response.adoc[]
+include::{snippets}/search-food-truck-overview/response-fields.adoc[]
 
 [[search-food-truck-detail]]
 === 푸드트럭 상세 조회
 
 ==== HTTP Request
+
 include::{snippets}/search-food-truck-detail/http-request.adoc[]
 include::{snippets}/search-food-truck-detail/path-parameters.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/search-food-truck-detail/http-response.adoc[]
 include::{snippets}/search-food-truck-detail/response-fields.adoc[]
 
@@ -47,13 +68,14 @@ include::{snippets}/search-food-truck-detail/response-fields.adoc[]
 === 푸드트럭 수정
 
 ==== HTTP Request
+
 include::{snippets}/edit-food-truck/http-request.adoc[]
 include::{snippets}/edit-food-truck/path-parameters.adoc[]
 include::{snippets}/edit-food-truck/request-parts.adoc[]
 include::{snippets}/edit-food-truck/request-part-request-fields.adoc[]
 
-
 ==== HTTP Response
+
 include::{snippets}/edit-food-truck/http-response.adoc[]
 include::{snippets}/edit-food-truck/response-fields.adoc[]
 
@@ -61,10 +83,12 @@ include::{snippets}/edit-food-truck/response-fields.adoc[]
 === 푸드트럭 삭제
 
 ==== HTTP Request
+
 include::{snippets}/delete-food-truck/http-request.adoc[]
 include::{snippets}/delete-food-truck/path-parameters.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/delete-food-truck/http-response.adoc[]
 include::{snippets}/delete-food-truck/response-fields.adoc[]
 
@@ -72,9 +96,11 @@ include::{snippets}/delete-food-truck/response-fields.adoc[]
 === 푸드트럭 찜
 
 ==== HTTP Request
+
 include::{snippets}/food-truck-like/http-request.adoc[]
 include::{snippets}/food-truck-like/request-fields.adoc[]
 
 ==== HTTP Response
+
 include::{snippets}/food-truck-like/http-response.adoc[]
 include::{snippets}/food-truck-like/response-fields.adoc[]

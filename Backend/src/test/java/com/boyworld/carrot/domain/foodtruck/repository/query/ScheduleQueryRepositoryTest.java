@@ -240,32 +240,35 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
                 BigDecimal.valueOf(35.204008),
                 BigDecimal.valueOf(126.807271),
                 LocalDateTime.now().minusHours(1),
-                LocalDateTime.now().plusHours(5), DayOfWeek.FRIDAY.toString()
+                LocalDateTime.now().plusHours(5),
+                DayOfWeek.FRIDAY.name()
         );
 
         Schedule schedule2 = createSchedule(foodTruck,
                 BigDecimal.valueOf(35.204349),
                 BigDecimal.valueOf(126.807805),
                 LocalDateTime.now().plusHours(3),
-                LocalDateTime.now().plusHours(5), DayOfWeek.SATURDAY.toString()
+                LocalDateTime.now().plusHours(5),
+                DayOfWeek.SATURDAY.name()
         );
 
         Schedule schedule3 = createSchedule(foodTruck,
                 BigDecimal.valueOf(35.204349),
                 BigDecimal.valueOf(126.807805),
                 LocalDateTime.now().plusHours(5),
-                LocalDateTime.now().plusHours(7), DayOfWeek.SATURDAY.toString()
+                LocalDateTime.now().plusHours(7),
+                DayOfWeek.SATURDAY.name()
         );
         List<Schedule> schedules = List.of(schedule1, schedule2, schedule3);
         scheduleRepository.saveAll(schedules);
     }
 
-    private Schedule createSchedule(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, LocalDateTime startTime, LocalDateTime endTime, String days) {
+    private Schedule createSchedule(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, LocalDateTime startTime, LocalDateTime endTime, String dayOfWeek) {
         return Schedule.builder()
                 .address("주소정보")
                 .latitude(latitude)
                 .longitude(longitude)
-                .days(days)
+                .dayOfWeek(dayOfWeek)
                 .startTime(startTime)
                 .endTime(endTime)
                 .active(true)

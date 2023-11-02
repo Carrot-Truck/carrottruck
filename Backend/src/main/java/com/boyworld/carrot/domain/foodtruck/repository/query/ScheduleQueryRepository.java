@@ -75,7 +75,7 @@ public class ScheduleQueryRepository {
                                         .when(sale.startTime.between(today, now))
                                         .then(true)
                                         .otherwise(false))
-                                .and(schedule.days.eq(LocalDateTime.now().getDayOfWeek()))
+                                .and(schedule.dayOfWeek.eq(LocalDateTime.now().getDayOfWeek()))
                 ))
                 .from(schedule)
                 .join(schedule.foodTruck, foodTruck)

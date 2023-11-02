@@ -55,11 +55,11 @@ public class Schedule extends TimeBaseEntity {
     private FoodTruck foodTruck;
 
     @Builder
-    private Schedule(String address, BigDecimal latitude, BigDecimal longitude, String days, LocalDateTime startTime, LocalDateTime endTime, Boolean active, FoodTruck foodTruck) {
+    private Schedule(String address, BigDecimal latitude, BigDecimal longitude, String dayOfWeek, LocalDateTime startTime, LocalDateTime endTime, Boolean active, FoodTruck foodTruck) {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.dayOfWeek = DayOfWeek.valueOf(days);
+        this.dayOfWeek = DayOfWeek.valueOf(dayOfWeek);
         this.startTime = startTime;
         this.endTime = endTime;
         this.active = active;

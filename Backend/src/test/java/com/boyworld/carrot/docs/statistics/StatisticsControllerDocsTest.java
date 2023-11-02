@@ -77,8 +77,8 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
 
         StatisticsBySalesResponse response = StatisticsBySalesResponse.builder()
                 .year(LocalDate.now().getYear())
-                .year(LocalDate.now().getMonthValue())
                 .statisticsBySales(items)
+                .hasNext(false)
                 .build();
 
         given(statisticsQueryService.getStatisticsBySales(anyLong(), anyInt(), anyInt(), anyInt()))
@@ -90,7 +90,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                         get("/statistics/{foodTruckId}/sales", fid)
                                 .param("year", "2023")
                                 .param("month", "11")
-                                .param("page", "1")
+                                .param("lastSalesId", "0")
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -107,8 +107,8 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("연도"),
                                 parameterWithName("month")
                                         .description("월"),
-                                parameterWithName("page")
-                                        .description("페이지")
+                                parameterWithName("lastSalesId")
+                                        .description("마지막으로 조회한 영업 ID")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -134,7 +134,9 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.statisticsBySales[].statisticsDto.totalMinutes").type(JsonFieldType.NUMBER)
                                         .description("판매한 분"),
                                 fieldWithPath("data.statisticsBySales[].statisticsDto.totalSales").type(JsonFieldType.NUMBER)
-                                        .description("총 매출액")
+                                        .description("총 매출액"),
+                                fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN)
+                                        .description("다음 페이지 존재 여부")
                         )
                 ));
     }
@@ -314,9 +316,10 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         StatisticsByWeekResponse response = StatisticsByWeekResponse.builder()
                 .year(LocalDate.now().getYear())
                 .statisticsByWeek(items)
+                .hasNext(false)
                 .build();
 
-        given(statisticsQueryService.getStatisticsByWeek(anyLong(), anyInt(), anyInt()))
+        given(statisticsQueryService.getStatisticsByWeek(anyLong(), anyInt(), any(LocalDate.class)))
                 .willReturn(response);
 
         Long fid = 1L;
@@ -324,7 +327,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         mockMvc.perform(
                         get("/statistics/{foodTruckId}/weekly", fid)
                                 .param("year", "2023")
-                                .param("page", "1")
+                                .param("lastStartDate", LocalDateTime.now().toLocalDate().minusDays(13).format(DateTimeFormatter.ISO_LOCAL_DATE).toString())
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -339,8 +342,8 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                         queryParameters(
                                 parameterWithName("year")
                                         .description("연도"),
-                                parameterWithName("page")
-                                        .description("페이지")
+                                parameterWithName("lastStartDate")
+                                        .description("마지막으로 조회한 영업 시작일")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -360,7 +363,9 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.statisticsByWeek[].statisticsDto.totalMinutes").type(JsonFieldType.NUMBER)
                                         .description("판매한 분"),
                                 fieldWithPath("data.statisticsByWeek[].statisticsDto.totalSales").type(JsonFieldType.NUMBER)
-                                        .description("총 매출액")
+                                        .description("총 매출액"),
+                                fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN)
+                                        .description("다음 페이지 존재 여부")
                         )
                 ));
     }

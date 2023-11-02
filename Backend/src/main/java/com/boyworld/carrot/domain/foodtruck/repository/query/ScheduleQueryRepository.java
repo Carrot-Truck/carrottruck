@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,6 @@ import static com.boyworld.carrot.domain.SizeConstants.SEARCH_RANGE_METER;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruck.foodTruck;
 import static com.boyworld.carrot.domain.foodtruck.QSchedule.schedule;
 import static com.boyworld.carrot.domain.sale.QSale.sale;
-import static com.querydsl.core.types.dsl.Expressions.numberTemplate;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
@@ -57,6 +58,10 @@ public class ScheduleQueryRepository {
             return new ArrayList<>();
         }
 
+        // TODO: 2023-11-03 리팩토링 필요
+
+        LocalDateTime today = LocalDate.now().atStartOfDay();
+        LocalDateTime now = LocalDateTime.now();
         return queryFactory
                 .select(Projections.constructor(FoodTruckMarkerItem.class,
                         schedule.foodTruck.category.id,
@@ -66,6 +71,11 @@ public class ScheduleQueryRepository {
                         schedule.latitude,
                         schedule.longitude,
                         sale.endTime.isNull()
+                                .and(new CaseBuilder()
+                                        .when(sale.startTime.between(today, now))
+                                        .then(true)
+                                        .otherwise(false))
+                                .and(schedule.days.eq(LocalDateTime.now().getDayOfWeek()))
                 ))
                 .from(schedule)
                 .join(schedule.foodTruck, foodTruck)

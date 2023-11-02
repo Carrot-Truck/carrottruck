@@ -14,6 +14,7 @@ include::{snippets}/open-sale/response-fields.adoc[]
 
 ==== HTTP Request
 include::{snippets}/get-processing-orders/http-request.adoc[]
+include::{snippets}/get-processing-orders/path-parameters.adoc[]
 
 ==== HTTP Response
 include::{snippets}/get-processing-orders/http-response.adoc[]
@@ -24,6 +25,7 @@ include::{snippets}/get-processing-orders/response-fields.adoc[]
 
 ==== HTTP Request
 include::{snippets}/get-complete-orders/http-request.adoc[]
+include::{snippets}/get-complete-orders/path-parameters.adoc[]
 
 ==== HTTP Response
 include::{snippets}/get-complete-orders/http-response.adoc[]
@@ -56,6 +58,7 @@ include::{snippets}/decline-order/response-fields.adoc[]
 
 ==== HTTP Request
 include::{snippets}/pause-order/http-request.adoc[]
+include::{snippets}/pause-order/path-parameters.adoc[]
 
 ==== HTTP Response
 include::{snippets}/pause-order/response-body.adoc[]
@@ -66,6 +69,7 @@ include::{snippets}/pause-order/response-fields.adoc[]
 
 ==== HTTP Request
 include::{snippets}/soldout-menu/http-request.adoc[]
+include::{snippets}/soldout-menu/path-parameters.adoc[]
 
 ==== HTTP Response
 include::{snippets}/soldout-menu/response-body.adoc[]
@@ -76,8 +80,8 @@ include::{snippets}/soldout-menu/response-fields.adoc[]
 
 ==== HTTP Request
 include::{snippets}/close-sale/http-request.adoc[]
+include::{snippets}/close-sale/path-parameters.adoc[]
 
 ==== HTTP Response
 include::{snippets}/close-sale/response-body.adoc[]
 include::{snippets}/close-sale/response-fields.adoc[]
-

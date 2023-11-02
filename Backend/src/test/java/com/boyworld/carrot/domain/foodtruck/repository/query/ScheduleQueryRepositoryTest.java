@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -89,7 +90,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(items).hasSize(6);
     }
 
-    @DisplayName("근처에 영업 중인 푸드트럭이 없으면 빈 리스트가 반환된다.")
+    @DisplayName("근처에 푸드트럭이 없으면 빈 리스트가 반환된다.")
     @Test
     void getEmptyPositionsByCondition() {
         // given
@@ -188,7 +189,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
                 .longitude(BigDecimal.valueOf(126.807271))
                 .orderNumber(0)
                 .totalAmount(0)
-                .startTime(LocalDateTime.of(2023, 11, 2, 9, 30))
+                .startTime(LocalDateTime.now().minusHours(1))
                 .endTime(endTime)
                 .active(true)
                 .build();
@@ -238,32 +239,33 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         Schedule schedule1 = createSchedule(foodTruck,
                 BigDecimal.valueOf(35.204008),
                 BigDecimal.valueOf(126.807271),
-                LocalDateTime.of(2023, 11, 2, 9, 30),
-                LocalDateTime.of(2023, 11, 2, 18, 30));
+                LocalDateTime.now().minusHours(1),
+                LocalDateTime.now().plusHours(5), DayOfWeek.FRIDAY.toString()
+        );
 
         Schedule schedule2 = createSchedule(foodTruck,
                 BigDecimal.valueOf(35.204349),
                 BigDecimal.valueOf(126.807805),
-                LocalDateTime.of(2023, 11, 2, 9, 30),
-                LocalDateTime.of(2023, 11, 2, 18, 30)
+                LocalDateTime.now().plusHours(3),
+                LocalDateTime.now().plusHours(5), DayOfWeek.SATURDAY.toString()
         );
 
         Schedule schedule3 = createSchedule(foodTruck,
                 BigDecimal.valueOf(35.204349),
                 BigDecimal.valueOf(126.807805),
-                LocalDateTime.of(2023, 11, 2, 20, 30),
-                LocalDateTime.of(2023, 11, 2, 23, 30)
+                LocalDateTime.now().plusHours(5),
+                LocalDateTime.now().plusHours(7), DayOfWeek.SATURDAY.toString()
         );
         List<Schedule> schedules = List.of(schedule1, schedule2, schedule3);
         scheduleRepository.saveAll(schedules);
     }
 
-    private Schedule createSchedule(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, LocalDateTime startTime, LocalDateTime endTime) {
+    private Schedule createSchedule(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, LocalDateTime startTime, LocalDateTime endTime, String days) {
         return Schedule.builder()
                 .address("주소정보")
                 .latitude(latitude)
                 .longitude(longitude)
-                .days("목요일")
+                .days(days)
                 .startTime(startTime)
                 .endTime(endTime)
                 .active(true)

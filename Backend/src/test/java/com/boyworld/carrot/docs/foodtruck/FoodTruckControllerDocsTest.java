@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -126,16 +127,18 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         FoodTruckMarkerItem info1 = FoodTruckMarkerItem.builder()
                 .categoryId(1L)
                 .foodTruckId(1L)
-                .latitude("37.5665")
-                .longitude("126.9780")
+                .latitude(BigDecimal.valueOf(37.5665))
+                .longitude(BigDecimal.valueOf(126.9780))
+                .distance(BigDecimal.valueOf(100))
                 .isOpen(true)
                 .build();
 
         FoodTruckMarkerItem info2 = FoodTruckMarkerItem.builder()
                 .categoryId(2L)
                 .foodTruckId(2L)
-                .latitude("35.1595")
-                .longitude("126.8526")
+                .latitude(BigDecimal.valueOf(35.1595))
+                .longitude(BigDecimal.valueOf(126.8526))
+                .distance(BigDecimal.valueOf(100))
                 .isOpen(false)
                 .build();
 
@@ -185,6 +188,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("카테고리 식별키"),
                                 fieldWithPath("data.markerItems[].foodTruckId").type(JsonFieldType.NUMBER)
                                         .description("푸드트럭 식별키"),
+                                fieldWithPath("data.markerItems[].distance").type(JsonFieldType.STRING)
+                                        .description("거리"),
                                 fieldWithPath("data.markerItems[].latitude").type(JsonFieldType.STRING)
                                         .description("위도"),
                                 fieldWithPath("data.markerItems[].longitude").type(JsonFieldType.STRING)

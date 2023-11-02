@@ -68,10 +68,13 @@ public class ReviewService {
             // Save review
             reviewRepository.save(review);
 
+            // 이미지 없이 등록한 리뷰라면 바로 종료
+            if(request.getImage() == null || request.getImage().isEmpty()) return true;
+
             // Image upload at AWS S3
             String uploadFileUrl = s3Uploader.uploadFiles(request.getImage(), "review");
             log.debug("review image saved at {}", uploadFileUrl);
-//             Save info at ReviewImage
+            // Save info at ReviewImage
             ReviewImage reviewImage = ReviewImage.builder()
                     .review(review)
                     .saveFileName(uploadFileUrl)
@@ -92,9 +95,8 @@ public class ReviewService {
      * @return boolean
      */
     @Transactional
-    public Boolean createComment(CommentRequest request) {
+    public Boolean createComment(CommentRequest request, String email) {
         try {
-            String email = SecurityUtil.getCurrentLoginId();
             // 만약 해당 리뷰가 달린 푸드트럭의 사업자의 email 과 답글을 남기려는 사업자의 이메일이 같지 않으면
             if(!reviewRepository.findById(request.getReviewId()).orElseThrow().getFoodTruck().getVendor().getEmail().equals(email)){
                 return false;

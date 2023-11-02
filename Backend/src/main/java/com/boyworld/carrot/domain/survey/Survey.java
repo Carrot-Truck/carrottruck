@@ -26,11 +26,11 @@ public class Survey extends TimeBaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Column(length = 20, nullable = false)
@@ -59,7 +59,7 @@ public class Survey extends TimeBaseEntity {
         this.active = active;
     }
 
-    public void delete() {
+    public void deActivate() {
         this.active = false;
     }
 }

@@ -21,7 +21,7 @@ public class CartMenu extends TimeBaseEntity {
 
     @Id
     private Long id;
-    private Long cartId;
+    private String cartId;
     private Long menuId;
     private String name;
     private Integer price;
@@ -29,7 +29,7 @@ public class CartMenu extends TimeBaseEntity {
     private Integer quantity;
 
     @Builder
-    public CartMenu(Long id, Long cartId, Long menuId, String name, Integer price, Boolean soldOut, Integer quantity) {
+    public CartMenu(Long id, String cartId, Long menuId, String name, Integer price, Boolean soldOut, Integer quantity) {
         this.id = id;
         this.cartId = cartId;
         this.menuId = menuId;

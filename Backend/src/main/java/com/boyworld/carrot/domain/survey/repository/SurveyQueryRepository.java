@@ -1,15 +1,20 @@
 package com.boyworld.carrot.domain.survey.repository;
 
-import com.boyworld.carrot.domain.survey.Survey;
+import com.boyworld.carrot.api.service.survey.dto.SurveyCountDto;
+import com.boyworld.carrot.api.service.survey.dto.SurveyDetailDto;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
 import static com.boyworld.carrot.domain.survey.QSurvey.survey;
 
 /**
@@ -23,30 +28,66 @@ public class SurveyQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public int countSurvey(String sido, String sigungu, String dong) {
-        LocalDateTime currentDate = LocalDate.now().atStartOfDay();
+    public List<SurveyCountDto> countSurvey(String sido, String sigungu, String dong) {
+        LocalDateTime currentDate = LocalDateTime.now();
 
         return queryFactory
-                .selectFrom(survey)
-                .where(survey.createdDate.between(currentDate.minusMonths(6), currentDate)
+                .selectDistinct(Projections.constructor(SurveyCountDto.class,
+                        survey.category.id,
+                        survey.category.name,
+                        survey.count().castToNum(Integer.class)
+                ))
+                .from(survey)
+                .where(survey.createdDate.gt(currentDate.minusMonths(6))
                         .and(survey.sido.eq(sido))
                         .and(survey.sigungu.eq(sigungu))
-                        .and(survey.dong.eq(dong)))
-                .fetch().size();
+                        .and(survey.dong.eq(dong)),
+                        isActiveSurvey()
+                )
+                .groupBy(survey.category.id)
+                .fetch();
     }
 
-    public List<Survey> getSurvey(Long categoryId, String sido, String sigungu, String dong, Pageable pageable) {
-        LocalDateTime currentDate = LocalDate.now().atStartOfDay();
+    public List<SurveyDetailDto> getSurvey(Long categoryId, String sido, String sigungu, String dong, Long lastSurveyId) {
+        LocalDateTime currentDate = LocalDateTime.now();
 
-        return queryFactory
-                .select(survey)
-                .where(survey.createdDate.between(currentDate.minusMonths(6), currentDate)
+        List<Long> ids = queryFactory
+                .select(survey.id)
+                .from(survey)
+                .where(survey.createdDate.gt(currentDate.minusMonths(6))
                         .and(survey.category.id.eq(categoryId))
                         .and(survey.sido.eq(sido))
                         .and(survey.sigungu.eq(sigungu))
-                        .and(survey.dong.eq(dong)))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                        .and(survey.dong.eq(dong)),
+                        isGreaterThanLastId(lastSurveyId),
+                        isActiveSurvey()
+                )
+                .limit(PAGE_SIZE + 1)
                 .fetch();
+
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Expression<String> formattedDate = Expressions.stringTemplate("DATE_FORMAT({0}, '%Y-%m-%dT%H:%i:%s')", survey.createdDate);
+
+        return queryFactory
+                .select(Projections.constructor(SurveyDetailDto.class,
+                        survey.id,
+                        survey.member.nickname,
+                        survey.content,
+                        formattedDate
+                ))
+                .from(survey)
+                .where(survey.id.in(ids))
+                .fetch();
+    }
+
+    private BooleanExpression isGreaterThanLastId(Long lastSurveyId) {
+        return lastSurveyId != null ? survey.id.gt(lastSurveyId) : null;
+    }
+
+    private BooleanExpression isActiveSurvey() {
+        return survey.active.isTrue();
     }
 }

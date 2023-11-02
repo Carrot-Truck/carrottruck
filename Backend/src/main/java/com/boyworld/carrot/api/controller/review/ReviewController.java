@@ -8,6 +8,7 @@ import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.api.service.review.ReviewService;
+import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +61,7 @@ public class ReviewController {
         log.debug("ReviewController#createComment called !!!");
         log.debug("review= {}", request);
 
-        return ApiResponse.created(reviewService.createComment(request));
+        return ApiResponse.created(reviewService.createComment(request, SecurityUtil.getCurrentLoginId()));
     }
 
     /**

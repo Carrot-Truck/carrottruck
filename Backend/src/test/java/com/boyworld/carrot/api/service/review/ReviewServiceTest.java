@@ -12,19 +12,25 @@ import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.order.Order;
+import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.order.repository.OrderRepository;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.domain.review.ReviewImage;
 import com.boyworld.carrot.domain.review.repository.ReviewImageRepository;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
 import com.boyworld.carrot.domain.sale.Sale;
+import com.boyworld.carrot.domain.sale.repository.SaleRepository;
 import com.boyworld.carrot.file.S3Uploader;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +48,9 @@ public class ReviewServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private FoodTruckRepository foodTruckRepository;
+
+    @Autowired
+    private SaleRepository saleRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -63,15 +72,16 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     void createCommentWithoutImage(){
         //given
         Member member = createMember(Role.CLIENT, true);
+        Member vendor = createMember(Role.VENDOR, true);
         Category category = createCategory();
-        FoodTruck foodTruck = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
             "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
             40,
             10,
             true);
-        Order order = createOrder(member, foodTruck);
-
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
         Review review = createReview(member, order, foodTruck);
 
         // when
@@ -89,8 +99,33 @@ public class ReviewServiceTest extends IntegrationTestSupport {
 
     @DisplayName("사용자가 리뷰 사진과 함께 리뷰를 등록한다.")
     @Test
-    void createCommentWithImage(){
+    void createCommentWithImage() throws Exception {
+        //given
+        Member member = createMember(Role.CLIENT, true);
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        MultipartFile image = new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes());
+        Review review = createReviewWithImage(member, order, foodTruck, image);
 
+        // when
+        Boolean result = reviewService.createReview(ReviewRequest.builder()
+            .orderId(order.getId())
+            .foodTruckId(foodTruck.getId())
+            .grade(review.getGrade())
+            .content(review.getContent())
+            .memberId(review.getMember().getId())
+            .image(image)
+            .build());
+
+        // then
+        assertThat(result).isTrue();
     }
 
     @DisplayName("사업자는 리뷰에 댓글을 남길 수 있다.")
@@ -220,16 +255,26 @@ public class ReviewServiceTest extends IntegrationTestSupport {
         return categoryRepository.save(category);
     }
 
-    private Order createOrder(Member member, FoodTruck foodTruck){
+    private Order createOrder(Member member, Sale sale, FoodTruck foodTruck){
         return orderRepository.save(Order.builder()
             .member(member)
-            .sale(Sale.builder()
-                .startTime(LocalDateTime.of(2023, 11, 2, 10, 0))
-                .active(true)
-                .longitude(BigDecimal.valueOf(36.33))
-                .latitude(BigDecimal.valueOf(130.21))
-                .foodTruck(foodTruck)
-                .build())
+            .sale(sale)
+            .totalPrice(10000)
+            .active(true)
+            .status(Status.PENDING)
+            .expectTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 30)))
+            .build());
+    }
+
+    private Sale createSale(FoodTruck foodTruck){
+        return saleRepository.save(Sale.builder()
+            .startTime(LocalDateTime.of(2023, 11, 2, 10, 0))
+            .active(true)
+            .longitude(BigDecimal.valueOf(36.33))
+            .latitude(BigDecimal.valueOf(130.21))
+            .foodTruck(foodTruck)
+            .orderNumber(1)
+            .totalAmount(10000)
             .build());
     }
 

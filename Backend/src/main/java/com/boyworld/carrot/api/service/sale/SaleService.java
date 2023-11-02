@@ -1,12 +1,14 @@
 package com.boyworld.carrot.api.service.sale;
 
-import com.boyworld.carrot.api.controller.sale.request.OpenSaleRequest;
 import com.boyworld.carrot.api.controller.sale.response.CloseSaleResponse;
 import com.boyworld.carrot.api.controller.sale.response.OpenSaleResponse;
 import com.boyworld.carrot.api.service.sale.dto.AcceptOrderDto;
 import com.boyworld.carrot.api.service.sale.dto.DeclineOrderDto;
 import com.boyworld.carrot.api.service.sale.dto.OpenSaleDto;
-import com.boyworld.carrot.domain.sale.repository.SaleRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
+import com.boyworld.carrot.domain.sale.Sale;
+import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SaleService {
 
     private final SaleRepository saleRepository;
+    private final FoodTruckRepository foodTruckRepository;
 
     /**
      * 영업 개시 API
@@ -32,7 +35,20 @@ public class SaleService {
      * @return response 개시된 영업 정보
      */
     public OpenSaleResponse openSale(OpenSaleDto dto) {
+
         // 새로운 영업 등록
+        Sale sale = Sale.builder()
+            .foodTruck(foodTruckRepository.findById(dto.getFoodTruckId()).orElse(null))
+            .latitude(dto.getLatitude())
+            .longitude(dto.getLongitude())
+            .orderNumber(0)
+            .totalAmount(0)
+            .startTime(LocalDateTime.now())
+            .orderable(true)
+            .active(true)
+            .build();
+
+        saleRepository.save(sale);
 
         // 판매하지 않을 메뉴는 비활성화
 

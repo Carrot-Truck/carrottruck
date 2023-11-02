@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -408,7 +409,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         ScheduleDto schedule1 = ScheduleDto.builder()
                 .scheduleId(1L)
                 .address("광주 광산구 장덕로5번길 16")
-                .days("월요일")
+                .days(DayOfWeek.MONDAY.name())
                 .startTime("17:00")
                 .endTime("01:00")
                 .build();
@@ -416,7 +417,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         ScheduleDto schedule2 = ScheduleDto.builder()
                 .scheduleId(2L)
                 .address("광주 광산구 장덕로5번길 16")
-                .days("화요일")
+                .days(DayOfWeek.TUESDAY.name())
                 .startTime("17:00")
                 .endTime("01:00")
                 .build();
@@ -424,7 +425,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         ScheduleDto schedule3 = ScheduleDto.builder()
                 .scheduleId(3L)
                 .address("")
-                .days("수요일")
+                .days(DayOfWeek.WEDNESDAY.name())
                 .startTime("")
                 .endTime("")
                 .build();

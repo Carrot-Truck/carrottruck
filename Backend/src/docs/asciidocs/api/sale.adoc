@@ -1,0 +1,87 @@
+[[open-sale]]
+=== 영업 개시
+
+==== HTTP Request
+include::{snippets}/open-sale/http-request.adoc[]
+include::{snippets}/open-sale/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/open-sale/http-response.adoc[]
+include::{snippets}/open-sale/response-fields.adoc[]
+
+[[get-processing-order]]
+=== 진행 중인 주문 조회
+
+==== HTTP Request
+include::{snippets}/get-processing-orders/http-request.adoc[]
+include::{snippets}/get-processing-orders/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-processing-orders/http-response.adoc[]
+include::{snippets}/get-processing-orders/response-fields.adoc[]
+
+[[get-complete-order]]
+=== 완료된 주문 조회
+
+==== HTTP Request
+include::{snippets}/get-complete-orders/http-request.adoc[]
+include::{snippets}/get-complete-orders/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-complete-orders/http-response.adoc[]
+include::{snippets}/get-complete-orders/response-fields.adoc[]
+
+[[accept-order]]
+=== 주문 수락
+
+==== HTTP Request
+include::{snippets}/accept-order/request-body.adoc[]
+include::{snippets}/accept-order/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/accept-order/response-body.adoc[]
+include::{snippets}/accept-order/response-fields.adoc[]
+
+[[decline-order]]
+=== 주문 거절
+
+==== HTTP Request
+include::{snippets}/decline-order/request-body.adoc[]
+include::{snippets}/decline-order/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/decline-order/response-body.adoc[]
+include::{snippets}/decline-order/response-fields.adoc[]
+
+[[pause-order]]
+=== 주문 일시 정지
+
+==== HTTP Request
+include::{snippets}/pause-order/http-request.adoc[]
+include::{snippets}/pause-order/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/pause-order/response-body.adoc[]
+include::{snippets}/pause-order/response-fields.adoc[]
+
+[[soldout-menu]]
+=== 메뉴 품절 등록
+
+==== HTTP Request
+include::{snippets}/soldout-menu/http-request.adoc[]
+include::{snippets}/soldout-menu/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/soldout-menu/response-body.adoc[]
+include::{snippets}/soldout-menu/response-fields.adoc[]
+
+[[close-sale]]
+=== 영업 종료
+
+==== HTTP Request
+include::{snippets}/close-sale/http-request.adoc[]
+include::{snippets}/close-sale/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/close-sale/response-body.adoc[]
+include::{snippets}/close-sale/response-fields.adoc[]

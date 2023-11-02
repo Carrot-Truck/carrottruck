@@ -1,8 +1,9 @@
 package com.boyworld.carrot.api.service.order;
 
-import com.boyworld.carrot.api.controller.order.response.OrderDetailResponse;
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
+import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
+import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class OrderService {
      * @param email     현재 로그인 중인 사용자 이메일
      * @return 사용자의 전체 주문 내역
      */
-    public OrderResponse getOrders(String email) {
+    public OrdersResponse getOrders(String email) {
         return null;
     }
 
@@ -39,7 +40,7 @@ public class OrderService {
      * @param email         현재 로그인 중인 사용자 이메일
      * @return 진행 중인 주문 내역
      */
-    public OrderResponse getProcessingOrders(Long foodTruckId, String email) {
+    public OrdersResponse getProcessingOrders(Long foodTruckId, String email) {
         return null;
     }
 
@@ -50,7 +51,7 @@ public class OrderService {
      * @param email         현재 로그인 중인 사용자 이메일
      * @return 완료된 주문 내역
      */
-    public OrderResponse getCompleteOrders(Long foodTruckId, String email) {
+    public OrdersResponse getCompleteOrders(Long foodTruckId, String email) {
         return null;
     }
 
@@ -66,13 +67,15 @@ public class OrderService {
     }
 
     /**
-     * 주문 상세 조회 API
+     * 고객 - 주문 상세 조회 API
      *
      * @param orderId   조회할 주문 식별키
      * @param email     현재 로그인 중인 사용자 이메일
+     * @param role      요청 주체
      * @return 주문 상세 정보
      */
-    public OrderDetailResponse getOrder(Long orderId, String email) {
+
+    public OrderResponse getOrder(Long orderId, String email, Role role) {
         return null;
     }
 

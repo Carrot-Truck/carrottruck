@@ -4,6 +4,7 @@ import com.boyworld.carrot.api.controller.survey.request.CreateSurveyRequest;
 import com.boyworld.carrot.api.controller.survey.response.CreateSurveyResponse;
 import com.boyworld.carrot.api.service.geocoding.GeocodingService;
 import com.boyworld.carrot.domain.foodtruck.Category;
+import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.survey.Survey;
@@ -30,6 +31,8 @@ public class SurveyService {
 
     private final MemberRepository memberRepository;
 
+    private final CategoryRepository categoryRepository;
+
     private final GeocodingService geocodingService;
 
     /**
@@ -42,7 +45,7 @@ public class SurveyService {
         Member member = findMemberById(request.getMemberId());
         checkActiveMember(member);
 
-        Category category = null;
+        Category category = findCategoryById(request.getCategoryId());
 
         String[] address = geocodingService.reverseGeocoding(request.getLatitude(), request.getLongitude(), "legalcode").get("legalcode").split(" ");
 
@@ -62,13 +65,10 @@ public class SurveyService {
 
         if (!survey.getMember().getEmail().equals(email)) {
             // 로그인한 회원과 수요조사 작성 회원 불일치
-            return null;
+            return -1L;
         }
 
-        if (!survey.getMember().getActive()) {
-            // 탈퇴한 회원이 작성한 수요조사
-            return null;
-        }
+        checkActiveMember(survey.getMember());
 
         survey.deActivate();
 
@@ -91,10 +91,10 @@ public class SurveyService {
         }
     }
     
-//    private Category findCategoryById(Long id) {
-//        return categoryRepository.findById(id)
-//                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 카테고리입니다."));
-//    }
+    private Category findCategoryById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 카테고리입니다."));
+    }
     
     private Survey findSurveyById(Long id) {
         return surveyRepository.findById(id)

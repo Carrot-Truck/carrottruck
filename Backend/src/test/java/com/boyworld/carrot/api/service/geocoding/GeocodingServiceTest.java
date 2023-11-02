@@ -1,7 +1,6 @@
-package com.boyworld.carrot.api.service.util;
+package com.boyworld.carrot.api.service.geocoding;
 
 import com.boyworld.carrot.IntegrationTestSupport;
-import com.boyworld.carrot.api.service.geocoding.GeocodingService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 @Slf4j
-public class GeocodingUtilTest extends IntegrationTestSupport {
+public class GeocodingServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private GeocodingService geocodingService;

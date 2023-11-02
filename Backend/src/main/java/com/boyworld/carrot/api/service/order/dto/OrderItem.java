@@ -14,8 +14,8 @@ public class OrderItem {
     private Long memberId;
     private String nickname;
     private String phoneNumber;
-    private Integer orderCnt;
     private Status status;
+    private Integer orderCnt;
     private Integer totalPrice;
     private LocalDateTime createdTime;
     private LocalDateTime expectTime;

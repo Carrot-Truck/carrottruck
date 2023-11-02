@@ -1,5 +1,6 @@
 package com.boyworld.carrot.docs.order;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -16,6 +17,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -60,23 +63,17 @@ public class OrderControllerDocsTest extends RestDocsSupport {
         List<Long> menuOptionIdList3 = new ArrayList<>(Arrays.asList(1L, 2L));
         orderMenuItems1.add(OrderMenuItem.builder()
             .menuId(1L)
-            .name("된장삼겹")
             .quantity(1)
-            .price(10000)
             .menuOptionIdList(menuOptionIdList1)
             .build());
         orderMenuItems1.add(OrderMenuItem.builder()
             .menuId(2L)
-            .name("돼지갈비")
             .quantity(2)
-            .price(15000)
             .menuOptionIdList(menuOptionIdList2)
             .build());
         orderMenuItems2.add(OrderMenuItem.builder()
             .menuId(2L)
-            .name("돼지갈비")
             .quantity(1)
-            .price(15000)
             .menuOptionIdList(menuOptionIdList3)
             .build());
 
@@ -131,12 +128,12 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                             .description("주문 ID"),
                         fieldWithPath("data.orderItems[].memberId").type(JsonFieldType.NUMBER).optional()
                             .description("회원 ID"),
-                        fieldWithPath("data.orderItems[].nickname").type(JsonFieldType.NUMBER).optional()
+                        fieldWithPath("data.orderItems[].nickname").type(JsonFieldType.STRING).optional()
                             .description("회원 닉네임"),
-                        fieldWithPath("data.orderItems[].phoneNumber").type(JsonFieldType.NUMBER).optional()
+                        fieldWithPath("data.orderItems[].phoneNumber").type(JsonFieldType.STRING).optional()
                             .description("회원 연락처"),
                         fieldWithPath("data.orderItems[].orderCnt").type(JsonFieldType.NUMBER)
-                            .description("기존 주문 횟수"),
+                            .description("이전 주문 횟수"),
                         fieldWithPath("data.orderItems[].status").type(JsonFieldType.STRING)
                             .description("주문 상태"),
                         fieldWithPath("data.orderItems[].totalPrice").type(JsonFieldType.NUMBER)
@@ -149,45 +146,10 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                             .description("주문 메뉴 리스트"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
                             .description("주문 메뉴 ID"),
-                        fieldWithPath("data.orderItems[].orderMenuItems[].name").type(JsonFieldType.STRING)
-                            .description("주문 메뉴 이름"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
                             .description("주문 수량"),
-                        fieldWithPath("data.orderItems[].orderMenuItems[].price").type(JsonFieldType.NUMBER)
-                            .description("메뉴 가격"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
                             .description("메뉴 옵션 ID 리스트")
-                    )
-                )
-            );
-    }
-
-    @DisplayName("주문 내역 삭제 API")
-    @Test
-    @WithMockUser(roles = "CLIENT")
-    void deleteOrder() throws Exception {
-
-        given(orderService.deleteOrder(anyLong(), anyString()))
-            .willReturn(1L);
-
-        mockMvc.perform(
-            delete("/order/1")
-                .header("Authentication", "authentication")
-        )
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andDo(
-                document("delete-order",
-                    preprocessResponse(prettyPrint()),
-                    responseFields(
-                        fieldWithPath("code").type(JsonFieldType.NUMBER)
-                            .description("코드"),
-                        fieldWithPath("status").type(JsonFieldType.STRING)
-                            .description("상태"),
-                        fieldWithPath("message").type(JsonFieldType.STRING)
-                            .description("메시지"),
-                        fieldWithPath("data").type(JsonFieldType.NUMBER)
-                            .description("삭제한 주문 ID")
                     )
                 )
             );
@@ -201,41 +163,88 @@ public class OrderControllerDocsTest extends RestDocsSupport {
         List<OrderMenuItem> orderMenuItems = new ArrayList<>();
 
         orderMenuItems.add(OrderMenuItem.builder()
-                .quantity(1)
-                .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+            .menuId(1L)
+            .quantity(1)
+            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+            .build());
+
+        orderMenuItems.add(OrderMenuItem.builder()
+            .menuId(2L)
+            .quantity(2)
+            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 4L)))
             .build());
 
         OrderResponse response = OrderResponse.builder()
             .orderItem(OrderItem.builder()
                 .orderId(1L)
-                .memberId(1L)
-                .totalPrice(10000)
                 .status(Status.COMPLETE)
+                .orderCnt(0)
+                .totalPrice(40000)
                 .createdTime(LocalDateTime.of(2023, 10, 30, 15, 35))
                 .expectTime(LocalDateTime.of(2023, 10, 30, 15, 55))
                 .orderMenuItems(orderMenuItems)
                 .build()).build();
 
-        given(orderService.getOrder(anyLong(), anyString(), Role.valueOf(anyString())))
+        given(orderService.getOrder(anyLong(), anyString(), eq(Role.CLIENT)))
             .willReturn(response);
 
+        Long orderId = 1L;
         mockMvc.perform(
-            get("/order/client/1")
+            get("/order/client/{orderId}", orderId)
                 .header("Authentication", "authentication")
             )
             .andDo(print())
             .andExpect(status().isOk())
             .andDo(
-                document("get-order-client",
+                document("get-order-by-client",
                     preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("orderId")
+                            .description("주문 ID")
+                    ),
                     responseFields(
-
+                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                            .description("코드"),
+                        fieldWithPath("status").type(JsonFieldType.STRING)
+                            .description("상태"),
+                        fieldWithPath("message").type(JsonFieldType.STRING)
+                            .description("메시지"),
+                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                            .description("상세 조회할 주문"),
+                        fieldWithPath("data.orderItem").type(JsonFieldType.OBJECT)
+                            .description("상세 조회할 주문 정보"),
+                        fieldWithPath("data.orderItem.orderId").type(JsonFieldType.NUMBER)
+                            .description("주문 ID"),
+                        fieldWithPath("data.orderItem.memberId").type(JsonFieldType.NUMBER).optional()
+                            .description("회원 ID"),
+                        fieldWithPath("data.orderItem.nickname").type(JsonFieldType.STRING).optional()
+                            .description("회원 닉네임"),
+                        fieldWithPath("data.orderItem.phoneNumber").type(JsonFieldType.STRING).optional()
+                            .description("회원 연락처"),
+                        fieldWithPath("data.orderItem.orderCnt").type(JsonFieldType.NUMBER)
+                            .description("이전 주문 횟수"),
+                        fieldWithPath("data.orderItem.status").type(JsonFieldType.STRING)
+                            .description("주문 상태"),
+                        fieldWithPath("data.orderItem.totalPrice").type(JsonFieldType.NUMBER)
+                            .description("주문 총액"),
+                        fieldWithPath("data.orderItem.createdTime").type(JsonFieldType.ARRAY)
+                            .description("주문 생성 시각"),
+                        fieldWithPath("data.orderItem.expectTime").type(JsonFieldType.ARRAY)
+                            .description("주문 완료 예상 시각"),
+                        fieldWithPath("data.orderItem.orderMenuItems").type(JsonFieldType.ARRAY)
+                            .description("주문 메뉴 리스트"),
+                        fieldWithPath("data.orderItem.orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 ID"),
+                        fieldWithPath("data.orderItem.orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
+                            .description("주문 수량"),
+                        fieldWithPath("data.orderItem.orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                            .description("메뉴 옵션 ID 리스트")
                     )
                 )
             );
     }
 
-    @DisplayName("고객 - 주문 상세 조회 API")
+    @DisplayName("사업자 - 주문 상세 조회 API")
     @Test
     @WithMockUser(roles = "VENDOR")
     void getOrderByVendor() throws Exception {
@@ -243,38 +252,88 @@ public class OrderControllerDocsTest extends RestDocsSupport {
         List<OrderMenuItem> orderMenuItems = new ArrayList<>();
 
         orderMenuItems.add(OrderMenuItem.builder()
-                .quantity(1)
-                .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
-                .build());
+            .menuId(1L)
+            .quantity(1)
+            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+            .build());
+
+        orderMenuItems.add(OrderMenuItem.builder()
+            .menuId(2L)
+            .quantity(2)
+            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 4L)))
+            .build());
 
         OrderResponse response = OrderResponse.builder()
             .orderItem(OrderItem.builder()
                 .orderId(1L)
                 .memberId(1L)
-                .totalPrice(10000)
+                .nickname("매미킴")
+                .phoneNumber("010-1324-9786")
                 .status(Status.COMPLETE)
+                .orderCnt(0)
+                .totalPrice(40000)
                 .createdTime(LocalDateTime.of(2023, 10, 30, 15, 35))
                 .expectTime(LocalDateTime.of(2023, 10, 30, 15, 55))
                 .orderMenuItems(orderMenuItems)
                 .build()).build();
 
-        given(orderService.getOrder(anyLong(), anyString(), Role.valueOf(anyString())))
-                .willReturn(response);
+        given(orderService.getOrder(anyLong(), anyString(), eq(Role.VENDOR)))
+            .willReturn(response);
 
+        Long orderId = 1L;
         mockMvc.perform(
-                        get("/order/vendor/1")
-                                .header("Authentication", "authentication")
+                get("/order/vendor/{orderId}", orderId)
+                    .header("Authentication", "authentication")
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(
+                document("get-order-by-vendor",
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("orderId")
+                            .description("주문 ID")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                            .description("코드"),
+                        fieldWithPath("status").type(JsonFieldType.STRING)
+                            .description("상태"),
+                        fieldWithPath("message").type(JsonFieldType.STRING)
+                            .description("메시지"),
+                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                            .description("상세 조회할 주문"),
+                        fieldWithPath("data.orderItem").type(JsonFieldType.OBJECT)
+                            .description("상세 조회할 주문 정보"),
+                        fieldWithPath("data.orderItem.orderId").type(JsonFieldType.NUMBER)
+                            .description("주문 ID"),
+                        fieldWithPath("data.orderItem.memberId").type(JsonFieldType.NUMBER)
+                            .description("회원 ID"),
+                        fieldWithPath("data.orderItem.nickname").type(JsonFieldType.STRING)
+                            .description("회원 닉네임"),
+                        fieldWithPath("data.orderItem.phoneNumber").type(JsonFieldType.STRING)
+                            .description("회원 연락처"),
+                        fieldWithPath("data.orderItem.orderCnt").type(JsonFieldType.NUMBER)
+                            .description("이전 주문 횟수"),
+                        fieldWithPath("data.orderItem.status").type(JsonFieldType.STRING)
+                            .description("주문 상태"),
+                        fieldWithPath("data.orderItem.totalPrice").type(JsonFieldType.NUMBER)
+                            .description("주문 총액"),
+                        fieldWithPath("data.orderItem.createdTime").type(JsonFieldType.ARRAY)
+                            .description("주문 생성 시각"),
+                        fieldWithPath("data.orderItem.expectTime").type(JsonFieldType.ARRAY)
+                            .description("주문 완료 예상 시각"),
+                        fieldWithPath("data.orderItem.orderMenuItems").type(JsonFieldType.ARRAY)
+                            .description("주문 메뉴 리스트"),
+                        fieldWithPath("data.orderItem.orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 ID"),
+                        fieldWithPath("data.orderItem.orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
+                            .description("주문 수량"),
+                        fieldWithPath("data.orderItem.orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                            .description("메뉴 옵션 ID 리스트")
+                    )
                 )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andDo(
-                        document("get-order-vendor",
-                                preprocessResponse(prettyPrint()),
-                                responseFields(
-
-                                )
-                        )
-                );
+            );
     }
 
     @DisplayName("주문 생성 API")
@@ -285,8 +344,15 @@ public class OrderControllerDocsTest extends RestDocsSupport {
         List<OrderMenuItem> orderMenuItems = new ArrayList<>();
 
         orderMenuItems.add(OrderMenuItem.builder()
+            .menuId(1L)
             .quantity(1)
             .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+            .build());
+
+        orderMenuItems.add(OrderMenuItem.builder()
+            .menuId(2L)
+            .quantity(2)
+            .menuOptionIdList(new ArrayList<>(Arrays.asList(2L, 4L)))
             .build());
 
         CreateOrderRequest request = CreateOrderRequest.builder()
@@ -309,7 +375,13 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                     preprocessResponse(prettyPrint()),
                     requestFields(
                         fieldWithPath("orderMenuItems").type(JsonFieldType.ARRAY)
-                            .description("주문할 메뉴 리스트")
+                            .description("주문할 메뉴 리스트"),
+                        fieldWithPath("orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 ID"),
+                        fieldWithPath("orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
+                            .description("주문 수량"),
+                        fieldWithPath("orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                            .description("메뉴 옵션 ID 리스트")
                     ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -323,26 +395,30 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                     )
                 )
             );
-
     }
 
-    @DisplayName("취소할 주문 정보")
+    @DisplayName("주문 취소 API")
     @Test
     @WithMockUser(roles = "CLIENT")
     void cancelOrder() throws Exception {
 
-        given(orderService.cancelOrder(anyLong(), anyString()))
+        given(orderService.cancelOrder(eq(1L), anyString()))
             .willReturn(1L);
 
+        Long orderId = 1L;
         mockMvc.perform(
-            put("/order/1")
+            put("/order/{orderId}", orderId)
                 .header("Authentication", "authentication")
         )
             .andDo(print())
             .andExpect(status().isOk())
             .andDo(
-                document("create-order",
+                document("cancel-order",
                     preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("orderId")
+                            .description("주문 ID")
+                    ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.NUMBER)
                             .description("코드"),
@@ -357,4 +433,39 @@ public class OrderControllerDocsTest extends RestDocsSupport {
             );
     }
 
+    @DisplayName("주문 내역 삭제 API")
+    @Test
+    @WithMockUser(roles = "CLIENT")
+    void deleteOrder() throws Exception {
+
+        given(orderService.deleteOrder(anyLong(), anyString()))
+            .willReturn(1L);
+
+        Long orderId = 1L;
+        mockMvc.perform(
+                delete("/order/{orderId}", orderId)
+                    .header("Authentication", "authentication")
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(
+                document("delete-order",
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("orderId")
+                            .description("주문 ID")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                            .description("코드"),
+                        fieldWithPath("status").type(JsonFieldType.STRING)
+                            .description("상태"),
+                        fieldWithPath("message").type(JsonFieldType.STRING)
+                            .description("메시지"),
+                        fieldWithPath("data").type(JsonFieldType.NUMBER)
+                            .description("삭제한 주문 ID")
+                    )
+                )
+            );
+    }
 }

@@ -74,7 +74,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     void createCommentWithoutImage(){
         //given
         Member member = createMember(Role.CLIENT, true);
-        Member vendor = createMember(Role.VENDOR, true);
+        Member vendor = createVendor(Role.VENDOR, true);
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
@@ -104,7 +104,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     void createCommentWithImage() throws Exception {
         //given
         Member member = createMember(Role.CLIENT, true);
-        Member vendor = createMember(Role.VENDOR, true);
+        Member vendor = createVendor(Role.VENDOR, true);
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",

@@ -31,5 +31,11 @@ export const GlobalFonts = createGlobalStyle`
             font-weight: 900;
             src: url("assets/fonts/NanumSquareNeoHeavy.otf") format("opentype");
         }
+        @font-face {
+            font-family: "BMJUA";
+            font-style: normal;
+            font-weight: 900;
+            src: url("assets/fonts/BMJUA_otf.otf") format("opentype");
+        }
         
 `;

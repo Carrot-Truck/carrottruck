@@ -1,6 +1,6 @@
 {
-  "short_name": "Carrot",
-  "name": "CarrotVendor",
+  "short_name": "vendor",
+  "name": "carrotVendor",
   "icons": [
     {
       "src": "playstore.ico",

@@ -12,7 +12,8 @@ export const InputWrapper = styled.div<IInputWrapperProps>`
     padding: 0 ${({ $isIcon }) => ($isIcon ? '2.5rem' : '1rem')};
     padding-right: 1rem;
     border-radius: var(--radius-m);
-    border: 1px solid var(--gray-300);
+    border: 1px solid var(--gray-100);
+    background-color: var(--gray-100);
 
     &:focus-visible {
       border: none;

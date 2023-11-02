@@ -11,6 +11,10 @@ endif::[]
 
 include::overview.adoc[]
 
+[[Analysis-API]]
+== Analysis API
+include::{docdir}/api/analysis.adoc[]
+
 [[Auth-API]]
 == Auth API
 include::{docdir}/api/member/auth.adoc[]
@@ -19,29 +23,21 @@ include::{docdir}/api/member/auth.adoc[]
 == Client API
 include::{docdir}/api/member/client.adoc[]
 
-[[MemberAddress-API]]
-== Member Address API
-include::{docdir}/api/member/member-address.adoc[]
-
-[[Vendor-API]]
-== Vendor API
-include::{docdir}/api/member/vendor.adoc[]
-
-[[Vendor-Info-API]]
-== Vendor Info ApI
-include::{docdir}/api/member/vendor-info.adoc[]
-
 [[FoodTruck-API]]
 == FoodTruck API
 include::{docdir}/api/food-truck.adoc[]
+
+[[MemberAddress-API]]
+== Member Address API
+include::{docdir}/api/member/member-address.adoc[]
 
 [[Menu-API]]
 == Menu API
 include::{docdir}/api/menu.adoc[]
 
-[[Schedule-API]]
-== Schedule API
-include::{docdir}/api/schedule.adoc[]
+[[Order-API]]
+== Order API
+include::{docdir}/api/order.adoc[]
 
 [[Review-API]]
 == Review API
@@ -51,14 +47,22 @@ include::{docdir}/api/review.adoc[]
 == Sale API
 include::{docdir}/api/sale.adoc[]
 
-[[Survey-API]]
-== Survey API
-include::{docdir}/api/survey.adoc[]
+[[Schedule-API]]
+== Schedule API
+include::{docdir}/api/schedule.adoc[]
 
 [[Statistics-API]]
 == Statistics API
 include::{docdir}/api/statistics.adoc[]
 
-[[Analysis-API]]
-== Analysis API
-include::{docdir}/api/analysis.adoc[]
+[[Survey-API]]
+== Survey API
+include::{docdir}/api/survey.adoc[]
+
+[[Vendor-API]]
+== Vendor API
+include::{docdir}/api/member/vendor.adoc[]
+
+[[Vendor-Info-API]]
+== Vendor Info ApI
+include::{docdir}/api/member/vendor-info.adoc[]

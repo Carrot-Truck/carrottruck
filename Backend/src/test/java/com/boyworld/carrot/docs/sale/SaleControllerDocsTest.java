@@ -15,6 +15,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,6 +30,7 @@ import com.boyworld.carrot.api.controller.sale.response.CloseSaleResponse;
 import com.boyworld.carrot.api.controller.sale.response.OpenSaleResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
+import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.api.service.sale.SaleService;
 import com.boyworld.carrot.api.service.sale.dto.SaleMenuItem;
 import com.boyworld.carrot.docs.RestDocsSupport;
@@ -132,23 +135,55 @@ public class SaleControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = "VENDOR")
     void getProcessingOrders() throws Exception {
 
+        List<OrderMenuItem> orderMenuItems1 = new ArrayList<>();
+        List<OrderMenuItem> orderMenuItems2 = new ArrayList<>();
+        List<Long> menuOptionIdList1 = new ArrayList<>(Arrays.asList(2L, 4L));
+        List<Long> menuOptionIdList2 = new ArrayList<>(Arrays.asList(1L, 3L));
+        List<Long> menuOptionIdList3 = new ArrayList<>(Arrays.asList(1L, 2L));
+        orderMenuItems1.add(OrderMenuItem.builder()
+            .menuId(1L)
+            .quantity(1)
+            .menuOptionIdList(menuOptionIdList1)
+            .build());
+        orderMenuItems1.add(OrderMenuItem.builder()
+            .menuId(2L)
+            .quantity(2)
+            .menuOptionIdList(menuOptionIdList2)
+            .build());
+        orderMenuItems2.add(OrderMenuItem.builder()
+            .menuId(2L)
+            .quantity(1)
+            .menuOptionIdList(menuOptionIdList3)
+            .build());
+
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(OrderItem.builder()
             .orderId(1L)
+            .memberId(1L)
+            .nickname("매미킴")
+            .phoneNumber("010-1324-9786")
             .status(Status.PROCESSING)
+            .orderCnt(0)
+            .totalPrice(40000)
             .createdTime(LocalDateTime.of(2023, 10, 30, 17, 25))
             .expectTime(LocalDateTime.of(2023, 10, 30, 17, 55))
-            .totalPrice(10000)
+            .orderMenuItems(orderMenuItems1)
             .build()
         );
         orderItems.add(OrderItem.builder()
             .orderId(2L)
+            .memberId(3L)
+            .nickname("양진리")
+            .phoneNumber("010-9876-6543")
+            .orderCnt(2)
             .status(Status.PENDING)
-            .createdTime(LocalDateTime.of(2023, 10, 30, 17, 35))
-            .expectTime(LocalDateTime.of(2023, 10, 30, 18, 5))
-            .totalPrice(20000)
+            .totalPrice(15000)
+            .createdTime(LocalDateTime.of(2023, 11, 1, 17, 35))
+            .expectTime(null)
+            .orderMenuItems(orderMenuItems2)
             .build()
         );
+
         OrdersResponse response = OrdersResponse.builder()
             .orderItems(orderItems)
             .build();
@@ -156,14 +191,19 @@ public class SaleControllerDocsTest extends RestDocsSupport {
         given(orderService.getProcessingOrders(anyLong(), anyString()))
             .willReturn(response);
 
+        Long foodTruckId = 1L;
         mockMvc.perform(
-            get("/sale/processing/1")
+            get("/sale/processing/{foodTruckId}", foodTruckId)
                 .header("Authentication", "authentication")
         ).andDo(print())
             .andExpect(status().isOk())
             .andDo(
                 document("get-processing-orders",
                     preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("foodTruckId")
+                            .description("푸드트럭 ID")
+                    ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.NUMBER)
                             .description("코드"),
@@ -176,15 +216,31 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                         fieldWithPath("data.orderItems").type(JsonFieldType.ARRAY)
                             .description("진행 중인 주문 정보"),
                         fieldWithPath("data.orderItems[].orderId").type(JsonFieldType.NUMBER)
-                            .description("주문 ID"),
+                            .description("완료된 주문 ID"),
+                        fieldWithPath("data.orderItems[].memberId").type(JsonFieldType.NUMBER)
+                            .description("주문한 회원 ID"),
+                        fieldWithPath("data.orderItems[].nickname").type(JsonFieldType.STRING)
+                            .description("주문한 회원 닉네임"),
+                        fieldWithPath("data.orderItems[].phoneNumber").type(JsonFieldType.STRING)
+                            .description("주문한 회원 연락처"),
                         fieldWithPath("data.orderItems[].status").type(JsonFieldType.STRING)
                             .description("주문 상태"),
+                        fieldWithPath("data.orderItems[].orderCnt").type(JsonFieldType.NUMBER)
+                            .description("이전 주문 횟수"),
+                        fieldWithPath("data.orderItems[].totalPrice").type(JsonFieldType.NUMBER)
+                            .description("주문 총액"),
                         fieldWithPath("data.orderItems[].createdTime").type(JsonFieldType.ARRAY)
                             .description("주문 생성 시각"),
-                        fieldWithPath("data.orderItems[].expectTime").type(JsonFieldType.ARRAY)
-                            .description("주문 완료 예상 시각"),
-                        fieldWithPath("data.orderItems[].totalPrice").type(JsonFieldType.NUMBER)
-                            .description("주문 총액")
+                        fieldWithPath("data.orderItems[].expectTime").type(JsonFieldType.ARRAY).optional()
+                            .description("주문 완료 (예상) 시각"),
+                        fieldWithPath("data.orderItems[].orderMenuItems").type(JsonFieldType.ARRAY)
+                            .description("주문 메뉴 리스트"),
+                        fieldWithPath("data.orderItems[].orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 ID"),
+                        fieldWithPath("data.orderItems[].orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
+                            .description("주문 수량"),
+                        fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                            .description("메뉴 옵션 ID 리스트")
                     )
                 )
             );
@@ -195,29 +251,65 @@ public class SaleControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = "VENDOR")
     void getCompleteOrders() throws Exception {
 
+        List<OrderMenuItem> orderMenuItems1 = new ArrayList<>();
+        List<OrderMenuItem> orderMenuItems2 = new ArrayList<>();
+        List<Long> menuOptionIdList1 = new ArrayList<>(Arrays.asList(2L, 4L));
+        List<Long> menuOptionIdList2 = new ArrayList<>(Arrays.asList(1L, 3L));
+        List<Long> menuOptionIdList3 = new ArrayList<>(Arrays.asList(1L, 2L));
+        orderMenuItems1.add(OrderMenuItem.builder()
+            .menuId(1L)
+            .quantity(1)
+            .menuOptionIdList(menuOptionIdList1)
+            .build());
+        orderMenuItems1.add(OrderMenuItem.builder()
+            .menuId(2L)
+            .quantity(2)
+            .menuOptionIdList(menuOptionIdList2)
+            .build());
+        orderMenuItems2.add(OrderMenuItem.builder()
+            .menuId(2L)
+            .quantity(1)
+            .menuOptionIdList(menuOptionIdList3)
+            .build());
+
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(OrderItem.builder()
-            .orderId(3L)
+            .orderId(1L)
+            .memberId(1L)
+            .nickname("매미킴")
+            .phoneNumber("010-1324-9786")
             .status(Status.COMPLETE)
-            .createdTime(LocalDateTime.of(2023, 11, 1, 15, 25))
-            .expectTime(LocalDateTime.of(2023, 11, 1, 15, 55))
-            .totalPrice(30000)
-            .build()
-        );
-        orderItems.add(OrderItem.builder()
-            .orderId(4L)
-            .status(Status.CANCELLED)
-            .createdTime(LocalDateTime.of(2023, 11, 1, 15, 35))
-            .expectTime(null)
+            .orderCnt(0)
             .totalPrice(40000)
+            .createdTime(LocalDateTime.of(2023, 10, 30, 17, 25))
+            .expectTime(LocalDateTime.of(2023, 10, 30, 17, 55))
+            .orderMenuItems(orderMenuItems1)
             .build()
         );
         orderItems.add(OrderItem.builder()
-            .orderId(5L)
-            .status(Status.DECLINED)
-            .createdTime(LocalDateTime.of(2023, 11, 1, 15, 45))
+            .orderId(2L)
+            .memberId(3L)
+            .nickname("양진리")
+            .phoneNumber("010-9876-6543")
+            .orderCnt(2)
+            .status(Status.CANCELLED)
+            .totalPrice(15000)
+            .createdTime(LocalDateTime.of(2023, 11, 1, 17, 35))
             .expectTime(null)
-            .totalPrice(50000)
+            .orderMenuItems(orderMenuItems2)
+            .build()
+        );
+        orderItems.add(OrderItem.builder()
+            .orderId(3L)
+            .memberId(2L)
+            .nickname("최정문")
+            .phoneNumber("010-3214-6543")
+            .orderCnt(2)
+            .status(Status.DECLINED)
+            .totalPrice(15000)
+            .createdTime(LocalDateTime.of(2023, 11, 1, 18, 35))
+            .expectTime(null)
+            .orderMenuItems(orderMenuItems1)
             .build()
         );
         OrdersResponse response = OrdersResponse.builder()
@@ -227,14 +319,19 @@ public class SaleControllerDocsTest extends RestDocsSupport {
         given(orderService.getCompleteOrders(anyLong(), anyString()))
             .willReturn(response);
 
+        Long foodTruckId = 1L;
         mockMvc.perform(
-                get("/sale/complete/1")
+                get("/sale/complete/{foodTruckId}", foodTruckId)
                     .header("Authentication", "authentication")
             ).andDo(print())
             .andExpect(status().isOk())
             .andDo(
                 document("get-complete-orders",
                     preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("foodTruckId")
+                            .description("푸드트럭 ID")
+                    ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.NUMBER)
                             .description("코드"),
@@ -247,15 +344,31 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                         fieldWithPath("data.orderItems").type(JsonFieldType.ARRAY)
                             .description("완료된 주문 정보"),
                         fieldWithPath("data.orderItems[].orderId").type(JsonFieldType.NUMBER)
-                            .description("완료된 ID"),
+                            .description("완료된 주문 ID"),
+                        fieldWithPath("data.orderItems[].memberId").type(JsonFieldType.NUMBER)
+                            .description("주문한 회원 ID"),
+                        fieldWithPath("data.orderItems[].nickname").type(JsonFieldType.STRING)
+                            .description("주문한 회원 닉네임"),
+                        fieldWithPath("data.orderItems[].phoneNumber").type(JsonFieldType.STRING)
+                            .description("주문한 회원 연락처"),
                         fieldWithPath("data.orderItems[].status").type(JsonFieldType.STRING)
-                            .description("완료된 상태"),
+                            .description("주문 상태"),
+                        fieldWithPath("data.orderItems[].orderCnt").type(JsonFieldType.NUMBER)
+                            .description("이전 주문 횟수"),
+                        fieldWithPath("data.orderItems[].totalPrice").type(JsonFieldType.NUMBER)
+                            .description("주문 총액"),
                         fieldWithPath("data.orderItems[].createdTime").type(JsonFieldType.ARRAY)
-                            .description("완료된 시각"),
+                            .description("주문 생성 시각"),
                         fieldWithPath("data.orderItems[].expectTime").type(JsonFieldType.ARRAY).optional()
                             .description("주문 완료 시각"),
-                        fieldWithPath("data.orderItems[].totalPrice").type(JsonFieldType.NUMBER)
-                            .description("주문 총액")
+                        fieldWithPath("data.orderItems[].orderMenuItems").type(JsonFieldType.ARRAY)
+                            .description("주문 메뉴 리스트"),
+                        fieldWithPath("data.orderItems[].orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 ID"),
+                        fieldWithPath("data.orderItems[].orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
+                            .description("주문 수량"),
+                        fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                            .description("메뉴 옵션 ID 리스트")
                     )
                 )
             );
@@ -355,8 +468,9 @@ public class SaleControllerDocsTest extends RestDocsSupport {
         given(saleService.pauseOrder(anyLong(), anyString()))
             .willReturn(1L);
 
+        Long foodTruckId = 1L;
         mockMvc.perform(
-                put("/sale/pause/1")
+                put("/sale/pause/{foodTruckId}", foodTruckId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())
@@ -364,6 +478,10 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .andDo(
                 document("pause-order",
                     preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("foodTruckId")
+                            .description("푸드트럭 ID")
+                    ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.NUMBER)
                             .description("코드"),
@@ -385,8 +503,9 @@ public class SaleControllerDocsTest extends RestDocsSupport {
         given(saleService.soldOutMenu(anyLong(), anyString()))
             .willReturn(1L);
 
+        Long menuId = 1L;
         mockMvc.perform(
-                put("/sale/soldout/1")
+                put("/sale/soldout/{menuId}", menuId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())
@@ -394,6 +513,10 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .andDo(
                 document("soldout-menu",
                     preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("menuId")
+                            .description("품절 등록할 메뉴 ID")
+                    ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.NUMBER)
                             .description("코드"),
@@ -424,8 +547,9 @@ public class SaleControllerDocsTest extends RestDocsSupport {
         given(saleService.closeSale(anyLong(), anyString()))
             .willReturn(response);
 
+        Long foodTruckId = 1L;
         mockMvc.perform(
-                put("/sale/close/1")
+                put("/sale/close/{foodTruckId}", foodTruckId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())
@@ -433,6 +557,10 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .andDo(
                 document("close-sale",
                     preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("foodTruckId")
+                            .description("푸드트럭 ID")
+                    ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.NUMBER)
                             .description("코드"),

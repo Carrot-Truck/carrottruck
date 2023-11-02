@@ -3,9 +3,10 @@
 import { FoodTruckMenuContainer } from './style';
 import FoodTruckMenuItem from '../../atoms/FoodTruckMenuItem';
 
-interface IFoodTruckMenuProps {}
+// interface IFoodTruckMenuProps {}
 
-function FoodTruckMenu(props: IFoodTruckMenuProps) {
+// function FoodTruckMenu(props: IFoodTruckMenuProps) {
+function FoodTruckMenu() {
   return (
     <FoodTruckMenuContainer>
       <FoodTruckMenuItem></FoodTruckMenuItem>

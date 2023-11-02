@@ -3,6 +3,7 @@ package com.boyworld.carrot.api.service.review;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.controller.review.request.CommentRequest;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -82,7 +84,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
             true);
         Sale sale = createSale(foodTruck);
         Order order = createOrder(member, sale, foodTruck);
-        Review review = createReview(member, order, foodTruck);
+        Review review = createReviewEntity(member, order, foodTruck);
 
         // when
         Boolean result = reviewService.createReview(ReviewRequest.builder()
@@ -102,8 +104,9 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     void createCommentWithImage() throws Exception {
         //given
         Member member = createMember(Role.CLIENT, true);
+        Member vendor = createMember(Role.VENDOR, true);
         Category category = createCategory();
-        FoodTruck foodTruck = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
             "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
             40,
@@ -112,7 +115,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
         Sale sale = createSale(foodTruck);
         Order order = createOrder(member, sale, foodTruck);
         MultipartFile image = new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes());
-        Review review = createReviewWithImage(member, order, foodTruck, image);
+        Review review = createReviewEntityWithImage(member, order, foodTruck, image);
 
         // when
         Boolean result = reviewService.createReview(ReviewRequest.builder()
@@ -130,11 +133,33 @@ public class ReviewServiceTest extends IntegrationTestSupport {
 
     @DisplayName("사업자는 리뷰에 댓글을 남길 수 있다.")
     @Test
+    @WithMockUser(roles = "VENDOR")
     void createComment(){
+        // given
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true);
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        Review review = createReview(createReviewEntity(member, order, foodTruck));
 
+        // when
+        Boolean result = reviewService.createComment(CommentRequest.builder()
+                .comment("리뷰 감사합니다.")
+                .reviewId(review.getId())
+            .build(), "vendor@ssafy.com");
+
+        // then
+        assertThat(result).isTrue();
     }
 
-    @DisplayName("사용자는 리뷰에 댓글을 남길 수 있다.")
+    @DisplayName("사용자는 리뷰에 댓글을 남길 수 없다.")
     @Test
     void createCommentAsClient(){
 
@@ -195,7 +220,20 @@ public class ReviewServiceTest extends IntegrationTestSupport {
         return memberRepository.save(member);
     }
 
-    private Review createReview(Member member, Order order, FoodTruck foodTruck){
+    private Member createVendor(Role role, boolean active) {
+        Member member = Member.builder()
+            .email("vendor@ssafy.com")
+            .nickname("매미킴")
+            .encryptedPwd(passwordEncoder.encode("ssafy1234"))
+            .name("김동현")
+            .phoneNumber("010-1234-5678")
+            .role(role)
+            .active(active)
+            .build();
+        return memberRepository.save(member);
+    }
+
+    private Review createReviewEntity(Member member, Order order, FoodTruck foodTruck){
         return Review.builder()
             .grade((int)(Math.random()*10)%6)
             .content("다음에 또 올게요~!")
@@ -206,7 +244,11 @@ public class ReviewServiceTest extends IntegrationTestSupport {
             .build();
     }
 
-    private Review createReviewWithImage(Member member, Order order, FoodTruck foodTruck, MultipartFile image) throws Exception{
+    private Review createReview(Review review){
+        return reviewRepository.save(review);
+    }
+
+    private Review createReviewEntityWithImage(Member member, Order order, FoodTruck foodTruck, MultipartFile image) throws Exception{
         Review review =  reviewRepository.save(Review.builder()
             .grade((int)(Math.random()*10)%6)
             .content("다음에 또 올게요~!")

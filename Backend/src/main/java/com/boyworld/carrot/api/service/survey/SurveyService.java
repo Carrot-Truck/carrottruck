@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.service.survey;
 
+import com.boyworld.carrot.api.controller.survey.request.CreateSurveyRequest;
 import com.boyworld.carrot.api.controller.survey.response.CreateSurveyResponse;
 import com.boyworld.carrot.api.service.geocoding.GeocodingService;
 import com.boyworld.carrot.api.service.survey.dto.CreateSurveyDto;

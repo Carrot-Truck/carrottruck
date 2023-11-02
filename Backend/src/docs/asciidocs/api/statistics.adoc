@@ -57,7 +57,7 @@ include::{snippets}/get-statistics-monthly-list/query-parameters.adoc[]
 include::{snippets}/get-statistics-monthly-list//http-response.adoc[]
 include::{snippets}/get-statistics-monthly-list/response-fields.adoc[]
 
-[[get-statistics-weekly-details]]
+[[get-statistics-monthly-details]]
 === 월별 매출 통계 상세 조회
 
 ==== HTTP Request

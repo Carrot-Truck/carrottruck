@@ -13,12 +13,15 @@ public class SurveyDetailsResponse {
 
     private String categoryName;
 
-    private List<SurveyDetailDto> surveyDetailDtoList;
+    private List<SurveyDetailDto> surveyDetails;
+
+    private Boolean hasNext;
 
     @Builder
-    public SurveyDetailsResponse(Long categoryId, String categoryName, List<SurveyDetailDto> surveyDetailDtoList) {
+    public SurveyDetailsResponse(Long categoryId, String categoryName, List<SurveyDetailDto> surveyDetails, Boolean hasNext) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
-        this.surveyDetailDtoList = surveyDetailDtoList;
+        this.surveyDetails = surveyDetails;
+        this.hasNext = hasNext;
     }
 }

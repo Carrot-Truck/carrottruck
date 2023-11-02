@@ -2,18 +2,19 @@ package com.boyworld.carrot.api.controller.order;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.order.request.CreateOrderRequest;
-import com.boyworld.carrot.api.controller.order.response.OrderDetailResponse;
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
+import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
+import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,13 +38,13 @@ public class OrderController {
      * @return 사용자 전체 주문 내역
      */
     @GetMapping
-    public ApiResponse<OrderResponse> getOrders() {
+    public ApiResponse<OrdersResponse> getOrders() {
         log.debug("OrderController:getOrders called");
         
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
         
-        OrderResponse response = orderService.getOrders(email);
+        OrdersResponse response = orderService.getOrders(email);
         log.debug("ClientOrderResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -69,21 +70,42 @@ public class OrderController {
     }
 
     /**
-     * 주문 상세 조회 API
+     * 고객 - 주문 상세 조회 API
      *
      * @param orderId 주문 식별키
      * @return 주문 상세 정보
      */
 
-    @GetMapping("/{orderId}")
-    public ApiResponse<OrderDetailResponse> getOrder(@PathVariable Long orderId) {
+    @GetMapping("/client/{orderId}")
+    public ApiResponse<OrderResponse> getOrderByClient(@PathVariable Long orderId) {
         log.debug("OrderController#getOrder called");
         log.debug("orderId={}", orderId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        OrderDetailResponse response = orderService.getOrder(orderId, email);
+        OrderResponse response = orderService.getOrder(orderId, email, Role.CLIENT);
+        log.debug("ClientOrderResponseDetail={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * 주문 상세 조회 API
+     *
+     * @param orderId 주문 식별키
+     * @return 주문 상세 정보
+     */
+
+    @GetMapping("/vendor/{orderId}")
+    public ApiResponse<OrderResponse> getOrderByVendor(@PathVariable Long orderId) {
+        log.debug("OrderController#getOrder called");
+        log.debug("orderId={}", orderId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        OrderResponse response = orderService.getOrder(orderId, email, Role.VENDOR);
         log.debug("ClientOrderResponseDetail={}", response);
 
         return ApiResponse.ok(response);
@@ -114,7 +136,7 @@ public class OrderController {
      * @param orderId 취소할 주문 정보
      * @return 취소된 주문 식별키
      */
-    @PatchMapping("/{orderId}")
+    @PutMapping("/{orderId}")
     public ApiResponse<Long> cancelOrder(@PathVariable Long orderId) {
         log.debug("OrderController#cancelOrder called");
 
@@ -123,6 +145,6 @@ public class OrderController {
 
         Long cancelId = orderService.cancelOrder(orderId, email);
 
-        return ApiResponse.found(cancelId);
+        return ApiResponse.ok(cancelId);
     }
 }

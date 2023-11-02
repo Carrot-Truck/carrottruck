@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { LoginPageLayout } from './style';
-import Button from 'components/atoms/Button';
 import SwitchButton from 'components/organisms/SwitchButton';
-import useMovePage from 'hooks/useMovePage';
 import BackSpace from 'components/atoms/BackSpace';
+import LoginForm from 'components/organisms/LoginForm';
 import JoinForm from 'components/organisms/JoinForm';
 
 function LoginPage() {
-  const [movePage] = useMovePage();
-  const handleBackClick = () => {
-    movePage('/vendor');
-  };
+  const [selectedButton, setSelectedButton] = useState(1);
 
   return (
     <LoginPageLayout>
-      <BackSpace></BackSpace>
-      <SwitchButton></SwitchButton>
-      <JoinForm></JoinForm>
+      <div className="header">
+        <BackSpace></BackSpace>
+        <p>환영해요!</p>
+      </div>
+      <SwitchButton selectedButton={selectedButton} setSelectedButton={setSelectedButton}></SwitchButton>
+      {selectedButton === 1 && <LoginForm />}
+      {selectedButton === 2 && <JoinForm />}
     </LoginPageLayout>
   );
 }

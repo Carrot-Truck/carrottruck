@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import './App.css';
 import RouteLink from './routes/Route';
 import { GlobalStyles } from 'styles/GlobalStyles';

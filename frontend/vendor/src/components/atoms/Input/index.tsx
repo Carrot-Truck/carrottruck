@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, ChangeEvent, ReactNode } from 'react';
+import { Dispatch, SetStateAction, ChangeEvent, ReactNode } from 'react';
 
 import { InputWrapper } from './style';
 

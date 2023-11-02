@@ -61,25 +61,23 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         // given
         Member member = createMember(Role.CLIENT);
         Category category = createCategory();
-        FoodTruck foodTruck = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
                 "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
                 "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
                 40,
                 10,
                 true);
-        createSchedules(foodTruck);
+        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+        createSchedules(foodTruck1);
+        createSchedules(foodTruck2);
 
-        Sale sale = Sale.builder()
-                .foodTruck(foodTruck)
-                .latitude(BigDecimal.valueOf(35.204008))
-                .longitude(BigDecimal.valueOf(126.807271))
-                .orderNumber(0)
-                .totalAmount(0)
-                .startTime(LocalDateTime.of(2023, 11, 2, 9, 30))
-                .endTime(null)
-                .active(true)
-                .build();
-        saleRepository.save(sale);
+        createSale(foodTruck1, null);
+        createSale(foodTruck2, null);
 
         // when
         List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(
@@ -88,7 +86,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         log.debug("items={}", items);
 
         // then
-        assertThat(items).hasSize(3);
+        assertThat(items).hasSize(6);
     }
 
     @DisplayName("근처에 영업 중인 푸드트럭이 없으면 빈 리스트가 반환된다.")
@@ -97,13 +95,13 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         // given
         Member member = createMember(Role.CLIENT);
         Category category = createCategory();
-        FoodTruck foodTruck = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
                 "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
                 "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
                 40,
                 10,
                 true);
-        createSchedules(foodTruck);
+        createSchedules(foodTruck2);
 
         // when
         List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(
@@ -115,7 +113,87 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(items).isEmpty();
     }
 
-    // TODO: 2023-11-02 테스트 케이스 추가 작성 (검색 조건 추가)
+    @DisplayName("사용자는 카테고리 식별키로 현재 위치 기준 반경 1Km 이내의 푸드트럭을 조회할 수 있다.")
+    @Test
+    void getEmptyPositionsByConditionWithCategoryId() {
+        // given
+        Member member = createMember(Role.CLIENT);
+        Category category = createCategory();
+        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+        createSchedules(foodTruck1);
+        createSchedules(foodTruck2);
+
+        createSale(foodTruck1, null);
+        createSale(foodTruck2, LocalDateTime.of(2023, 11, 2, 21, 30));
+
+        // when
+        List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(
+                SearchCondition.of(category.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)));
+        log.debug("items={}", items);
+
+        // then
+        assertThat(items).hasSize(6);
+    }
+
+    @DisplayName("사용자는 키워드로 현재 위치 기준 반경 1Km 이내의 푸드트럭을 조회할 수 있다.")
+    @Test
+    void getEmptyPositionsByConditionWithKeyword() {
+        // given
+        Member member = createMember(Role.CLIENT);
+        Category category = createCategory();
+        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+        createSchedules(foodTruck1);
+        createSchedules(foodTruck2);
+
+        createSale(foodTruck1, null);
+        createSale(foodTruck2, LocalDateTime.of(2023, 11, 2, 21, 30));
+
+        // when
+        List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(
+                SearchCondition.of(null, "된장",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)));
+        log.debug("items={}", items);
+
+        // then
+        assertThat(items).hasSize(3);
+    }
+
+    private void createSale(FoodTruck foodTruck, LocalDateTime endTime) {
+        Sale sale = Sale.builder()
+                .foodTruck(foodTruck)
+                .latitude(BigDecimal.valueOf(35.204008))
+                .longitude(BigDecimal.valueOf(126.807271))
+                .orderNumber(0)
+                .totalAmount(0)
+                .startTime(LocalDateTime.of(2023, 11, 2, 9, 30))
+                .endTime(endTime)
+                .active(true)
+                .build();
+        saleRepository.save(sale);
+    }
 
     private Member createMember(Role role) {
         Member member = Member.builder()

@@ -27,7 +27,7 @@ public class CreateSurveyDto {
         this.latitude = latitude;
         this.longitude = longitude;
         this.content = content;
-        this.active = active;
+        this.active = true;
     }
 
     public Survey toEntity(Category category, Member member, String sido, String sigungu, String dong) {

@@ -44,6 +44,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("수요조사 제출 API")
     @Test
+    @WithMockUser(roles = "CLIENT")
     void submitSurvey() throws Exception {
         CreateSurveyResponse response = CreateSurveyResponse.builder()
                 .categoryName("한식")
@@ -77,14 +78,14 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                         requestFields(
                                 fieldWithPath("categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 아이디"),
-                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
-                                        .description("멤버 아이디"),
                                 fieldWithPath("latitude").type(JsonFieldType.NUMBER)
                                         .description("위도"),
                                 fieldWithPath("longitude").type(JsonFieldType.NUMBER)
                                         .description("경도"),
                                 fieldWithPath("content").type(JsonFieldType.STRING)
-                                        .description("상세 내용")
+                                        .description("상세 내용"),
+                                fieldWithPath("active").type(JsonFieldType.BOOLEAN)
+                                        .description("설문활성화")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -164,11 +165,11 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                                         .description("상태"),
                                 fieldWithPath("message").type(JsonFieldType.STRING)
                                         .description("메시지"),
-                                fieldWithPath("data.surveyCountDtoList[].categoryId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.surveyCounts[].categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 아이디"),
-                                fieldWithPath("data.surveyCountDtoList[].categoryName").type(JsonFieldType.STRING)
+                                fieldWithPath("data.surveyCounts[].categoryName").type(JsonFieldType.STRING)
                                         .description("카테고리 이름"),
-                                fieldWithPath("data.surveyCountDtoList[].surveyCount").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.surveyCounts[].surveyCount").type(JsonFieldType.NUMBER)
                                         .description("수요조사 갯수")
                         )
                 ));

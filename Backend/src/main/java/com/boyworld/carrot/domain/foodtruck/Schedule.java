@@ -30,10 +30,10 @@ public class Schedule extends TimeBaseEntity {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
+    @Column(precision = 38, scale = 10, nullable = false)
     private BigDecimal latitude;
 
-    @Column(nullable = false)
+    @Column(precision = 38, scale = 10, nullable = false)
     private BigDecimal longitude;
 
     @Column(nullable = false, length = 30)

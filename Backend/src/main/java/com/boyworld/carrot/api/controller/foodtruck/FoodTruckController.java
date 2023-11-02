@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -67,7 +68,12 @@ public class FoodTruckController {
      * @return 푸드트럭 지도에 표시될 마커 정보
      */
     @GetMapping("/marker")
-    public ApiResponse<FoodTruckMarkerResponse> getFoodTruckMarkers(@RequestParam(required = false, defaultValue = "") String categoryId, @RequestParam(required = false, defaultValue = "") String keyword, @RequestParam(required = false, defaultValue = "") String longitude, @RequestParam(required = false, defaultValue = "") String latitude) {
+    public ApiResponse<FoodTruckMarkerResponse> getFoodTruckMarkers(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false, defaultValue = "") String keyword,
+            @RequestParam BigDecimal longitude,
+            @RequestParam BigDecimal latitude) {
+
         log.debug("FoodTruckController#getFoodTruckMarkers called");
         log.debug("categoryId={}", categoryId);
         log.debug("keyword={}", keyword);
@@ -77,7 +83,8 @@ public class FoodTruckController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(SearchCondition.of(categoryId, keyword, longitude, latitude), email);
+        FoodTruckMarkerResponse response =
+                foodTruckQueryService.getFoodTruckMarkers(SearchCondition.of(categoryId, keyword, longitude, latitude));
         log.debug("FoodTruckResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -95,11 +102,11 @@ public class FoodTruckController {
      */
     @GetMapping
     public ApiResponse<FoodTruckResponse<List<FoodTruckItem>>> getSearchedFoodTrucks(
-            @RequestParam(required = false, defaultValue = "") String categoryId,
+            @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false, defaultValue = "") String keyword,
-            @RequestParam(required = false, defaultValue = "") String longitude,
-            @RequestParam(required = false, defaultValue = "") String latitude,
-            @RequestParam(required = false, defaultValue = "") String lastFoodTruckId) {
+            @RequestParam BigDecimal longitude,
+            @RequestParam BigDecimal latitude,
+            @RequestParam(required = false) Long lastFoodTruckId) {
 
         log.debug("FoodTruckController#getFoodTrucks called");
         log.debug("categoryId={}", categoryId);

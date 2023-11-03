@@ -77,7 +77,7 @@ public class ReviewService {
             // Save info at ReviewImage
             ReviewImage reviewImage = ReviewImage.builder()
                     .review(review)
-                    .saveFileName(uploadFileUrl)
+                    .storeFileName(uploadFileUrl)
                     .uploadFileName(request.getImage().getOriginalFilename())
                     .active(true)
                     .build();

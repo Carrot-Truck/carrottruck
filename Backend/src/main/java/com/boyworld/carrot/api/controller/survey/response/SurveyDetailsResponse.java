@@ -18,10 +18,21 @@ public class SurveyDetailsResponse {
     private Boolean hasNext;
 
     @Builder
-    public SurveyDetailsResponse(Long categoryId, String categoryName, List<SurveyDetailDto> surveyDetails, Boolean hasNext) {
+    public SurveyDetailsResponse(Long categoryId, String categoryName,
+                                 List<SurveyDetailDto> surveyDetails, Boolean hasNext) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.surveyDetails = surveyDetails;
         this.hasNext = hasNext;
+    }
+
+    public static SurveyDetailsResponse of(Long categoryId, String categoryName,
+                                           List<SurveyDetailDto> surveyDetails, Boolean hasNext) {
+        return SurveyDetailsResponse.builder()
+                .categoryId(categoryId)
+                .categoryName(categoryName)
+                .surveyDetails(surveyDetails)
+                .hasNext(hasNext)
+                .build();
     }
 }

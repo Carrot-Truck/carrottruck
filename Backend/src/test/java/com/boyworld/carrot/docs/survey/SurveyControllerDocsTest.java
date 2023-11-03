@@ -1,12 +1,12 @@
 package com.boyworld.carrot.docs.survey;
 
 import com.boyworld.carrot.api.controller.survey.SurveyController;
-import com.boyworld.carrot.api.controller.survey.request.CreateSurveyRequest;
 import com.boyworld.carrot.api.controller.survey.response.CreateSurveyResponse;
 import com.boyworld.carrot.api.controller.survey.response.SurveyCountResponse;
 import com.boyworld.carrot.api.controller.survey.response.SurveyDetailsResponse;
 import com.boyworld.carrot.api.service.survey.SurveyQueryService;
 import com.boyworld.carrot.api.service.survey.SurveyService;
+import com.boyworld.carrot.api.service.survey.dto.CreateSurveyDto;
 import com.boyworld.carrot.api.service.survey.dto.SurveyCountDto;
 import com.boyworld.carrot.api.service.survey.dto.SurveyDetailDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
@@ -44,6 +44,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("수요조사 제출 API")
     @Test
+    @WithMockUser(roles = "CLIENT")
     void submitSurvey() throws Exception {
         CreateSurveyResponse response = CreateSurveyResponse.builder()
                 .categoryName("한식")
@@ -53,18 +54,17 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                 .dong("장덕동")
                 .build();
 
-        given(surveyService.createSurvey(any(CreateSurveyRequest.class)))
+        given(surveyService.createSurvey(any(CreateSurveyDto.class), anyString()))
                 .willReturn(response);
 
-        CreateSurveyRequest request = CreateSurveyRequest.builder()
+        CreateSurveyDto dto = CreateSurveyDto.builder()
                 .categoryId(1L)
-                .memberId(1L)
                 .latitude(new BigDecimal("35.19684"))
                 .longitude(new BigDecimal("126.8108"))
                 .content("해줘잉")
                 .build();
 
-        String jsonRequest = objectMapper.writeValueAsString(request);
+        String jsonRequest = objectMapper.writeValueAsString(dto);
 
         mockMvc.perform(
                 post("/survey/submit")
@@ -78,8 +78,6 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                         requestFields(
                                 fieldWithPath("categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 아이디"),
-                                fieldWithPath("memberId").type(JsonFieldType.NUMBER)
-                                        .description("멤버 아이디"),
                                 fieldWithPath("latitude").type(JsonFieldType.NUMBER)
                                         .description("위도"),
                                 fieldWithPath("longitude").type(JsonFieldType.NUMBER)
@@ -133,7 +131,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
         List<SurveyCountDto> items = List.of(item1, item2, item3);
 
         SurveyCountResponse response = SurveyCountResponse.builder()
-                .surveyCountDtoList(items)
+                .surveyCounts(items)
                 .build();
 
         given(surveyQueryService.getSurveyCount(anyString(), anyString(), anyString()))
@@ -165,11 +163,11 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                                         .description("상태"),
                                 fieldWithPath("message").type(JsonFieldType.STRING)
                                         .description("메시지"),
-                                fieldWithPath("data.surveyCountDtoList[].categoryId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.surveyCounts[].categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 아이디"),
-                                fieldWithPath("data.surveyCountDtoList[].categoryName").type(JsonFieldType.STRING)
+                                fieldWithPath("data.surveyCounts[].categoryName").type(JsonFieldType.STRING)
                                         .description("카테고리 이름"),
-                                fieldWithPath("data.surveyCountDtoList[].surveyCount").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.surveyCounts[].surveyCount").type(JsonFieldType.NUMBER)
                                         .description("수요조사 갯수")
                         )
                 ));
@@ -180,7 +178,6 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
     void getSurveyDetails() throws Exception {
         SurveyDetailDto item1 = SurveyDetailDto.builder()
                 .surveyId(1L)
-                .memberId(1L)
                 .nickname("당근당근")
                 .content("출근길에 아아가 있었으면 좋겠어요")
                 .createdTime(LocalDateTime.now().minusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
@@ -188,7 +185,6 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
 
         SurveyDetailDto item2 = SurveyDetailDto.builder()
                 .surveyId(6L)
-                .memberId(25L)
                 .nickname("트럭")
                 .content("커피팔아주세요")
                 .createdTime(LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
@@ -196,7 +192,6 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
 
         SurveyDetailDto item3 = SurveyDetailDto.builder()
                 .surveyId(11L)
-                .memberId(30L)
                 .nickname("바니")
                 .content("붕어빵 먹고싶어요")
                 .createdTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
@@ -255,8 +250,6 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                                         .description("카테고리 이름"),
                                 fieldWithPath("data.surveyDetails[].surveyId").type(JsonFieldType.NUMBER)
                                         .description("수요조사 ID"),
-                                fieldWithPath("data.surveyDetails[].memberId").type(JsonFieldType.NUMBER)
-                                        .description("작성자 ID"),
                                 fieldWithPath("data.surveyDetails[].nickname").type(JsonFieldType.STRING)
                                         .description("작성자 닉네임"),
                                 fieldWithPath("data.surveyDetails[].content").type(JsonFieldType.STRING)

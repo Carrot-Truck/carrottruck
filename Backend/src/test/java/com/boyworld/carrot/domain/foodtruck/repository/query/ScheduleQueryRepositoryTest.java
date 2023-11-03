@@ -13,7 +13,7 @@ import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.sale.Sale;
-import com.boyworld.carrot.domain.sale.repository.SaleRepository;
+import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

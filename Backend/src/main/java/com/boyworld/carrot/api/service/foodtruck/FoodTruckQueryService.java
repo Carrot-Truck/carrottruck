@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -44,7 +43,7 @@ public class FoodTruckQueryService {
      * 근처 푸드트럭 위치 정보 검색 API
      *
      * @param condition 검색 조건
-     * @param showAll 전체보기 / 영업중보기 여부
+     * @param showAll   전체보기 / 영업중보기 여부
      * @return 푸드트럭 지도에 표시될 마커 정보
      */
     public FoodTruckMarkerResponse getFoodTruckMarkers(SearchCondition condition, Boolean showAll) {
@@ -61,11 +60,19 @@ public class FoodTruckQueryService {
      * 근처 푸드트럭 목록 조회 API
      *
      * @param condition 검색 조건
+     * @param showAll   전체보기 / 영업중 보기 여부
      * @return 현재 위치 기반 반경 1Km 이내의 푸드트럭 목록
      */
-    public FoodTruckResponse<List<FoodTruckItem>> getFoodTrucks(SearchCondition condition, Long lastFoodTruckId) {
-        // TODO: 2023-11-02 정렬 조건(가까운순, 평점순, 리뷰많은순, 찜개수순)
-        return null;
+    public FoodTruckResponse<List<FoodTruckItem>> getFoodTrucks(SearchCondition condition, Long lastFoodTruckId, Boolean showAll) {
+        List<FoodTruckItem> items;
+        if (showAll) {
+            items = scheduleQueryRepository.getFoodTrucksByCondition(condition);
+        } else {
+            items = saleQueryRepository.getFoodTrucksByCondition(condition);
+        }
+        Boolean hasNext = checkHasNext(items);
+
+        return FoodTruckResponse.of(hasNext, items);
     }
 
     /**

@@ -56,8 +56,6 @@ public class ScheduleQueryRepository {
             return new ArrayList<>();
         }
 
-        // TODO: 2023-11-03 리팩토링 필요
-
         LocalDateTime today = LocalDate.now().atStartOfDay();
         LocalDateTime now = LocalDateTime.now();
         return queryFactory
@@ -68,12 +66,7 @@ public class ScheduleQueryRepository {
                                 condition.getLongitude(), schedule.longitude),
                         schedule.latitude,
                         schedule.longitude,
-                        sale.endTime.isNull()
-                                .and(new CaseBuilder()
-                                        .when(sale.startTime.between(today, now))
-                                        .then(true)
-                                        .otherwise(false))
-                                .and(schedule.dayOfWeek.eq(LocalDateTime.now().getDayOfWeek()))
+                        isOpen(today, now)
                 ))
                 .from(schedule)
                 .join(schedule.foodTruck, foodTruck)
@@ -104,6 +97,28 @@ public class ScheduleQueryRepository {
         return Expressions.numberTemplate(BigDecimal.class,
                 "ST_DISTANCE(POINT({0}, {1}), POINT({2}, {3}))",
                 currentLat, currentLng, targetLat, targetLng);
+    }
+
+    private static BooleanExpression isOpen(LocalDateTime today, LocalDateTime now) {
+        return notClosed()
+                .and(isOpened(today, now))
+                .and(isToDay(now));
+    }
+
+    private static BooleanExpression notClosed() {
+        return sale.endTime.isNull();
+    }
+
+    private static BooleanExpression isOpened(LocalDateTime today, LocalDateTime now) {
+        return sale.startTime.isNotNull()
+                .and(new CaseBuilder()
+                        .when(sale.startTime.between(today, now))
+                        .then(true)
+                        .otherwise(false));
+    }
+
+    private static BooleanExpression isToDay(LocalDateTime now) {
+        return schedule.dayOfWeek.eq(now.getDayOfWeek());
     }
 
     private BooleanExpression isActiveSchedule() {

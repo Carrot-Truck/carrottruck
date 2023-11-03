@@ -193,17 +193,17 @@ public class ScheduleQueryRepository {
                 currentLat, currentLng, targetLat, targetLng);
     }
 
-    private static BooleanExpression isOpen(LocalDateTime today, LocalDateTime now) {
+    private BooleanExpression isOpen(LocalDateTime today, LocalDateTime now) {
         return notClosed()
                 .and(isOpened(today, now))
                 .and(isToDay(now));
     }
 
-    private static BooleanExpression notClosed() {
+    private BooleanExpression notClosed() {
         return sale.endTime.isNull();
     }
 
-    private static BooleanExpression isOpened(LocalDateTime today, LocalDateTime now) {
+    private BooleanExpression isOpened(LocalDateTime today, LocalDateTime now) {
         return sale.startTime.isNotNull()
                 .and(new CaseBuilder()
                         .when(sale.startTime.between(today, now))
@@ -221,7 +221,7 @@ public class ScheduleQueryRepository {
                 );
     }
 
-    private static BooleanExpression isToDay(LocalDateTime now) {
+    private BooleanExpression isToDay(LocalDateTime now) {
         return schedule.dayOfWeek.eq(now.getDayOfWeek());
     }
 

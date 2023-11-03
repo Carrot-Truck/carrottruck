@@ -130,7 +130,7 @@ public class FoodTruckController {
 
         FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService
                 .getFoodTrucks(SearchCondition.of(categoryId, keyword, longitude, latitude, orderCondition),
-                        lastFoodTruckId, showAll);
+                        email, lastFoodTruckId, showAll);
         log.debug("FoodTruckResponse={}", response);
 
         return ApiResponse.ok(response);

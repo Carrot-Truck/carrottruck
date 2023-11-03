@@ -60,15 +60,17 @@ public class FoodTruckQueryService {
      * 근처 푸드트럭 목록 조회 API
      *
      * @param condition 검색 조건
+     * @param email 현재 로그인 중인 사용자 이메일
+     * @param lastFoodTruckId 마지막으로 조회된 푸드트럭 식별키
      * @param showAll   전체보기 / 영업중 보기 여부
      * @return 현재 위치 기반 반경 1Km 이내의 푸드트럭 목록
      */
-    public FoodTruckResponse<List<FoodTruckItem>> getFoodTrucks(SearchCondition condition, Long lastFoodTruckId, Boolean showAll) {
+    public FoodTruckResponse<List<FoodTruckItem>> getFoodTrucks(SearchCondition condition, String email, Long lastFoodTruckId, Boolean showAll) {
         List<FoodTruckItem> items;
         if (showAll) {
-            items = scheduleQueryRepository.getFoodTrucksByCondition(condition);
+            items = scheduleQueryRepository.getFoodTrucksByCondition(condition, email, lastFoodTruckId);
         } else {
-            items = saleQueryRepository.getFoodTrucksByCondition(condition);
+            items = saleQueryRepository.getFoodTrucksByCondition(condition, email, lastFoodTruckId);
         }
         Boolean hasNext = checkHasNext(items);
 

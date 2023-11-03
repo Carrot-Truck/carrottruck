@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 
 @Data
 public class FoodTruckItem {
+
+    private Long foodTruckScheduleId;
     private Long categoryId;
     private Long foodTruckId;
     private String foodTruckName;
@@ -22,9 +24,11 @@ public class FoodTruckItem {
     private Boolean isNew;
 
     @Builder
-    public FoodTruckItem(Long categoryId, Long foodTruckId, String foodTruckName, Boolean isOpen, Boolean isLiked,
-                         Integer prepareTime, Integer likeCount, Double grade, Integer reviewCount, BigDecimal distance,
-                         String address, String foodTruckImageUrl, Boolean isNew) {
+    public FoodTruckItem(Long foodTruckScheduleId, Long categoryId, Long foodTruckId, String foodTruckName,
+                         Boolean isOpen, Boolean isLiked, Integer prepareTime, Integer likeCount, Double grade,
+                         Integer reviewCount, BigDecimal distance, String address, String foodTruckImageUrl,
+                         Boolean isNew) {
+        this.foodTruckScheduleId = foodTruckScheduleId;
         this.categoryId = categoryId;
         this.foodTruckId = foodTruckId;
         this.foodTruckName = foodTruckName;

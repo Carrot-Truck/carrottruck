@@ -41,14 +41,14 @@ public class FoodTruckQueryService {
     private final MemberRepository memberRepository;
 
     /**
-     * 푸드트럭 지도 검색 API
+     * 근처 푸드트럭 위치 정보 검색 API
      *
      * @param condition 검색 조건
      * @param showAll 전체보기 / 영업중보기 여부
      * @return 푸드트럭 지도에 표시될 마커 정보
      */
     public FoodTruckMarkerResponse getFoodTruckMarkers(SearchCondition condition, Boolean showAll) {
-        List<FoodTruckMarkerItem> items = new ArrayList<>();
+        List<FoodTruckMarkerItem> items;
         if (showAll) {
             items = scheduleQueryRepository.getPositionsByCondition(condition);
         } else {
@@ -58,13 +58,12 @@ public class FoodTruckQueryService {
     }
 
     /**
-     * 푸드트럭 목록 조회 API
+     * 근처 푸드트럭 목록 조회 API
      *
      * @param condition 검색 조건
-     * @param email     현재 로그인 중인 사용자 이메일
-     * @return 식별키 리스트에 해당하는 푸드트럭 리스트 (거리순 정렬)
+     * @return 현재 위치 기반 반경 1Km 이내의 푸드트럭 목록
      */
-    public FoodTruckResponse<List<FoodTruckItem>> getFoodTrucks(SearchCondition condition, Long lastFoodTruckId, String email) {
+    public FoodTruckResponse<List<FoodTruckItem>> getFoodTrucks(SearchCondition condition, Long lastFoodTruckId) {
         // TODO: 2023-11-02 정렬 조건(가까운순, 평점순, 리뷰많은순, 찜개수순)
         return null;
     }

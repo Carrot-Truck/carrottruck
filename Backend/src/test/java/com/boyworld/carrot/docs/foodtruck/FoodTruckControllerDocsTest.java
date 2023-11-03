@@ -241,7 +241,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
 
         FoodTruckResponse<List<FoodTruckItem>> response = FoodTruckResponse.of(false, items);
 
-        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), nullable(Long.class), anyString()))
+        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), nullable(Long.class)))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -252,6 +252,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                 .param("latitude", "35.1595")
                                 .param("longitude", "126.8526")
                                 .param("lastFoodTruckId", "")
+                                .param("showAll", "true")
+                                .param("orderBy", "")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -263,12 +265,16 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("카테고리 식별키"),
                                 parameterWithName("keyword")
                                         .description("푸드트럭/메뉴 이름"),
+                                parameterWithName("orderBy")
+                                        .description("정렬 기준 (가까운순(default), 평점 높은 순(grade), 찜 많은 순(like), 리뷰 많은 순(review))"),
                                 parameterWithName("latitude")
                                         .description("현재 사용자의 위도"),
                                 parameterWithName("longitude")
                                         .description("현재 사용자의 경도"),
                                 parameterWithName("lastFoodTruckId")
-                                        .description("마지막으로 조회된 푸드트럭 식별키")
+                                        .description("마지막으로 조회된 푸드트럭 식별키"),
+                                parameterWithName("showAll")
+                                        .description("푸드트럭 전체조회 / 영업중 조회 여부")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

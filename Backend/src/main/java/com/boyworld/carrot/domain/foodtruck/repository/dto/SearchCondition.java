@@ -12,8 +12,8 @@ public class SearchCondition {
     private String keyword;
     private BigDecimal longitude;
     private BigDecimal latitude;
+    private String orderBy;
 
-    @Builder
     public SearchCondition(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude) {
         this.categoryId = categoryId;
         this.keyword = keyword;
@@ -21,12 +21,20 @@ public class SearchCondition {
         this.latitude = latitude;
     }
 
+    @Builder
+    public SearchCondition(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude, String orderBy) {
+        this.categoryId = categoryId;
+        this.keyword = keyword;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.orderBy = orderBy;
+    }
+
     public static SearchCondition of(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude) {
-        return SearchCondition.builder()
-                .categoryId(categoryId)
-                .keyword(keyword)
-                .latitude(latitude)
-                .longitude(longitude)
-                .build();
+        return new SearchCondition(categoryId, keyword, longitude, latitude);
+    }
+
+    public static SearchCondition of(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude, String orderBy) {
+        return new SearchCondition(categoryId, keyword, longitude, latitude, orderBy);
     }
 }

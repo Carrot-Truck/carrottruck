@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +70,7 @@ public class SaleQueryRepository {
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
                         isNearBy(condition, sale.latitude, sale.longitude),
+                        isActive(),
                         isActiveSale()
                 )
                 .fetch();
@@ -76,16 +79,20 @@ public class SaleQueryRepository {
             return new ArrayList<>();
         }
 
+        LocalDateTime today = LocalDate.now().atStartOfDay();
+        LocalDateTime now = LocalDateTime.now();
+        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), sale.latitude,
+                condition.getLongitude(), sale.longitude);
+
         return queryFactory
                 .select(Projections.constructor(FoodTruckMarkerItem.class,
                         sale.foodTruck.category.id,
                         sale.foodTruck.id,
-                        calculateDistance(condition.getLatitude(), sale.latitude,
-                                condition.getLongitude(), sale.longitude),
+                        distance,
                         sale.latitude,
                         sale.longitude,
                         sale.endTime.isNull()
-                        ))
+                ))
                 .from(sale)
                 .join(sale.foodTruck, foodTruck)
                 .where(
@@ -116,11 +123,15 @@ public class SaleQueryRepository {
                 currentLat, currentLng, targetLat, targetLng);
     }
 
+    private BooleanExpression isActive() {
+        return foodTruck.active;
+    }
+
     private BooleanExpression isActiveSale() {
         return sale.active.isTrue().and(sale.endTime.isNull());
     }
 
-    public List<FoodTruckItem> getFoodTrucksByCondition(SearchCondition condition) {
+    public List<FoodTruckItem> getFoodTrucksByCondition(SearchCondition condition, String email, Long lastFoodTruckId) {
         return null;
     }
 }

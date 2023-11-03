@@ -8,6 +8,7 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -123,25 +124,22 @@ public class ScheduleQueryRepository {
                 condition.getLongitude(), schedule.longitude);
 
         // TODO: 2023-11-03 리팩토링
-        
+
         return queryFactory
                 .select(Projections.constructor(FoodTruckItem.class,
                         schedule.foodTruck.category.id,
                         schedule.foodTruck.id,
                         schedule.foodTruck.name,
                         isOpen(today, now),
-                        foodTruckLike.isNotNull().and(foodTruckLike.active.isTrue()),
+                        isLiked(),
                         schedule.foodTruck.prepareTime,
-                        select(foodTruckLike.count().intValue()).from(foodTruckLike).where(foodTruckLike.foodTruck.eq(schedule.foodTruck)),
-                        select(review.grade.sum().divide(review.count()).doubleValue()).from(review).where(review.foodTruck.eq(schedule.foodTruck)),
-                        select(review.count().intValue()).from(review).where(review.foodTruck.eq(schedule.foodTruck)),
+                        getLikeCount(),
+                        getAvgGrade(),
+                        getReviewCount(),
                         distance,
                         schedule.address,
                         foodTruckImage.uploadFile.storeFileName,
-                        new CaseBuilder()
-                                .when(foodTruck.createdDate.after(lastMonth))
-                                .then(true)
-                                .otherwise(false)
+                        isNew(lastMonth)
                 ))
                 .from(schedule)
                 .join(schedule.foodTruck, foodTruck)
@@ -157,29 +155,6 @@ public class ScheduleQueryRepository {
                 )
                 .limit(PAGE_SIZE + 1)
                 .fetch();
-    }
-
-    private BooleanExpression isActive() {
-        return foodTruck.active;
-    }
-
-    private OrderSpecifier<?>[] createOrderSpecifiers(OrderCondition orderCondition, NumberTemplate<BigDecimal> distance) {
-        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
-        orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, distance));
-
-        if (orderCondition == null) {
-            return orderSpecifiers.toArray(new OrderSpecifier[0]);
-        }
-
-        if (orderCondition.equals(OrderCondition.LIKE)) {
-            orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, foodTruckLike.count()));
-        } else if (orderCondition.equals(OrderCondition.GRADE)) {
-            orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, review.grade.avg()));
-        } else if (orderCondition.equals(OrderCondition.REVIEW)) {
-            orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, review.count()));
-        }
-
-        return orderSpecifiers.toArray(new OrderSpecifier[0]);
     }
 
     private BooleanExpression isEqualCategoryId(Long categoryId) {
@@ -222,11 +197,60 @@ public class ScheduleQueryRepository {
                         .otherwise(false));
     }
 
+    private BooleanExpression isLiked() {
+        return foodTruckLike.isNotNull().and(foodTruckLike.active.isTrue());
+    }
+
     private static BooleanExpression isToDay(LocalDateTime now) {
         return schedule.dayOfWeek.eq(now.getDayOfWeek());
     }
 
     private BooleanExpression isActiveSchedule() {
         return schedule.active;
+    }
+
+    private BooleanExpression isActive() {
+        return foodTruck.active;
+    }
+
+    private BooleanExpression isNew(LocalDateTime lastMonth) {
+        return new CaseBuilder()
+                .when(foodTruck.createdDate.after(lastMonth))
+                .then(true)
+                .otherwise(false);
+    }
+
+    private OrderSpecifier<?>[] createOrderSpecifiers(OrderCondition orderCondition, NumberTemplate<BigDecimal> distance) {
+        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+
+        if (orderCondition == null) {
+            orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, distance));
+        } else if (orderCondition.equals(OrderCondition.LIKE)) {
+            orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, getLikeCount()));
+        } else if (orderCondition.equals(OrderCondition.GRADE)) {
+            orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, review.grade.avg()));
+        } else if (orderCondition.equals(OrderCondition.REVIEW)) {
+            orderSpecifiers.add(new OrderSpecifier<>(Order.DESC, review.count()));
+        }
+
+        return orderSpecifiers.toArray(new OrderSpecifier[0]);
+    }
+
+    private JPQLQuery<Integer> getLikeCount() {
+        return select(foodTruckLike.count().intValue())
+                .from(foodTruckLike)
+                .where(foodTruckLike.foodTruck.eq(schedule.foodTruck));
+    }
+
+    private JPQLQuery<Double> getAvgGrade() {
+        return select(review.grade.sum().divide(review.count()).doubleValue())
+                .from(review)
+                .where(review.foodTruck.eq(schedule.foodTruck));
+    }
+
+    private JPQLQuery<Integer> getReviewCount() {
+        return select(review.count().intValue())
+                .from(review)
+                .where(review.foodTruck.eq(schedule.foodTruck));
     }
 }

@@ -38,16 +38,16 @@ public class ReviewImage extends TimeBaseEntity {
     private String uploadFileName;
 
     @Column(nullable = false, length = 255)
-    private String saveFileName;
+    private String storeFileName;
 
     @Column(nullable = false)
     private Boolean active;
 
     @Builder
-    private ReviewImage(Review review, String uploadFileName, String saveFileName, Boolean active) {
+    private ReviewImage(Review review, String uploadFileName, String storeFileName, Boolean active) {
         this.review = review;
         this.uploadFileName = uploadFileName;
-        this.saveFileName = saveFileName;
+        this.storeFileName = storeFileName;
         this.active = active;
     }
 }

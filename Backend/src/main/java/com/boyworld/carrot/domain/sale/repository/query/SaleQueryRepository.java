@@ -1,5 +1,6 @@
 package com.boyworld.carrot.domain.sale.repository.query;
 
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.boyworld.carrot.domain.sale.QSale;
@@ -117,5 +118,9 @@ public class SaleQueryRepository {
 
     private BooleanExpression isActiveSale() {
         return sale.active.isTrue().and(sale.endTime.isNull());
+    }
+
+    public List<FoodTruckItem> getFoodTrucksByCondition(SearchCondition condition) {
+        return null;
     }
 }

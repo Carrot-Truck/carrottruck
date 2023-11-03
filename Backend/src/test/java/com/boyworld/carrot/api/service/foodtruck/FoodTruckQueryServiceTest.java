@@ -143,6 +143,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         // when
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(SearchCondition.of(null, "",
                 BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), true);
+        log.debug("response={}", response);
 
         // then
         assertThat(response.getMarkerCount()).isEqualTo(6);
@@ -172,6 +173,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
                 SearchCondition.of(null, "",
                         BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), true);
+        log.debug("response={}", response);
 
         // then
         assertThat(response.getMarkerCount()).isZero();
@@ -206,6 +208,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
                 SearchCondition.of(category.getId(), "",
                         BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), true);
+        log.debug("response={}", response);
 
         // then
         assertThat(response.getMarkerCount()).isEqualTo(6);
@@ -241,6 +244,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
                 SearchCondition.of(null, "된장",
                         BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), true);
+        log.debug("response={}", response);
 
         // then
         assertThat(response.getMarkerCount()).isEqualTo(3);
@@ -273,6 +277,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
                 SearchCondition.of(null, "",
                         BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), false);
+        log.debug("response={}", response);
 
         // then
         assertThat(response.getMarkerCount()).isEqualTo(1);
@@ -305,6 +310,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
                 SearchCondition.of(null, "",
                         BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), false);
+        log.debug("response={}", response);
 
         // then
         assertThat(response.getMarkerCount()).isZero();
@@ -337,6 +343,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
                 SearchCondition.of(category.getId(), "",
                         BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), false);
+        log.debug("response={}", response);
 
         // then
         assertThat(response.getMarkerCount()).isEqualTo(2);
@@ -369,6 +376,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
                 SearchCondition.of(null, "된장",
                         BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), false);
+        log.debug("response={}", response);
 
         // then
         assertThat(response.getMarkerCount()).isEqualTo(2);

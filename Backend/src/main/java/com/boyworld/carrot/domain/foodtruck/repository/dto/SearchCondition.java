@@ -2,6 +2,7 @@ package com.boyworld.carrot.domain.foodtruck.repository.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -12,7 +13,7 @@ public class SearchCondition {
     private String keyword;
     private BigDecimal longitude;
     private BigDecimal latitude;
-    private String orderBy;
+    private OrderCondition orderCondition;
 
     public SearchCondition(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude) {
         this.categoryId = categoryId;
@@ -22,19 +23,19 @@ public class SearchCondition {
     }
 
     @Builder
-    public SearchCondition(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude, String orderBy) {
+    public SearchCondition(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude, String orderCondition) {
         this.categoryId = categoryId;
         this.keyword = keyword;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.orderBy = orderBy;
+        this.orderCondition = StringUtils.hasText(orderCondition) ? OrderCondition.valueOf(orderCondition) : null;
     }
 
     public static SearchCondition of(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude) {
         return new SearchCondition(categoryId, keyword, longitude, latitude);
     }
 
-    public static SearchCondition of(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude, String orderBy) {
-        return new SearchCondition(categoryId, keyword, longitude, latitude, orderBy);
+    public static SearchCondition of(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude, String orderCondition) {
+        return new SearchCondition(categoryId, keyword, longitude, latitude, orderCondition);
     }
 }

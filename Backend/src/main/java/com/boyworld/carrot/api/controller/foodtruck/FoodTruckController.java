@@ -99,7 +99,7 @@ public class FoodTruckController {
      *
      * @param categoryId      카테고리 식별키
      * @param keyword         검색어(푸드트럭 이름 / 메뉴 이름)
-     * @param orderBy         정렬 기준 (가까운순, 평점 높은 순, 찜 많은 순, 리뷰 많은 순)
+     * @param orderCondition         정렬 기준 (가까운순, 평점 높은 순, 찜 많은 순, 리뷰 많은 순)
      * @param latitude        위도
      * @param longitude       경도
      * @param lastFoodTruckId 마지막으로 조회된 푸드트럭 식별키
@@ -110,11 +110,11 @@ public class FoodTruckController {
     public ApiResponse<FoodTruckResponse<List<FoodTruckItem>>> getSearchedFoodTrucks(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false, defaultValue = "") String keyword,
-            @RequestParam(required = false, defaultValue = "") String orderBy,
+            @RequestParam(required = false, defaultValue = "") String orderCondition,
             @RequestParam BigDecimal longitude,
             @RequestParam BigDecimal latitude,
             @RequestParam(required = false) Long lastFoodTruckId,
-            @RequestParam(defaultValue = "true") Boolean showAll) {
+            @RequestParam(defaultValue = "false") Boolean showAll) {
 
         log.debug("FoodTruckController#getFoodTrucks called");
         log.debug("categoryId={}", categoryId);
@@ -122,14 +122,15 @@ public class FoodTruckController {
         log.debug("latitude={}", latitude);
         log.debug("longitude={}", longitude);
         log.debug("lastFoodTruckId={}", lastFoodTruckId);
-        log.debug("orderBy={}", orderBy);
+        log.debug("orderCondition={}", orderCondition);
         log.debug("showAll={}", showAll);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
         FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService
-                .getFoodTrucks(SearchCondition.of(categoryId, keyword, longitude, latitude, orderBy), lastFoodTruckId);
+                .getFoodTrucks(SearchCondition.of(categoryId, keyword, longitude, latitude, orderCondition),
+                        lastFoodTruckId, showAll);
         log.debug("FoodTruckResponse={}", response);
 
         return ApiResponse.ok(response);

@@ -216,10 +216,11 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .isLiked(true)
                 .prepareTime(30)
                 .grade(4.5)
+                .likeCount(143)
                 .reviewCount(1324)
-                .distance(123)
+                .distance(BigDecimal.valueOf(123))
                 .address("광주 광산구 장덕로 5번길 16")
-                .foodTruckImageId(1L)
+                .foodTruckImageUrl("imageUrl")
                 .isNew(true)
                 .build();
 
@@ -231,17 +232,18 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .isLiked(false)
                 .prepareTime(20)
                 .grade(4.0)
+                .likeCount(132)
                 .reviewCount(1324)
-                .distance(100)
+                .distance(BigDecimal.valueOf(100))
                 .address("수완자이아파트정문")
-                .foodTruckImageId(2L)
+                .foodTruckImageUrl("imageUrl")
                 .isNew(false)
                 .build();
         List<FoodTruckItem> items = List.of(item1, item2);
 
         FoodTruckResponse<List<FoodTruckItem>> response = FoodTruckResponse.of(false, items);
 
-        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), nullable(Long.class)))
+        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), nullable(Long.class), anyBoolean()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -301,14 +303,16 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("예상 준비 시간"),
                                 fieldWithPath("data.items[].grade").type(JsonFieldType.NUMBER)
                                         .description("평점"),
+                                fieldWithPath("data.items[].likeCount").type(JsonFieldType.NUMBER)
+                                        .description("찜 개수"),
                                 fieldWithPath("data.items[].reviewCount").type(JsonFieldType.NUMBER)
                                         .description("리뷰 개수"),
                                 fieldWithPath("data.items[].distance").type(JsonFieldType.NUMBER)
                                         .description("현재 사용자와의 거리"),
                                 fieldWithPath("data.items[].address").type(JsonFieldType.STRING)
                                         .description("푸드트럭 주소"),
-                                fieldWithPath("data.items[].foodTruckImageId").type(JsonFieldType.NUMBER)
-                                        .description("푸드트럭 이미지 식별키"),
+                                fieldWithPath("data.items[].foodTruckImageUrl").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 이미지 저장 경로"),
                                 fieldWithPath("data.items[].isNew").type(JsonFieldType.BOOLEAN)
                                         .description("신규 등록 여부")
                         )

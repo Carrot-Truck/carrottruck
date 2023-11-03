@@ -144,6 +144,40 @@ class SaleQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(items).hasSize(2);
     }
 
+    @DisplayName("사용자는 키워드에 해당하는 현재 위치 기준 반경 1Km 이내의 영업중인 푸드트럭을 조회할 수 있다.")
+    @Test
+    void getPositionsByConditionWithKeyword() {
+        // given
+        Member member = createMember(Role.CLIENT);
+        Category category = createCategory();
+        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), null);
+        Sale sale2 = createSale(foodTruck2, LocalDateTime.now().minusHours(3), null);
+
+        // when
+        List<FoodTruckMarkerItem> items = saleQueryRepository.getPositionsByCondition(
+                SearchCondition.of(null, "된장",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)));
+        for (FoodTruckMarkerItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).hasSize(2);
+    }
+
     private Member createMember(Role role) {
         Member member = Member.builder()
                 .email("ssafy@ssafy.com")

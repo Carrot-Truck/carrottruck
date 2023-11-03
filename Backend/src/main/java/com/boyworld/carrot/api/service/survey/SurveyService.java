@@ -3,6 +3,7 @@ package com.boyworld.carrot.api.service.survey;
 import com.boyworld.carrot.api.controller.survey.request.CreateSurveyRequest;
 import com.boyworld.carrot.api.controller.survey.response.CreateSurveyResponse;
 import com.boyworld.carrot.api.service.geocoding.GeocodingService;
+import com.boyworld.carrot.api.service.survey.dto.CreateSurveyDto;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
 import com.boyworld.carrot.domain.member.Member;
@@ -38,18 +39,21 @@ public class SurveyService {
     /**
      * 설문 제출
      *
-     * @param request 제출 수요조사 정보
+     * @param dto 제출 수요조사 정보
      * @return 제출 수요조사 정보
      */
-    public CreateSurveyResponse createSurvey(CreateSurveyRequest request) {
-        Member member = findMemberById(request.getMemberId());
+    public CreateSurveyResponse createSurvey(CreateSurveyDto dto, String email) {
+        log.debug("CreateSurveyDto={}", dto);
+        Member member = findMemberByEmail(email);
         checkActiveMember(member);
 
-        Category category = findCategoryById(request.getCategoryId());
+        Category category = findCategoryById(dto.getCategoryId());
+        log.debug("category={}", category.getId());
 
-        String[] address = geocodingService.reverseGeocoding(request.getLatitude(), request.getLongitude(), "legalcode").get("legalcode").split(" ");
+        String[] address = geocodingService.reverseGeocoding(dto.getLatitude(), dto.getLongitude(),
+                "legalcode").get("legalcode").split(" ");
 
-        Survey survey = saveSurvey(category, member, address[0], address[1], address[2], request.getContent());
+        Survey survey = saveSurvey(category, member, address, dto);
 
         return CreateSurveyResponse.of(survey);
     }
@@ -75,11 +79,6 @@ public class SurveyService {
         return surveyId;
     }
 
-    private Member findMemberById(Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
-    }
-
     private Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
@@ -101,16 +100,10 @@ public class SurveyService {
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 수요조사입니다."));
     }
 
-    private Survey saveSurvey(Category category, Member member, String sido, String sigungu, String dong, String content) {
-        Survey survey = Survey.builder()
-                .category(category)
-                .member(member)
-                .sido(sido)
-                .sigungu(sigungu)
-                .dong(dong)
-                .content(content)
-                .active(true)
-                .build();
+    private Survey saveSurvey(Category category, Member member, String[] address, CreateSurveyDto dto) {
+        Survey survey = dto.toEntity(category, member, address[0], address[1], address[2]);
+        log.debug("Survey={}", survey.getContent());
+
         return surveyRepository.save(survey);
     }
 }

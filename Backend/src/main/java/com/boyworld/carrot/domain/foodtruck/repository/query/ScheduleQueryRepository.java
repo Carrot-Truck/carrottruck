@@ -117,7 +117,7 @@ public class ScheduleQueryRepository {
                 )
                 .limit(PAGE_SIZE + 1)
                 .fetch();
-        log.debug("ids={}", ids);
+
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
@@ -182,15 +182,15 @@ public class ScheduleQueryRepository {
         return distance.loe(SEARCH_RANGE_METER);
     }
 
-    private BooleanExpression isGreaterThanLastId(Long lastScheduleId) {
-        return lastScheduleId != null ? schedule.id.gt(lastScheduleId) : null;
-    }
-
     private NumberTemplate<BigDecimal> calculateDistance(BigDecimal currentLat, NumberPath<BigDecimal> targetLat,
                                                          BigDecimal currentLng, NumberPath<BigDecimal> targetLng) {
         return Expressions.numberTemplate(BigDecimal.class,
                 "ST_DISTANCE(POINT({0}, {1}), POINT({2}, {3}))",
                 currentLat, currentLng, targetLat, targetLng);
+    }
+
+    private BooleanExpression isGreaterThanLastId(Long lastScheduleId) {
+        return lastScheduleId != null ? schedule.id.gt(lastScheduleId) : null;
     }
 
     private BooleanExpression isOpen(LocalDateTime today, LocalDateTime now) {
@@ -211,6 +211,10 @@ public class ScheduleQueryRepository {
                         .otherwise(false));
     }
 
+    private BooleanExpression isToDay(LocalDateTime now) {
+        return schedule.dayOfWeek.eq(now.getDayOfWeek());
+    }
+
     private JPQLQuery<Boolean> isLiked(String email) {
         return select(foodTruckLike.count().goe(1L))
                 .from(foodTruckLike)
@@ -221,16 +225,12 @@ public class ScheduleQueryRepository {
                 );
     }
 
-    private BooleanExpression isToDay(LocalDateTime now) {
-        return schedule.dayOfWeek.eq(now.getDayOfWeek());
+    private BooleanExpression isActive() {
+        return foodTruck.active;
     }
 
     private BooleanExpression isActiveSchedule() {
         return schedule.active;
-    }
-
-    private BooleanExpression isActive() {
-        return foodTruck.active;
     }
 
     private BooleanExpression isNew(LocalDateTime lastMonth) {

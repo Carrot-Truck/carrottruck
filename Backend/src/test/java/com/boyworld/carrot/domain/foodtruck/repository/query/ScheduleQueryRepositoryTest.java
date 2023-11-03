@@ -140,7 +140,6 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
                 40,
                 10,
                 true);
-        createSchedules(foodTruck2);
 
         // when
         List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(

@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
 import static com.boyworld.carrot.domain.SizeConstants.SEARCH_RANGE_METER;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruck.foodTruck;
 import static com.boyworld.carrot.domain.foodtruck.QSchedule.schedule;
@@ -51,7 +50,6 @@ public class ScheduleQueryRepository {
                         isNearBy(condition, schedule.latitude, schedule.longitude),
                         isActiveSchedule()
                 )
-                .limit(PAGE_SIZE + 1)
                 .fetch();
 
         if (ids == null || ids.isEmpty()) {

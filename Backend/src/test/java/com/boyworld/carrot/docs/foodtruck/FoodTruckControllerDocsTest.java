@@ -209,6 +209,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = {"CLIENT", "VENDOR"})
     void getSearchedFoodTrucks() throws Exception {
         FoodTruckItem item1 = FoodTruckItem.builder()
+                .foodTruckScheduleId(1L)
                 .categoryId(1L)
                 .foodTruckId(1L)
                 .foodTruckName("동현 된장삼겹")
@@ -225,6 +226,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .build();
 
         FoodTruckItem item2 = FoodTruckItem.builder()
+                .foodTruckScheduleId(2L)
                 .categoryId(2L)
                 .foodTruckId(2L)
                 .foodTruckName("팔천순대")
@@ -243,7 +245,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
 
         FoodTruckResponse<List<FoodTruckItem>> response = FoodTruckResponse.of(false, items);
 
-        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), nullable(Long.class), anyBoolean()))
+        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), anyString(), nullable(Long.class), anyBoolean()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -289,6 +291,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("다음 페이지 존재 여부"),
                                 fieldWithPath("data.items").type(JsonFieldType.ARRAY)
                                         .description("푸드트럭 검색 결과 목록"),
+                                fieldWithPath("data.items[].foodTruckScheduleId").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 스케줄 식별키"),
                                 fieldWithPath("data.items[].categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 식별키"),
                                 fieldWithPath("data.items[].foodTruckId").type(JsonFieldType.NUMBER)

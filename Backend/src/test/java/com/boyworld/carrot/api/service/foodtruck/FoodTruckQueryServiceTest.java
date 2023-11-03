@@ -4,7 +4,6 @@ import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckOverview;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
-import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;

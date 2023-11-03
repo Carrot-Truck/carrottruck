@@ -148,7 +148,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .markerItems(List.of(info1, info2))
                 .build();
 
-        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class)))
+        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class), anyBoolean()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -158,6 +158,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                 .param("keyword", "")
                                 .param("latitude", "35.1595")
                                 .param("longitude", "126.8526")
+                                .param("showAll", "true")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -172,7 +173,9 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                 parameterWithName("latitude")
                                         .description("현재 사용자의 위도"),
                                 parameterWithName("longitude")
-                                        .description("현재 사용자의 경도")
+                                        .description("현재 사용자의 경도"),
+                                parameterWithName("showAll")
+                                        .description("푸드트럭 전체조회 / 영업중 조회 여부")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

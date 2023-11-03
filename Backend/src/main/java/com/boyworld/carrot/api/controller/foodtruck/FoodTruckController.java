@@ -72,7 +72,8 @@ public class FoodTruckController {
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false, defaultValue = "") String keyword,
             @RequestParam BigDecimal longitude,
-            @RequestParam BigDecimal latitude) {
+            @RequestParam BigDecimal latitude,
+            @RequestParam(defaultValue = "true") Boolean showAll) {
 
         log.debug("FoodTruckController#getFoodTruckMarkers called");
         log.debug("categoryId={}", categoryId);
@@ -84,7 +85,8 @@ public class FoodTruckController {
         log.debug("email={}", email);
 
         FoodTruckMarkerResponse response =
-                foodTruckQueryService.getFoodTruckMarkers(SearchCondition.of(categoryId, keyword, longitude, latitude));
+                foodTruckQueryService
+                        .getFoodTruckMarkers(SearchCondition.of(categoryId, keyword, longitude, latitude), showAll);
         log.debug("FoodTruckResponse={}", response);
 
         return ApiResponse.ok(response);

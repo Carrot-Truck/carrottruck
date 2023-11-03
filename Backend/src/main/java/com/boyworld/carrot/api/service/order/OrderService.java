@@ -3,8 +3,14 @@ package com.boyworld.carrot.api.service.order;
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
+import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Role;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.order.Order;
+import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.order.repository.OrderRepository;
+import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
+import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OrderService {
 
+    private final FoodTruckRepository foodTruckRepository;
+    private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
+    private final SaleRepository saleRepository;
+    private final SaleQueryRepository saleQueryRepository;
 
     /**
      * 전체 주문내역 조회 API
@@ -56,17 +66,6 @@ public class OrderService {
     }
 
     /**
-     * (주문 내역에서) 주문 삭제 API
-     *
-     * @param orderId   삭제할 주문 식별키
-     * @param email     현재 로그인 중인 사용자 이메일
-     * @return 삭제된 푸드트럭 식별키                  
-     */
-    public Long deleteOrder(Long orderId, String email) {
-        return null;
-    }
-
-    /**
      * 고객 - 주문 상세 조회 API
      *
      * @param orderId   조회할 주문 식별키
@@ -87,7 +86,18 @@ public class OrderService {
      * @return 생성된 주문 식별키
      */
     public Long createOrder(CreateOrderDto dto, String email) {
-        return null;
+
+        Order order = Order.builder()
+            .member(memberRepository.findByEmail(email).orElse(null))
+            .sale(saleQueryRepository.getSaleOrderByCreatedTimeDesc(dto.getFoodTruckId()).orElse(null))
+            .status(Status.PENDING)
+            .totalPrice(dto.getTotalPrice())
+            .active(true)
+            .build();
+
+        Order createdOrder = orderRepository.save(order);
+
+        return createdOrder.getId();
     }
 
     /**
@@ -98,6 +108,17 @@ public class OrderService {
      * @return 취소된 주문 식별키
      */
     public Long cancelOrder(Long orderId, String email) {
+        return null;
+    }
+
+    /**
+     * (주문 내역에서) 주문 삭제 API
+     *
+     * @param orderId   삭제할 주문 식별키
+     * @param email     현재 로그인 중인 사용자 이메일
+     * @return 삭제된 푸드트럭 식별키
+     */
+    public Long deleteOrder(Long orderId, String email) {
         return null;
     }
 }

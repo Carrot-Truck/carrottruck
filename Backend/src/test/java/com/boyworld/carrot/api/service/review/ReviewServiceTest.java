@@ -20,7 +20,7 @@ import com.boyworld.carrot.domain.review.ReviewImage;
 import com.boyworld.carrot.domain.review.repository.ReviewImageRepository;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
 import com.boyworld.carrot.domain.sale.Sale;
-import com.boyworld.carrot.domain.sale.repository.SaleRepository;
+import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
 import com.boyworld.carrot.file.S3Uploader;
 import java.math.BigDecimal;
 import java.time.LocalDate;

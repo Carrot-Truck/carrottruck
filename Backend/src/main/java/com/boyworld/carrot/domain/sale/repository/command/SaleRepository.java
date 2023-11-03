@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.sale.repository;
+package com.boyworld.carrot.domain.sale.repository.command;
 
 import com.boyworld.carrot.domain.sale.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;

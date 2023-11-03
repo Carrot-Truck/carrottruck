@@ -59,6 +59,9 @@ public class Sale extends TimeBaseEntity {
     @Column
     private LocalDateTime endTime;
 
+    @Column
+    private Boolean orderable;
+
     @Column(nullable = false)
     private Boolean active;
 

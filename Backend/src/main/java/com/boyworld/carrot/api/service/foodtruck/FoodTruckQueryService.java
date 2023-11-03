@@ -9,11 +9,13 @@ import com.boyworld.carrot.domain.foodtruck.repository.query.ScheduleQueryReposi
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -34,16 +36,24 @@ public class FoodTruckQueryService {
 
     private final ScheduleQueryRepository scheduleQueryRepository;
 
+    private final SaleQueryRepository saleQueryRepository;
+
     private final MemberRepository memberRepository;
 
     /**
      * 푸드트럭 지도 검색 API
      *
      * @param condition 검색 조건
+     * @param showAll 전체보기 / 영업중보기 여부
      * @return 푸드트럭 지도에 표시될 마커 정보
      */
-    public FoodTruckMarkerResponse getFoodTruckMarkers(SearchCondition condition) {
-        List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(condition);
+    public FoodTruckMarkerResponse getFoodTruckMarkers(SearchCondition condition, Boolean showAll) {
+        List<FoodTruckMarkerItem> items = new ArrayList<>();
+        if (showAll) {
+            items = scheduleQueryRepository.getPositionsByCondition(condition);
+        } else {
+            items = saleQueryRepository.getPositionsByCondition(condition);
+        }
         return FoodTruckMarkerResponse.of(items.size(), items);
     }
 

@@ -1,12 +1,15 @@
 package com.boyworld.carrot.api.service.foodtruck;
 
 import com.boyworld.carrot.api.controller.foodtruck.response.*;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.query.ScheduleQueryRepository;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,28 +33,48 @@ public class FoodTruckQueryService {
 
     private final FoodTruckQueryRepository foodTruckQueryRepository;
 
+    private final ScheduleQueryRepository scheduleQueryRepository;
+
+    private final SaleQueryRepository saleQueryRepository;
+
     private final MemberRepository memberRepository;
 
     /**
-     * 푸드트럭 지도 검색 API
+     * 근처 푸드트럭 위치 정보 검색 API
      *
      * @param condition 검색 조건
-     * @param email     현재 로그인 중인 사용자 이메일
+     * @param showAll   전체보기 / 영업중보기 여부
      * @return 푸드트럭 지도에 표시될 마커 정보
      */
-    public FoodTruckMarkerResponse getFoodTruckMarkers(SearchCondition condition, String email) {
-        return null;
+    public FoodTruckMarkerResponse getFoodTruckMarkers(SearchCondition condition, Boolean showAll) {
+        List<FoodTruckMarkerItem> items;
+        if (showAll) {
+            items = scheduleQueryRepository.getPositionsByCondition(condition);
+        } else {
+            items = saleQueryRepository.getPositionsByCondition(condition);
+        }
+        return FoodTruckMarkerResponse.of(items.size(), items);
     }
 
     /**
-     * 푸드트럭 목록 조회 API
+     * 근처 푸드트럭 목록 조회 API
      *
      * @param condition 검색 조건
-     * @param email     현재 로그인 중인 사용자 이메일
-     * @return 식별키 리스트에 해당하는 푸드트럭 리스트 (거리순 정렬)
+     * @param email 현재 로그인 중인 사용자 이메일
+     * @param lastFoodTruckId 마지막으로 조회된 푸드트럭 식별키
+     * @param showAll   전체보기 / 영업중 보기 여부
+     * @return 현재 위치 기반 반경 1Km 이내의 푸드트럭 목록
      */
-    public FoodTruckResponse<List<FoodTruckItem>> getFoodTrucks(SearchCondition condition, String lastFoodTruckId, String email) {
-        return null;
+    public FoodTruckResponse<List<FoodTruckItem>> getFoodTrucks(SearchCondition condition, String email, Long lastFoodTruckId, Boolean showAll) {
+        List<FoodTruckItem> items;
+        if (showAll) {
+            items = scheduleQueryRepository.getFoodTrucksByCondition(condition, email, lastFoodTruckId);
+        } else {
+            items = saleQueryRepository.getFoodTrucksByCondition(condition, email, lastFoodTruckId);
+        }
+        Boolean hasNext = checkHasNext(items);
+
+        return FoodTruckResponse.of(hasNext, items);
     }
 
     /**

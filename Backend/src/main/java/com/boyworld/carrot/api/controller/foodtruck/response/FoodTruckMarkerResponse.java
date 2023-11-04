@@ -18,4 +18,11 @@ public class FoodTruckMarkerResponse {
         this.markerCount = markerCount;
         this.markerItems = markerItems;
     }
+
+    public static FoodTruckMarkerResponse of(Integer markerCount, List<FoodTruckMarkerItem> markerItems) {
+        return FoodTruckMarkerResponse.builder()
+                .markerCount(markerCount)
+                .markerItems(markerItems)
+                .build();
+    }
 }

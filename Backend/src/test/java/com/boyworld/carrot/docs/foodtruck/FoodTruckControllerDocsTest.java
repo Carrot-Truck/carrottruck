@@ -27,6 +27,8 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -126,16 +128,18 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         FoodTruckMarkerItem info1 = FoodTruckMarkerItem.builder()
                 .categoryId(1L)
                 .foodTruckId(1L)
-                .latitude("37.5665")
-                .longitude("126.9780")
+                .latitude(BigDecimal.valueOf(37.5665))
+                .longitude(BigDecimal.valueOf(126.9780))
+                .distance(BigDecimal.valueOf(100))
                 .isOpen(true)
                 .build();
 
         FoodTruckMarkerItem info2 = FoodTruckMarkerItem.builder()
                 .categoryId(2L)
                 .foodTruckId(2L)
-                .latitude("35.1595")
-                .longitude("126.8526")
+                .latitude(BigDecimal.valueOf(35.1595))
+                .longitude(BigDecimal.valueOf(126.8526))
+                .distance(BigDecimal.valueOf(100))
                 .isOpen(false)
                 .build();
 
@@ -144,7 +148,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .markerItems(List.of(info1, info2))
                 .build();
 
-        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class), anyString()))
+        given(foodTruckQueryService.getFoodTruckMarkers(any(SearchCondition.class), anyBoolean()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -152,8 +156,9 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                 .header("Authentication", "authentication")
                                 .param("categoryId", "")
                                 .param("keyword", "")
-                                .param("latitude", "")
-                                .param("longitude", "")
+                                .param("latitude", "35.1595")
+                                .param("longitude", "126.8526")
+                                .param("showAll", "true")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -168,7 +173,9 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                 parameterWithName("latitude")
                                         .description("현재 사용자의 위도"),
                                 parameterWithName("longitude")
-                                        .description("현재 사용자의 경도")
+                                        .description("현재 사용자의 경도"),
+                                parameterWithName("showAll")
+                                        .description("푸드트럭 전체조회 / 영업중 조회 여부")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -185,6 +192,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("카테고리 식별키"),
                                 fieldWithPath("data.markerItems[].foodTruckId").type(JsonFieldType.NUMBER)
                                         .description("푸드트럭 식별키"),
+                                fieldWithPath("data.markerItems[].distance").type(JsonFieldType.STRING)
+                                        .description("거리"),
                                 fieldWithPath("data.markerItems[].latitude").type(JsonFieldType.STRING)
                                         .description("위도"),
                                 fieldWithPath("data.markerItems[].longitude").type(JsonFieldType.STRING)
@@ -200,6 +209,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = {"CLIENT", "VENDOR"})
     void getSearchedFoodTrucks() throws Exception {
         FoodTruckItem item1 = FoodTruckItem.builder()
+                .foodTruckScheduleId(1L)
                 .categoryId(1L)
                 .foodTruckId(1L)
                 .foodTruckName("동현 된장삼겹")
@@ -207,14 +217,16 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .isLiked(true)
                 .prepareTime(30)
                 .grade(4.5)
+                .likeCount(143)
                 .reviewCount(1324)
-                .distance(123)
+                .distance(BigDecimal.valueOf(123))
                 .address("광주 광산구 장덕로 5번길 16")
-                .foodTruckImageId(1L)
+                .foodTruckImageUrl("imageUrl")
                 .isNew(true)
                 .build();
 
         FoodTruckItem item2 = FoodTruckItem.builder()
+                .foodTruckScheduleId(2L)
                 .categoryId(2L)
                 .foodTruckId(2L)
                 .foodTruckName("팔천순대")
@@ -222,17 +234,18 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .isLiked(false)
                 .prepareTime(20)
                 .grade(4.0)
+                .likeCount(132)
                 .reviewCount(1324)
-                .distance(100)
+                .distance(BigDecimal.valueOf(100))
                 .address("수완자이아파트정문")
-                .foodTruckImageId(2L)
+                .foodTruckImageUrl("imageUrl")
                 .isNew(false)
                 .build();
         List<FoodTruckItem> items = List.of(item1, item2);
 
         FoodTruckResponse<List<FoodTruckItem>> response = FoodTruckResponse.of(false, items);
 
-        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), anyString(), anyString()))
+        given(foodTruckQueryService.getFoodTrucks(any(SearchCondition.class), anyString(), nullable(Long.class), anyBoolean()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -240,9 +253,11 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                 .header("Authentication", "authentication")
                                 .param("categoryId", "")
                                 .param("keyword", "")
-                                .param("latitude", "")
-                                .param("longitude", "")
+                                .param("latitude", "35.1595")
+                                .param("longitude", "126.8526")
                                 .param("lastFoodTruckId", "")
+                                .param("showAll", "true")
+                                .param("orderBy", "")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -254,12 +269,16 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("카테고리 식별키"),
                                 parameterWithName("keyword")
                                         .description("푸드트럭/메뉴 이름"),
+                                parameterWithName("orderBy")
+                                        .description("정렬 기준 (가까운순(default), 평점 높은 순(grade), 찜 많은 순(like), 리뷰 많은 순(review))"),
                                 parameterWithName("latitude")
                                         .description("현재 사용자의 위도"),
                                 parameterWithName("longitude")
                                         .description("현재 사용자의 경도"),
                                 parameterWithName("lastFoodTruckId")
-                                        .description("마지막으로 조회된 푸드트럭 식별키")
+                                        .description("마지막으로 조회된 푸드트럭 식별키"),
+                                parameterWithName("showAll")
+                                        .description("푸드트럭 전체조회 / 영업중 조회 여부")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -272,6 +291,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("다음 페이지 존재 여부"),
                                 fieldWithPath("data.items").type(JsonFieldType.ARRAY)
                                         .description("푸드트럭 검색 결과 목록"),
+                                fieldWithPath("data.items[].foodTruckScheduleId").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 스케줄 식별키"),
                                 fieldWithPath("data.items[].categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 식별키"),
                                 fieldWithPath("data.items[].foodTruckId").type(JsonFieldType.NUMBER)
@@ -286,14 +307,16 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("예상 준비 시간"),
                                 fieldWithPath("data.items[].grade").type(JsonFieldType.NUMBER)
                                         .description("평점"),
+                                fieldWithPath("data.items[].likeCount").type(JsonFieldType.NUMBER)
+                                        .description("찜 개수"),
                                 fieldWithPath("data.items[].reviewCount").type(JsonFieldType.NUMBER)
                                         .description("리뷰 개수"),
                                 fieldWithPath("data.items[].distance").type(JsonFieldType.NUMBER)
                                         .description("현재 사용자와의 거리"),
                                 fieldWithPath("data.items[].address").type(JsonFieldType.STRING)
                                         .description("푸드트럭 주소"),
-                                fieldWithPath("data.items[].foodTruckImageId").type(JsonFieldType.NUMBER)
-                                        .description("푸드트럭 이미지 식별키"),
+                                fieldWithPath("data.items[].foodTruckImageUrl").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 이미지 저장 경로"),
                                 fieldWithPath("data.items[].isNew").type(JsonFieldType.BOOLEAN)
                                         .description("신규 등록 여부")
                         )
@@ -403,7 +426,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         ScheduleDto schedule1 = ScheduleDto.builder()
                 .scheduleId(1L)
                 .address("광주 광산구 장덕로5번길 16")
-                .days("월요일")
+                .days(DayOfWeek.MONDAY.name())
                 .startTime("17:00")
                 .endTime("01:00")
                 .build();
@@ -411,7 +434,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         ScheduleDto schedule2 = ScheduleDto.builder()
                 .scheduleId(2L)
                 .address("광주 광산구 장덕로5번길 16")
-                .days("화요일")
+                .days(DayOfWeek.TUESDAY.name())
                 .startTime("17:00")
                 .endTime("01:00")
                 .build();
@@ -419,7 +442,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         ScheduleDto schedule3 = ScheduleDto.builder()
                 .scheduleId(3L)
                 .address("")
-                .days("수요일")
+                .days(DayOfWeek.WEDNESDAY.name())
                 .startTime("")
                 .endTime("")
                 .build();

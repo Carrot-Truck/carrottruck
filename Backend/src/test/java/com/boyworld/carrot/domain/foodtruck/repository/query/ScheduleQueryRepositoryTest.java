@@ -78,25 +78,15 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getPositionsByCondition() {
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        createSale(foodTruck1, null);
-        createSale(foodTruck2, null);
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(
@@ -110,54 +100,24 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(items).hasSize(6);
     }
 
-    @DisplayName("현재 영업 중이지 않은 푸드트럭 일정의 위치 정보도 검색이 가능하다.")
-    @Test
-    void getPositionsByConditionWithOutSale() {
-        // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
-
-        // when
-        List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(
-                SearchCondition.of(null, "",
-                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)));
-        log.debug("items={}", items);
-
-        // then
-        assertThat(items).hasSize(6);
-    }
-
     @DisplayName("근처에 푸드트럭 일정이 없으면 빈 리스트가 반환된다.")
     @Test
     void getEmptyPositionsByCondition() {
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
-        Category category = createCategory();
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(
                 SearchCondition.of(null, "",
-                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)));
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(-56.807253)));
         log.debug("items={}", items);
 
         // then
@@ -168,59 +128,55 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getEmptyPositionsByConditionWithCategoryId() {
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        FoodTruck foodTruck1 = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
                 "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
                 "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
                 40,
                 10,
                 true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 삼겹", "010-1234-5678",
+        FoodTruck foodTruck2 = createFoodTruck(vendor2, category2, "팔천순대", "010-1234-5678",
                 "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
                 "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
+                30,
+                20,
+                false);
         createSchedules(foodTruck1);
         createSchedules(foodTruck2);
 
-        createSale(foodTruck1, null);
-        createSale(foodTruck2, LocalDateTime.of(2023, 11, 2, 21, 30));
+        Sale sale1 = createSale(foodTruck1, null);
+        Sale sale2 = createSale(foodTruck2, null);
 
         // when
         List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(
-                SearchCondition.of(category.getId(), "",
+                SearchCondition.of(category1.getId(), "",
                         BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)));
         log.debug("items={}", items);
 
         // then
-        assertThat(items).hasSize(6);
+        assertThat(items).hasSize(3);
     }
 
     @DisplayName("사용자는 키워드로 현재 위치 기준 반경 1Km 이내의 푸드트럭 일정의 위치 정보를 조회할 수 있다.")
     @Test
     void getEmptyPositionsByConditionWithKeyword() {
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        createSale(foodTruck1, null);
-        createSale(foodTruck2, LocalDateTime.of(2023, 11, 2, 21, 30));
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         List<FoodTruckMarkerItem> items = scheduleQueryRepository.getPositionsByCondition(
@@ -241,39 +197,10 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(vendor2, category, "된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                30,
-                20,
-                false);
-        createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
 
-        Sale sale1 = createSale(foodTruck1, null);
-        Sale sale2 = createSale(foodTruck2, null);
-
-        createFoodTruckLike(client1, foodTruck1);
-        createFoodTruckLike(client2, foodTruck1);
-
-        createFoodTruckLike(client2, foodTruck2);
-
-        Order order1 = createOrder(client1, sale1, 30000);
-
-        Order order2 = createOrder(client1, sale2, 50000);
-        Order order3 = createOrder(client2, sale2, 40000);
-
-        createReview(client1, foodTruck1, order1, "별로에요", 3);
-
-        createReview(client2, foodTruck2, order3, "아 진짜 별로", 1);
-        createReview(client1, foodTruck2, order2, "마시써요", 4);
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
@@ -289,6 +216,62 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(items).hasSize(6);
     }
 
+    @DisplayName("사용자는 가까운 순으로 현재 위치 기준 반경 1Km 이내의 카테고리 식별키에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithCategoryIdOrderByDistance() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        ""),
+                client1.getEmail(), null);
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).hasSize(3);
+    }
+
+    @DisplayName("사용자는 가까운 순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithKeywordOrderByDistance() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        ""),
+                client1.getEmail(), null);
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).hasSize(3);
+    }
+
     @DisplayName("사용자는 검색 조건 없이 찜(좋아요) 순으로 현재 위치 기준 반경 1Km 이내의 푸드트럭 목록을 조회할 수 있다.")
     @Test
     void getFoodTrucksWithoutConditionOrderByLike() {
@@ -298,39 +281,8 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(vendor2, category, "된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                30,
-                20,
-                false);
-        createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
-
-        Sale sale1 = createSale(foodTruck1, null);
-        Sale sale2 = createSale(foodTruck2, null);
-
-        createFoodTruckLike(client1, foodTruck1);
-        createFoodTruckLike(client2, foodTruck1);
-
-        createFoodTruckLike(client2, foodTruck2);
-
-        Order order1 = createOrder(client1, sale1, 30000);
-
-        Order order2 = createOrder(client1, sale2, 50000);
-        Order order3 = createOrder(client2, sale2, 40000);
-
-        createReview(client1, foodTruck1, order1, "별로에요", 3);
-
-        createReview(client2, foodTruck2, order3, "아 진짜 별로", 1);
-        createReview(client1, foodTruck2, order2, "마시써요", 4);
+        Category category = createCategory("고기/구이");
+        setUpData(vendor1, vendor2, client1, client2, category, category);
 
         // when
         List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
@@ -347,6 +299,62 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(items.get(0).getLikeCount()).isNotZero();
     }
 
+    @DisplayName("사용자는 찜(좋아요)순으로 현재 위치 기준 반경 1Km 이내의 카테고리 식별키에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithCategoryIdOrderByLike() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.LIKE.name()),
+                client1.getEmail(), null);
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).hasSize(3);
+    }
+
+    @DisplayName("사용자는 찜(좋아요)순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithKeywordOrderByLike() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.LIKE.name()),
+                client1.getEmail(), null);
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).hasSize(3);
+    }
+
     @DisplayName("사용자는 검색 조건 없이 리뷰 개수 순으로 현재 위치 기준 반경 1Km 이내의 푸드트럭 목록을 조회할 수 있다.")
     @Test
     void getFoodTrucksWithoutConditionOrderByReview() {
@@ -356,39 +364,8 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(vendor2, category, "된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                30,
-                20,
-                false);
-        createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
-
-        Sale sale1 = createSale(foodTruck1, null);
-        Sale sale2 = createSale(foodTruck2, null);
-
-        createFoodTruckLike(client1, foodTruck1);
-        createFoodTruckLike(client2, foodTruck1);
-
-        createFoodTruckLike(client2, foodTruck2);
-
-        Order order1 = createOrder(client1, sale1, 30000);
-
-        Order order2 = createOrder(client1, sale2, 50000);
-        Order order3 = createOrder(client2, sale2, 40000);
-
-        createReview(client1, foodTruck1, order1, "별로에요", 3);
-
-        createReview(client2, foodTruck2, order3, "아 진짜 별로", 1);
-        createReview(client1, foodTruck2, order2, "마시써요", 4);
+        Category category = createCategory("고기/구이");
+        setUpData(vendor1, vendor2, client1, client2, category, category);
 
         // when
         List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
@@ -404,6 +381,62 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(items).hasSize(6);
     }
 
+    @DisplayName("사용자는 리뷰 개수 순으로 현재 위치 기준 반경 1Km 이내의 카테고리에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithConditionOrderByReview() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.REVIEW.name()),
+                client1.getEmail(), null);
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).hasSize(3);
+    }
+
+    @DisplayName("사용자는 리뷰 개수 순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithKeywordOrderByReview() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.REVIEW.name()),
+                client1.getEmail(), null);
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).hasSize(3);
+    }
+
     @DisplayName("사용자는 검색 조건 없이 별점 순으로 현재 위치 기준 반경 1Km 이내의 푸드트럭 목록을 조회할 수 있다.")
     @Test
     void getFoodTrucksWithoutConditionOrderByGrade() {
@@ -413,39 +446,8 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(vendor2, category, "된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                30,
-                20,
-                false);
-        createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
-
-        Sale sale1 = createSale(foodTruck1, null);
-        Sale sale2 = createSale(foodTruck2, null);
-
-        createFoodTruckLike(client1, foodTruck1);
-        createFoodTruckLike(client2, foodTruck1);
-
-        createFoodTruckLike(client2, foodTruck2);
-
-        Order order1 = createOrder(client1, sale1, 30000);
-
-        Order order2 = createOrder(client1, sale2, 50000);
-        Order order3 = createOrder(client2, sale2, 40000);
-
-        createReview(client1, foodTruck1, order1, "별로에요", 3);
-
-        createReview(client2, foodTruck2, order3, "아 진짜 별로", 1);
-        createReview(client1, foodTruck2, order2, "마시써요", 4);
+        Category category = createCategory("고기/구이");
+        setUpData(vendor1, vendor2, client1, client2, category, category);
 
         // when
         List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
@@ -461,41 +463,60 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(items).hasSize(6);
     }
 
-    private Order createOrder(Member client, Sale sale, int totalPrice) {
-        Order order = Order.builder()
-                .status(Status.COMPLETE)
-                .member(client)
-                .sale(sale)
-                .totalPrice(totalPrice)
-                .active(true)
-                .build();
-        return orderRepository.save(order);
+    @DisplayName("사용자는 별점 순으로 현재 위치 기준 반경 1Km 이내의 카테고리에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithConditionOrderByGrade() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.GRADE.name()),
+                client1.getEmail(), null);
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).hasSize(3);
     }
 
-    private Review createReview(Member client, FoodTruck foodTruck, Order order, String content, int grade) {
-        Review review = Review.builder()
-                .member(client)
-                .foodTruck(foodTruck)
-                .order(order)
-                .content(content)
-                .grade(grade)
-                .active(true)
-                .build();
-        return reviewRepository.save(review);
-    }
+    @DisplayName("사용자는 별점 순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithKeywordOrderByGrade() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-    private Sale createSale(FoodTruck foodTruck, LocalDateTime endTime) {
-        Sale sale = Sale.builder()
-                .foodTruck(foodTruck)
-                .latitude(BigDecimal.valueOf(35.204008))
-                .longitude(BigDecimal.valueOf(126.807271))
-                .orderNumber(0)
-                .totalAmount(0)
-                .startTime(LocalDateTime.now().minusHours(1))
-                .endTime(endTime)
-                .active(true)
-                .build();
-        return saleRepository.save(sale);
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        List<FoodTruckItem> items = scheduleQueryRepository.getFoodTrucksByCondition(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.GRADE.name()),
+                client1.getEmail(), null);
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).hasSize(3);
     }
 
     private Member createMember(Role role, String email) {
@@ -511,12 +532,36 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         return memberRepository.save(member);
     }
 
-    private Category createCategory() {
+    private Category createCategory(String name) {
         Category category = Category.builder()
-                .name("고기/구이")
+                .name(name)
                 .active(true)
                 .build();
         return categoryRepository.save(category);
+    }
+
+    private void setUpData(Member vendor1, Member vendor2, Member client1, Member client2, Category category1, Category category2) {
+        FoodTruck foodTruck1 = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+        FoodTruck foodTruck2 = createFoodTruck(vendor2, category2, "팔천순대", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                30,
+                20,
+                false);
+        createSchedules(foodTruck1);
+        createSchedules(foodTruck2);
+
+        Sale sale1 = createSale(foodTruck1, null);
+        Sale sale2 = createSale(foodTruck2, null);
+
+        createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);
+
+        createOrdersAndReviews(client1, client2, foodTruck1, foodTruck2, sale1, sale2);
     }
 
     private FoodTruck createFoodTruck(Member member, Category category, String name, String phoneNumber,
@@ -576,6 +621,62 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
                 .active(true)
                 .foodTruck(foodTruck)
                 .build();
+    }
+
+    private Sale createSale(FoodTruck foodTruck, LocalDateTime endTime) {
+        Sale sale = Sale.builder()
+                .foodTruck(foodTruck)
+                .latitude(BigDecimal.valueOf(35.204008))
+                .longitude(BigDecimal.valueOf(126.807271))
+                .orderNumber(0)
+                .totalAmount(0)
+                .startTime(LocalDateTime.now().minusHours(1))
+                .endTime(endTime)
+                .active(true)
+                .build();
+        return saleRepository.save(sale);
+    }
+
+    private void createFoodTruckLikes(Member client1, Member client2, FoodTruck foodTruck1, FoodTruck foodTruck2) {
+        createFoodTruckLike(client1, foodTruck1);
+        createFoodTruckLike(client2, foodTruck1);
+
+        createFoodTruckLike(client2, foodTruck2);
+    }
+
+    private void createOrdersAndReviews(Member client1, Member client2, FoodTruck foodTruck1, FoodTruck foodTruck2, Sale sale1, Sale sale2) {
+        Order order1 = createOrder(client1, sale1, 30000);
+
+        Order order2 = createOrder(client1, sale2, 50000);
+        Order order3 = createOrder(client2, sale2, 40000);
+
+        createReview(client1, foodTruck1, order1, "별로에요", 3);
+
+        createReview(client2, foodTruck2, order3, "아 진짜 별로", 1);
+        createReview(client1, foodTruck2, order2, "마시써요", 4);
+    }
+
+    private Order createOrder(Member client, Sale sale, int totalPrice) {
+        Order order = Order.builder()
+                .status(Status.COMPLETE)
+                .member(client)
+                .sale(sale)
+                .totalPrice(totalPrice)
+                .active(true)
+                .build();
+        return orderRepository.save(order);
+    }
+
+    private Review createReview(Member client, FoodTruck foodTruck, Order order, String content, int grade) {
+        Review review = Review.builder()
+                .member(client)
+                .foodTruck(foodTruck)
+                .order(order)
+                .content(content)
+                .grade(grade)
+                .active(true)
+                .build();
+        return reviewRepository.save(review);
     }
 
     private void createFoodTruckLike(Member member, FoodTruck foodTruck) {

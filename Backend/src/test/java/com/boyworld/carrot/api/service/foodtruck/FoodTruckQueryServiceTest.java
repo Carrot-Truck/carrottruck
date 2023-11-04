@@ -1,20 +1,30 @@
 package com.boyworld.carrot.api.service.foodtruck;
 
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckOverview;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
+import com.boyworld.carrot.domain.foodtruck.FoodTruckLike;
 import com.boyworld.carrot.domain.foodtruck.Schedule;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckLikeRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.command.ScheduleRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.dto.OrderCondition;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.order.Order;
+import com.boyworld.carrot.domain.order.Status;
+import com.boyworld.carrot.domain.order.repository.OrderRepository;
+import com.boyworld.carrot.domain.review.Review;
+import com.boyworld.carrot.domain.review.repository.ReviewRepository;
 import com.boyworld.carrot.domain.sale.Sale;
 import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -55,46 +65,61 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
+    @Autowired
+    private FoodTruckLikeRepository foodTruckLikeRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
     @DisplayName("사업자는 보유 푸드트럭 목록을 조회할 수 있다.")
     @Test
     void getFoodTruckOverviewsAsVendor() {
         // given
-        Member member = createMember(Role.VENDOR);
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "팔천순대", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "팔천순대 푸드트럭",
-                20,
-                10,
-                false);
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         FoodTruckResponse<List<FoodTruckOverview>> response =
-                foodTruckQueryService.getFoodTruckOverviews(null, "ssafy@ssafy.com");
+                foodTruckQueryService.getFoodTruckOverviews(null, vendor1.getEmail());
+        for (FoodTruckOverview item : response.getItems()) {
+            log.debug("item={}", item);
+        }
 
         // then
         assertThat(response).isNotNull();
         assertThat(response.getHasNext()).isFalse();
         assertThat(response.getItems()).isNotEmpty();
-        assertThat(response.getItems()).hasSize(2);
+        assertThat(response.getItems()).hasSize(1);
     }
 
     @DisplayName("보유 푸드트럭이 없을 경우 빈 리스트가 반환된다.")
     @Test
     void getEmptyFoodTruckOverviewsAsVendor() {
         // given
-        Member member = createMember(Role.VENDOR);
-        Category category = createCategory();
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member vendor3 = createMember(Role.VENDOR, "bye@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         FoodTruckResponse<List<FoodTruckOverview>> response =
-                foodTruckQueryService.getFoodTruckOverviews(null, "ssafy@ssafy.com");
+                foodTruckQueryService.getFoodTruckOverviews(null, vendor3.getEmail());
 
         // then
         assertThat(response).isNotNull();
@@ -106,43 +131,43 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckOverviewsAsClient() {
         // given
-        Member member = createMember(Role.CLIENT);
-        Category category = createCategory();
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when // then
-        assertThatThrownBy(() -> foodTruckQueryService.getFoodTruckOverviews(null, "ssafy@ssafy.com"))
+        assertThatThrownBy(() -> foodTruckQueryService.getFoodTruckOverviews(null, client1.getEmail()))
                 .isInstanceOf(InvalidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }
 
-    @DisplayName("사용자는 검색 조건 없이 현재 위치 기준 반경 1Km 이내의 푸드트럭을 조회할 수 있다.")
+    @DisplayName("사용자는 검색 조건 없이 현재 위치 기준 반경 1Km 이내의 푸드트럭 일정의 위치 정보를 조회할 수 있다.")
     @Test
     void getAllFoodTruckMarkers() {
         // given
-        Member member = createMember(Role.CLIENT);
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), LocalDateTime.now());
-        Sale sale2 = createSale(foodTruck2, LocalDateTime.now().minusHours(3), LocalDateTime.now().minusHours(1));
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
-        FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(SearchCondition.of(null, "",
-                BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), true);
-        log.debug("response={}", response);
+        FoodTruckMarkerResponse response =
+                foodTruckQueryService.getFoodTruckMarkers(SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), true);
+        for (FoodTruckMarkerItem item : response.getMarkerItems()) {
+            log.debug("item={}", item);
+        }
 
         // then
         assertThat(response.getMarkerCount()).isEqualTo(6);
@@ -153,25 +178,20 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getEmptyAllFoodTruckMarkers() {
         // given
-        Member member = createMember(Role.CLIENT);
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
                 SearchCondition.of(null, "",
-                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), true);
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(-56.807253)), true);
         log.debug("response={}", response);
 
         // then
@@ -179,65 +199,44 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         assertThat(response.getMarkerItems()).isEmpty();
     }
 
-    @DisplayName("사용자는 카테고리 식별키로 현재 위치 기준 반경 1Km 이내의 푸드트럭을 조회할 수 있다.")
+    @DisplayName("사용자는 카테고리 식별키로 현재 위치 기준 반경 1Km 이내의 푸드트럭 일정의 위치 정보를 조회할 수 있다.")
     @Test
     void getAllFoodTruckMarkersWithCategoryId() {
         // given
-        Member member = createMember(Role.CLIENT);
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), LocalDateTime.now());
-        Sale sale2 = createSale(foodTruck2, LocalDateTime.now().minusHours(3), LocalDateTime.now().minusHours(1));
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
-                SearchCondition.of(category.getId(), "",
+                SearchCondition.of(category1.getId(), "",
                         BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), true);
         log.debug("response={}", response);
 
         // then
-        assertThat(response.getMarkerCount()).isEqualTo(6);
-        assertThat(response.getMarkerItems()).hasSize(6);
+        assertThat(response.getMarkerCount()).isEqualTo(3);
+        assertThat(response.getMarkerItems()).hasSize(3);
     }
 
-    @DisplayName("사용자는 키워드에 해당하는 현재 위치 기준 반경 1Km 이내의 영업중인 푸드트럭을 조회할 수 있다.")
+    @DisplayName("사용자는 키워드로 현재 위치 기준 반경 1Km 이내의 푸드트럭 일정의 위치 정보를 조회할 수 있다.")
     @Test
     void getAllFoodTruckMarkersWithKeyword() {
         // given
-        Member member = createMember(Role.CLIENT);
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
 
-        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), null);
-        Sale sale2 = createSale(foodTruck2, LocalDateTime.now().minusHours(3), null);
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
@@ -250,31 +249,72 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         assertThat(response.getMarkerItems()).hasSize(3);
     }
 
-    @DisplayName("사용자는 검색 조건 없이 현재 위치 기준 반경 1Km 이내의 영업중인 푸드트럭을 조회할 수 있다.")
+    @DisplayName("사용자는 검색 조건 없이 현재 위치 기준 반경 1Km 이내의 영업중인 푸드트럭 위치 정보를 조회할 수 있다.")
     @Test
     void getFoodTruckMarkersWithoutCondition() {
         // given
-        Member member = createMember(Role.CLIENT);
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), null);
-        Sale sale2 = createSale(foodTruck2, LocalDateTime.now().minusHours(3), LocalDateTime.now().minusHours(1));
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
                 SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), false);
+        log.debug("response={}", response);
+
+        // then
+        assertThat(response.getMarkerCount()).isEqualTo(2);
+        assertThat(response.getMarkerItems()).hasSize(2);
+    }
+
+    @DisplayName("근처에 영업 중인 푸드트럭이 없으면 빈 리스트가 반환된다.")
+    @Test
+    void getEmptyFoodTruckMarkers() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
+                SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(-56.807253)), false);
+        log.debug("response={}", response);
+
+        // then
+        assertThat(response.getMarkerCount()).isZero();
+        assertThat(response.getMarkerItems()).isEmpty();
+    }
+
+    @DisplayName("사용자는 카테고리 식별키에 해당하는 현재 위치 기준 반경 1Km 이내의 영업중인 푸드트럭 위치 정보를 조회할 수 있다.")
+    @Test
+    void getFoodTruckMarkersWithCategoryId() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+        // when
+        FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
+                SearchCondition.of(category1.getId(), "",
                         BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), false);
         log.debug("response={}", response);
 
@@ -283,93 +323,19 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         assertThat(response.getMarkerItems()).hasSize(1);
     }
 
-    @DisplayName("근처에 영업 중인 푸드트럭이 없으면 빈 리스트가 반환된다.")
-    @Test
-    void getEmptyFoodTruckMarkers() {
-        // given
-        Member member = createMember(Role.CLIENT);
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-
-        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), LocalDateTime.now());
-        Sale sale2 = createSale(foodTruck2, LocalDateTime.now().minusHours(3), LocalDateTime.now().minusHours(1));
-
-        // when
-        FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
-                SearchCondition.of(null, "",
-                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), false);
-        log.debug("response={}", response);
-
-        // then
-        assertThat(response.getMarkerCount()).isZero();
-        assertThat(response.getMarkerItems()).isEmpty();
-    }
-
-    @DisplayName("사용자는 카테고리 식별키에 해당하는 현재 위치 기준 반경 1Km 이내의 영업중인 푸드트럭을 조회할 수 있다.")
-    @Test
-    void getFoodTruckMarkersWithCategoryId() {
-        // given
-        Member member = createMember(Role.CLIENT);
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-
-        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), null);
-        Sale sale2 = createSale(foodTruck2, LocalDateTime.now().minusHours(3), null);
-
-        // when
-        FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
-                SearchCondition.of(category.getId(), "",
-                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253)), false);
-        log.debug("response={}", response);
-
-        // then
-        assertThat(response.getMarkerCount()).isEqualTo(2);
-        assertThat(response.getMarkerItems()).hasSize(2);
-    }
-
-    @DisplayName("사용자는 키워드에 해당하는 현재 위치 기준 반경 1Km 이내의 영업중인 푸드트럭을 조회할 수 있다.")
+    @DisplayName("사용자는 키워드에 해당하는 현재 위치 기준 반경 1Km 이내의 영업중인 푸드트럭 위치 정보를 조회할 수 있다.")
     @Test
     void getFoodTruckMarkersWithKeyword() {
         // given
-        Member member = createMember(Role.CLIENT);
-        Category category = createCategory();
-        FoodTruck foodTruck1 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
 
-        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), null);
-        Sale sale2 = createSale(foodTruck2, LocalDateTime.now().minusHours(3), null);
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
 
         // when
         FoodTruckMarkerResponse response = foodTruckQueryService.getFoodTruckMarkers(
@@ -378,13 +344,697 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         log.debug("response={}", response);
 
         // then
-        assertThat(response.getMarkerCount()).isEqualTo(2);
-        assertThat(response.getMarkerItems()).hasSize(2);
+        assertThat(response.getMarkerCount()).isEqualTo(1);
+        assertThat(response.getMarkerItems()).hasSize(1);
     }
 
-    private Member createMember(Role role) {
+    @DisplayName("사용자는 검색 조건 없이 가까운 순으로 현재 위치 기준 반경 1Km 이내의 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithoutConditionOrderByDistance() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        ""),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(6);
+    }
+
+    @DisplayName("사용자는 가까운 순으로 현재 위치 기준 반경 1Km 이내의 카테고리 식별키에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithCategoryIdOrderByDistance() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        ""),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(3);
+    }
+
+    @DisplayName("사용자는 가까운 순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithKeywordOrderByDistance() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        ""),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(3);
+    }
+
+    @DisplayName("사용자는 검색 조건 없이 찜(좋아요) 순으로 현재 위치 기준 반경 1Km 이내의 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithoutConditionOrderByLike() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+        setUpData(vendor1, vendor2, client1, client2, category, category);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.LIKE.name()),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(6);
+    }
+
+    @DisplayName("사용자는 찜(좋아요)순으로 현재 위치 기준 반경 1Km 이내의 카테고리 식별키에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithCategoryIdOrderByLike() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.LIKE.name()),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(3);
+    }
+
+    @DisplayName("사용자는 찜(좋아요)순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithKeywordOrderByLike() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.LIKE.name()),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(3);
+    }
+
+    @DisplayName("사용자는 검색 조건 없이 리뷰 개수 순으로 현재 위치 기준 반경 1Km 이내의 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithoutConditionOrderByReview() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+        setUpData(vendor1, vendor2, client1, client2, category, category);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.REVIEW.name()),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(6);
+    }
+
+    @DisplayName("사용자는 리뷰 개수 순으로 현재 위치 기준 반경 1Km 이내의 카테고리에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithConditionOrderByReview() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.REVIEW.name()),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(3);
+    }
+
+    @DisplayName("사용자는 리뷰 개수 순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithKeywordOrderByReview() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.REVIEW.name()),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(3);
+    }
+
+    @DisplayName("사용자는 검색 조건 없이 별점 순으로 현재 위치 기준 반경 1Km 이내의 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithoutConditionOrderByGrade() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+        setUpData(vendor1, vendor2, client1, client2, category, category);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.GRADE.name()),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(6);
+    }
+
+    @DisplayName("사용자는 별점 순으로 현재 위치 기준 반경 1Km 이내의 카테고리에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithConditionOrderByGrade() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.GRADE.name()),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(3);
+    }
+
+    @DisplayName("사용자는 별점 순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTrucksWithKeywordOrderByGrade() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.GRADE.name()),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(3);
+    }
+
+    @DisplayName("사용자는 검색 조건 없이 가까운 순으로 현재 위치 기준 반경 1Km 이내의 영업 중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithoutConditionOrderByDistance() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        ""),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(2);
+    }
+
+    @DisplayName("사용자는 가까운 순으로 현재 위치 기준 반경 1Km 이내의 카테고리 식별키에 해당하는 영업 중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithCategoryIdOrderByDistance() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        ""),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(1);
+    }
+
+    @DisplayName("사용자는 가까운 순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 영업 중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithKeywordOrderByDistance() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        ""),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(1);
+    }
+
+    @DisplayName("사용자는 검색 조건 없이 찜(좋아요) 순으로 현재 위치 기준 반경 1Km 이내의 영업 중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithoutConditionOrderByLike() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+        setUpData(vendor1, vendor2, client1, client2, category, category);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.LIKE.name()),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(2);
+    }
+
+    @DisplayName("사용자는 찜(좋아요)순으로 현재 위치 기준 반경 1Km 이내의 카테고리 식별키에 해당하는 영업중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithCategoryIdOrderByLike() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.LIKE.name()),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(1);
+    }
+
+    @DisplayName("사용자는 찜(좋아요)순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 영업중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithKeywordOrderByLike() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.LIKE.name()),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(1);
+    }
+
+    @DisplayName("사용자는 검색 조건 없이 리뷰 개수 순으로 현재 위치 기준 반경 1Km 이내의 영업중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithoutConditionOrderByReview() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+        setUpData(vendor1, vendor2, client1, client2, category, category);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.REVIEW.name()),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(2);
+    }
+
+    @DisplayName("사용자는 리뷰 개수 순으로 현재 위치 기준 반경 1Km 이내의 카테고리에 해당하는 영업중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithConditionOrderByReview() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.REVIEW.name()),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(1);
+    }
+
+    @DisplayName("사용자는 리뷰 개수 순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 영업중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpebFoodTrucksWithKeywordOrderByReview() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.REVIEW.name()),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(1);
+    }
+
+    @DisplayName("사용자는 검색 조건 없이 별점 순으로 현재 위치 기준 반경 1Km 이내의 영업중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithoutConditionOrderByGrade() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+        setUpData(vendor1, vendor2, client1, client2, category, category);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.GRADE.name()),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(2);
+    }
+
+    @DisplayName("사용자는 별점 순으로 현재 위치 기준 반경 1Km 이내의 카테고리에 해당하는 영업중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithConditionOrderByGrade() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(category1.getId(), "",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.GRADE.name()),
+                client1.getEmail(), null, false);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(1);
+    }
+
+    @DisplayName("사용자는 별점 순으로 현재 위치 기준 반경 1Km 이내의 검색 키워드에 해당하는 영업중인 푸드트럭 목록을 조회할 수 있다.")
+    @Test
+    void getOpenFoodTrucksWithKeywordOrderByGrade() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        setUpData(vendor1, vendor2, client1, client2, category1, category2);
+
+        // when
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getFoodTrucks(
+                SearchCondition.of(null, "된장삼겹",
+                        BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253),
+                        OrderCondition.GRADE.name()),
+                client1.getEmail(), null, true);
+        for (FoodTruckItem item : response.getItems()) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(response.getHasNext()).isFalse();
+        assertThat(response.getItems()).hasSize(3);
+    }
+
+    private Member createMember(Role role, String email) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email(email)
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")
@@ -395,12 +1045,40 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         return memberRepository.save(member);
     }
 
-    private Category createCategory() {
+    private Category createCategory(String name) {
         Category category = Category.builder()
-                .name("고기/구이")
+                .name(name)
                 .active(true)
                 .build();
         return categoryRepository.save(category);
+    }
+
+    private void setUpData(Member vendor1, Member vendor2, Member client1, Member client2, Category category1, Category category2) {
+        FoodTruck foodTruck1 = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+        FoodTruck foodTruck2 = createFoodTruck(vendor2, category2, "팔천순대", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                30,
+                20,
+                false);
+
+        createSchedules(foodTruck1);
+        createSchedules(foodTruck2);
+
+        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1),
+                BigDecimal.valueOf(35.204008), BigDecimal.valueOf(126.807271));
+
+        Sale sale2 = createSale(foodTruck2, LocalDateTime.now().minusHours(2),
+                BigDecimal.valueOf(35.204349), BigDecimal.valueOf(126.807805));
+
+        createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);
+
+        createOrdersAndReviews(client1, client2, foodTruck1, foodTruck2, sale1, sale2);
     }
 
     private FoodTruck createFoodTruck(Member member, Category category, String name, String phoneNumber,
@@ -462,17 +1140,68 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private Sale createSale(FoodTruck foodTruck, LocalDateTime startTime, LocalDateTime endTime) {
+    private Sale createSale(FoodTruck foodTruck, LocalDateTime startTime, BigDecimal latitude, BigDecimal longitude) {
         Sale sale = Sale.builder()
                 .foodTruck(foodTruck)
-                .latitude(BigDecimal.valueOf(35.204008))
-                .longitude(BigDecimal.valueOf(126.807271))
+                .latitude(latitude)
+                .longitude(longitude)
                 .orderNumber(0)
                 .totalAmount(0)
                 .startTime(startTime)
-                .endTime(endTime)
+                .endTime(null)
                 .active(true)
                 .build();
         return saleRepository.save(sale);
+    }
+
+    private void createFoodTruckLikes(Member client1, Member client2, FoodTruck foodTruck1, FoodTruck foodTruck2) {
+        createFoodTruckLike(client1, foodTruck1);
+        createFoodTruckLike(client2, foodTruck1);
+
+        createFoodTruckLike(client2, foodTruck2);
+    }
+
+    private void createOrdersAndReviews(Member client1, Member client2, FoodTruck foodTruck1, FoodTruck foodTruck2, Sale sale1, Sale sale2) {
+        Order order1 = createOrder(client1, sale1, 30000);
+
+        Order order2 = createOrder(client1, sale2, 50000);
+        Order order3 = createOrder(client2, sale2, 40000);
+
+        createReview(client1, foodTruck1, order1, "별로에요", 3);
+
+        createReview(client2, foodTruck2, order3, "아 진짜 별로", 1);
+        createReview(client1, foodTruck2, order2, "마시써요", 4);
+    }
+
+    private void createFoodTruckLike(Member member, FoodTruck foodTruck) {
+        FoodTruckLike foodTruckLike = FoodTruckLike.builder()
+                .foodTruck(foodTruck)
+                .member(member)
+                .active(true)
+                .build();
+        foodTruckLikeRepository.save(foodTruckLike);
+    }
+
+    private Order createOrder(Member client, Sale sale, int totalPrice) {
+        Order order = Order.builder()
+                .status(Status.COMPLETE)
+                .member(client)
+                .sale(sale)
+                .totalPrice(totalPrice)
+                .active(true)
+                .build();
+        return orderRepository.save(order);
+    }
+
+    private Review createReview(Member client, FoodTruck foodTruck, Order order, String content, int grade) {
+        Review review = Review.builder()
+                .member(client)
+                .foodTruck(foodTruck)
+                .order(order)
+                .content(content)
+                .grade(grade)
+                .active(true)
+                .build();
+        return reviewRepository.save(review);
     }
 }

@@ -11,19 +11,19 @@ public class SearchCondition {
 
     private Long categoryId;
     private String keyword;
-    private BigDecimal longitude;
     private BigDecimal latitude;
+    private BigDecimal longitude;
     private OrderCondition orderCondition;
 
-    public SearchCondition(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude) {
+    public SearchCondition(Long categoryId, String keyword, BigDecimal latitude, BigDecimal longitude) {
         this.categoryId = categoryId;
         this.keyword = keyword;
-        this.longitude = longitude;
         this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     @Builder
-    public SearchCondition(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude, String orderCondition) {
+    public SearchCondition(Long categoryId, String keyword, BigDecimal latitude, BigDecimal longitude, String orderCondition) {
         this.categoryId = categoryId;
         this.keyword = keyword;
         this.longitude = longitude;
@@ -31,11 +31,11 @@ public class SearchCondition {
         this.orderCondition = StringUtils.hasText(orderCondition) ? OrderCondition.valueOf(orderCondition) : null;
     }
 
-    public static SearchCondition of(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude) {
-        return new SearchCondition(categoryId, keyword, longitude, latitude);
+    public static SearchCondition of(Long categoryId, String keyword, BigDecimal latitude, BigDecimal longitude) {
+        return new SearchCondition(categoryId, keyword, latitude, longitude);
     }
 
-    public static SearchCondition of(Long categoryId, String keyword, BigDecimal longitude, BigDecimal latitude, String orderCondition) {
-        return new SearchCondition(categoryId, keyword, longitude, latitude, orderCondition);
+    public static SearchCondition of(Long categoryId, String keyword, BigDecimal latitude, BigDecimal longitude, String orderCondition) {
+        return new SearchCondition(categoryId, keyword, latitude, longitude, orderCondition);
     }
 }

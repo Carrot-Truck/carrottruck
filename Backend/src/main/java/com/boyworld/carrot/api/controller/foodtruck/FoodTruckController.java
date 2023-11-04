@@ -88,7 +88,7 @@ public class FoodTruckController {
 
         FoodTruckMarkerResponse response =
                 foodTruckQueryService
-                        .getFoodTruckMarkers(SearchCondition.of(categoryId, keyword, longitude, latitude), showAll);
+                        .getFoodTruckMarkers(SearchCondition.of(categoryId, keyword, latitude, longitude), showAll);
         log.debug("FoodTruckResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -129,7 +129,7 @@ public class FoodTruckController {
         log.debug("email={}", email);
 
         FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService
-                .getFoodTrucks(SearchCondition.of(categoryId, keyword, longitude, latitude, orderCondition),
+                .getFoodTrucks(SearchCondition.of(categoryId, keyword, latitude, longitude, orderCondition),
                         email, lastFoodTruckId, showAll);
         log.debug("FoodTruckResponse={}", response);
 

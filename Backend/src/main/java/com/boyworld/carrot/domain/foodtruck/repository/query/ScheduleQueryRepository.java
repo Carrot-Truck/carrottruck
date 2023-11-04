@@ -50,6 +50,9 @@ public class ScheduleQueryRepository {
      * @return 현재 위치 기준 1Km 이내의 푸드트럭 마커 목록
      */
     public List<FoodTruckMarkerItem> getPositionsByCondition(SearchCondition condition) {
+        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), schedule.latitude,
+                condition.getLongitude(), schedule.longitude);
+
         List<Long> ids = queryFactory
                 .select(schedule.id)
                 .from(schedule)
@@ -58,7 +61,7 @@ public class ScheduleQueryRepository {
                 .where(
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
-                        isNearBy(condition, schedule.latitude, schedule.longitude),
+                        distance.loe(SEARCH_RANGE_METER),
                         isActiveSchedule()
                 )
                 .fetch();
@@ -69,8 +72,6 @@ public class ScheduleQueryRepository {
 
         LocalDateTime today = LocalDate.now().atStartOfDay();
         LocalDateTime now = LocalDateTime.now();
-        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), schedule.latitude,
-                condition.getLongitude(), schedule.longitude);
 
         return queryFactory
                 .select(Projections.constructor(FoodTruckMarkerItem.class,
@@ -99,6 +100,9 @@ public class ScheduleQueryRepository {
      * @return 현재 위치 기반 반경 1Km 이내의 푸드트럭 목록
      */
     public List<FoodTruckItem> getFoodTrucksByCondition(SearchCondition condition, String email, Long lastScheduleId) {
+        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), schedule.latitude,
+                condition.getLongitude(), schedule.longitude);
+
         List<Long> ids = queryFactory
                 .selectDistinct(schedule.id)
                 .from(schedule)
@@ -110,7 +114,7 @@ public class ScheduleQueryRepository {
                 .where(
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
-                        isNearBy(condition, schedule.latitude, schedule.longitude),
+                        distance.loe(SEARCH_RANGE_METER),
                         isGreaterThanLastId(lastScheduleId),
                         isActive(),
                         isActiveSchedule()
@@ -125,11 +129,6 @@ public class ScheduleQueryRepository {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime today = LocalDate.now().atStartOfDay();
         LocalDateTime lastMonth = now.minusMonths(1);
-
-        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), schedule.latitude,
-                condition.getLongitude(), schedule.longitude);
-
-        // TODO: 2023-11-03 리팩토링
 
         return queryFactory
                 .select(Projections.constructor(FoodTruckItem.class,
@@ -175,18 +174,11 @@ public class ScheduleQueryRepository {
         return hasText(keyword) ? foodTruck.name.contains(keyword) : null;
     }
 
-    private BooleanExpression isNearBy(SearchCondition condition,
-                                       NumberPath<BigDecimal> targetLat, NumberPath<BigDecimal> targetLng) {
-        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), targetLat,
-                condition.getLongitude(), targetLng);
-        return distance.loe(SEARCH_RANGE_METER);
-    }
-
     private NumberTemplate<BigDecimal> calculateDistance(BigDecimal currentLat, NumberPath<BigDecimal> targetLat,
                                                          BigDecimal currentLng, NumberPath<BigDecimal> targetLng) {
         return Expressions.numberTemplate(BigDecimal.class,
-                "ST_DISTANCE(POINT({0}, {1}), POINT({2}, {3}))",
-                currentLat, currentLng, targetLat, targetLng);
+                "ST_DISTANCE_SPHERE(POINT({0}, {1}), POINT({2}, {3}))",
+                currentLng, currentLat, targetLng, targetLat);
     }
 
     private BooleanExpression isGreaterThanLastId(Long lastScheduleId) {

@@ -13,6 +13,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -37,6 +38,7 @@ import static org.springframework.util.StringUtils.hasText;
  *
  * @author 박은규
  */
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class SaleQueryRepository {
@@ -68,6 +70,9 @@ public class SaleQueryRepository {
      * @return 현재 위치 기준 1Km 이내의 푸드트럭 마커 목록
      */
     public List<FoodTruckMarkerItem> getPositionsByCondition(SearchCondition condition) {
+        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), sale.latitude,
+                condition.getLongitude(), sale.longitude);
+
         List<Long> ids = queryFactory
                 .select(sale.id)
                 .from(sale)
@@ -75,18 +80,17 @@ public class SaleQueryRepository {
                 .where(
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
-                        isNearBy(condition, sale.latitude, sale.longitude),
+                        distance.loe(SEARCH_RANGE_METER),
                         isActive(),
                         isActiveSale()
                 )
                 .fetch();
 
+        log.debug("ids={}", ids);
+
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
-
-        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), sale.latitude,
-                condition.getLongitude(), sale.longitude);
 
         return queryFactory
                 .select(Projections.constructor(FoodTruckMarkerItem.class,
@@ -114,6 +118,9 @@ public class SaleQueryRepository {
      * @return 현재 위치 기반 반경 1Km 이내의 푸드트럭 목록
      */
     public List<FoodTruckItem> getFoodTrucksByCondition(SearchCondition condition, String email, Long lastScheduleId) {
+        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), sale.latitude,
+                condition.getLongitude(), sale.longitude);
+
         List<Long> ids = queryFactory
                 .selectDistinct(sale.id)
                 .from(sale)
@@ -124,7 +131,7 @@ public class SaleQueryRepository {
                 .where(
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
-                        isNearBy(condition, sale.latitude, sale.longitude),
+                        distance.loe(SEARCH_RANGE_METER),
                         isActive(),
                         isActiveSale()
                 )
@@ -137,9 +144,6 @@ public class SaleQueryRepository {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime lastMonth = now.minusMonths(1);
-
-        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), sale.latitude,
-                condition.getLongitude(), sale.longitude);
 
         return queryFactory
                 .select(Projections.constructor(FoodTruckItem.class,
@@ -184,18 +188,11 @@ public class SaleQueryRepository {
         return hasText(keyword) ? foodTruck.name.contains(keyword) : null;
     }
 
-    private BooleanExpression isNearBy(SearchCondition condition,
-                                       NumberPath<BigDecimal> targetLat, NumberPath<BigDecimal> targetLng) {
-        NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), targetLat,
-                condition.getLongitude(), targetLng);
-        return distance.loe(SEARCH_RANGE_METER);
-    }
-
     private NumberTemplate<BigDecimal> calculateDistance(BigDecimal currentLat, NumberPath<BigDecimal> targetLat,
                                                          BigDecimal currentLng, NumberPath<BigDecimal> targetLng) {
         return Expressions.numberTemplate(BigDecimal.class,
-                "ST_DISTANCE(POINT({0}, {1}), POINT({2}, {3}))",
-                currentLat, currentLng, targetLat, targetLng);
+                "ST_DISTANCE_SPHERE(POINT({0}, {1}), POINT({2}, {3}))",
+                currentLng, currentLat, targetLng, targetLat);
     }
 
     private BooleanExpression isActive() {
@@ -203,7 +200,7 @@ public class SaleQueryRepository {
     }
 
     private BooleanExpression isActiveSale() {
-        return sale.active.isTrue().and(sale.endTime.isNull());
+        return sale.active.and(sale.endTime.isNull());
     }
 
     private JPQLQuery<Boolean> isLiked(String email) {

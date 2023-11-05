@@ -3,11 +3,9 @@ package com.boyworld.carrot.api.service.geocoding;
 import com.boyworld.carrot.api.service.geocoding.dto.gc.Address;
 import com.boyworld.carrot.config.NaverMapsProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -45,7 +43,7 @@ public class GeocodingService {
      * @return 도로명주소
      */
     public Map<String, String> reverseGeocoding(BigDecimal latitude, BigDecimal longitude, String orders) {
-        log.debug("GeocodingUtil#geociding called !!!");
+        log.debug("GeocodingService#reverseGeocoding called !!!");
         log.debug("latitude={}, longitude={}, orders={}", latitude, longitude, orders);
 
         Map<String, String> addressRes = new HashMap<>();
@@ -69,10 +67,9 @@ public class GeocodingService {
                     .toUri();
 
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<Map> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity,Map.class);
+            ResponseEntity<Map> response = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, Map.class);
             ArrayList<Object> results = (ArrayList<Object>) response.getBody().get("results");
 
-            log.debug("ReverseGeocoding Results={}, ", results);
             ObjectMapper mapper = new ObjectMapper();
             for (Object res : results) {
                 String jsonString = mapper.writeValueAsString(res);

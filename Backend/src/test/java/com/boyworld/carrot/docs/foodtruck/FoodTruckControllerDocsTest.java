@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -427,25 +428,25 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         ScheduleDto schedule1 = ScheduleDto.builder()
                 .scheduleId(1L)
                 .address("광주 광산구 장덕로5번길 16")
-                .dayOfWeek(DayOfWeek.MONDAY.name())
-                .startTime("17:00")
-                .endTime("01:00")
+                .dayOfWeek(DayOfWeek.MONDAY)
+                .startTime(LocalDateTime.parse("17:00"))
+                .endTime(LocalDateTime.parse("01:00"))
                 .build();
 
         ScheduleDto schedule2 = ScheduleDto.builder()
                 .scheduleId(2L)
                 .address("광주 광산구 장덕로5번길 16")
-                .dayOfWeek(DayOfWeek.TUESDAY.name())
-                .startTime("17:00")
-                .endTime("01:00")
+                .dayOfWeek(DayOfWeek.TUESDAY)
+                .startTime(LocalDateTime.parse("17:00"))
+                .endTime(LocalDateTime.parse("01:00"))
                 .build();
 
         ScheduleDto schedule3 = ScheduleDto.builder()
                 .scheduleId(3L)
                 .address("")
-                .dayOfWeek(DayOfWeek.WEDNESDAY.name())
-                .startTime("")
-                .endTime("")
+                .dayOfWeek(DayOfWeek.WEDNESDAY)
+                .startTime(LocalDateTime.parse(""))
+                .endTime(LocalDateTime.parse(""))
                 .build();
 
         FoodTruckDetailResponse response = FoodTruckDetailResponse.builder()

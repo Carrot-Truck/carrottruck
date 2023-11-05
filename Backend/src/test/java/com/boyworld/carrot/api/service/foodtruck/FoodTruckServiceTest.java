@@ -91,10 +91,10 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         // given
         Member member = createMember(Role.VENDOR, true);
         Category category = createCategory();
-        MockMultipartFile file = new MockMultipartFile(
-                "file",
-                "image.jpg",
-                MediaType.IMAGE_JPEG_VALUE, "image data".getBytes());
+
+        String path = "test.png";
+        String contentType = "image/png";
+        MockMultipartFile file = new MockMultipartFile("test", path, contentType, "test".getBytes());
 
         CreateFoodTruckDto dto = getCreateFoodTruckDto(category);
 

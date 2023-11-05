@@ -41,10 +41,13 @@ public class Sale extends TimeBaseEntity {
     @JoinColumn(name = "food_truck_id", nullable = false)
     private FoodTruck foodTruck;
 
-    @Column(nullable = false)
+    @Column
+    private String address;
+
+    @Column(precision = 15, scale = 13, nullable = false)
     private BigDecimal latitude;
 
-    @Column(nullable = false)
+    @Column(precision = 15, scale = 12, nullable = false)
     private BigDecimal longitude;
 
     @Column(nullable = false)
@@ -59,12 +62,16 @@ public class Sale extends TimeBaseEntity {
     @Column
     private LocalDateTime endTime;
 
+    @Column
+    private Boolean orderable;
+
     @Column(nullable = false)
     private Boolean active;
 
     @Builder
-    private Sale(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, Integer orderNumber,
+    private Sale(String address, FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, Integer orderNumber,
         Integer totalAmount, LocalDateTime startTime, LocalDateTime endTime, Boolean active) {
+        this.address = address;
         this.foodTruck = foodTruck;
         this.latitude = latitude;
         this.longitude = longitude;

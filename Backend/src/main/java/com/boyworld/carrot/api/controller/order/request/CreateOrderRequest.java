@@ -11,14 +11,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateOrderRequest {
 
+    Long foodTruckId;
+    Integer totalPrice;
     List<OrderMenuItem> orderMenuItems;
+
     @Builder
-    public CreateOrderRequest(List<OrderMenuItem> orderMenuItems) {
+    public CreateOrderRequest(Long foodTruckId, Integer totalPrice, List<OrderMenuItem> orderMenuItems) {
+        this.foodTruckId = foodTruckId;
+        this.totalPrice = totalPrice;
         this.orderMenuItems = orderMenuItems;
     }
 
     public CreateOrderDto toCreateOrderDto() {
         return CreateOrderDto.builder()
+            .foodTruckId(this.foodTruckId)
+            .totalPrice(this.totalPrice)
             .orderMenuItems(this.orderMenuItems)
             .build();
     }

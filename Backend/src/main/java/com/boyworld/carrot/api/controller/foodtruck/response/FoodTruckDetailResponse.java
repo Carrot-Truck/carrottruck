@@ -2,7 +2,6 @@ package com.boyworld.carrot.api.controller.foodtruck.response;
 
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckDetailDto;
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
-import com.boyworld.carrot.api.service.review.dto.FoodTruckReviewDto;
 import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
 import lombok.Builder;
 import lombok.Data;
@@ -12,19 +11,23 @@ import java.util.List;
 @Data
 public class FoodTruckDetailResponse {
 
-    private Boolean isOwner;
-    private FoodTruckDetailDto foodTruckDetail;
+    private FoodTruckDetailDto foodTruck;
     private List<MenuDto> menus;
     private List<ScheduleDto> schedules;
-    private List<FoodTruckReviewDto> reviews;
-
     @Builder
-    public FoodTruckDetailResponse(Boolean isOwner, FoodTruckDetailDto foodTruckDetail, List<MenuDto> menus,
-                                   List<ScheduleDto> schedules, List<FoodTruckReviewDto> reviews) {
-        this.isOwner = isOwner;
-        this.foodTruckDetail = foodTruckDetail;
+    public FoodTruckDetailResponse(FoodTruckDetailDto foodTruck, List<MenuDto> menus,
+                                   List<ScheduleDto> schedules) {
+        this.foodTruck = foodTruck;
         this.menus = menus;
         this.schedules = schedules;
-        this.reviews = reviews;
+    }
+
+    public static FoodTruckDetailResponse of(FoodTruckDetailDto foodTruck, List<MenuDto> menus,
+                                             List<ScheduleDto> schedules) {
+        return FoodTruckDetailResponse.builder()
+                .foodTruck(foodTruck)
+                .menus(menus)
+                .schedules(schedules)
+                .build();
     }
 }

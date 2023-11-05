@@ -18,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -131,25 +133,25 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
         ScheduleDto schedule1 = ScheduleDto.builder()
                 .scheduleId(1L)
                 .address("광주 광산구 장덕로5번길 16")
-                .days("월요일")
-                .startTime("17:00")
-                .endTime("01:00")
+                .dayOfWeek(DayOfWeek.MONDAY)
+                .startTime(LocalDateTime.parse("17:00"))
+                .endTime(LocalDateTime.parse("01:00"))
                 .build();
 
         ScheduleDto schedule2 = ScheduleDto.builder()
                 .scheduleId(2L)
                 .address("광주 광산구 장덕로5번길 16")
-                .days("화요일")
-                .startTime("17:00")
-                .endTime("01:00")
+                .dayOfWeek(DayOfWeek.TUESDAY)
+                .startTime(LocalDateTime.parse("17:00"))
+                .endTime(LocalDateTime.parse("01:00"))
                 .build();
 
         ScheduleDto schedule3 = ScheduleDto.builder()
                 .scheduleId(3L)
                 .address("")
-                .days("수요일")
-                .startTime("")
-                .endTime("")
+                .dayOfWeek(DayOfWeek.WEDNESDAY)
+                .startTime(LocalDateTime.parse(""))
+                .endTime(LocalDateTime.parse(""))
                 .build();
 
         ScheduleResponse response = ScheduleResponse.builder()
@@ -187,7 +189,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                                         .description("스케줄 식별키"),
                                 fieldWithPath("data.schedules[].address").type(JsonFieldType.STRING)
                                         .description("주소"),
-                                fieldWithPath("data.schedules[].days").type(JsonFieldType.STRING)
+                                fieldWithPath("data.schedules[].dayOfWeek").type(JsonFieldType.STRING)
                                         .description("요일"),
                                 fieldWithPath("data.schedules[].startTime").type(JsonFieldType.STRING)
                                         .description("시작 시간"),

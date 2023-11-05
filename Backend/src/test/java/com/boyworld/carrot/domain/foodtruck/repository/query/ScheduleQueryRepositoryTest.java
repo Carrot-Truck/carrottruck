@@ -3,6 +3,7 @@ package com.boyworld.carrot.domain.foodtruck.repository.query;
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
+import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.FoodTruckLike;
@@ -519,6 +520,38 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(items).hasSize(3);
     }
 
+    @DisplayName("푸드트럭 식별키로 스케줄 목록을 조회할 수 있다.")
+    @Test
+    void getSchedulesByFoodTruckId() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        List<FoodTruck> foodTrucks = setUpData(vendor1, vendor2, client1, client2, category1, category2);
+        FoodTruck foodTruck1 = foodTrucks.get(0);
+        FoodTruck foodTruck2 = foodTrucks.get(1);
+
+        // when
+        List<ScheduleDto> schedules1 = scheduleQueryRepository.getSchedulesByFoodTruckId(foodTruck1.getId());
+        for (ScheduleDto schedule : schedules1) {
+            log.debug("schedule={}", schedule);
+        }
+
+        List<ScheduleDto> schedules2 = scheduleQueryRepository.getSchedulesByFoodTruckId(foodTruck2.getId());
+        for (ScheduleDto schedule : schedules2) {
+            log.debug("schedule={}", schedule);
+        }
+
+        // then
+        assertThat(schedules1).isNotEmpty();
+        assertThat(schedules2).isEmpty();
+    }
+
     private Member createMember(Role role, String email) {
         Member member = Member.builder()
                 .email(email)
@@ -540,7 +573,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         return categoryRepository.save(category);
     }
 
-    private void setUpData(Member vendor1, Member vendor2, Member client1, Member client2, Category category1, Category category2) {
+    private List<FoodTruck> setUpData(Member vendor1, Member vendor2, Member client1, Member client2, Category category1, Category category2) {
         FoodTruck foodTruck1 = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
                 "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
                 "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
@@ -554,7 +587,6 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
                 20,
                 false);
         createSchedules(foodTruck1);
-        createSchedules(foodTruck2);
 
         Sale sale1 = createSale(foodTruck1, null);
         Sale sale2 = createSale(foodTruck2, null);
@@ -562,6 +594,8 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);
 
         createOrdersAndReviews(client1, client2, foodTruck1, foodTruck2, sale1, sale2);
+
+        return List.of(foodTruck1, foodTruck2);
     }
 
     private FoodTruck createFoodTruck(Member member, Category category, String name, String phoneNumber,

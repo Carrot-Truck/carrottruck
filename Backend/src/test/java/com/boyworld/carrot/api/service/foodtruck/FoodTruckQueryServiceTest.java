@@ -1,10 +1,7 @@
 package com.boyworld.carrot.api.service.foodtruck;
 
 import com.boyworld.carrot.IntegrationTestSupport;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckOverview;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
+import com.boyworld.carrot.api.controller.foodtruck.response.*;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
 import com.boyworld.carrot.domain.foodtruck.Category;
@@ -19,7 +16,12 @@ import com.boyworld.carrot.domain.foodtruck.repository.dto.OrderCondition;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
+import com.boyworld.carrot.domain.member.VendorInfo;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.member.repository.command.VendorInfoRepository;
+import com.boyworld.carrot.domain.menu.Menu;
+import com.boyworld.carrot.domain.menu.MenuInfo;
+import com.boyworld.carrot.domain.menu.repository.MenuRepository;
 import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.order.repository.OrderRepository;
@@ -73,6 +75,12 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private MenuRepository menuRepository;
+
+    @Autowired
+    private VendorInfoRepository vendorInfoRepository;
 
     @DisplayName("사업자는 보유 푸드트럭 목록을 조회할 수 있다.")
     @Test
@@ -1032,6 +1040,49 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         assertThat(response.getItems()).hasSize(3);
     }
 
+    @DisplayName("사용자는 푸드트럭 식별키와 이메일, 현재 위치를 사용하여 푸드트럭을 상세조회 할 수 있다.")
+    @Test
+    void getFoodTruck() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        List<FoodTruck> foodTrucks = setUpData(vendor1, vendor2, client1, client2, category1, category2);
+        FoodTruck foodTruck1 = foodTrucks.get(0);
+        FoodTruck foodTruck2 = foodTrucks.get(1);
+
+        createMenus(foodTruck1);
+
+        // when
+        FoodTruckDetailResponse clientResponse = foodTruckQueryService.getFoodTruck(foodTruck1.getId(), client1.getEmail(),
+                BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253));
+        log.debug("clientResponse={}", clientResponse);
+
+        FoodTruckDetailResponse vendorResponse = foodTruckQueryService.getFoodTruck(foodTruck1.getId(), vendor1.getEmail(),
+                BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253));
+        log.debug("vendorResponse={}", vendorResponse);
+
+        // then
+        assertThat(clientResponse).isNotNull();
+        assertThat(clientResponse.getFoodTruck()).extracting("isOwner")
+                .isEqualTo(false);
+        assertThat(clientResponse.getMenus()).hasSize(2);
+        assertThat(clientResponse.getSchedules()).hasSize(3);
+
+        assertThat(vendorResponse).isNotNull();
+        assertThat(vendorResponse.getFoodTruck()).extracting("isOwner")
+                .isEqualTo(true);
+        assertThat(vendorResponse.getMenus()).hasSize(2);
+        assertThat(vendorResponse.getSchedules()).hasSize(3);
+    }
+
     private Member createMember(Role role, String email) {
         Member member = Member.builder()
                 .email(email)
@@ -1045,6 +1096,18 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         return memberRepository.save(member);
     }
 
+    private void createVendorInfo(Member member) {
+        VendorInfo vendorInfo = VendorInfo.builder()
+                .vendorName("김동현")
+                .phoneNumber("010-5678-1234")
+                .businessNumber("123-456-789999")
+                .tradeName("된삼")
+                .member(member)
+                .active(true)
+                .build();
+        vendorInfoRepository.save(vendorInfo);
+    }
+
     private Category createCategory(String name) {
         Category category = Category.builder()
                 .name(name)
@@ -1053,7 +1116,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         return categoryRepository.save(category);
     }
 
-    private void setUpData(Member vendor1, Member vendor2, Member client1, Member client2, Category category1, Category category2) {
+    private List<FoodTruck> setUpData(Member vendor1, Member vendor2, Member client1, Member client2, Category category1, Category category2) {
         FoodTruck foodTruck1 = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
                 "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
                 "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
@@ -1079,6 +1142,8 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);
 
         createOrdersAndReviews(client1, client2, foodTruck1, foodTruck2, sale1, sale2);
+
+        return List.of(foodTruck1, foodTruck2);
     }
 
     private FoodTruck createFoodTruck(Member member, Category category, String name, String phoneNumber,
@@ -1203,5 +1268,20 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
                 .active(true)
                 .build();
         return reviewRepository.save(review);
+    }
+
+    private void createMenus(FoodTruck foodTruck1) {
+        Menu menu1 = Menu.builder()
+                .foodTruck(foodTruck1)
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
+                .active(true)
+                .build();
+
+        Menu menu2 = Menu.builder()
+                .foodTruck(foodTruck1)
+                .menuInfo(MenuInfo.builder().name("메뉴2").price(15000).description("메뉴 설명2").soldOut(false).build())
+                .active(true)
+                .build();
+        menuRepository.saveAll(List.of(menu1, menu2));
     }
 }

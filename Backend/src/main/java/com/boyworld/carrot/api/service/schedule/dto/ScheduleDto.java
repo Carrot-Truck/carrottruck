@@ -7,15 +7,15 @@ import lombok.Data;
 public class ScheduleDto {
     private Long scheduleId;
     private String address;
-    private String days;
+    private String dayOfWeek;
     private String startTime;
     private String endTime;
 
     @Builder
-    public ScheduleDto(Long scheduleId, String address, String days, String startTime, String endTime) {
+    public ScheduleDto(Long scheduleId, String address, String dayOfWeek, String startTime, String endTime) {
         this.scheduleId = scheduleId;
         this.address = address;
-        this.days = days;
+        this.dayOfWeek = dayOfWeek;
         this.startTime = startTime;
         this.endTime = endTime;
     }

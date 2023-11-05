@@ -1,20 +1,25 @@
 package com.boyworld.carrot.api.service.foodtruck;
 
 import com.boyworld.carrot.api.controller.foodtruck.response.*;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckDetailDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
 import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
+import com.boyworld.carrot.api.service.menu.dto.MenuDto;
+import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.query.ScheduleQueryRepository;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.menu.repository.MenuQueryRepository;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -39,6 +44,8 @@ public class FoodTruckQueryService {
 
     private final MemberRepository memberRepository;
 
+    private final MenuQueryRepository menuQueryRepository;
+
     /**
      * 근처 푸드트럭 위치 정보 검색 API
      *
@@ -59,10 +66,10 @@ public class FoodTruckQueryService {
     /**
      * 근처 푸드트럭 목록 조회 API
      *
-     * @param condition 검색 조건
-     * @param email 현재 로그인 중인 사용자 이메일
+     * @param condition       검색 조건
+     * @param email           현재 로그인 중인 사용자 이메일
      * @param lastFoodTruckId 마지막으로 조회된 푸드트럭 식별키
-     * @param showAll   전체보기 / 영업중 보기 여부
+     * @param showAll         전체보기 / 영업중 보기 여부
      * @return 현재 위치 기반 반경 1Km 이내의 푸드트럭 목록
      */
     public FoodTruckResponse<List<FoodTruckItem>> getFoodTrucks(SearchCondition condition, String email, Long lastFoodTruckId, Boolean showAll) {
@@ -145,11 +152,17 @@ public class FoodTruckQueryService {
     /**
      * 푸드트럭 상세 조회 API
      *
-     * @param truckId 푸드트럭 식별키
-     * @param email   현재 로그인 중인 사용자 이메일
+     * @param foodTruckId 푸드트럭 식별키
+     * @param email       현재 로그인 중인 사용자 이메일
+     * @param latitude    위도
+     * @param longitude   경도
      * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
      */
-    public FoodTruckDetailResponse getFoodTruck(Long truckId, String email) {
-        return null;
+    public FoodTruckDetailResponse getFoodTruck(Long foodTruckId, String email,
+                                                BigDecimal latitude, BigDecimal longitude) {
+        FoodTruckDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckById(foodTruckId, email, latitude, longitude);
+        List<MenuDto> menus = menuQueryRepository.getMenusByFoodTruckId(foodTruckId);
+        List<ScheduleDto> schedules = scheduleQueryRepository.getSchedulesByFoodTruckId(foodTruckId);
+        return FoodTruckDetailResponse.of(foodTruck, menus, schedules);
     }
 }

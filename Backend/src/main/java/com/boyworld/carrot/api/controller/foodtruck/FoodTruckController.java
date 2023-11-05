@@ -99,7 +99,7 @@ public class FoodTruckController {
      *
      * @param categoryId      카테고리 식별키
      * @param keyword         검색어(푸드트럭 이름 / 메뉴 이름)
-     * @param orderCondition         정렬 기준 (가까운순, 평점 높은 순, 찜 많은 순, 리뷰 많은 순)
+     * @param orderCondition  정렬 기준 (가까운순, 평점 높은 순, 찜 많은 순, 리뷰 많은 순)
      * @param latitude        위도
      * @param longitude       경도
      * @param lastFoodTruckId 마지막으로 조회된 푸드트럭 식별키
@@ -159,18 +159,23 @@ public class FoodTruckController {
     /**
      * 푸드트럭 상세조회 API
      *
-     * @param truckId 푸드트럭 식별키
+     * @param foodTruckId 푸드트럭 식별키
+     * @param latitude        위도
+     * @param longitude       경도
      * @return 푸드트럭 상세 정보
      */
-    @GetMapping("/{truckId}")
-    public ApiResponse<FoodTruckDetailResponse> getFoodTruck(@PathVariable Long truckId) {
+    @GetMapping("/{foodTruckId}")
+    public ApiResponse<FoodTruckDetailResponse> getFoodTruck(@PathVariable Long foodTruckId,
+                                                             @RequestParam BigDecimal latitude,
+                                                             @RequestParam BigDecimal longitude) {
         log.debug("FoodTruckController#getFoodTruck called");
-        log.debug("truckId={}", truckId);
+        log.debug("truckId={}", foodTruckId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        FoodTruckDetailResponse response = foodTruckQueryService.getFoodTruck(truckId, email);
+        FoodTruckDetailResponse response = foodTruckQueryService.getFoodTruck(foodTruckId, email,
+                latitude, longitude);
         log.debug("FoodTruckDetailResponse={}", response);
 
         return ApiResponse.ok(response);

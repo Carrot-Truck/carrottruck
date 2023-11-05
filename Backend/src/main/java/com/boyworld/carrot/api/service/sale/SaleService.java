@@ -62,8 +62,8 @@ public class SaleService {
     /**
      * 주문 수락 API
      *
-     * @param dto 수락할 영업 정보 및 예상 소요 시간
-     * @return 수락한 영업 식별키
+     * @param dto 수락할 주문 정보 및 예상 소요 시간
+     * @return 수락한 주문 식별키
      */
     public Long acceptOrder(AcceptOrderDto dto, String email) {
         return null;
@@ -72,8 +72,8 @@ public class SaleService {
     /**
      * 주문 거절 API
      * 
-     * @param dto 거절할 영업 정보 및 거절 사유
-     * @return 거절한 영업 식별키
+     * @param dto 거절할 주문 정보 및 거절 사유
+     * @return 거절한 주문 식별키
      */
     public Long declineOrder(DeclineOrderDto dto, String email) {
         return null;

@@ -262,7 +262,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
 
         ReviewImage reviewImage = ReviewImage.builder()
             .review(review)
-            .saveFileName(uploadFileUrl)
+            .storeFileName(uploadFileUrl)
             .uploadFileName(image.getOriginalFilename())
             .active(true)
             .build();
@@ -312,8 +312,8 @@ public class ReviewServiceTest extends IntegrationTestSupport {
         return saleRepository.save(Sale.builder()
             .startTime(LocalDateTime.of(2023, 11, 2, 10, 0))
             .active(true)
-            .longitude(BigDecimal.valueOf(36.33))
-            .latitude(BigDecimal.valueOf(130.21))
+            .longitude(BigDecimal.valueOf(130.21))
+            .latitude(BigDecimal.valueOf(36.33))
             .foodTruck(foodTruck)
             .orderNumber(1)
             .totalAmount(10000)

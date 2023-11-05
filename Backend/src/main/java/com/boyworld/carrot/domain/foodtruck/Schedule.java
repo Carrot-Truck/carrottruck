@@ -3,12 +3,13 @@ package com.boyworld.carrot.domain.foodtruck;
 
 import com.boyworld.carrot.domain.TimeBaseEntity;
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
 /**
@@ -30,14 +31,15 @@ public class Schedule extends TimeBaseEntity {
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
+    @Column(precision = 15, scale = 13, nullable = false)
     private BigDecimal latitude;
 
-    @Column(nullable = false)
+    @Column(precision = 15, scale = 12, nullable = false)
     private BigDecimal longitude;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
-    private String days;
+    private DayOfWeek dayOfWeek;
 
     @Column(nullable = false)
     private LocalDateTime startTime;
@@ -53,11 +55,11 @@ public class Schedule extends TimeBaseEntity {
     private FoodTruck foodTruck;
 
     @Builder
-    private Schedule(String address, BigDecimal latitude, BigDecimal longitude, String days, LocalDateTime startTime, LocalDateTime endTime, Boolean active, FoodTruck foodTruck) {
+    private Schedule(String address, BigDecimal latitude, BigDecimal longitude, String dayOfWeek, LocalDateTime startTime, LocalDateTime endTime, Boolean active, FoodTruck foodTruck) {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.days = days;
+        this.dayOfWeek = DayOfWeek.valueOf(dayOfWeek);
         this.startTime = startTime;
         this.endTime = endTime;
         this.active = active;

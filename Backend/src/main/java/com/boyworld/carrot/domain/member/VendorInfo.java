@@ -37,7 +37,7 @@ public class VendorInfo {
     private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "vendor_id")
     private Member member;
 
     @Builder

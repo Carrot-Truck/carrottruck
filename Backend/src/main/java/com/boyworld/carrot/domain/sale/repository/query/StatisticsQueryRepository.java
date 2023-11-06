@@ -69,7 +69,7 @@ public class StatisticsQueryRepository {
             startOfYearDate = startOfYearDate.plusDays(1);
         }
         LocalDateTime startOfYearDateTime = startOfYearDate.minusDays(3).atStartOfDay();
-        LocalDateTime lastOfYearDateTime = null;
+        LocalDateTime lastOfYearDateTime;
         if (lastWeek == null) {
             LocalDate lastOfYearDate = LocalDate.of(year+1, Month.JANUARY, 1);
 
@@ -78,7 +78,7 @@ public class StatisticsQueryRepository {
             }
             lastOfYearDateTime = lastOfYearDate.atStartOfDay().minusDays(3);
         } else {
-            lastOfYearDateTime = lastOfYearDateTime.plusWeeks(lastWeek).minusDays(3);
+            lastOfYearDateTime = startOfYearDate.plusWeeks(lastWeek).minusDays(3).atStartOfDay();
         }
 
         List<Long> weeks = queryFactory

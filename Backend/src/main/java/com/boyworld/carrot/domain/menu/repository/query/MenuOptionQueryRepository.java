@@ -2,6 +2,7 @@ package com.boyworld.carrot.domain.menu.repository.query;
 
 import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -33,7 +34,7 @@ public class MenuOptionQueryRepository {
                 .select(menuOption.id)
                 .from(menuOption)
                 .where(
-                        menuOption.menu.id.eq(menuId),
+                        isEqualMenuId(menuId),
                         menuOption.menu.active,
                         menuOption.active
                 )
@@ -56,5 +57,9 @@ public class MenuOptionQueryRepository {
                         menuOption.id.in(ids)
                 )
                 .fetch();
+    }
+
+    private BooleanExpression isEqualMenuId(Long menuId) {
+        return menuId != null ? menuOption.menu.id.eq(menuId) : null;
     }
 }

@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api;
 
 import com.boyworld.carrot.api.service.member.error.DuplicateException;
+import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -66,6 +67,16 @@ public class ApiControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IOException.class)
     public ApiResponse<Object> ioException(IOException e) {
+        return ApiResponse.of(
+                HttpStatus.BAD_REQUEST,
+                e.getMessage(),
+                null
+        );
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(InValidAccessException.class)
+    public ApiResponse<Object> inValidAccessException(InValidAccessException e) {
         return ApiResponse.of(
                 HttpStatus.BAD_REQUEST,
                 e.getMessage(),

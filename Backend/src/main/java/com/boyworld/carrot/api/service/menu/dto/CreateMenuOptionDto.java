@@ -28,7 +28,7 @@ public class CreateMenuOptionDto {
                         .name(this.menuOptionName)
                         .description(this.menuOptionDescription)
                         .price(this.menuOptionPrice)
-                        .soldOut(true)
+                        .soldOut(false)
                         .build())
                 .active(true)
                 .menu(menu)

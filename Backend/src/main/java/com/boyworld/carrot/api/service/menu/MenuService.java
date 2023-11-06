@@ -120,6 +120,39 @@ public class MenuService {
     }
 
     /**
+     * 메뉴 옵션 등록
+     *
+     * @param dto    메뉴 옵션 정보
+     * @param email  현재 로그인 중인 회원 이메일
+     * @param menuId 메뉴 식별키
+     * @return 등록된 메뉴 옵션 정보
+     */
+    public MenuOptionResponse createMenuOption(CreateMenuOptionDto dto, String email, Long menuId) {
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        Menu menu = getMenuByMenuId(menuId);
+
+        FoodTruck foodTruck = menu.getFoodTruck();
+        checkOwnerAccess(member, foodTruck);
+
+        MenuOption savedMenuOption = menuOptionRepository.save(dto.toEntity(menu));
+
+        return MenuOptionResponse.of(savedMenuOption);
+    }
+
+    /**
+     * 메뉴 옵션 삭제
+     *
+     * @param menuOptionId 삭제할 메뉴 옵션 식별키
+     * @param email        현재 로그인 중인 회원 이메일
+     * @return 삭제된 메뉴 옵션 식별키
+     */
+    public Long deleteMenuOption(Long menuOptionId, String email) {
+        return null;
+    }
+
+    /**
      * 이메일로 회원 엔티티 조회
      *
      * @param email 현재 로그인한 사용자 이메일
@@ -256,28 +289,5 @@ public class MenuService {
                 .active(true)
                 .build();
         menuImageRepository.save(image);
-    }
-
-    /**
-     * 메뉴 옵션 등록
-     *
-     * @param dto    메뉴 옵션 정보
-     * @param email  현재 로그인 중인 회원 이메일
-     * @param menuId 메뉴 식별키
-     * @return 등록된 메뉴 옵션 정보
-     */
-    public MenuOptionResponse createMenuOption(CreateMenuOptionDto dto, String email, Long menuId) {
-        return null;
-    }
-
-    /**
-     * 메뉴 옵션 삭제
-     *
-     * @param menuOptionId 삭제할 메뉴 옵션 식별키
-     * @param email        현재 로그인 중인 회원 이메일
-     * @return 삭제된 메뉴 옵션 식별키
-     */
-    public Long deleteMenuOption(Long menuOptionId, String email) {
-        return null;
     }
 }

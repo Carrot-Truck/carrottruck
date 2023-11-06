@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 /**
  * 푸드트럭 API 컨트롤러
  *
@@ -41,9 +43,10 @@ public class MenuController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<CreateMenuResponse> createMenu(@Valid @RequestPart CreateMenuRequest request,
-                                                      @RequestPart(required = false) MultipartFile file) {
+                                                      @RequestPart(required = false) MultipartFile file) throws IOException {
         log.debug("MenuController#createMenu called");
         log.debug("CreateMenuRequest={}", request);
+        log.debug("MultipartFile={}", file);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);

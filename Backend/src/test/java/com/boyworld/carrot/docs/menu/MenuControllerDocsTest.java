@@ -86,6 +86,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menuName("달콤짭짤한 밥도둑 된장 삼겹살 구이")
                 .price(8900)
                 .description("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
+                .menuOptionSize(2)
                 .build();
 
         MockMultipartFile file = new MockMultipartFile("file", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "image data".getBytes());
@@ -148,7 +149,9 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.price").type(JsonFieldType.NUMBER)
                                         .description("메뉴 가격"),
                                 fieldWithPath("data.description").type(JsonFieldType.STRING)
-                                        .description("메뉴 설명")
+                                        .description("메뉴 설명"),
+                                fieldWithPath("data.menuOptionSize").type(JsonFieldType.NUMBER)
+                                        .description("저장된 메뉴 옵션 개수")
                         )
                 ));
     }

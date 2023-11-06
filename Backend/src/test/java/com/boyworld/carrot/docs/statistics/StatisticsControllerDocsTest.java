@@ -319,7 +319,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                 .hasNext(false)
                 .build();
 
-        given(statisticsQueryService.getStatisticsByWeek(anyLong(), anyInt(), any(LocalDate.class)))
+        given(statisticsQueryService.getStatisticsByWeek(anyLong(), anyInt(), anyInt()))
                 .willReturn(response);
 
         Long fid = 1L;
@@ -327,7 +327,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         mockMvc.perform(
                         get("/api/statistics/{foodTruckId}/weekly", fid)
                                 .param("year", "2023")
-                                .param("lastStartDate", LocalDateTime.now().toLocalDate().minusDays(13).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                .param("lastWeek", "1")
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())

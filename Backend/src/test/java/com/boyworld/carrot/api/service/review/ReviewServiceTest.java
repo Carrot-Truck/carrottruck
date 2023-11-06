@@ -245,7 +245,6 @@ public class ReviewServiceTest extends IntegrationTestSupport {
         // given
         Member member = createMember(Role.CLIENT, true);
         Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
-        Member fakeVendor = createVendor(Role.VENDOR, true, "fakevendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
@@ -256,12 +255,14 @@ public class ReviewServiceTest extends IntegrationTestSupport {
         Sale sale = createSale(foodTruck);
         Order order = createOrder(member, sale, foodTruck);
         Review review = createReview(createReviewEntity(member, order, foodTruck));
+        reviewService.withdrawal(review.getId(), member.getEmail());
 
         // when
-        Boolean result = reviewService.withdrawal(review.getId(), member.getEmail());
+        MyReviewResponse response = reviewService.getMyReview(member.getEmail());
 
         // then
-        assertThat(result).isTrue();
+        assertThat(response.getMyReviewDtoList()).isNotNull();
+        assertThat(response.getMyReviewDtoList().isEmpty()).isTrue();
     }
 
     @DisplayName("사용자는 내가 작성한 리뷰가 없을때는 빈 목록을 확인할 수 있다.")
@@ -328,6 +329,29 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     @DisplayName("사용자는 리뷰를 삭제할 수 있다.")
     @Test
     void withdrawal(){
+        // given
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        Review review = createReview(createReviewEntity(member, order, foodTruck));
+
+        // when
+        Boolean result = reviewService.withdrawal(review.getId(), member.getEmail());
+
+        // then
+        assertThat(result).isTrue();
+        assertThat(reviewRepository.findByMemberAndActive(member, true).isPresent()).isTrue();
+        assertThat(reviewRepository.findByMemberAndActive(member, true).get().isEmpty()).isTrue();
+        assertThat(reviewRepository.findByMemberAndActive(member, false).isPresent()).isTrue();
+        assertThat(reviewRepository.findByMemberAndActive(member, false).get().size()).isEqualTo(1);
 
     }
 

@@ -172,10 +172,10 @@ public class ReviewService {
             // 만약 삭제하고자 하는 댓글의 email과 현재 로그인한 email이 동일하다면
             if(review.getMember().getEmail().equals(email)){
                 review.setActive(false); // 비활성화
+                return true;
             } else {
                 return false;
             }
-            return true;
         } catch (Exception e){
             return false;
         }

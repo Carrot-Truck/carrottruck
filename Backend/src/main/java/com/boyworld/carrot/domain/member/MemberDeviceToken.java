@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member_device_token")
-public class DeviceToken {
+public class MemberDeviceToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class DeviceToken {
     private Member member;
 
     @Builder
-    private DeviceToken(String deviceToken, Member member) {
+    private MemberDeviceToken(String deviceToken, Member member) {
         this.deviceToken = deviceToken;
         this.member = member;
     }

@@ -429,24 +429,24 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .scheduleId(1L)
                 .address("광주 광산구 장덕로5번길 16")
                 .dayOfWeek(DayOfWeek.MONDAY)
-                .startTime(LocalDateTime.parse("17:00"))
-                .endTime(LocalDateTime.parse("01:00"))
+                .startTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now().plusHours(5))
                 .build();
 
         ScheduleDto schedule2 = ScheduleDto.builder()
                 .scheduleId(2L)
                 .address("광주 광산구 장덕로5번길 16")
                 .dayOfWeek(DayOfWeek.TUESDAY)
-                .startTime(LocalDateTime.parse("17:00"))
-                .endTime(LocalDateTime.parse("01:00"))
+                .startTime(LocalDateTime.now().plusDays(1))
+                .endTime(LocalDateTime.now().plusDays(1).plusHours(5))
                 .build();
 
         ScheduleDto schedule3 = ScheduleDto.builder()
                 .scheduleId(3L)
                 .address("")
                 .dayOfWeek(DayOfWeek.WEDNESDAY)
-                .startTime(LocalDateTime.parse(""))
-                .endTime(LocalDateTime.parse(""))
+                .startTime(LocalDateTime.now().plusDays(2))
+                .endTime(LocalDateTime.now().plusDays(2).plusHours(5))
                 .build();
 
         FoodTruckDetailResponse response = FoodTruckDetailResponse.builder()

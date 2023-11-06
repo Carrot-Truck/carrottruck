@@ -2,7 +2,7 @@ package com.boyworld.carrot.api.service.member.command;
 
 import com.boyworld.carrot.api.controller.member.response.VendorInfoResponse;
 import com.boyworld.carrot.api.service.member.dto.CreateVendorInfoDto;
-import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
+import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.VendorInfo;
@@ -61,11 +61,11 @@ public class VendorInfoService {
      * 접근 유효성 판별
      *
      * @param member 회원 엔티티
-     * @throws InvalidAccessException 해당 회원의 권한이 CLIENT 이거나 비활성화 상태인 경우
+     * @throws InValidAccessException 해당 회원의 권한이 CLIENT 이거나 비활성화 상태인 경우
      */
     private void checkValidAccess(Member member) {
         if (isClient(member.getRole()) || !member.getActive()) {
-            throw new InvalidAccessException("잘못된 접근입니다.");
+            throw new InValidAccessException("잘못된 접근입니다.");
         }
     }
 

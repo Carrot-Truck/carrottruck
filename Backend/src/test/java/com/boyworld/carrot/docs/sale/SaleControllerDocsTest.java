@@ -84,7 +84,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .willReturn(response);
 
         mockMvc.perform(
-            post("/sale/open")
+            post("/api/sale/open")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -193,7 +193,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         Long foodTruckId = 1L;
         mockMvc.perform(
-            get("/sale/processing/{foodTruckId}", foodTruckId)
+            get("/api/sale/processing/{foodTruckId}", foodTruckId)
                 .header("Authentication", "authentication")
         ).andDo(print())
             .andExpect(status().isOk())
@@ -321,7 +321,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         Long foodTruckId = 1L;
         mockMvc.perform(
-                get("/sale/complete/{foodTruckId}", foodTruckId)
+                get("/api/sale/complete/{foodTruckId}", foodTruckId)
                     .header("Authentication", "authentication")
             ).andDo(print())
             .andExpect(status().isOk())
@@ -388,7 +388,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .willReturn(1L);
 
         mockMvc.perform(
-            post("/sale/accept")
+            post("/api/sale/accept")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -431,7 +431,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .willReturn(2L);
 
         mockMvc.perform(
-                post("/sale/decline")
+                post("/api/sale/decline")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -470,7 +470,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         Long foodTruckId = 1L;
         mockMvc.perform(
-                put("/sale/pause/{foodTruckId}", foodTruckId)
+                put("/api/sale/pause/{foodTruckId}", foodTruckId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())
@@ -505,7 +505,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         Long menuId = 1L;
         mockMvc.perform(
-                put("/sale/soldout/{menuId}", menuId)
+                put("/api/sale/soldout/{menuId}", menuId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())
@@ -549,7 +549,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         Long foodTruckId = 1L;
         mockMvc.perform(
-                put("/sale/close/{foodTruckId}", foodTruckId)
+                put("/api/sale/close/{foodTruckId}", foodTruckId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())

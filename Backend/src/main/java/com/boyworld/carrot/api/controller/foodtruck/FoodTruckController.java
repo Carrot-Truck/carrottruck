@@ -43,8 +43,8 @@ public class FoodTruckController {
      */
     @PostMapping("/vendor")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Long> createFoodTruck(@Valid @RequestPart(name = "request") CreateFoodTruckRequest request,
-                                             @RequestPart(required = false, name = "file") MultipartFile file) throws IOException {
+    public ApiResponse<Long> createFoodTruck(@Valid @RequestPart CreateFoodTruckRequest request,
+                                             @RequestPart(required = false) MultipartFile file) throws IOException {
         log.debug("FoodTruckController#createFoodTruck called");
         log.debug("CreateFoodTruckRequest={}", request);
         log.debug("MultipartFile={}", file);
@@ -189,7 +189,9 @@ public class FoodTruckController {
      * @return 수정된 푸드트럭 식별키
      */
     @PatchMapping("/{foodTruckId}")
-    public ApiResponse<Long> editFoodTruck(@PathVariable Long foodTruckId, @Valid @RequestPart(name = "request") UpdateFoodTruckRequest request, @RequestPart(required = false, name = "file") MultipartFile file) {
+    public ApiResponse<Long> editFoodTruck(@PathVariable Long foodTruckId,
+                                           @Valid @RequestPart UpdateFoodTruckRequest request,
+                                           @RequestPart(required = false) MultipartFile file) throws IOException {
         log.debug("FoodTruckController#editFoodTruck called");
         log.debug("foodTruckId={}", foodTruckId);
         log.debug("UpdateFoodTruckRequest={}", request);

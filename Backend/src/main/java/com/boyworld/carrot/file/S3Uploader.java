@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class S3Uploader {
@@ -44,10 +46,10 @@ public class S3Uploader {
     // 로컬에 저장된 이미지 지우기
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
-            System.out.println("File delete success");
+            log.debug("File delete success");
             return;
         }
-        System.out.println("File delete fail");
+        log.debug("File delete fail");
     }
 
     // 로컬에 파일 업로드 하기

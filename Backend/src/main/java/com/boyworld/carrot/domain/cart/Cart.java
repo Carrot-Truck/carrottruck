@@ -24,6 +24,7 @@ public class Cart {
     private Long foodTruckId;
     private String foodTruckName;
     private Integer totalPrice;
+//    private Boolean orderable; 조회시 확인
 
     @Builder
     public Cart(String id, Long foodTruckId, String foodTruckName, Integer totalPrice) {

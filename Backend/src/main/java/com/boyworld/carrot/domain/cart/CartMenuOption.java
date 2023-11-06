@@ -20,20 +20,19 @@ import org.springframework.data.redis.core.RedisHash;
 public class CartMenuOption {
 
     @Id
-    private Long id;
-    private Long cartMenuId;
+    private String id;
+    private String cartMenuId;
     private Long menuOptionId;
     private String name;
     private Integer price;
-    private Boolean soldOut;
+//    private Boolean soldOut; 조회시 확인
 
     @Builder
-    public CartMenuOption(Long id, Long cartMenuId, Long menuOptionId, String name, Integer price, Boolean soldOut) {
+    public CartMenuOption(String id, String cartMenuId, Long menuOptionId, String name, Integer price) {
         this.id = id;
         this.cartMenuId = cartMenuId;
         this.menuOptionId = menuOptionId;
         this.name = name;
         this.price = price;
-        this.soldOut = soldOut;
     }
 }

@@ -109,7 +109,15 @@ public class FoodTruckService {
      * @return 삭제된 푸드트럭 식별키
      */
     public Long deleteFoodTruck(Long foodTruckId, String email) {
-        return null;
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        FoodTruck foodTruck = getFoodTruckById(foodTruckId);
+        checkOwnerAccess(member, foodTruck);
+
+        foodTruck.deActivate();
+
+        return foodTruck.getId();
     }
 
     /**

@@ -79,4 +79,8 @@ public class FoodTruck extends TimeBaseEntity {
         this.prepareTime = prepareTime;
         this.waitLimits = waitLimits;
     }
+
+    public void deActivate() {
+        this.active = false;
+    }
 }

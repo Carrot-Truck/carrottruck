@@ -70,11 +70,14 @@ dependencies {
 
 	// Amazon S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// Google FCM
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 tasks.named('test') {
 	outputs.dir snippetsDir
-	useJUnitPlatform()
+//	useJUnitPlatform()
 }
 
 asciidoctor {

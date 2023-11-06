@@ -10,9 +10,11 @@ import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.menu.Menu;
+import com.boyworld.carrot.domain.menu.MenuImage;
 import com.boyworld.carrot.domain.menu.MenuInfo;
+import com.boyworld.carrot.domain.menu.repository.command.MenuImageRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
-import com.boyworld.carrot.domain.menu.repository.query.MenuQueryRepository;
+import com.boyworld.carrot.file.UploadFile;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,6 +45,9 @@ class MenuQueryRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
     private FoodTruckRepository foodTruckRepository;
+
+    @Autowired
+    private MenuImageRepository menuImageRepository;
 
     @DisplayName("푸드트럭 식별키로 메뉴 목록을 조회할 수 있다.")
     @Test
@@ -116,6 +121,54 @@ class MenuQueryRepositoryTest extends IntegrationTestSupport {
 
         // then
         assertThat(menus).isEmpty();
+    }
+
+    @DisplayName("메뉴 식별키로 메뉴 상세 정보를 조회한다.")
+    @Test
+    void getMenuById() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        List<FoodTruck> foodTrucks = createFoodTrucks(vendor1, vendor2, category1, category2);
+
+        FoodTruck foodTruck1 = foodTrucks.get(0);
+        FoodTruck foodTruck2 = foodTrucks.get(1);
+
+        Menu menu1 = Menu.builder()
+                .foodTruck(foodTruck1)
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
+                .active(true)
+                .build();
+
+        Menu menu2 = Menu.builder()
+                .foodTruck(foodTruck1)
+                .menuInfo(MenuInfo.builder().name("메뉴2").price(15000).description("메뉴 설명2").soldOut(false).build())
+                .active(true)
+                .build();
+        menuRepository.saveAll(List.of(menu1, menu2));
+
+        MenuImage image = MenuImage.builder()
+                .menu(menu1)
+                .uploadFile(UploadFile.builder().uploadFileName("test.png").storeFileName("saved-test.png").build())
+                .active(true)
+                .build();
+        menuImageRepository.save(image);
+
+        // when
+        MenuDto menuDto = menuQueryRepository.getMenuById(menu1.getId());
+        log.debug("menuDto={}", menuDto);
+
+        // then
+        assertThat(menuDto).isNotNull();
+        assertThat(menuDto).extracting("menuName", "menuPrice", "menuDescription",
+                        "menuSoldOut", "menuImageUrl")
+                .containsExactly(menu1.getMenuInfo().getName(), menu1.getMenuInfo().getPrice(),
+                        menu1.getMenuInfo().getDescription(), menu1.getMenuInfo().getSoldOut(),
+                        image.getUploadFile().getStoreFileName());
     }
 
     private Member createMember(Role role, String email) {

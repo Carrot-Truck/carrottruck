@@ -99,6 +99,27 @@ public class MenuService {
     }
 
     /**
+     * 메뉴 삭제
+     *
+     * @param menuId 메뉴 식별키
+     * @param email  현재 로그인 중인 회원 이메일
+     * @return 삭제된 메뉴 식별키
+     */
+    public Long deleteMenu(Long menuId, String email) {
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        Menu menu = getMenuByMenuId(menuId);
+
+        FoodTruck foodTruck = menu.getFoodTruck();
+        checkOwnerAccess(member, foodTruck);
+
+        menu.deActivate();
+
+        return menu.getId();
+    }
+
+    /**
      * 이메일로 회원 엔티티 조회
      *
      * @param email 현재 로그인한 사용자 이메일
@@ -235,17 +256,6 @@ public class MenuService {
                 .active(true)
                 .build();
         menuImageRepository.save(image);
-    }
-
-    /**
-     * 메뉴 삭제
-     *
-     * @param menuId 메뉴 식별키
-     * @param email  현재 로그인 중인 회원 이메일
-     * @return 삭제된 메뉴 식별키
-     */
-    public Long deleteMenu(Long menuId, String email) {
-        return null;
     }
 
     /**

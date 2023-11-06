@@ -50,4 +50,8 @@ public class Menu extends TimeBaseEntity {
                 .soldOut(this.getMenuInfo().getSoldOut())
                 .build();
     }
+
+    public void deActivate() {
+        this.active = false;
+    }
 }

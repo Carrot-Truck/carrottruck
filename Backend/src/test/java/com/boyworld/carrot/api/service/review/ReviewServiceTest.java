@@ -217,7 +217,26 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     @DisplayName("사용자는 내가 작성한 리뷰 목록을 확인할 수 있다.")
     @Test
     void getMyReview(){
+        // given
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Member fakeVendor = createVendor(Role.VENDOR, true, "fakevendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        Review review = createReview(createReviewEntity(member, order, foodTruck));
 
+        // when
+        MyReviewResponse result = reviewService.getMyReview(member.getEmail());
+
+        // then
+        assertThat(result).isNotNull();
     }
 
     @DisplayName("사용자는 삭제한 리뷰를 볼 수 없다.")

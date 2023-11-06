@@ -54,18 +54,21 @@ public class StatisticsQueryServiceTest extends IntegrationTestSupport {
                 true);
 
         Sale sale1 = createSale(foodTruck, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+                "광주광역시 광산구 장덕동",
                     10,
                     170000,
                     LocalDateTime.now().minusDays(3).minusHours(8),
                     LocalDateTime.now().minusDays(3).minusHours(4));
 
         Sale sale2 = createSale(foodTruck, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+                "광주광역시 광산구 장덕동",
                 2,
                 30000,
                 LocalDateTime.now().minusDays(2).minusHours(7),
                 LocalDateTime.now().minusDays(2).minusHours(3));
 
         Sale sale3 = createSale(foodTruck, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+                "광주광역시 광산구 장덕동",
                 50,
                 800000,
                 LocalDateTime.now().minusDays(1).minusHours(9),
@@ -120,12 +123,13 @@ public class StatisticsQueryServiceTest extends IntegrationTestSupport {
         return foodTruckRepository.save(foodTruck);
     }
 
-    private Sale createSale(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude,
+    private Sale createSale(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, String address,
                             Integer orderNumber, Integer totalAmount, LocalDateTime startTime, LocalDateTime endTime) {
         Sale sale = Sale.builder()
                 .foodTruck(foodTruck)
                 .latitude(latitude)
                 .longitude(longitude)
+                .address(address)
                 .orderNumber(orderNumber)
                 .totalAmount(totalAmount)
                 .startTime(startTime)

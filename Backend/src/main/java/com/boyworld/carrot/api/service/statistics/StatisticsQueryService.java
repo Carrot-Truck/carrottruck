@@ -50,9 +50,6 @@ public class StatisticsQueryService {
 
         List<StatisticsBySalesDto> statisticsBySalesDtos = new ArrayList<>();
         for (SalesDto salesDto : salesDtos) {
-            String address = geocodingService.reverseGeocoding(salesDto.getLatitude(),
-                    salesDto.getLongitude(), "legalcode").get("legalcode");
-
             int totalMinutes = (int)ChronoUnit.MINUTES.between(salesDto.getStartTime(), salesDto.getEndTime());
 
             StatisticsBySalesDto statisticsBySalesDto = StatisticsBySalesDto.builder()
@@ -60,7 +57,7 @@ public class StatisticsQueryService {
                     .date(salesDto.getStartTime().toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                     .startTime(salesDto.getStartTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME))
                     .endTime(salesDto.getEndTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME))
-                    .address(address)
+                    .address(salesDto.getAddress())
                     .totalHours(totalMinutes / 60)
                     .totalMinutes(totalMinutes % 60)
                     .totalSales(salesDto.getTotalAmount())

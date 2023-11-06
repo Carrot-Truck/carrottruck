@@ -46,8 +46,7 @@ public class StatisticsQueryRepository {
                         sale.id,
                         sale.startTime,
                         sale.endTime,
-                        sale.latitude,
-                        sale.longitude,
+                        sale.address,
                         sale.totalAmount
                 ))
                 .from(sale)

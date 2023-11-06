@@ -15,20 +15,17 @@ public class SalesDto {
 
     private LocalDateTime endTime;
 
-    private BigDecimal latitude;
-
-    private BigDecimal longitude;
+    private String address;
 
     private Integer totalAmount;
 
     @Builder
     public SalesDto(Long salesId, LocalDateTime startTime, LocalDateTime endTime,
-                    BigDecimal latitude, BigDecimal longitude, Integer totalAmount) {
+                    String address, Integer totalAmount) {
         this.salesId = salesId;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.address = address;
         this.totalAmount = totalAmount;
     }
 }

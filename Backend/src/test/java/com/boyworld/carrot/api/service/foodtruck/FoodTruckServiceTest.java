@@ -275,6 +275,48 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         assertThat(editedImage.getUploadFile()).extracting("uploadFileName")
                 .isEqualTo("test.png");
     }
+
+    @DisplayName("푸드트럭을 소유한 사업자는 자신의 푸드트럭을 삭제할 수 있다.")
+    @Test
+    void deleteFoodTruckAsOwner() {
+        // given
+        Member member = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        FoodTruck foodTruck = createFoodTruck(member, category1);
+
+        // when
+        Long deletedId = foodTruckService.deleteFoodTruck(foodTruck.getId(), member.getEmail());
+        FoodTruck deletedFoodTruck = foodTruckRepository.findById(deletedId)
+                .orElseThrow();
+
+        // then
+        assertThat(deletedFoodTruck).extracting("active")
+                .isEqualTo(false);
+    }
+
+    @DisplayName("일반 사용자이거나 푸드트럭의 소유주가 아닌 회원은 해당 푸드트럭을 삭제할 수 없다.")
+    @Test
+    void deleteFoodTruckAsMember() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1);
+
+        // when // then
+        assertThatThrownBy(() -> foodTruckService.deleteFoodTruck(foodTruck.getId(), vendor2.getEmail()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+
+        assertThatThrownBy(() -> foodTruckService.deleteFoodTruck(foodTruck.getId(), client1.getEmail()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+    }
     
     private Member createMember(Role role, boolean active, String email) {
         Member member = Member.builder()

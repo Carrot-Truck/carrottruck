@@ -3,7 +3,6 @@ package com.boyworld.carrot.domain.review.repository;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.boyworld.carrot.IntegrationTestSupport;
-import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
@@ -33,6 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -225,6 +225,36 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         // then
         assertThat(items).isNotNull();
         assertThat(items.size()).isEqualTo(2);
+    }
+
+    @DisplayName("사용자는 리뷰를 삭제할 수 있다.")
+    @Test
+    @Transactional
+    void withdrawal(){
+        // given
+        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale);
+        Long reviewId = reviewRepository.save(createReviewEntity(member, order, foodTruck)).getId();
+
+        // when
+        Review review = reviewRepository.findById(reviewId).orElseThrow();
+        review.setActive(false);
+        reviewRepository.save(review);
+        Review deletedReview = reviewRepository.findById(reviewId).orElseThrow();
+
+        // then
+        assertThat(reviewRepository.count()).isEqualTo(1);
+        assertThat(reviewRepository.findByMemberAndActive(member, true).isEmpty()).isFalse();
+        assertThat(reviewRepository.findByMemberAndActive(member, true).get().size()).isEqualTo(0);
+        assertThat(deletedReview.getActive()).isFalse();
     }
 
 

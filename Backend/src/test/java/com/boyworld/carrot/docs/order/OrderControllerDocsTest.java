@@ -356,6 +356,8 @@ public class OrderControllerDocsTest extends RestDocsSupport {
             .build());
 
         CreateOrderRequest request = CreateOrderRequest.builder()
+            .foodTruckId(1L)
+            .totalPrice(40000)
             .orderMenuItems(orderMenuItems)
             .build();
 
@@ -374,6 +376,10 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     requestFields(
+                        fieldWithPath("foodTruckId").type(JsonFieldType.NUMBER)
+                            .description("주문할 푸드트럭 ID"),
+                        fieldWithPath("totalPrice").type(JsonFieldType.NUMBER)
+                            .description("주문 총액"),
                         fieldWithPath("orderMenuItems").type(JsonFieldType.ARRAY)
                             .description("주문할 메뉴 리스트"),
                         fieldWithPath("orderMenuItems[].menuId").type(JsonFieldType.NUMBER)

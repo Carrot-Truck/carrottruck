@@ -2,7 +2,7 @@ package com.boyworld.carrot.api.service.member.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.service.member.dto.LoginDto;
-import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
+import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
@@ -78,7 +78,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
         // when // then
         assertThatThrownBy(() -> authService.login(dto, "VENDOR"))
-                .isInstanceOf(InvalidAccessException.class)
+                .isInstanceOf(InValidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }
 

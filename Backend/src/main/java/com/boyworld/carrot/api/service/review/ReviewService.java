@@ -19,7 +19,6 @@ import com.boyworld.carrot.domain.review.repository.CommentRepository;
 import com.boyworld.carrot.domain.review.repository.ReviewImageRepository;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
 import com.boyworld.carrot.file.S3Uploader;
-import com.boyworld.carrot.security.SecurityUtil;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

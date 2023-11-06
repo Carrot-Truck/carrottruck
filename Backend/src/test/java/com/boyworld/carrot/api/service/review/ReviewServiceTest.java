@@ -27,7 +27,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -267,7 +266,14 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     @DisplayName("사용자는 내가 작성한 리뷰가 없을때는 빈 목록을 확인할 수 있다.")
     @Test
     void getMyEmptyReview(){
+        // given
+        Member member = createMember(Role.CLIENT, true);
 
+        // when
+        MyReviewResponse result = reviewService.getMyReview(member.getEmail());
+
+        // then
+        assertThat(result).isNull();
     }
 
     @DisplayName("사용자는 특정 푸드트럭의 리뷰 목록을 조회할 수 있다.")

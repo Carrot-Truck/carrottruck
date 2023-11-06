@@ -77,7 +77,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
 //                    .file(image)
 //                    .flashAttr("reviewRequest", request)
 //                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                MockMvcRequestBuilders.multipart("/review")
+                MockMvcRequestBuilders.multipart("/api/review")
                     .file(image)
                     .param("memberId", "1")
                     .param("orderId", "1")

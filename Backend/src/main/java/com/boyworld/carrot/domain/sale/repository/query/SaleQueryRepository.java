@@ -253,8 +253,7 @@ public class SaleQueryRepository {
                 .from(foodTruckLike)
                 .where(
                         foodTruckLike.foodTruck.eq(sale.foodTruck),
-                        foodTruckLike.member.email.eq(email),
-                        member.active
+                        foodTruckLike.member.email.eq(email)
                 );
     }
 

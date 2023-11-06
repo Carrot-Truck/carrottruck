@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -174,8 +173,9 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
         createSchedules(foodTruck1);
         createSchedules(foodTruck2);
 
-        Sale sale1 = createSale(foodTruck1, null);
-        Sale sale2 = createSale(foodTruck2, null);
+//        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), "sale1 address");
+        Sale sale1 = createSale(foodTruck1, null, "sale1 address");
+        Sale sale2 = createSale(foodTruck2, null, "sale2 address");
 
         createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);
 
@@ -263,31 +263,34 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
                 BigDecimal.valueOf(126.807271),
                 LocalDateTime.now().minusHours(1),
                 LocalDateTime.now().plusHours(5),
-                DayOfWeek.FRIDAY.name()
+                LocalDateTime.now().getDayOfWeek().name(), "schedule1 address"
         );
 
         Schedule schedule2 = createSchedule(foodTruck,
                 BigDecimal.valueOf(35.204349),
                 BigDecimal.valueOf(126.807805),
-                LocalDateTime.now().plusHours(3),
-                LocalDateTime.now().plusHours(5),
-                DayOfWeek.SATURDAY.name()
+                LocalDateTime.now().plusDays(1).plusHours(3),
+                LocalDateTime.now().plusDays(1).plusHours(5),
+                LocalDateTime.now().plusDays(1).getDayOfWeek().name(), "schedule2 address"
         );
 
         Schedule schedule3 = createSchedule(foodTruck,
                 BigDecimal.valueOf(35.204349),
                 BigDecimal.valueOf(126.807805),
                 LocalDateTime.now().plusHours(5),
-                LocalDateTime.now().plusHours(7),
-                DayOfWeek.SATURDAY.name()
+                LocalDateTime.now().plusDays(2).plusHours(7),
+                LocalDateTime.now().plusDays(2).getDayOfWeek().name(), "schedule3 address"
         );
         List<Schedule> schedules = List.of(schedule1, schedule2, schedule3);
-        scheduleRepository.saveAll(schedules);
+        List<Schedule> savedSchedules = scheduleRepository.saveAll(schedules);
+        for (Schedule schedule : savedSchedules) {
+            log.debug("schedule={}", schedule.getDayOfWeek());
+        }
     }
 
-    private Schedule createSchedule(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, LocalDateTime startTime, LocalDateTime endTime, String dayOfWeek) {
+    private Schedule createSchedule(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, LocalDateTime startTime, LocalDateTime endTime, String dayOfWeek, String scheduleAddress) {
         return Schedule.builder()
-                .address("주소정보")
+                .address(scheduleAddress)
                 .latitude(latitude)
                 .longitude(longitude)
                 .dayOfWeek(dayOfWeek)
@@ -298,15 +301,17 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private Sale createSale(FoodTruck foodTruck, LocalDateTime endTime) {
+    private Sale createSale(FoodTruck foodTruck, LocalDateTime endTime, String saleAddress) {
         Sale sale = Sale.builder()
                 .foodTruck(foodTruck)
                 .latitude(BigDecimal.valueOf(35.204008))
                 .longitude(BigDecimal.valueOf(126.807271))
+                .address(saleAddress)
                 .orderNumber(0)
                 .totalAmount(0)
                 .startTime(LocalDateTime.now().minusHours(1))
                 .endTime(endTime)
+                .orderable(true)
                 .active(true)
                 .build();
         return saleRepository.save(sale);

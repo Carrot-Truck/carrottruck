@@ -40,4 +40,9 @@ public class FoodTruckImage extends TimeBaseEntity {
         this.foodTruck = foodTruck;
         this.active = active;
     }
+
+    // == business logic ==//
+    public void deActivate() {
+        this.active = false;
+    }
 }

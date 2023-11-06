@@ -77,7 +77,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
 //                    .file(image)
 //                    .flashAttr("reviewRequest", request)
 //                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                MockMvcRequestBuilders.multipart("/review")
+                MockMvcRequestBuilders.multipart("/api/review")
                     .file(image)
                     .param("memberId", "1")
                     .param("orderId", "1")
@@ -187,12 +187,12 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .build();
 
         // ReviewService의 getMyReview 메서드가 호출될 때 가짜 응답을 반환하도록 설정
-        given(reviewService.getMyReview())
+        given(reviewService.getMyReview(anyString()))
             .willReturn(myReviewResponse);
 
         // API 요청 및 응답 검증
         mockMvc.perform(
-                get("/review")
+                get("/api/review")
                     .header("Authentication", "authentication")
             ).andDo(print())
             .andExpect(status().isFound())
@@ -250,7 +250,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             foodTruckReviewResponse);
 
         mockMvc.perform(
-                get("/review/1")
+                get("/api/review/1")
             ).andDo(print())
             .andExpect(status().isFound())
             .andDo(
@@ -298,11 +298,11 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .build();
 
         given(
-            reviewService.withdrawal(withdrawalRequest.getReviewId()))
+            reviewService.withdrawal(any(), anyString()))
             .willReturn(result);
 
         mockMvc.perform(
-                put("/review/withdrawal")
+                put("/api/review/withdrawal")
                     .content(objectMapper.writeValueAsString(withdrawalRequest))
                     .contentType(MediaType.APPLICATION_JSON)
             ).andDo(print())
@@ -339,7 +339,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
         given(reviewService.report(request.getReviewId(), request.getContent())).willReturn(result);
 
         mockMvc.perform(
-                post("/review/report")
+                post("/api/review/report")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             ).andDo(print())

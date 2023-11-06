@@ -32,7 +32,7 @@ public class MemberAddress extends TimeBaseEntity {
     private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "vendor_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder

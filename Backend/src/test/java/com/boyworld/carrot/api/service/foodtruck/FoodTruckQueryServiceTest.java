@@ -3,7 +3,7 @@ package com.boyworld.carrot.api.service.foodtruck;
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.foodtruck.response.*;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
-import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
+import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.FoodTruckLike;
@@ -21,7 +21,7 @@ import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.member.repository.command.VendorInfoRepository;
 import com.boyworld.carrot.domain.menu.Menu;
 import com.boyworld.carrot.domain.menu.MenuInfo;
-import com.boyworld.carrot.domain.menu.repository.MenuRepository;
+import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
 import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
@@ -151,7 +151,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
 
         // when // then
         assertThatThrownBy(() -> foodTruckQueryService.getFoodTruckOverviews(null, client1.getEmail()))
-                .isInstanceOf(InvalidAccessException.class)
+                .isInstanceOf(InValidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }
 
@@ -1207,6 +1207,8 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
 
     private Sale createSale(FoodTruck foodTruck, LocalDateTime startTime, BigDecimal latitude, BigDecimal longitude) {
         Sale sale = Sale.builder()
+                .address("sale address")
+                .orderable(true)
                 .foodTruck(foodTruck)
                 .latitude(latitude)
                 .longitude(longitude)

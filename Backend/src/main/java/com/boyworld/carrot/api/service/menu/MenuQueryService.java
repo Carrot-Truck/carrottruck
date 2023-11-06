@@ -2,7 +2,7 @@ package com.boyworld.carrot.api.service.menu;
 
 import com.boyworld.carrot.api.controller.menu.response.MenuResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuDetailResponse;
-import com.boyworld.carrot.domain.menu.repository.MenuQueryRepository;
+import com.boyworld.carrot.domain.menu.repository.query.MenuQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -73,7 +73,7 @@ public class ReviewController {
     public ApiResponse<MyReviewResponse> getMyReview() {
         log.debug("ReviewController#getMyReview called !!!");
 
-        MyReviewResponse response = reviewService.getMyReview();
+        MyReviewResponse response = reviewService.getMyReview(SecurityUtil.getCurrentLoginId());
         return ApiResponse.found(response);
     }
 
@@ -101,7 +101,7 @@ public class ReviewController {
         log.debug("ReviewController#withdrawal called !!!");
         log.debug("WithdrawalRequest={}", request);
 
-        Boolean result = reviewService.withdrawal(request.getReviewId());
+        Boolean result = reviewService.withdrawal(request.getReviewId(), SecurityUtil.getCurrentLoginId());
         log.debug("result={}", result);
 
         return ApiResponse.ok(true);

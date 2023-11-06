@@ -7,10 +7,10 @@ import com.boyworld.carrot.api.service.fcm.dto.FCMNotificationRequestDto;
 import com.boyworld.carrot.api.service.sale.dto.AcceptOrderDto;
 import com.boyworld.carrot.api.service.sale.dto.DeclineOrderDto;
 import com.boyworld.carrot.api.service.sale.dto.OpenSaleDto;
+import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
-import com.boyworld.carrot.domain.menu.repository.MenuQueryRepository;
-import com.boyworld.carrot.domain.menu.repository.MenuRepository;
+import com.boyworld.carrot.domain.menu.repository.query.MenuQueryRepository;
 import com.boyworld.carrot.domain.order.repository.query.OrderQueryRepository;
 import com.boyworld.carrot.domain.sale.Sale;
 import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
@@ -135,8 +135,7 @@ public class SaleService {
         }
 
         // 2. 푸드트럭 비활성화
-        foodTruckRepository.deactivateFoodTruck(foodTruckId);
-
+        foodTruckRepository.findById(foodTruckId).ifPresent(FoodTruck::deActivate);
         return foodTruckId;
     }
 

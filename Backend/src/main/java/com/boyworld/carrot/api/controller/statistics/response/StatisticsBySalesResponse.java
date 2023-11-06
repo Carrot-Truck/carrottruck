@@ -21,4 +21,12 @@ public class StatisticsBySalesResponse {
         this.statisticsBySales = statisticsBySales;
         this.hasNext = hasNext;
     }
+
+    public static StatisticsBySalesResponse of(Integer year, List<StatisticsBySalesDto> statisticsBySales, Boolean hasNext) {
+        return StatisticsBySalesResponse.builder()
+                .year(year)
+                .statisticsBySales(statisticsBySales)
+                .hasNext(hasNext)
+                .build();
+    }
 }

@@ -12,7 +12,7 @@ import com.boyworld.carrot.domain.foodtruck.repository.query.ScheduleQueryReposi
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
-import com.boyworld.carrot.domain.menu.repository.MenuQueryRepository;
+import com.boyworld.carrot.domain.menu.repository.query.MenuQueryRepository;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

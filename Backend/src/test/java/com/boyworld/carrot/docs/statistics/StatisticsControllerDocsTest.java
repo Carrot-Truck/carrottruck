@@ -87,7 +87,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long fid = 1L;
 
         mockMvc.perform(
-                        get("/api/statistics/{foodTruckId}/sales", fid)
+                        get("/statistics/{foodTruckId}/sales", fid)
                                 .param("year", "2023")
                                 .param("month", "11")
                                 .param("lastSalesId", "0")
@@ -232,7 +232,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long sid = 1L;
 
         mockMvc.perform(
-                        get("/api/statistics/{foodTruckId}/sales-detail/{salesId}", fid, sid)
+                        get("/statistics/{foodTruckId}/sales-detail/{salesId}", fid, sid)
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -325,7 +325,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long fid = 1L;
 
         mockMvc.perform(
-                        get("/api/statistics/{foodTruckId}/weekly", fid)
+                        get("/statistics/{foodTruckId}/weekly", fid)
                                 .param("year", "2023")
                                 .param("lastWeek", "1")
                                 .header("Authentication", "authentication")
@@ -342,8 +342,8 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                         queryParameters(
                                 parameterWithName("year")
                                         .description("연도"),
-                                parameterWithName("lastStartDate")
-                                        .description("마지막으로 조회한 영업 시작일")
+                                parameterWithName("lastWeek")
+                                        .description("마지막으로 조회한 영업주")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -485,7 +485,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long fid = 1L;
 
         mockMvc.perform(
-                        get("/api/statistics/{foodTruckId}/weekly-detail", fid)
+                        get("/statistics/{foodTruckId}/weekly-detail", fid)
                                 .param("startDate", startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                                 .param("endDate", endDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                                 .header("Authentication", "authentication")
@@ -577,7 +577,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long fid = 1L;
 
         mockMvc.perform(
-                        get("/api/statistics/{foodTruckId}/monthly", fid)
+                        get("/statistics/{foodTruckId}/monthly", fid)
                                 .param("year", "2023")
                                 .header("Authentication", "authentication")
                 )
@@ -726,7 +726,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long fid = 1L;
 
         mockMvc.perform(
-                        get("/api/statistics/{foodTruckId}/monthly-detail", fid)
+                        get("/statistics/{foodTruckId}/monthly-detail", fid)
                                 .param("year", "2023")
                                 .param("month", "10")
                                 .header("Authentication", "authentication")

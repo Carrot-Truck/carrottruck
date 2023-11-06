@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.service.menu;
 
+import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuDetailResponse;
 import com.boyworld.carrot.api.service.member.error.InValidAccessException;
@@ -9,6 +10,7 @@ import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckReposito
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.menu.repository.query.MenuOptionQueryRepository;
 import com.boyworld.carrot.domain.menu.repository.query.MenuQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,7 @@ public class MenuQueryService {
     private final MenuQueryRepository menuQueryRepository;
     private final MemberRepository memberRepository;
     private final FoodTruckRepository foodTruckRepository;
+    private final MenuOptionQueryRepository menuOptionQueryRepository;
 
     /**
      * 푸드트럭 메뉴 목록 조회
@@ -116,7 +119,15 @@ public class MenuQueryService {
      * @param email  현재 로그인 중인 사용자 이메일
      * @return 메뉴 상세 정보 (옵션 포함)
      */
-    public MenuDetailResponse getMenu(Long menuId, String email) {
-        return null;
+    public MenuDetailResponse getMenu(Long foodTruckId, Long menuId, String email) {
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        FoodTruck foodTruck = getFoodTruckById(foodTruckId);
+        checkOwnerAccess(member, foodTruck);
+
+        MenuDto menu = menuQueryRepository.getMenuById(menuId);
+        List<MenuOptionResponse> menuOptions = menuOptionQueryRepository.getMenuOptionsByMenuId(menuId);
+        return MenuDetailResponse.of(menu, menuOptions);
     }
 }

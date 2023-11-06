@@ -3,7 +3,7 @@ package com.boyworld.carrot.api.service.foodtruck;
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.foodtruck.response.*;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
-import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
+import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.FoodTruckLike;
@@ -151,7 +151,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
 
         // when // then
         assertThatThrownBy(() -> foodTruckQueryService.getFoodTruckOverviews(null, client1.getEmail()))
-                .isInstanceOf(InvalidAccessException.class)
+                .isInstanceOf(InValidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }
 

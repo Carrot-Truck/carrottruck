@@ -1,7 +1,7 @@
-package com.boyworld.carrot.domain.menu.repository;
+package com.boyworld.carrot.domain.menu.repository.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
-import com.boyworld.carrot.api.service.menu.dto.MenuDto;
+import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
@@ -11,8 +11,9 @@ import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.menu.Menu;
 import com.boyworld.carrot.domain.menu.MenuInfo;
+import com.boyworld.carrot.domain.menu.MenuOption;
+import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
-import com.boyworld.carrot.domain.menu.repository.query.MenuQueryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,14 +24,21 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * 메뉴 옵션 조회 레포지토리 테스트
+ *
+ * @author 최영환
+ */
 @Slf4j
-class MenuQueryRepositoryTest extends IntegrationTestSupport {
-
+class MenuOptionQueryRepositoryTest extends IntegrationTestSupport {
     @Autowired
-    private MenuQueryRepository menuQueryRepository;
+    private MenuOptionQueryRepository menuOptionQueryRepository;
 
     @Autowired
     private MenuRepository menuRepository;
+
+    @Autowired
+    private MenuOptionRepository menuOptionRepository;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -44,78 +52,80 @@ class MenuQueryRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private FoodTruckRepository foodTruckRepository;
 
-    @DisplayName("푸드트럭 식별키로 메뉴 목록을 조회할 수 있다.")
+    @DisplayName("메뉴 식별키로 메뉴 옵션 리스트를 조회한다.")
     @Test
-    void getMenusByFoodTruckId() {
+    void getMenuOptionsByMenuId() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
-        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
 
-        Category category1 = createCategory("고기/구이");
-        Category category2 = createCategory("분식");
+        Category category = createCategory("고기/구이");
 
-        List<FoodTruck> foodTrucks = createFoodTrucks(vendor1, vendor2, category1, category2);
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
 
-        FoodTruck foodTruck = foodTrucks.get(0);
-        Menu menu1 = Menu.builder()
+        Menu menu = Menu.builder()
                 .foodTruck(foodTruck)
                 .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
                 .active(true)
                 .build();
 
-        Menu menu2 = Menu.builder()
-                .foodTruck(foodTruck)
-                .menuInfo(MenuInfo.builder().name("메뉴2").price(15000).description("메뉴 설명2").soldOut(false).build())
+        MenuOption option1 = MenuOption.builder()
+                .menu(menu)
+                .menuInfo(MenuInfo.builder().name("메뉴옵션1").price(500).description("메뉴 옵션 설명1").soldOut(false).build())
                 .active(true)
                 .build();
-        menuRepository.saveAll(List.of(menu1, menu2));
+
+        MenuOption option2 = MenuOption.builder()
+                .menu(menu)
+                .menuInfo(MenuInfo.builder().name("메뉴옵션2").price(300).description("메뉴 옵션 설명2").soldOut(false).build())
+                .active(true)
+                .build();
+        menuOptionRepository.saveAll(List.of(option1, option2));
 
         // when
-        List<MenuDto> menus = menuQueryRepository.getMenusByFoodTruckId(foodTruck.getId());
-        for (MenuDto menu : menus) {
-            log.debug("menu={}", menu);
+        List<MenuOptionResponse> options = menuOptionQueryRepository.getMenuOptionsByMenuId(menu.getId());
+        for (MenuOptionResponse option : options) {
+            log.debug("option={}", option);
         }
 
         // then
-        assertThat(menus).isNotEmpty();
+        assertThat(options).hasSize(2);
     }
 
-    @DisplayName("푸드트럭에 메뉴가 없으면 빈 리스트가 반환된다.")
+    @DisplayName("메뉴 식별키에 해당하는 메뉴 옵션이 없으면 빈 리스트가 반환된다.")
     @Test
-    void getMenusByFoodTruckIdWithEmpty() {
+    void getEmptyMenuOptionsByMenuId() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
-        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
 
-        Category category1 = createCategory("고기/구이");
-        Category category2 = createCategory("분식");
+        Category category = createCategory("고기/구이");
 
-        List<FoodTruck> foodTrucks = createFoodTrucks(vendor1, vendor2, category1, category2);
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
 
-        FoodTruck foodTruck1 = foodTrucks.get(0);
-        FoodTruck foodTruck2 = foodTrucks.get(1);
-
-        Menu menu1 = Menu.builder()
-                .foodTruck(foodTruck1)
+        Menu menu = Menu.builder()
+                .foodTruck(foodTruck)
                 .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
                 .active(true)
                 .build();
-
-        Menu menu2 = Menu.builder()
-                .foodTruck(foodTruck1)
-                .menuInfo(MenuInfo.builder().name("메뉴2").price(15000).description("메뉴 설명2").soldOut(false).build())
-                .active(true)
-                .build();
-        menuRepository.saveAll(List.of(menu1, menu2));
+        Menu saveMenu = menuRepository.save(menu);
 
         // when
-        List<MenuDto> menus = menuQueryRepository.getMenusByFoodTruckId(foodTruck2.getId());
-        for (MenuDto menu : menus) {
-            log.debug("menu={}", menu);
+        List<MenuOptionResponse> options = menuOptionQueryRepository.getMenuOptionsByMenuId(saveMenu.getId());
+        for (MenuOptionResponse option : options) {
+            log.debug("option={}", option);
         }
 
         // then
-        assertThat(menus).isEmpty();
+        assertThat(options).isEmpty();
     }
 
     private Member createMember(Role role, String email) {
@@ -137,22 +147,6 @@ class MenuQueryRepositoryTest extends IntegrationTestSupport {
                 .active(true)
                 .build();
         return categoryRepository.save(category);
-    }
-
-    private List<FoodTruck> createFoodTrucks(Member vendor1, Member vendor2, Category category1, Category category2) {
-        FoodTruck foodTruck1 = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-        FoodTruck foodTruck2 = createFoodTruck(vendor2, category2, "팔천순대", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                30,
-                20,
-                false);
-        return List.of(foodTruck1, foodTruck2);
     }
 
     private FoodTruck createFoodTruck(Member member, Category category, String name, String phoneNumber,

@@ -298,7 +298,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .build();
 
         given(
-            reviewService.withdrawal(withdrawalRequest.getReviewId(), anyString()))
+            reviewService.withdrawal(any(), anyString()))
             .willReturn(result);
 
         mockMvc.perform(

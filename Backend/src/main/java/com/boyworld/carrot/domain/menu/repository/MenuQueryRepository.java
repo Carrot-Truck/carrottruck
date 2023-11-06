@@ -1,9 +1,11 @@
 package com.boyworld.carrot.domain.menu.repository;
 
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
+import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +25,7 @@ import static com.boyworld.carrot.domain.menu.QMenuImage.menuImage;
 public class MenuQueryRepository {
 
     private final JPAQueryFactory queryFactory;
+    private final FoodTruckQueryRepository foodTruckQueryRepository;
 
     /**
      * 푸드트럭 식별키로 메뉴 목록 조회 쿼리
@@ -60,6 +63,28 @@ public class MenuQueryRepository {
                         menu.id.in(ids)
                 )
                 .fetch();
+    }
+
+    @Transactional
+    public void deactivateMenu(Long menuId) {
+        queryFactory
+            .update(menu)
+            .set(menu.active, false)
+            .where(menu.id.eq(menuId))
+            .execute();
+    }
+
+    public Boolean isMenuOwner(Long menuId, String email) {
+        Long foodTruckId = queryFactory.select(menu.foodTruck.id)
+            .from(menu)
+            .where(menu.id.eq(menuId))
+            .fetchOne();
+
+        if (foodTruckId != null) {
+            return foodTruckQueryRepository.isFoodTruckOwner(foodTruckId, email);
+        }
+
+        return false;
     }
 
     private BooleanExpression isEqualFoodTruckId(Long foodTruckId) {

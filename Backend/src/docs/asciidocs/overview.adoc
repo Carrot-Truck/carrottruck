@@ -1,6 +1,12 @@
 [[overview]]
 == Overview
 
+[[overview-context-path]]
+=== Context Path
+모든 요청 URL 은 '/api' 로 시작합니다.
+
+ex) POST '/api/member/join'
+
 [[overview-http-status-codes]]
 === HTTP status codes
 
@@ -13,11 +19,8 @@
 | `201 Created`
 | 등록
 
-| `204 No Content`
-| 비어있는 응답
-
 | `302 Found`
-| 리다랙션 상태
+| 리다이랙션 상태
 
 | `400 Bad Request`
 | 잘못된 요청

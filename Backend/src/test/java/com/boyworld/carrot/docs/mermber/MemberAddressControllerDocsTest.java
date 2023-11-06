@@ -58,7 +58,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        post("/api/member/address")
+                        post("/member/address")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -115,7 +115,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/api/member/address")
+                        get("/member/address")
                                 .header("Authentication", "authentication")
                                 .param("lastMemberAddressId", "")
                 )
@@ -163,7 +163,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/api/member/address/{memberAddressId}", 1)
+                        get("/member/address/{memberAddressId}", 1)
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -210,7 +210,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        patch("/api/member/address/{memberAddressId}", 1)
+                        patch("/member/address/{memberAddressId}", 1)
                                 .header("Authentication", "authentication")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -255,7 +255,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                 .willReturn(true);
 
         mockMvc.perform(
-                        delete("/api/member/address/{memberAddressId}", 1)
+                        delete("/member/address/{memberAddressId}", 1)
                                 .header("Authentication", "authentication")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -293,7 +293,7 @@ public class MemberAddressControllerDocsTest extends RestDocsSupport {
                 .willReturn(2L);
 
         mockMvc.perform(
-                        patch("/api/member/address/selected")
+                        patch("/member/address/selected")
                                 .header("Authentication", "authentication")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)

@@ -78,7 +78,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .willReturn(1L);
 
         mockMvc.perform(
-                        multipart("/api/food-truck/vendor")
+                        multipart("/food-truck/vendor")
                                 .file(file)
                                 .file(jsonRequestPart)
                                 .header("Authentication", "authentication")
@@ -152,7 +152,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/api/food-truck/marker")
+                        get("/food-truck/marker")
                                 .header("Authentication", "authentication")
                                 .param("categoryId", "")
                                 .param("keyword", "")
@@ -249,7 +249,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/api/food-truck")
+                        get("/food-truck")
                                 .header("Authentication", "authentication")
                                 .param("categoryId", "")
                                 .param("keyword", "")
@@ -346,7 +346,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/api/food-truck/overview")
+                        get("/food-truck/overview")
                                 .header("Authentication", "authentication")
                                 .param("lastFoodTruckId", (String) null)
                 )
@@ -459,7 +459,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/api/food-truck/{foodTruckId}", foodTruck.getFoodTruckId())
+                        get("/food-truck/{foodTruckId}", foodTruck.getFoodTruckId())
                                 .header("Authentication", "authentication")
                                 .param("latitude", "35.1595")
                                 .param("longitude", "126.8526")
@@ -584,7 +584,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         // multipart 는 기본적으로 POST 요청을 위한 처리로만 사용되고 있으므로 아래와 같이 Override 해서 만들어줘야함
         MockMultipartHttpServletRequestBuilder builder =
                 RestDocumentationRequestBuilders.
-                        multipart("/api/food-truck/{foodTruckId}", foodTruckId);
+                        multipart("/food-truck/{foodTruckId}", foodTruckId);
 
         builder.with(new RequestPostProcessor() {
             @Override
@@ -652,7 +652,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .willReturn(foodTruckId);
 
         mockMvc.perform(
-                        delete("/api/food-truck/{foodTruckId}", foodTruckId)
+                        delete("/food-truck/{foodTruckId}", foodTruckId)
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -695,7 +695,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        post("/api/food-truck/like")
+                        post("/food-truck/like")
                                 .header("Authentication", "authentication")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)

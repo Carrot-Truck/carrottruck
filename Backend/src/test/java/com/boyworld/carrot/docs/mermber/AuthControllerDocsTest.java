@@ -52,7 +52,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
                 .willReturn(tokenInfo);
 
         mockMvc.perform(
-                        post("/api/auth/login/client")
+                        post("/auth/login/client")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -104,7 +104,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
                 .willReturn(tokenInfo);
 
         mockMvc.perform(
-                        post("/api/auth/login/vendor")
+                        post("/auth/login/vendor")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -151,7 +151,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
                 .willReturn(result);
 
         mockMvc.perform(
-                        post("/api/auth/duplication/email")
+                        post("/auth/duplication/email")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )

@@ -66,7 +66,7 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        post("/api/member/client/join")
+                        post("/member/client/join")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -126,7 +126,7 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .willReturn(result);
 
         mockMvc.perform(
-                        post("/api/member/client/withdrawal")
+                        post("/member/client/withdrawal")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -170,7 +170,7 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/api/member/client/info")
+                        get("/member/client/info")
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -220,7 +220,7 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        put("/api/member/client")
+                        put("/member/client")
                                 .header("Authentication", "authentication")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)

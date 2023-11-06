@@ -70,6 +70,9 @@ class FoodTruckImageQueryRepositoryTest extends IntegrationTestSupport {
 
         // then
         assertThat(result).isNotNull();
+        assertThat(result.getUploadFile()).extracting("storeFileName", "uploadFileName")
+                .containsExactly(foodTruckImage.getUploadFile().getStoreFileName(),
+                        foodTruckImage.getUploadFile().getUploadFileName());
     }
 
     @DisplayName("푸드트럭 식별키로 푸드트럭 이미지를 조회할 수 있다.")

@@ -1,6 +1,8 @@
 package com.boyworld.carrot.api.controller.foodtruck.request;
 
 import com.boyworld.carrot.api.service.foodtruck.dto.UpdateFoodTruckDto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,16 +10,22 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UpdateFoodTruckRequest {
+    @NotNull
     private Long categoryId;
+    @NotBlank
     private String foodTruckName;
+    @NotBlank
     private String phoneNumber;
     private String content;
     private String originInfo;
+    @NotNull
     private Integer prepareTime;
+    @NotNull
     private Integer waitLimits;
 
     @Builder
-    public UpdateFoodTruckRequest(Long categoryId, String foodTruckName, String phoneNumber, String content, String originInfo, Integer prepareTime, Integer waitLimits) {
+    public UpdateFoodTruckRequest(Long categoryId, String foodTruckName, String phoneNumber,
+                                  String content, String originInfo, Integer prepareTime, Integer waitLimits) {
         this.categoryId = categoryId;
         this.foodTruckName = foodTruckName;
         this.phoneNumber = phoneNumber;

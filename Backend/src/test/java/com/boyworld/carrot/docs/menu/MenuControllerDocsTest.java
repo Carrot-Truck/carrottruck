@@ -185,7 +185,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menus(List.of(menu1, menu2))
                 .build();
 
-        given(menuQueryService.getMenus(anyLong(), anyLong(), anyString()))
+        given(menuQueryService.getMenus(anyLong(), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -211,6 +211,8 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                                         .description("메뉴 목록 조회 결과"),
+                                fieldWithPath("data.menuCount").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 개수"),
                                 fieldWithPath("data.menus").type(JsonFieldType.ARRAY)
                                         .description("메뉴 리스트"),
                                 fieldWithPath("data.menus[].menuId").type(JsonFieldType.NUMBER)

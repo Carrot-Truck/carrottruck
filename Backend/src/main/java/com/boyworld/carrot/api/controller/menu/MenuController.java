@@ -61,20 +61,17 @@ public class MenuController {
      * 푸드트럭 메뉴 목록 조회
      *
      * @param foodTruckId 루드트럭 식별키
-     * @param lastMenuId  마지막으로 조회된 메뉴 식별키
      * @return 해당 푸드트럭의 메뉴 목록
      */
     @GetMapping
-    public ApiResponse<MenuResponse> getMenus(@RequestParam Long foodTruckId,
-                                              @RequestParam(required = false, defaultValue = "0") Long lastMenuId) {
+    public ApiResponse<MenuResponse> getMenus(@RequestParam Long foodTruckId) {
         log.debug("MenuController#getMenus called");
         log.debug("foodTruckId={}", foodTruckId);
-        log.debug("lastMenuId={}", lastMenuId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        MenuResponse response = menuQueryService.getMenus(foodTruckId, lastMenuId, email);
+        MenuResponse response = menuQueryService.getMenus(foodTruckId, email);
         log.debug("MenuResponse={}", response);
 
         return ApiResponse.ok(response);

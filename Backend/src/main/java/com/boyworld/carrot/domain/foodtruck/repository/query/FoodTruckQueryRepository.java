@@ -145,6 +145,18 @@ public class FoodTruckQueryRepository {
                 .fetchOne();
     }
 
+    public Boolean isFoodTruckOwner(Long foodTruckId, String email) {
+        return queryFactory
+            .select(foodTruck.id.count().goe(1L))
+            .from(foodTruck)
+            .join(foodTruck.vendor, member)
+            .where(
+                member.email.eq(email),
+                foodTruck.id.eq(foodTruckId)
+            )
+            .fetchFirst();
+    }
+
     private BooleanExpression isEqualEmail(String email) {
         return hasText(email) ? foodTruck.vendor.email.eq(email) : null;
     }

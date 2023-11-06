@@ -81,7 +81,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                 .hasNext(false)
                 .build();
 
-        given(statisticsQueryService.getStatisticsBySales(anyLong(), anyInt(), anyInt(), anyInt()))
+        given(statisticsQueryService.getStatisticsBySales(anyLong(), anyInt(), anyInt(), anyLong()))
                 .willReturn(response);
 
         Long fid = 1L;

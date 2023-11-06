@@ -33,7 +33,7 @@ public class AnalysisController {
      */
     @GetMapping("/store/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<StoreAnalysisResponse> getStoreAnalysis(@PathVariable Integer categoryId,
+    public ApiResponse<StoreAnalysisResponse> getStoreAnalysis(@PathVariable Long categoryId,
                                                                @RequestParam BigDecimal latitude,
                                                                @RequestParam BigDecimal longitude) {
         log.debug("AnalysisController#getStoreAnalysis called !!!");

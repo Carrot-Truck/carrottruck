@@ -43,10 +43,10 @@ public class AnalysisControllerDocsTest extends RestDocsSupport {
                 .sido("광주광역시")
                 .sigungu("광산구")
                 .dong("수완동")
-                .middleClassCode("I201")
-                .middleClassName("한식")
-                .smallClassCode("I20109")
-                .smallClassName("곱창 전골/구이")
+                .indsMclsCd("I201")
+                .indsMclsNm("한식")
+                .indsSclsCd("I20109")
+                .indsSclsNm("곱창 전골/구이")
                 .build();
 
         StoreAnalysisDto item2 = StoreAnalysisDto.builder()
@@ -56,10 +56,10 @@ public class AnalysisControllerDocsTest extends RestDocsSupport {
                 .sido("광주광역시")
                 .sigungu("광산구")
                 .dong("장덕동")
-                .middleClassCode("I201")
-                .middleClassName("한식")
-                .smallClassCode("I20105")
-                .smallClassName("국수/칼국수")
+                .indsMclsCd("I201")
+                .indsMclsNm("한식")
+                .indsSclsCd("I20105")
+                .indsSclsNm("국수/칼국수")
                 .build();
 
         StoreAnalysisDto item3 = StoreAnalysisDto.builder()
@@ -69,10 +69,10 @@ public class AnalysisControllerDocsTest extends RestDocsSupport {
                 .sido("광주광역시")
                 .sigungu("광산구")
                 .dong("장덕동")
-                .middleClassCode("I201")
-                .middleClassName("한식")
-                .smallClassCode("I20101")
-                .smallClassName("백반/한정식")
+                .indsMclsCd("I201")
+                .indsMclsNm("한식")
+                .indsSclsCd("I20101")
+                .indsSclsNm("백반/한정식")
                 .build();
 
         StoreAnalysisDto item4 = StoreAnalysisDto.builder()
@@ -82,10 +82,10 @@ public class AnalysisControllerDocsTest extends RestDocsSupport {
                 .sido("광주광역시")
                 .sigungu("광산구")
                 .dong("장덕동")
-                .middleClassCode("I201")
-                .middleClassName("한식")
-                .smallClassCode("I20101")
-                .smallClassName("백반/한정식")
+                .indsMclsCd("I201")
+                .indsMclsNm("한식")
+                .indsSclsCd("I20101")
+                .indsSclsNm("백반/한정식")
                 .build();
 
         StoreAnalysisDto item5 = StoreAnalysisDto.builder()
@@ -95,10 +95,10 @@ public class AnalysisControllerDocsTest extends RestDocsSupport {
                 .sido("광주광역시")
                 .sigungu("광산구")
                 .dong("신가동")
-                .middleClassCode("I201")
-                .middleClassName("한식")
-                .smallClassCode("I20101")
-                .smallClassName("백반/한정식")
+                .indsMclsCd("I201")
+                .indsMclsNm("한식")
+                .indsSclsCd("I20101")
+                .indsSclsNm("백반/한정식")
                 .build();
 
         List<StoreAnalysisDto> items = List.of(item1, item2, item3, item4, item5);
@@ -114,7 +114,7 @@ public class AnalysisControllerDocsTest extends RestDocsSupport {
                 .stores(items)
                 .build();
 
-        given(analysisQueryService.getStoreAnalysis(anyInt(), any(BigDecimal.class), any(BigDecimal.class)))
+        given(analysisQueryService.getStoreAnalysis(anyLong(), any(BigDecimal.class), any(BigDecimal.class)))
                 .willReturn(response);
 
         Long cid = 1L;
@@ -172,13 +172,13 @@ public class AnalysisControllerDocsTest extends RestDocsSupport {
                                         .description("상가업소의 시군구 명칭"),
                                 fieldWithPath("data.stores[].dong").type(JsonFieldType.STRING)
                                         .description("상가업소의 읍면동 명칭(법정동)"),
-                                fieldWithPath("data.stores[].middleClassCode").type(JsonFieldType.STRING)
+                                fieldWithPath("data.stores[].indsMclsCd").type(JsonFieldType.STRING)
                                         .description("상권업종중분류코드(4자리)"),
-                                fieldWithPath("data.stores[].middleClassName").type(JsonFieldType.STRING)
+                                fieldWithPath("data.stores[].indsMclsNm").type(JsonFieldType.STRING)
                                         .description("상권업종중분류명"),
-                                fieldWithPath("data.stores[].smallClassCode").type(JsonFieldType.STRING)
+                                fieldWithPath("data.stores[].indsSclsCd").type(JsonFieldType.STRING)
                                         .description("상권업종소분류코드(6자리)"),
-                                fieldWithPath("data.stores[].smallClassName").type(JsonFieldType.STRING)
+                                fieldWithPath("data.stores[].indsSclsNm").type(JsonFieldType.STRING)
                                         .description("상권업종소분류명")
                         )
                 ));

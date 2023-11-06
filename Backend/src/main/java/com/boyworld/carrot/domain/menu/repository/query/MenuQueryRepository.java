@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.menu.repository;
+package com.boyworld.carrot.domain.menu.repository.query;
 
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
 import com.querydsl.core.types.Projections;

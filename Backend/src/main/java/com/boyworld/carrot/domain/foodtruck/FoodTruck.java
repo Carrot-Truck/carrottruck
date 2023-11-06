@@ -68,4 +68,19 @@ public class FoodTruck extends TimeBaseEntity {
         this.vendor = vendor;
         this.category = category;
     }
+
+    // == business logic ==//
+    public void editFoodTruck(String foodTruckName, Category category, String content, String phoneNumber,
+                              String originInfo, Integer prepareTime, Integer waitLimits) {
+        this.name = foodTruckName;
+        this.content = content;
+        this.phoneNumber = phoneNumber;
+        this.originInfo = originInfo;
+        this.prepareTime = prepareTime;
+        this.waitLimits = waitLimits;
+    }
+
+    public void deActivate() {
+        this.active = false;
+    }
 }

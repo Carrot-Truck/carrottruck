@@ -16,9 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    Optional<List<Review>> findByMember(Member memberId);
-
-    Optional<List<Review>> findByFoodTruck(FoodTruck foodTruck);
     Optional<List<Review>> findByFoodTruckAndActive(FoodTruck foodTruck, Boolean active);
 
     Optional<List<Review>> findByMemberAndActive(Member member, Boolean active);

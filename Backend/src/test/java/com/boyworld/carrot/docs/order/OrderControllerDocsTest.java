@@ -106,7 +106,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
             .willReturn(response);
 
         mockMvc.perform(
-            get("/order")
+            get("/api/order")
                 .header("Authentication", "authentication")
         ).andDo(print())
             .andExpect(status().isOk())
@@ -190,7 +190,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
 
         Long orderId = 1L;
         mockMvc.perform(
-            get("/order/client/{orderId}", orderId)
+            get("/api/order/client/{orderId}", orderId)
                 .header("Authentication", "authentication")
             )
             .andDo(print())
@@ -282,7 +282,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
 
         Long orderId = 1L;
         mockMvc.perform(
-                get("/order/vendor/{orderId}", orderId)
+                get("/api/order/vendor/{orderId}", orderId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())
@@ -365,7 +365,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
             .willReturn(1L);
 
         mockMvc.perform(
-            post("/order/create")
+            post("/api/order/create")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -413,7 +413,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
 
         Long orderId = 1L;
         mockMvc.perform(
-            put("/order/{orderId}", orderId)
+            put("/api/order/{orderId}", orderId)
                 .header("Authentication", "authentication")
         )
             .andDo(print())
@@ -449,7 +449,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
 
         Long orderId = 1L;
         mockMvc.perform(
-                delete("/order/{orderId}", orderId)
+                delete("/api/order/{orderId}", orderId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())

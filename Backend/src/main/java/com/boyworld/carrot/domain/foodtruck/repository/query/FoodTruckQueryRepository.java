@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,11 +102,19 @@ public class FoodTruckQueryRepository {
      *
      * @param foodTruckId 푸드트럭 식별키
      * @param email       현재 로그인 중인 사용자 이메일
-     * @param currentLat    위도
-     * @param currentLng   경도
+     * @param currentLat  위도
+     * @param currentLng  경도
      * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
      */
     public FoodTruckDetailDto getFoodTruckById(Long foodTruckId, String email, BigDecimal currentLat, BigDecimal currentLng) {
+        DayOfWeek today = LocalDateTime.now().getDayOfWeek();
+
+        NumberExpression<BigDecimal> distance = new CaseBuilder().when(sale.endTime.isNull()).then(calculateDistance(currentLat, sale.latitude, currentLng, sale.longitude))
+                .otherwise(calculateDistance(currentLat, schedule.latitude, currentLng, schedule.longitude));
+
+        StringExpression address = new CaseBuilder().when(sale.endTime.isNull()).then(sale.address)
+                .otherwise(schedule.address);
+
         return queryFactory
                 .selectDistinct(Projections.constructor(FoodTruckDetailDto.class,
                         foodTruck.id,
@@ -119,8 +128,8 @@ public class FoodTruckQueryRepository {
                         getAvgGrade(),
                         getLikeCount(),
                         getReviewCount(),
-                        calculateDistance(currentLat, sale.latitude, currentLng, sale.longitude),
-                        sale.address,
+                        distance,
+                        address,
                         foodTruckImage.uploadFile.storeFileName,
                         foodTruck.selected,
                         isNew(LocalDateTime.now().minusMonths(1)),
@@ -140,7 +149,7 @@ public class FoodTruckQueryRepository {
                 .leftJoin(foodTruckImage).on(foodTruckImage.foodTruck.eq(foodTruck), foodTruckImage.active)
                 .where(
                         foodTruck.id.eq(foodTruckId),
-                        sale.endTime.isNull()
+                        schedule.dayOfWeek.eq(today)
                 )
                 .fetchOne();
     }

@@ -84,14 +84,15 @@ public class MenuController {
      * @return 메뉴 상세 정보 (옵션 포함)
      */
     @GetMapping("/{menuId}")
-    public ApiResponse<MenuDetailResponse> getMenu(@PathVariable Long menuId) {
+    public ApiResponse<MenuDetailResponse> getMenu(@PathVariable Long menuId, @RequestParam Long foodTruckId) {
         log.debug("MenuController#getMenu called");
         log.debug("menuId={}", menuId);
+        log.debug("foodTruckId={}", foodTruckId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        MenuDetailResponse response = menuQueryService.getMenu(menuId, email);
+        MenuDetailResponse response = menuQueryService.getMenu(menuId, foodTruckId, email);
         log.debug("MenuDetailResponse={}", response);
 
         return ApiResponse.ok(response);

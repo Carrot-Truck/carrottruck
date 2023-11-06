@@ -251,22 +251,28 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menuOptionDescription("설명2")
                 .build();
 
-        MenuDetailResponse response = MenuDetailResponse.builder()
+        MenuDto menu = MenuDto.builder()
                 .menuId(2L)
                 .menuName("노른자 된장 삼겹살 덮밥")
                 .menuDescription("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
                 .menuPrice(6900)
                 .menuSoldOut(false)
                 .menuImageUrl("imageUrl")
+                .build();
+
+        MenuDetailResponse response = MenuDetailResponse.builder()
+                .menu(menu)
                 .menuOptions(List.of(option1, option2))
                 .build();
 
-        given(menuQueryService.getMenu(anyLong(), anyString()))
+        given(menuQueryService.getMenu(anyLong(), anyLong(), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
                         get("/menu/{menuId}", menuId)
                                 .header("Authentication", "authentication")
+                                .param("menuId", "1")
+                                .queryParam("foodTruckId", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -275,7 +281,8 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("menuId").description("메뉴 식별키")
+                                parameterWithName("menuId").description("메뉴 식별키"),
+                                parameterWithName("foodTruckId").description("푸드트럭 식별키")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -286,17 +293,19 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                                         .description("메뉴 상세 조회 결과"),
-                                fieldWithPath("data.menuId").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.menu").type(JsonFieldType.OBJECT)
+                                        .description("메뉴 상세 정보"),
+                                fieldWithPath("data.menu.menuId").type(JsonFieldType.NUMBER)
                                         .description("메뉴 식별키"),
-                                fieldWithPath("data.menuName").type(JsonFieldType.STRING)
+                                fieldWithPath("data.menu.menuName").type(JsonFieldType.STRING)
                                         .description("메뉴명"),
-                                fieldWithPath("data.menuPrice").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.menu.menuPrice").type(JsonFieldType.NUMBER)
                                         .description("메뉴 가격"),
-                                fieldWithPath("data.menuDescription").type(JsonFieldType.STRING)
+                                fieldWithPath("data.menu.menuDescription").type(JsonFieldType.STRING)
                                         .description("메뉴 설명"),
-                                fieldWithPath("data.menuSoldOut").type(JsonFieldType.BOOLEAN)
+                                fieldWithPath("data.menu.menuSoldOut").type(JsonFieldType.BOOLEAN)
                                         .description("품절 여부"),
-                                fieldWithPath("data.menuImageUrl").type(JsonFieldType.STRING)
+                                fieldWithPath("data.menu.menuImageUrl").type(JsonFieldType.STRING)
                                         .description("메뉴 이미지 저장 경로"),
                                 fieldWithPath("data.menuOptions").type(JsonFieldType.ARRAY)
                                         .description("메뉴 옵션 리스트"),

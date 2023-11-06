@@ -252,6 +252,72 @@ class MenuServiceTest extends IntegrationTestSupport {
                 .hasMessage("잘못된 접근입니다.");
     }
 
+    @DisplayName("사업자는 본인 소유의 푸드트럭의 메뉴를 삭제할 수 있다.")
+    @Test
+    void deleteMenuAsOwner() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Menu menu = Menu.builder()
+                .foodTruck(foodTruck)
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
+                .active(true)
+                .build();
+        menu = menuRepository.save(menu);
+
+        // when
+        Long menuId = menuService.deleteMenu(menu.getId(), vendor1.getEmail());
+        Menu deletedMenu = menuRepository.findById(menuId)
+                .orElseThrow();
+
+        // then
+        assertThat(deletedMenu).extracting("active")
+                .isEqualTo(false);
+    }
+
+    @DisplayName("사업자는 본인 소유의 푸드트럭의 메뉴를 삭제할 수 있다.")
+    @Test
+    void deleteMenuAsInValidMember() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Menu menu = Menu.builder()
+                .foodTruck(foodTruck)
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
+                .active(true)
+                .build();
+        Menu savedMenu = menuRepository.save(menu);
+
+        // when // then
+        assertThatThrownBy(() -> menuService.deleteMenu(savedMenu.getId(), vendor2.getEmail()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+
+        assertThatThrownBy(() -> menuService.deleteMenu(savedMenu.getId(), client1.getEmail()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+    }
+
     private Member createMember(Role role, String email) {
         Member member = Member.builder()
                 .email(email)

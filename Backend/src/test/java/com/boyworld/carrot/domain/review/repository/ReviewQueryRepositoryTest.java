@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,10 +79,10 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
             "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
             40,
-            10,
-            true);
+            10
+        );
         Sale sale = createSale(foodTruck);
-        Order order = createOrder(member, sale, foodTruck);
+        Order order = createOrder(member, sale);
         Review review = createReviewEntity(member, order, foodTruck);
 
         // when
@@ -106,10 +107,10 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
             "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
             40,
-            10,
-            true);
+            10
+        );
         Sale sale = createSale(foodTruck);
-        Order order = createOrder(member, sale, foodTruck);
+        Order order = createOrder(member, sale);
         MultipartFile image = new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE,
             "test1".getBytes());
         Review review = createReviewEntity(member, order, foodTruck);
@@ -147,14 +148,14 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
         Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
         Category category = createCategory();
-        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
-            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-            40,
-            10,
-            true);
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹2", "010-1231-5678",
+            "소고기(국산), 고추가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭 시즌 2",
+            30,
+            15
+        );
         Sale sale = createSale(foodTruck);
-        Order order = createOrder(member, sale, foodTruck);
+        Order order = createOrder(member, sale);
         Review review = createReviewEntity(member, order, foodTruck);
         reviewRepository.save(review);
 
@@ -173,6 +174,31 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(comment.getContent()).isEqualTo(savedComment.getContent());
         assertThat(comment.getId()).isNotNull();
         assertThat(commentRepository.count()).isEqualTo(1);
+    }
+
+    @DisplayName("사용자는 내가 작성한 리뷰 목록을 확인할 수 있다.")
+    @Test
+    void getMyReview(){
+        // given
+        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale);
+        reviewRepository.save(createReviewEntity(member, order, foodTruck));
+        reviewRepository.save(createReviewEntity(member, order, foodTruck));
+
+        // when
+        List<Review> myReview = reviewRepository.findByMemberAndActive(member, true).orElseThrow();
+
+        // then
+        assertThat(myReview).isNotNull();
+        assertThat(myReview.size()).isEqualTo(2);
     }
 
     private Member createMember(Role role, String email) {
@@ -203,7 +229,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
     private FoodTruck createFoodTruck(Member member, Category category, String name,
         String phoneNumber,
         String content, String originInfo, Integer prepareTime,
-        Integer waitLimits, Boolean selected) {
+        Integer waitLimits) {
         FoodTruck foodTruck = FoodTruck.builder()
             .vendor(member)
             .category(category)
@@ -213,7 +239,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
             .originInfo(originInfo)
             .prepareTime(prepareTime)
             .waitLimits(waitLimits)
-            .selected(selected)
+            .selected(true)
             .active(true)
             .build();
         return foodTruckRepository.save(foodTruck);
@@ -227,7 +253,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         return categoryRepository.save(category);
     }
 
-    private Order createOrder(Member member, Sale sale, FoodTruck foodTruck) {
+    private Order createOrder(Member member, Sale sale) {
         return orderRepository.save(Order.builder()
             .member(member)
             .sale(sale)

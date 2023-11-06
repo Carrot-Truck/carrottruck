@@ -62,6 +62,36 @@ public class MenuQueryRepository {
                 .fetch();
     }
 
+    /**
+     * 메뉴 식별키로 메뉴 상세 조회 쿼리
+     *
+     * @param menuId 메뉴 식별키
+     * @return 메뉴 상세 정보
+     */
+    public MenuDto getMenuById(Long menuId) {
+        return queryFactory
+                .select(Projections.constructor(MenuDto.class,
+                        menu.id,
+                        menu.menuInfo.name,
+                        menu.menuInfo.price,
+                        menu.menuInfo.description,
+                        menu.menuInfo.soldOut,
+                        menuImage.uploadFile.storeFileName
+                ))
+                .from(menu)
+                .join(menuImage).on(menuImage.menu.eq(menu))
+                .where(
+                        isEqualMenuId(menuId),
+                        menu.foodTruck.active,
+                        menu.active
+                )
+                .fetchOne();
+    }
+
+    private BooleanExpression isEqualMenuId(Long menuId) {
+        return menuId != null ? menu.id.eq(menuId) : null;
+    }
+
     private BooleanExpression isEqualFoodTruckId(Long foodTruckId) {
         return foodTruckId != null ? menu.foodTruck.id.eq(foodTruckId) : null;
     }

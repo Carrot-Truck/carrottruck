@@ -77,7 +77,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
 //                    .file(image)
 //                    .flashAttr("reviewRequest", request)
 //                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                MockMvcRequestBuilders.multipart("/api/review")
+                MockMvcRequestBuilders.multipart("/review")
                     .file(image)
                     .param("memberId", "1")
                     .param("orderId", "1")
@@ -192,7 +192,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
 
         // API 요청 및 응답 검증
         mockMvc.perform(
-                get("/api/review")
+                get("/review")
                     .header("Authentication", "authentication")
             ).andDo(print())
             .andExpect(status().isFound())
@@ -250,7 +250,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             foodTruckReviewResponse);
 
         mockMvc.perform(
-                get("/api/review/1")
+                get("/review/1")
             ).andDo(print())
             .andExpect(status().isFound())
             .andDo(
@@ -302,7 +302,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .willReturn(result);
 
         mockMvc.perform(
-                put("/api/review/withdrawal")
+                put("/review/withdrawal")
                     .content(objectMapper.writeValueAsString(withdrawalRequest))
                     .contentType(MediaType.APPLICATION_JSON)
             ).andDo(print())
@@ -339,7 +339,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
         given(reviewService.report(request.getReviewId(), request.getContent())).willReturn(result);
 
         mockMvc.perform(
-                post("/api/review/report")
+                post("/review/report")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             ).andDo(print())

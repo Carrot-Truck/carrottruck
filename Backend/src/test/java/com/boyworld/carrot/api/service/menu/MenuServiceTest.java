@@ -16,6 +16,7 @@ import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.menu.Menu;
 import com.boyworld.carrot.domain.menu.MenuInfo;
+import com.boyworld.carrot.domain.menu.MenuOption;
 import com.boyworld.carrot.domain.menu.repository.command.MenuImageRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
@@ -402,6 +403,92 @@ class MenuServiceTest extends IntegrationTestSupport {
                 .hasMessage("잘못된 접근입니다.");
 
         assertThatThrownBy(() -> menuService.createMenuOption(dto, client1.getEmail(), savedMenu.getId()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+    }
+
+    @DisplayName("사업자는 본인 소유의 푸드트럭 메뉴의 메뉴 옵션을 삭제할 수 있다.")
+    @Test
+    void deleteMenuOptionAsOwner() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Menu menu = Menu.builder()
+                .foodTruck(foodTruck)
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
+                .active(true)
+                .build();
+        Menu savedMenu = menuRepository.save(menu);
+
+        MenuOption menuOption = MenuOption.builder()
+                .menu(savedMenu)
+                .menuInfo(MenuInfo.builder()
+                        .name("프리미엄 된장 소스")
+                        .price(1000).description("동현 된장삼겹의 시그니쳐 소스")
+                        .soldOut(false).build())
+                .active(true)
+                .build();
+        MenuOption savedMenuOption = menuOptionRepository.save(menuOption);
+
+        // when
+        Long deletedId = menuService.deleteMenuOption(savedMenuOption.getId(), vendor1.getEmail());
+        MenuOption deltedMenuOption = menuOptionRepository.findById(deletedId)
+                .orElseThrow();
+
+        // then
+        assertThat(deltedMenuOption).extracting("active")
+                .isEqualTo(false);
+    }
+
+    @DisplayName("일반 사용자나 본인 소유의 푸드트럭이 아닌 경우 예외가 발생한다.")
+    @Test
+    void deleteMenuOptionAsInValidMember() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Menu menu = Menu.builder()
+                .foodTruck(foodTruck)
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
+                .active(true)
+                .build();
+        Menu savedMenu = menuRepository.save(menu);
+
+        MenuOption menuOption = MenuOption.builder()
+                .menu(savedMenu)
+                .menuInfo(MenuInfo.builder()
+                        .name("프리미엄 된장 소스")
+                        .price(1000).description("동현 된장삼겹의 시그니쳐 소스")
+                        .soldOut(false).build())
+                .active(true)
+                .build();
+        MenuOption savedMenuOption = menuOptionRepository.save(menuOption);
+
+        // when // then
+        assertThatThrownBy(() -> menuService.deleteMenuOption(savedMenuOption.getId(), vendor2.getEmail()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+
+        assertThatThrownBy(() -> menuService.deleteMenuOption(savedMenuOption.getId(), client1.getEmail()))
                 .isInstanceOf(InValidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }

@@ -3,6 +3,7 @@ package com.boyworld.carrot.domain.review.repository;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
@@ -200,6 +201,32 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(myReview).isNotNull();
         assertThat(myReview.size()).isEqualTo(2);
     }
+
+    @DisplayName("사용자는 특정 푸드트럭의 리뷰 목록을 조회할 수 있다.")
+    @Test
+    void getFoodTruckReview(){
+        // given
+        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale);
+        reviewRepository.save(createReviewEntity(member, order, foodTruck));
+        reviewRepository.save(createReviewEntity(member, order, foodTruck));
+
+        // when
+        List<Review> items = reviewRepository.findByFoodTruckAndActive(foodTruck, true).orElseThrow();
+
+        // then
+        assertThat(items).isNotNull();
+        assertThat(items.size()).isEqualTo(2);
+    }
+
 
     private Member createMember(Role role, String email) {
         Member member = Member.builder()

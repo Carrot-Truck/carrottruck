@@ -27,28 +27,22 @@ public class CreateCartMenuRequest {
 
     private List<Long> cartMenuOptionIds;
 
+
     @Builder
-    public CreateCartMenuRequest(@NotNull Long foodTruckId, @NotNull String menuName, @NotNull Integer menuPrice, @NotNull Long menuId, @NotNull Integer cartMenuQuantity, List<CreateCartMenuOptionRequest> cartMenuOptions) {
+    public CreateCartMenuRequest(Long foodTruckId, Long menuId, Integer cartMenuQuantity, List<Long> cartMenuOptionIds) {
         this.foodTruckId = foodTruckId;
-        this.menuName = menuName;
-        this.menuPrice = menuPrice;
         this.menuId = menuId;
         this.cartMenuQuantity = cartMenuQuantity;
-        this.cartMenuOptions = cartMenuOptions;
+        this.cartMenuOptionIds = cartMenuOptionIds;
     }
+
 
     public CreateCartMenuDto toCreateMenuDto() {
         return CreateCartMenuDto.builder()
                 .foodTruckId(this.foodTruckId)
-                .menuName(this.menuName)
-                .menuPrice(this.menuPrice)
                 .menuId(this.menuId)
                 .cartMenuQuantity(this.cartMenuQuantity)
-                .cartMenuOptionDtos(Optional.ofNullable(this.cartMenuOptions)
-                        .map(options -> options.stream()
-                                .map(CreateCartMenuOptionRequest::toCreateCartMenuOptionDto)
-                                .collect(Collectors.toList()))
-                        .orElse(Collections.emptyList()))
+                .cartMenuOptionIds(this.cartMenuOptionIds)
                 .build();
     }
 }

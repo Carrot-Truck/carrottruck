@@ -10,6 +10,12 @@ import com.boyworld.carrot.domain.cart.CartMenuOption;
 import com.boyworld.carrot.domain.cart.repository.RedisCartRepository;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
+import com.boyworld.carrot.domain.member.Member;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.menu.Menu;
+import com.boyworld.carrot.domain.menu.MenuOption;
+import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
+import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,82 +35,68 @@ public class CartService {
     private final ObjectMapper objectMapper;
     private final RedisTemplate redisTemplate;
     private final FoodTruckRepository foodTruckRepository;
+    private final MemberRepository memberRepository;
+    private final MenuRepository menuRepository;
+    private final MenuOptionRepository menuOptionRepository;
 
     public Long createCart(CreateCartMenuDto createCartMenuDto, String email) {
 
-        FoodTruck foodTruck = foodTruckRepository.findById(createCartMenuDto.getFoodTruckId())
-                .orElseThrow( () -> new NoSuchElementException("존재하지 않는 푸드트럭 입니다."));
+        Member member = getMemberByEmail(email);
 
-        // 회원의 카트가 존재하는지?
-            // 존재하지 않으면 새로 장바구니 새로 생성
-                // 이메일이 id인 장바구니 생성
-                // cartMenuId 데이터 생성
-                // cartMenuOptionId 데이터 생성
-            // 회원의 장바구니가 있으면 푸드트럭 Id whghl
-        // 회원의 카트가 존재하면 같은 푸드트럭의 카트가 존재하는 지?
-        // 카트 및 카트 메뉴 추가
+        FoodTruck foodTruck = getFoodTruckById(createCartMenuDto.getFoodTruckId());
+
+        Menu menu = getMenuById(createCartMenuDto.getMenuId());
 
         try {
-            Long foodTruckId = getData(email, Cart.class).getFoodTruckId();
+            Cart cart = getData(email, Cart.class);
+            if(cart.getFoodTruckId().equals(createCartMenuDto.getFoodTruckId())) {
+                // 회원 카트가 존재하고 푸드트럭이 같으면 카트 총금액 변경, 메뉴 추가, 메뉴 옵션 추가
 
-            if(!foodTruckId.equals(createCartMenuDto.getFoodTruckId())) {
-                // 이전의 푸드트럭과 다르면 장바구니 비우기
-                // cartMenuId인 cartMenuOption 삭제
-                // cartId인 cartMenu 삭제
+            }
+            else {
+                // 회원 카트가 존재하지만 푸드트럭이 다르면 메뉴 삭제, 메뉴 옵션 삭제
+                // 카트 추가, 메뉴 추가, 메뉴 옵션 추가
             }
         }
         catch (Exception e) {
-            log.debug("장바구니가 비어있습니다 : {}", e.getMessage());
+            // 회원 카트가 존재하지 않으면 카트 추가, 메뉴 추가, 메뉴 옵션 추가
             Cart cart = Cart.builder()
                     .id(email)
-                    .foodTruckId(createCartMenuDto.getFoodTruckId())
-                    .foodTruckName("테스트 푸드트럭이름")
-                    .totalPrice(createCartMenuDto.getMenuPrice() * createCartMenuDto.getCartMenuQuantity())
+                    .foodTruckId(foodTruck.getId())
+                    .foodTruckName(foodTruck.getName())
+                    .totalPrice(menu.getMenuInfo().getPrice() * createCartMenuDto.getCartMenuQuantity())
                     .build();
-            saveData(email, cart); // toEntity 사용 saveData(email,
-            log.debug("create new cart : {}", cart.getId());
-        }
 
-        RedisAtomicLong cartMenuIndex = new RedisAtomicLong("cartMenuId", redisTemplate.getConnectionFactory());
-        Long cartMenuId = cartMenuIndex.incrementAndGet();
-        // 메뉴 pk 생성 및 증가
+            saveData(email, cart);
+            log.debug("cart 추가: {}", cart.getId());
 
-        CartMenu cartMenu = CartMenu.builder()
-                .id(cartMenuId)
-                .cartId(email)
-                .menuId(createCartMenuDto.getMenuId())
-                .name(createCartMenuDto.getMenuName())
-                .price(createCartMenuDto.getMenuPrice())
-                .soldOut(createCartMenuDto.getMenuSoldOut())
-                .quantity(createCartMenuDto.getCartMenuQuantity())
-                .build();
-        saveData(String.valueOf(cartMenuId), cartMenu); // Id는 고유가 될 수 없음..
-        log.debug("cartMenu : {}", cartMenu.getName());
+            RedisAtomicLong cartMenuIndex = new RedisAtomicLong("cartMenuId", redisTemplate.getConnectionFactory());
+            String cartMenuId = "menu" + cartMenuIndex.incrementAndGet();
+            // 카트메뉴 pk 생성
+            saveData(cartMenuId, createCartMenuDto.toEntity(menu, cartMenuId, email));
+            log.debug("cartMenu 추가: {}", cartMenuId);
 
-        if(!createCartMenuDto.getCartMenuOptionDtos().isEmpty()) {
+            if(createCartMenuDto.getCartMenuOptionIds() != null) {
+                RedisAtomicLong cartMenuOptionIndex = new RedisAtomicLong("cartMenuOptionId", redisTemplate.getConnectionFactory());
+                for(Long menuOptionId : createCartMenuDto.getCartMenuOptionIds()) {
+                    String cartMenuOptionId = "menuoption" + cartMenuOptionIndex.incrementAndGet();
+                    // 카트메뉴옵션 pk 생성
+                    MenuOption menuOption = getMenuOptionById(menuOptionId);
 
-            RedisAtomicLong cartMenuOptionIndex = new RedisAtomicLong("cartMenuOptionId", redisTemplate.getConnectionFactory());
-            for(CreateCartMenuOptionDto createCartMenuOptionDto : createCartMenuDto.getCartMenuOptionDtos()){
-                Long cartMenuOptionId = cartMenuOptionIndex.incrementAndGet();
-                // 메뉴옵션 pk 생성 및 증가
-
-                CartMenuOption cartMenuOption = CartMenuOption.builder()
-                        .id(cartMenuOptionId)
-                        .cartMenuId(cartMenuId)
-                        .menuOptionId(createCartMenuOptionDto.getMenuOptionId())
-                        .name(createCartMenuOptionDto.getMenuOptionName())
-                        .price(createCartMenuOptionDto.getMenuOptionPrice())
-                        .soldOut(createCartMenuOptionDto.getMenuOptionSoldOut())
-                        .build();
-                saveData(String.valueOf(cartMenuOptionId), cartMenuOption); // Id는 고유가 될 수 없음.. 2
-                log.debug("cartMenuOption : {}", cartMenuOption.getName());
+                    CartMenuOption cartMenuOption = CartMenuOption.builder()
+                            .id(cartMenuOptionId)
+                            .cartMenuId(cartMenuId)
+                            .menuOptionId(menuOptionId)
+                            .name(menuOption.getMenuInfo().getName())
+                            .price(menuOption.getMenuInfo().getPrice())
+                            .build();
+                    saveData(cartMenuOptionId, cartMenuOption);
+                    log.debug("cartMenuOption 추가: {}", cartMenuOptionId);
+                }
             }
         }
 
-//        redisCartRepository.save(cart);
-//        log.debug("CartService#saveCart : {}", cart);
-
-        return cartMenuId;
+        return foodTruck.getId();
     }
 
     public CartResponse getCart(String email) {
@@ -123,25 +115,48 @@ public class CartService {
         return null;
     }
 
+
+    private Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+    }
+
+    private FoodTruck getFoodTruckById(Long foodTruckId) {
+        return foodTruckRepository.findById(foodTruckId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 푸드트럭입니다."));
+    }
+
+    private Menu getMenuById(Long menuId) {
+        return menuRepository.findById(menuId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 메뉴입니다."));
+    }
+
+    private MenuOption getMenuOptionById(Long menuOptionId) {
+        return menuOptionRepository.findById(menuOptionId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 메뉴옵션입니다."));
+    }
+
+
     public <T> boolean saveData(String key, T data) {
         try {
             String value = objectMapper.writeValueAsString(data);
             redisTemplate.opsForValue().set(key, value);
             return true;
-        } catch(Exception e){
+        } catch (Exception e) {
 //            log.error(e);
             return false;
         }
     }
-public <T> T getData(String key, Class<T> classType) throws Exception {
 
-    String jsonResult = (String) redisTemplate.opsForValue().get(key);
-    if (jsonResult.isEmpty()) {
-        return null;
-    } else {
-        T obj = objectMapper.readValue(jsonResult, classType);
-        return obj;
+    public <T> T getData(String key, Class<T> classType) throws Exception {
+
+        String jsonResult = (String) redisTemplate.opsForValue().get(key);
+        if (jsonResult.isEmpty()) {
+            return null;
+        } else {
+            T obj = objectMapper.readValue(jsonResult, classType);
+            return obj;
+        }
+
     }
-
-}
 }

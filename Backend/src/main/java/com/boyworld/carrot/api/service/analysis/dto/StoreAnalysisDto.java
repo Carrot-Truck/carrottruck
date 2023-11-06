@@ -2,7 +2,6 @@ package com.boyworld.carrot.api.service.analysis.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import org.apache.catalina.Store;
 
 import java.math.BigDecimal;
 
@@ -21,25 +20,40 @@ public class StoreAnalysisDto {
 
     private String dong;
 
-    private String middleClassCode;
+    private String indsMclsCd;
 
-    private String middleClassName;
+    private String indsMclsNm;
 
-    private String smallClassCode;
+    private String indsSclsCd;
 
-    private String smallClassName;
+    private String indsSclsNm;
 
     @Builder
-    public StoreAnalysisDto(String storeName, BigDecimal latitude, BigDecimal longitude, String sido, String sigungu, String dong, String middleClassCode, String middleClassName, String smallClassCode, String smallClassName) {
+    public StoreAnalysisDto(String storeName, BigDecimal latitude, BigDecimal longitude, String sido, String sigungu, String dong, String indsMclsCd, String indsMclsNm, String indsSclsCd, String indsSclsNm) {
         this.storeName = storeName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.sido = sido;
         this.sigungu = sigungu;
         this.dong = dong;
-        this.middleClassCode = middleClassCode;
-        this.middleClassName = middleClassName;
-        this.smallClassCode = smallClassCode;
-        this.smallClassName = smallClassName;
+        this.indsMclsCd = indsMclsCd;
+        this.indsMclsNm = indsMclsNm;
+        this.indsSclsCd = indsSclsCd;
+        this.indsSclsNm = indsSclsNm;
+    }
+
+    public static StoreAnalysisDto of(Store store) {
+        return StoreAnalysisDto.builder()
+                .storeName(store.getBizesNm())
+                .latitude(new BigDecimal(store.getLat()))
+                .longitude(new BigDecimal(store.getLon()))
+                .sido(store.getCtprvnNm())
+                .sigungu(store.getSignguNm())
+                .dong(store.getLdongNm())
+                .indsMclsCd(store.getIndsMclsCd())
+                .indsMclsNm(store.getIndsMclsNm())
+                .indsSclsCd(store.getIndsSclsCd())
+                .indsSclsNm(store.getIndsSclsNm())
+                .build();
     }
 }

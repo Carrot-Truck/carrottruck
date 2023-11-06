@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,12 +106,14 @@ public class FoodTruckQueryRepository {
      * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
      */
     public FoodTruckDetailDto getFoodTruckById(Long foodTruckId, String email, BigDecimal currentLat, BigDecimal currentLng) {
-        DayOfWeek today = LocalDateTime.now().getDayOfWeek();
-
-        NumberExpression<BigDecimal> distance = new CaseBuilder().when(sale.endTime.isNull()).then(calculateDistance(currentLat, sale.latitude, currentLng, sale.longitude))
+        NumberExpression<BigDecimal> distance = new CaseBuilder()
+                .when(sale.endTime.isNull())
+                .then(calculateDistance(currentLat, sale.latitude, currentLng, sale.longitude))
                 .otherwise(calculateDistance(currentLat, schedule.latitude, currentLng, schedule.longitude));
 
-        StringExpression address = new CaseBuilder().when(sale.endTime.isNull()).then(sale.address)
+        StringExpression address = new CaseBuilder()
+                .when(sale.endTime.isNull())
+                .then(sale.address)
                 .otherwise(schedule.address);
 
         return queryFactory
@@ -148,8 +149,7 @@ public class FoodTruckQueryRepository {
                 .leftJoin(sale).on(sale.foodTruck.eq(foodTruck), sale.active)
                 .leftJoin(foodTruckImage).on(foodTruckImage.foodTruck.eq(foodTruck), foodTruckImage.active)
                 .where(
-                        foodTruck.id.eq(foodTruckId),
-                        schedule.dayOfWeek.eq(today)
+                        foodTruck.id.eq(foodTruckId)
                 )
                 .fetchOne();
     }

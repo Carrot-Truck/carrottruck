@@ -39,4 +39,9 @@ public class MenuImage extends TimeBaseEntity {
         this.menu = menu;
         this.active = active;
     }
+
+    // == business logic == //
+    public void deActivate() {
+        this.active = false;
+    }
 }

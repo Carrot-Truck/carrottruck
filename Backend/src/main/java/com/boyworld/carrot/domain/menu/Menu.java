@@ -39,4 +39,15 @@ public class Menu extends TimeBaseEntity {
         this.active = active;
         this.foodTruck = foodTruck;
     }
+
+
+    // == business logic ==//
+    public void editMenu(String menuName, String menuDescription, Integer menuPrice) {
+        this.menuInfo = MenuInfo.builder()
+                .name(menuName)
+                .description(menuDescription)
+                .price(menuPrice)
+                .soldOut(this.getMenuInfo().getSoldOut())
+                .build();
+    }
 }

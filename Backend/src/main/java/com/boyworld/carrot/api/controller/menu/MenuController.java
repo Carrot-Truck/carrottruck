@@ -108,8 +108,8 @@ public class MenuController {
      */
     @PatchMapping("/{menuId}")
     public ApiResponse<Long> editMenu(@PathVariable Long menuId,
-                                      @Valid @RequestPart(name = "request") EditMenuRequest request,
-                                      @RequestPart(required = false, name = "file") MultipartFile file) {
+                                      @Valid @RequestPart EditMenuRequest request,
+                                      @RequestPart MultipartFile file) throws IOException {
         log.debug("MenuController#editMenu called");
         log.debug("menuId={}", menuId);
         log.debug("EditMenuRequest={}", request);

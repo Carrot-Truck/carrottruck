@@ -13,6 +13,7 @@ import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.order.repository.OrderRepository;
+import com.boyworld.carrot.domain.review.Comment;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.domain.review.ReviewImage;
 import com.boyworld.carrot.domain.sale.Sale;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -67,10 +69,10 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("사용자가 리뷰 사진 없이 리뷰를 등록한다.")
     @Test
-    void createCommentWithoutImage(){
+    void createCommentWithoutImage() {
         //given
-        Member member = createMember(Role.CLIENT, true, "ssafy@ssafy.com");
-        Member vendor = createMember(Role.VENDOR, true, "vendor@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
@@ -97,8 +99,8 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void createCommentWithImage() throws Exception {
         //given
-        Member member = createMember(Role.CLIENT, true, "ssafy@ssafy.com");
-        Member vendor = createMember(Role.VENDOR, true, "vendor@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
@@ -108,7 +110,8 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
             true);
         Sale sale = createSale(foodTruck);
         Order order = createOrder(member, sale, foodTruck);
-        MultipartFile image = new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes());
+        MultipartFile image = new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE,
+            "test1".getBytes());
         Review review = createReviewEntity(member, order, foodTruck);
         String uploadFileUrl = s3Uploader.uploadFiles(image, "review");
         ReviewImage reviewImage = ReviewImage.builder()
@@ -133,11 +136,46 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(reviewImage.getStoreFileName()).isEqualTo(savedReviewImage.getStoreFileName());
         assertThat(reviewImage.getUploadFileName()).isEqualTo(savedReviewImage.getUploadFileName());
         assertThat(savedReviewImage.getId()).isNotNull();
-//        reviewImageRepository.findAll().forEach(review1 -> System.out.println(review1.getStoreFileName()));
         assertThat(reviewImageRepository.count()).isEqualTo(1);
     }
 
-    private Member createMember(Role role, boolean active, String email) {
+    @DisplayName("사업자는 리뷰에 댓글을 남길 수 있다.")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void createComment() {
+        // given
+        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        Review review = createReviewEntity(member, order, foodTruck);
+        reviewRepository.save(review);
+
+        Comment comment = Comment.builder()
+            .review(review)
+            .content("리뷰 감사합니다.")
+            .vendor(vendor)
+            .active(true)
+            .build();
+
+        // when
+        Comment savedComment = commentRepository.save(comment);
+
+        // then
+        assertThat(comment).isSameAs(savedComment);
+        assertThat(comment.getContent()).isEqualTo(savedComment.getContent());
+        assertThat(comment.getId()).isNotNull();
+        assertThat(commentRepository.count()).isEqualTo(1);
+    }
+
+    private Member createMember(Role role, String email) {
         Member member = Member.builder()
             .email(email)
             .nickname("매미킴")
@@ -145,15 +183,15 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
             .name("김동현")
             .phoneNumber("010-1234-5678")
             .role(role)
-            .active(active)
+            .active(true)
             .build();
         return memberRepository.save(member);
     }
 
 
-    private Review createReviewEntity(Member member, Order order, FoodTruck foodTruck){
+    private Review createReviewEntity(Member member, Order order, FoodTruck foodTruck) {
         return Review.builder()
-            .grade((int)(Math.random()*10)%6)
+            .grade((int) (Math.random() * 10) % 6)
             .content("다음에 또 올게요~!")
             .order(order)
             .foodTruck(foodTruck)
@@ -162,7 +200,8 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
             .build();
     }
 
-    private FoodTruck createFoodTruck(Member member, Category category, String name, String phoneNumber,
+    private FoodTruck createFoodTruck(Member member, Category category, String name,
+        String phoneNumber,
         String content, String originInfo, Integer prepareTime,
         Integer waitLimits, Boolean selected) {
         FoodTruck foodTruck = FoodTruck.builder()
@@ -188,7 +227,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         return categoryRepository.save(category);
     }
 
-    private Order createOrder(Member member, Sale sale, FoodTruck foodTruck){
+    private Order createOrder(Member member, Sale sale, FoodTruck foodTruck) {
         return orderRepository.save(Order.builder()
             .member(member)
             .sale(sale)
@@ -199,7 +238,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
             .build());
     }
 
-    private Sale createSale(FoodTruck foodTruck){
+    private Sale createSale(FoodTruck foodTruck) {
         return saleRepository.save(Sale.builder()
             .startTime(LocalDateTime.of(2023, 11, 2, 10, 0))
             .active(true)

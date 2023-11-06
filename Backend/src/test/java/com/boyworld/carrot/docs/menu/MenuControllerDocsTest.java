@@ -242,6 +242,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menuOptionName("옵션1")
                 .menuOptionPrice(500)
                 .menuOptionDescription("설명1")
+                .menuOptionSoldOut(false)
                 .build();
 
         MenuOptionResponse option2 = MenuOptionResponse.builder()
@@ -249,6 +250,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menuOptionName("옵션2")
                 .menuOptionPrice(300)
                 .menuOptionDescription("설명2")
+                .menuOptionSoldOut(false)
                 .build();
 
         MenuDto menu = MenuDto.builder()
@@ -281,7 +283,9 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("menuId").description("메뉴 식별키"),
+                                parameterWithName("menuId").description("메뉴 식별키")
+                        ),
+                        queryParameters(
                                 parameterWithName("foodTruckId").description("푸드트럭 식별키")
                         ),
                         responseFields(
@@ -307,6 +311,8 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                         .description("품절 여부"),
                                 fieldWithPath("data.menu.menuImageUrl").type(JsonFieldType.STRING)
                                         .description("메뉴 이미지 저장 경로"),
+                                fieldWithPath("data.menuOptionCount").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 옵션 개수"),
                                 fieldWithPath("data.menuOptions").type(JsonFieldType.ARRAY)
                                         .description("메뉴 옵션 리스트"),
                                 fieldWithPath("data.menuOptions[].menuOptionId").type(JsonFieldType.NUMBER)
@@ -316,7 +322,9 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.menuOptions[].menuOptionPrice").type(JsonFieldType.NUMBER)
                                         .description("메뉴 옵션 가격"),
                                 fieldWithPath("data.menuOptions[].menuOptionDescription").type(JsonFieldType.STRING)
-                                        .description("메뉴 옵션 설명")
+                                        .description("메뉴 옵션 설명"),
+                                fieldWithPath("data.menuOptions[].menuOptionSoldOut").type(JsonFieldType.BOOLEAN)
+                                        .description("품절 여부")
                         )
                 ));
     }
@@ -444,6 +452,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menuOptionName("옵션1")
                 .menuOptionPrice(500)
                 .menuOptionDescription("설명1")
+                .menuOptionSoldOut(false)
                 .build();
 
         given(menuService.createMenuOption(any(CreateMenuOptionDto.class), anyString(), anyLong()))
@@ -484,7 +493,9 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.menuOptionPrice").type(JsonFieldType.NUMBER)
                                         .description("메뉴 옵션 가격"),
                                 fieldWithPath("data.menuOptionDescription").type(JsonFieldType.STRING)
-                                        .description("메뉴 옵션 설명")
+                                        .description("메뉴 옵션 설명"),
+                                fieldWithPath("data.menuOptionSoldOut").type(JsonFieldType.BOOLEAN)
+                                        .description("품절 여부")
                         )
                 ));
     }

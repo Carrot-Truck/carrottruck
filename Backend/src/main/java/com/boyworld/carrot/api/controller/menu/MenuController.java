@@ -40,14 +40,15 @@ public class MenuController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<CreateMenuResponse> createMenu(@Valid @RequestBody CreateMenuRequest request) {
+    public ApiResponse<CreateMenuResponse> createMenu(@Valid @RequestPart CreateMenuRequest request,
+                                                      @RequestPart(required = false) MultipartFile file) {
         log.debug("MenuController#createMenu called");
         log.debug("CreateMenuRequest={}", request);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        CreateMenuResponse response = menuService.createMenu(request.toCreateMenuDto(), email);
+        CreateMenuResponse response = menuService.createMenu(request.toCreateMenuDto(), file, email);
         log.debug("CreateMenuResponse={}", response);
 
         return ApiResponse.created(response);

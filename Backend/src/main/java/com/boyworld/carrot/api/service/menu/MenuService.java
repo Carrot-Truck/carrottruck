@@ -28,10 +28,11 @@ public class MenuService {
      * 메뉴 등록
      *
      * @param dto   메뉴 정보
+     * @param file  이미지 파일
      * @param email 현재 로그인 중인 회원 이메일
      * @return 등록된 메뉴 정보
      */
-    public CreateMenuResponse createMenu(CreateMenuDto dto, String email) {
+    public CreateMenuResponse createMenu(CreateMenuDto dto, MultipartFile file, String email) {
         return null;
     }
 
@@ -39,7 +40,7 @@ public class MenuService {
      * 메뉴 수정
      *
      * @param dto   메뉴 정보
-     * @param file  메뉴 이미지
+     * @param file  이미지 파일
      * @param email 현재 로그인 중인 회원 이메일
      * @return 수정된 메뉴 식별키
      */

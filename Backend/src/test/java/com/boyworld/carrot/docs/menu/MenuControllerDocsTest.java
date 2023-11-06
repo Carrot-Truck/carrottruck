@@ -1,13 +1,13 @@
 package com.boyworld.carrot.docs.menu;
 
 import com.boyworld.carrot.api.controller.menu.MenuController;
-import com.boyworld.carrot.api.controller.menu.response.MenuResponse;
 import com.boyworld.carrot.api.controller.menu.request.CreateMenuOptionRequest;
 import com.boyworld.carrot.api.controller.menu.request.CreateMenuRequest;
 import com.boyworld.carrot.api.controller.menu.request.EditMenuRequest;
 import com.boyworld.carrot.api.controller.menu.response.CreateMenuResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuDetailResponse;
 import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
+import com.boyworld.carrot.api.controller.menu.response.MenuResponse;
 import com.boyworld.carrot.api.service.menu.MenuQueryService;
 import com.boyworld.carrot.api.service.menu.MenuService;
 import com.boyworld.carrot.api.service.menu.dto.CreateMenuDto;
@@ -88,21 +88,31 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .description("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
                 .build();
 
-        given(menuService.createMenu(any(CreateMenuDto.class), anyString()))
+        MockMultipartFile file = new MockMultipartFile("file", "image.jpg", MediaType.IMAGE_JPEG_VALUE, "image data".getBytes());
+
+        String jsonRequest = objectMapper.writeValueAsString(request);
+        MockMultipartFile jsonRequestPart = new MockMultipartFile("request", "request.json", APPLICATION_JSON_VALUE, jsonRequest.getBytes(UTF_8));
+
+        given(menuService.createMenu(any(CreateMenuDto.class), any(MultipartFile.class), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
-                        post("/menu")
+                        multipart("/menu")
+                                .file(file)
+                                .file(jsonRequestPart)
                                 .header("Authentication", "authentication")
-                                .content(objectMapper.writeValueAsString(request))
-                                .contentType(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andDo(document("create-menu",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(
+                        requestParts(
+                                partWithName("file").description("메뉴 이미지"),
+                                partWithName("request").description("메뉴 정보")
+                        ),
+                        requestPartFields("request",
                                 fieldWithPath("foodTruckId").type(JsonFieldType.NUMBER)
                                         .description("푸드트럭 식별키"),
                                 fieldWithPath("menuName").type(JsonFieldType.STRING)
@@ -169,7 +179,6 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .build();
 
         MenuResponse response = MenuResponse.builder()
-                .hasNext(false)
                 .menus(List.of(menu1, menu2))
                 .build();
 
@@ -180,7 +189,6 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                         get("/menu")
                                 .header("Authentication", "authentication")
                                 .param("foodTruckId", Long.toString(foodTruckId))
-                                .param("lastMenuId", "")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
@@ -189,8 +197,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         queryParameters(
-                                parameterWithName("foodTruckId").description("푸드트럭 식별키"),
-                                parameterWithName("lastMenuId").description("마지막으로 조회된 메뉴 식별키")
+                                parameterWithName("foodTruckId").description("푸드트럭 식별키")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -201,8 +208,6 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.OBJECT)
                                         .description("메뉴 목록 조회 결과"),
-                                fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN)
-                                        .description("다음 페이지 존재 여부"),
                                 fieldWithPath("data.menus").type(JsonFieldType.ARRAY)
                                         .description("메뉴 리스트"),
                                 fieldWithPath("data.menus[].menuId").type(JsonFieldType.NUMBER)
@@ -247,7 +252,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menuDescription("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
                 .menuPrice(6900)
                 .menuSoldOut(false)
-                .menuImageId(2L)
+                .menuImageUrl("imageUrl")
                 .menuOptions(List.of(option1, option2))
                 .build();
 
@@ -286,8 +291,8 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                                         .description("메뉴 설명"),
                                 fieldWithPath("data.menuSoldOut").type(JsonFieldType.BOOLEAN)
                                         .description("품절 여부"),
-                                fieldWithPath("data.menuImageId").type(JsonFieldType.NUMBER)
-                                        .description("메뉴 이미지 식별키"),
+                                fieldWithPath("data.menuImageUrl").type(JsonFieldType.STRING)
+                                        .description("메뉴 이미지 저장 경로"),
                                 fieldWithPath("data.menuOptions").type(JsonFieldType.ARRAY)
                                         .description("메뉴 옵션 리스트"),
                                 fieldWithPath("data.menuOptions[].menuOptionId").type(JsonFieldType.NUMBER)

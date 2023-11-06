@@ -71,7 +71,7 @@ public class MenuController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        MenuResponse response = menuQueryService.getMenus(foodTruckId, email);
+        MenuResponse response = menuQueryService.getMenus(foodTruckId);
         log.debug("MenuResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -92,7 +92,7 @@ public class MenuController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        MenuDetailResponse response = menuQueryService.getMenu(menuId, foodTruckId, email);
+        MenuDetailResponse response = menuQueryService.getMenu(foodTruckId);
         log.debug("MenuDetailResponse={}", response);
 
         return ApiResponse.ok(response);

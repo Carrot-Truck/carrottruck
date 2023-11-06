@@ -40,18 +40,24 @@ public class MenuQueryService {
      * 푸드트럭 메뉴 목록 조회
      *
      * @param foodTruckId 루드트럭 식별키
-     * @param email       현재 로그인 중인 사용자 이메일
      * @return 해당 푸드트럭의 메뉴 목록
      */
-    public MenuResponse getMenus(Long foodTruckId, String email) {
-        Member member = getMemberByEmail(email);
-        checkValidMemberAccess(member);
-
-        FoodTruck foodTruck = getFoodTruckById(foodTruckId);
-        checkOwnerAccess(member, foodTruck);
-
+    public MenuResponse getMenus(Long foodTruckId) {
         List<MenuDto> menus = menuQueryRepository.getMenusByFoodTruckId(foodTruckId);
         return MenuResponse.of(menus);
+    }
+
+    /**
+     * 메뉴 상세 조회 API
+     *
+     * @param menuId 메뉴 식별키
+     * @return 메뉴 상세 정보 (옵션 포함)
+     */
+    public MenuDetailResponse getMenu(Long menuId) {
+        MenuDto menu = menuQueryRepository.getMenuById(menuId);
+        List<MenuOptionResponse> menuOptions = menuOptionQueryRepository.getMenuOptionsByMenuId(menuId);
+
+        return MenuDetailResponse.of(menu, menuOptions);
     }
 
     /**
@@ -110,24 +116,5 @@ public class MenuQueryService {
      */
     private boolean isClient(Role role) {
         return role.equals(Role.CLIENT);
-    }
-
-    /**
-     * 메뉴 상세 조회 API
-     *
-     * @param menuId 메뉴 식별키
-     * @param email  현재 로그인 중인 사용자 이메일
-     * @return 메뉴 상세 정보 (옵션 포함)
-     */
-    public MenuDetailResponse getMenu(Long foodTruckId, Long menuId, String email) {
-        Member member = getMemberByEmail(email);
-        checkValidMemberAccess(member);
-
-        FoodTruck foodTruck = getFoodTruckById(foodTruckId);
-        checkOwnerAccess(member, foodTruck);
-
-        MenuDto menu = menuQueryRepository.getMenuById(menuId);
-        List<MenuOptionResponse> menuOptions = menuOptionQueryRepository.getMenuOptionsByMenuId(menuId);
-        return MenuDetailResponse.of(menu, menuOptions);
     }
 }

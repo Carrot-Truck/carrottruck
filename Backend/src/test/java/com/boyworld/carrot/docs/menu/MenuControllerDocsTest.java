@@ -185,7 +185,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menus(List.of(menu1, menu2))
                 .build();
 
-        given(menuQueryService.getMenus(anyLong(), anyString()))
+        given(menuQueryService.getMenus(anyLong()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -267,7 +267,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .menuOptions(List.of(option1, option2))
                 .build();
 
-        given(menuQueryService.getMenu(anyLong(), anyLong(), anyString()))
+        given(menuQueryService.getMenu(anyLong()))
                 .willReturn(response);
 
         mockMvc.perform(

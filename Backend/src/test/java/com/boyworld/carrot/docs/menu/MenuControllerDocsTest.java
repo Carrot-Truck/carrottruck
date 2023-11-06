@@ -98,7 +98,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        multipart("/menu")
+                        multipart("/api/menu")
                                 .file(file)
                                 .file(jsonRequestPart)
                                 .header("Authentication", "authentication")
@@ -189,7 +189,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/menu")
+                        get("/api/menu")
                                 .header("Authentication", "authentication")
                                 .param("foodTruckId", Long.toString(foodTruckId))
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -271,7 +271,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/menu/{menuId}", menuId)
+                        get("/api/menu/{menuId}", menuId)
                                 .header("Authentication", "authentication")
                                 .param("menuId", "1")
                                 .queryParam("foodTruckId", "1")
@@ -352,7 +352,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
         // multipart 는 기본적으로 POST 요청을 위한 처리로만 사용되고 있으므로 아래와 같이 Override 해서 만들어줘야함
         MockMultipartHttpServletRequestBuilder builder =
                 RestDocumentationRequestBuilders.
-                        multipart("/menu/{menuId}", menuId);
+                        multipart("/api/menu/{menuId}", menuId);
 
         builder.with(new RequestPostProcessor() {
             @Override
@@ -412,7 +412,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .willReturn(menuId);
 
         mockMvc.perform(
-                        delete("/menu/{menuId}", menuId)
+                        delete("/api/menu/{menuId}", menuId)
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -459,7 +459,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        post("/menu/{menuId}/option", 1L)
+                        post("/api/menu/{menuId}/option", 1L)
                                 .header("Authentication", "authentication")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -511,7 +511,7 @@ public class MenuControllerDocsTest extends RestDocsSupport {
                 .willReturn(deleteId);
 
         mockMvc.perform(
-                        delete("/menu/option/{menuOptionId}", deleteId)
+                        delete("/api/menu/option/{menuOptionId}", deleteId)
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())

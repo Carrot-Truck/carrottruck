@@ -62,7 +62,7 @@ class VendorInfoControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        post("/member/vendor-info")
+                        post("/api/member/vendor-info")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -121,7 +121,7 @@ class VendorInfoControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/member/vendor-info")
+                        get("/api/member/vendor-info")
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -161,7 +161,7 @@ class VendorInfoControllerDocsTest extends RestDocsSupport {
                 .willReturn(true);
 
         mockMvc.perform(
-                        delete("/member/vendor-info/{vendorInfoId}", 1)
+                        delete("/api/member/vendor-info/{vendorInfoId}", 1)
                                 .header("Authentication", "authentication")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )

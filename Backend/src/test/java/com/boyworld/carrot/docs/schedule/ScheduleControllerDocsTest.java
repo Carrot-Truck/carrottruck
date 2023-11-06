@@ -73,7 +73,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        post("/schedule")
+                        post("/api/schedule")
                                 .header("Authentication", "authentication")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -162,7 +162,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/schedule")
+                        get("/api/schedule")
                                 .header("Authentication", "authentication")
                                 .param("foodTruckId", "1")
                 )
@@ -217,7 +217,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/schedule/{scheduleId}", 1L)
+                        get("/api/schedule/{scheduleId}", 1L)
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -284,7 +284,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        patch("/schedule/{scheduleId}", 1L)
+                        patch("/api/schedule/{scheduleId}", 1L)
                                 .header("Authentication", "authentication")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -351,7 +351,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                 .willReturn(deleteId);
 
         mockMvc.perform(
-                        delete("/schedule/{scheduleId}", deleteId)
+                        delete("/api/schedule/{scheduleId}", deleteId)
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())

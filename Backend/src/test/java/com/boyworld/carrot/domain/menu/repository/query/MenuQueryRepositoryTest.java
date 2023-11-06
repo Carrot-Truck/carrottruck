@@ -25,6 +25,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * 메뉴 조회 레포지토리 테스트
+ *
+ * @author 최영환
+ */
 @Slf4j
 class MenuQueryRepositoryTest extends IntegrationTestSupport {
 

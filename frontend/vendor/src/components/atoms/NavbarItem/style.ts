@@ -7,7 +7,7 @@ export const NavbarItemWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  img {
+  svg {
     display: flex;
     width: 24px;
     height: 24px;

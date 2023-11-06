@@ -1,17 +1,14 @@
+import { Link } from 'react-router-dom';
 import { NavbarItemWrapper } from './style';
 
-interface INaverMapProps {
-  svg: string;
-  text: string;
-}
-
-function NavbarItem(props: INaverMapProps) {
-  const { svg, text } = props;
+function NavbarItem({ svg: Svg, text, to }: { svg: any; text: string; to: string }) {
   return (
-    <NavbarItemWrapper>
-      <img src={svg} alt="" />
-      <span>{text}</span>
-    </NavbarItemWrapper>
+    <Link to={to}>
+      <NavbarItemWrapper>
+        <Svg />
+        <span>{text}</span>
+      </NavbarItemWrapper>
+    </Link>
   );
 }
 

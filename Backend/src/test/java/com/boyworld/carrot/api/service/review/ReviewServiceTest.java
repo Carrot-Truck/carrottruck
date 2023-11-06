@@ -3,6 +3,8 @@ package com.boyworld.carrot.api.service.review;
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.review.request.CommentRequest;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
+import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
+import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
@@ -20,6 +22,10 @@ import com.boyworld.carrot.domain.review.repository.ReviewRepository;
 import com.boyworld.carrot.domain.sale.Sale;
 import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
 import com.boyworld.carrot.file.S3Uploader;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,11 +35,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -75,14 +76,14 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     void createCommentWithoutImage() {
         //given
         Member member = createMember(Role.CLIENT, true);
-        Member vendor = createVendor(Role.VENDOR, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
         Sale sale = createSale(foodTruck);
         Order order = createOrder(member, sale, foodTruck);
         Review review = createReviewEntity(member, order, foodTruck);
@@ -105,14 +106,14 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     void createCommentWithImage() throws Exception {
         //given
         Member member = createMember(Role.CLIENT, true);
-        Member vendor = createVendor(Role.VENDOR, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
         Sale sale = createSale(foodTruck);
         Order order = createOrder(member, sale, foodTruck);
         MultipartFile image = new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes());
@@ -138,7 +139,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     void createComment() {
         // given
         Member member = createMember(Role.CLIENT, true);
-        Member vendor = createVendor(Role.VENDOR, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
                 "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
@@ -162,49 +163,194 @@ public class ReviewServiceTest extends IntegrationTestSupport {
 
     @DisplayName("사용자는 리뷰에 댓글을 남길 수 없다.")
     @Test
-    void createCommentAsClient() {
+    void createCommentAsClient(){
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        Review review = createReview(createReviewEntity(member, order, foodTruck));
 
+        // when
+        Boolean result = reviewService.createComment(CommentRequest.builder()
+            .comment("리뷰 감사합니다.")
+            .reviewId(review.getId())
+            .build(), "ssafy@ssafy.com");
+
+        // then
+        assertThat(result).isFalse();
     }
 
     @DisplayName("사업자는 내 푸드트럭이 아닌 리뷰에 댓글을 남길 수 없다.")
     @Test
-    void createCommentAtAnotherFoodTruck() {
+    void createCommentAtAnotherFoodTruck(){
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Member fakeVendor = createVendor(Role.VENDOR, true, "fakevendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        Review review = createReview(createReviewEntity(member, order, foodTruck));
 
+        // when
+        Boolean result = reviewService.createComment(CommentRequest.builder()
+            .comment("리뷰 감사합니다.")
+            .reviewId(review.getId())
+            .build(), fakeVendor.getEmail());
+
+        // then
+        assertThat(result).isFalse();
     }
 
     @DisplayName("사용자는 내가 작성한 리뷰 목록을 확인할 수 있다.")
     @Test
-    void getMyReview() {
+    void getMyReview(){
+        // given
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        createReview(createReviewEntity(member, order, foodTruck));
 
+        // when
+        MyReviewResponse result = reviewService.getMyReview(member.getEmail());
+
+        // then
+        assertThat(result).isNotNull();
     }
 
     @DisplayName("사용자는 삭제한 리뷰를 볼 수 없다.")
     @Test
-    void getDeletedMyReview() {
+    void getDeletedMyReview(){
+        // given
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        Review review = createReview(createReviewEntity(member, order, foodTruck));
+        reviewService.withdrawal(review.getId(), member.getEmail());
 
+        // when
+        MyReviewResponse response = reviewService.getMyReview(member.getEmail());
+
+        // then
+        assertThat(response.getMyReviewDtoList()).isNotNull();
+        assertThat(response.getMyReviewDtoList().isEmpty()).isTrue();
     }
 
     @DisplayName("사용자는 내가 작성한 리뷰가 없을때는 빈 목록을 확인할 수 있다.")
     @Test
-    void getMyEmptyReview() {
+    void getMyEmptyReview(){
+        // given
+        Member member = createMember(Role.CLIENT, true);
 
+        // when
+        MyReviewResponse result = reviewService.getMyReview(member.getEmail());
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getMyReviewDtoList().isEmpty()).isTrue();
     }
 
     @DisplayName("사용자는 특정 푸드트럭의 리뷰 목록을 조회할 수 있다.")
     @Test
-    void getFoodTruckReview() {
+    void getFoodTruckReview(){
+        // given
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        createReviewEntity(member, order, foodTruck);
 
+        // when
+        FoodTruckReviewResponse result = reviewService.getFoodTruckReview(foodTruck.getId());
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getAverageGrade()).isLessThan(5);
     }
 
     @DisplayName("사용자는 특정 푸드트럭의 빈 리뷰 목록을 조회할 수 있다.")
     @Test
-    void getEmptyFoodTruckReview() {
+    void getEmptyFoodTruckReview(){
+        // given
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
 
+        // when
+        FoodTruckReviewResponse result = reviewService.getFoodTruckReview(foodTruck.getId());
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getFoodTruckReviewDtoList().isEmpty()).isTrue();
+        assertThat(result.getAverageGrade()).isEqualTo(0f);
     }
 
     @DisplayName("사용자는 리뷰를 삭제할 수 있다.")
     @Test
-    void withdrawal() {
+    void withdrawal(){
+        // given
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        Review review = createReview(createReviewEntity(member, order, foodTruck));
+
+        // when
+        Boolean result = reviewService.withdrawal(review.getId(), member.getEmail());
+
+        // then
+        assertThat(result).isTrue();
+        assertThat(reviewRepository.findByMemberAndActive(member, true).isPresent()).isTrue();
+        assertThat(reviewRepository.findByMemberAndActive(member, true).get().isEmpty()).isTrue();
+        assertThat(reviewRepository.findByMemberAndActive(member, false).isPresent()).isTrue();
+        assertThat(reviewRepository.findByMemberAndActive(member, false).get().size()).isEqualTo(1);
 
     }
 
@@ -221,28 +367,28 @@ public class ReviewServiceTest extends IntegrationTestSupport {
         return memberRepository.save(member);
     }
 
-    private Member createVendor(Role role, boolean active) {
+    private Member createVendor(Role role, boolean active, String email) {
         Member member = Member.builder()
-                .email("vendor@ssafy.com")
-                .nickname("매미킴")
-                .encryptedPwd(passwordEncoder.encode("ssafy1234"))
-                .name("김동현")
-                .phoneNumber("010-1234-5678")
-                .role(role)
-                .active(active)
-                .build();
+            .email(email)
+            .nickname("매미킴")
+            .encryptedPwd(passwordEncoder.encode("ssafy1234"))
+            .name("김동현")
+            .phoneNumber("010-1234-5678")
+            .role(role)
+            .active(active)
+            .build();
         return memberRepository.save(member);
     }
 
-    private Review createReviewEntity(Member member, Order order, FoodTruck foodTruck) {
+    private Review createReviewEntity(Member member, Order order, FoodTruck foodTruck){
         return Review.builder()
-                .grade((int) (Math.random() * 10) % 6)
-                .content("다음에 또 올게요~!")
-                .order(order)
-                .foodTruck(foodTruck)
-                .active(true)
-                .member(member)
-                .build();
+            .grade((int)(Math.random()*10)%6)
+            .content("다음에 또 올게요~!")
+            .order(order)
+            .foodTruck(foodTruck)
+            .active(true)
+            .member(member)
+            .build();
     }
 
     private Review createReview(Review review) {

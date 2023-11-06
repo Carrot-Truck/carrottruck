@@ -149,7 +149,20 @@ public class MenuService {
      * @return 삭제된 메뉴 옵션 식별키
      */
     public Long deleteMenuOption(Long menuOptionId, String email) {
-        return null;
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        MenuOption menuOption = menuOptionRepository.findById(menuOptionId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 메뉴 옵션입니다."));
+
+        Menu menu = menuOption.getMenu();
+
+        FoodTruck foodTruck = menu.getFoodTruck();
+        checkOwnerAccess(member, foodTruck);
+
+        menuOption.deActivate();
+
+        return menuOption.getId();
     }
 
     /**

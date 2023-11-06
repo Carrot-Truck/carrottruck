@@ -187,7 +187,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .build();
 
         // ReviewService의 getMyReview 메서드가 호출될 때 가짜 응답을 반환하도록 설정
-        given(reviewService.getMyReview())
+        given(reviewService.getMyReview(anyString()))
             .willReturn(myReviewResponse);
 
         // API 요청 및 응답 검증
@@ -298,7 +298,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
             .build();
 
         given(
-            reviewService.withdrawal(withdrawalRequest.getReviewId()))
+            reviewService.withdrawal(withdrawalRequest.getReviewId(), anyString()))
             .willReturn(result);
 
         mockMvc.perform(

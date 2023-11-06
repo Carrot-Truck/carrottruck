@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.review.request.CommentRequest;
 import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
+import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
@@ -26,6 +27,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -74,7 +76,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     void createCommentWithoutImage(){
         //given
         Member member = createMember(Role.CLIENT, true);
-        Member vendor = createVendor(Role.VENDOR, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
@@ -104,7 +106,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     void createCommentWithImage() throws Exception {
         //given
         Member member = createMember(Role.CLIENT, true);
-        Member vendor = createVendor(Role.VENDOR, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
@@ -137,7 +139,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     void createComment(){
         // given
         Member member = createMember(Role.CLIENT, true);
-        Member vendor = createVendor(Role.VENDOR, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
             "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
@@ -162,7 +164,27 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     @DisplayName("사용자는 리뷰에 댓글을 남길 수 없다.")
     @Test
     void createCommentAsClient(){
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        Review review = createReview(createReviewEntity(member, order, foodTruck));
 
+        // when
+        Boolean result = reviewService.createComment(CommentRequest.builder()
+            .comment("리뷰 감사합니다.")
+            .reviewId(review.getId())
+            .build(), "ssafy@ssafy.com");
+
+        // then
+        assertThat(result).isFalse();
     }
 
     @DisplayName("사업자는 내 푸드트럭이 아닌 리뷰에 댓글을 남길 수 없다.")
@@ -220,9 +242,9 @@ public class ReviewServiceTest extends IntegrationTestSupport {
         return memberRepository.save(member);
     }
 
-    private Member createVendor(Role role, boolean active) {
+    private Member createVendor(Role role, boolean active, String email) {
         Member member = Member.builder()
-            .email("vendor@ssafy.com")
+            .email(email)
             .nickname("매미킴")
             .encryptedPwd(passwordEncoder.encode("ssafy1234"))
             .name("김동현")

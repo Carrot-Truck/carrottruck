@@ -87,7 +87,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long fid = 1L;
 
         mockMvc.perform(
-                        get("/statistics/{foodTruckId}/sales", fid)
+                        get("/api/statistics/{foodTruckId}/sales", fid)
                                 .param("year", "2023")
                                 .param("month", "11")
                                 .param("lastSalesId", "0")
@@ -232,7 +232,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long sid = 1L;
 
         mockMvc.perform(
-                        get("/statistics/{foodTruckId}/sales-detail/{salesId}", fid, sid)
+                        get("/api/statistics/{foodTruckId}/sales-detail/{salesId}", fid, sid)
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -325,9 +325,9 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long fid = 1L;
 
         mockMvc.perform(
-                        get("/statistics/{foodTruckId}/weekly", fid)
+                        get("/api/statistics/{foodTruckId}/weekly", fid)
                                 .param("year", "2023")
-                                .param("lastStartDate", LocalDateTime.now().toLocalDate().minusDays(13).format(DateTimeFormatter.ISO_LOCAL_DATE).toString())
+                                .param("lastStartDate", LocalDateTime.now().toLocalDate().minusDays(13).format(DateTimeFormatter.ISO_LOCAL_DATE))
                                 .header("Authentication", "authentication")
                 )
                 .andDo(print())
@@ -485,7 +485,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long fid = 1L;
 
         mockMvc.perform(
-                        get("/statistics/{foodTruckId}/weekly-detail", fid)
+                        get("/api/statistics/{foodTruckId}/weekly-detail", fid)
                                 .param("startDate", startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                                 .param("endDate", endDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
                                 .header("Authentication", "authentication")
@@ -577,7 +577,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long fid = 1L;
 
         mockMvc.perform(
-                        get("/statistics/{foodTruckId}/monthly", fid)
+                        get("/api/statistics/{foodTruckId}/monthly", fid)
                                 .param("year", "2023")
                                 .header("Authentication", "authentication")
                 )
@@ -726,7 +726,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         Long fid = 1L;
 
         mockMvc.perform(
-                        get("/statistics/{foodTruckId}/monthly-detail", fid)
+                        get("/api/statistics/{foodTruckId}/monthly-detail", fid)
                                 .param("year", "2023")
                                 .param("month", "10")
                                 .header("Authentication", "authentication")

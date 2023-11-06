@@ -138,7 +138,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                get("/survey/list")
+                get("/api/survey/list")
                         .param("sido", "광주광역시")
                         .param("sigungu", "광산구")
                         .param("dong", "장덕동")
@@ -212,7 +212,7 @@ public class SurveyControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/survey/list/{categoryId}", cid)
+                        get("/api/survey/list/{categoryId}", cid)
                                 .param("sido", "광주광역시")
                                 .param("sigungu", "광산구")
                                 .param("dong", "장덕동")

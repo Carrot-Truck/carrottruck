@@ -120,7 +120,7 @@ public class AnalysisControllerDocsTest extends RestDocsSupport {
         Long cid = 1L;
 
         mockMvc.perform(
-                get("/analysis/store/{categoryId}", cid)
+                get("/api/analysis/store/{categoryId}", cid)
                         .param("latitude", "35.19684")
                         .param("longitude", "126.8108")
                 )

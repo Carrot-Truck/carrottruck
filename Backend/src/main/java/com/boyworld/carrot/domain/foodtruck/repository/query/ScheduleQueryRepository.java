@@ -2,6 +2,7 @@ package com.boyworld.carrot.domain.foodtruck.repository.query;
 
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
+import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.OrderCondition;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.querydsl.core.types.Order;
@@ -62,7 +63,8 @@ public class ScheduleQueryRepository {
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
                         distance.loe(SEARCH_RANGE_METER),
-                        isActiveSchedule()
+                        isActiveFoodTruck(),
+                        schedule.active
                 )
                 .fetch();
 
@@ -116,8 +118,8 @@ public class ScheduleQueryRepository {
                         nameLikeKeyword(condition.getKeyword()),
                         distance.loe(SEARCH_RANGE_METER),
                         isGreaterThanLastId(lastScheduleId),
-                        isActive(),
-                        isActiveSchedule()
+                        isActiveFoodTruck(),
+                        schedule.active
                 )
                 .limit(PAGE_SIZE + 1)
                 .fetch();
@@ -162,6 +164,41 @@ public class ScheduleQueryRepository {
                 )
                 .orderBy(
                         createOrderSpecifier(condition.getOrderCondition(), distance)
+                )
+                .fetch();
+    }
+
+    /**
+     * 푸드트럭 식별키로 스케줄 목록 조회 쿼리
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @return 해당 푸드트럭의 스케줄 목록
+     */
+    public List<ScheduleDto> getSchedulesByFoodTruckId(Long foodTruckId) {
+        List<Long> ids = queryFactory
+                .select(schedule.id)
+                .from(schedule)
+                .where(
+                        isEqualFoodTruckId(foodTruckId),
+                        schedule.active
+                )
+                .fetch();
+
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return queryFactory
+                .select(Projections.constructor(ScheduleDto.class,
+                        schedule.id,
+                        schedule.address,
+                        schedule.dayOfWeek,
+                        schedule.startTime,
+                        schedule.endTime
+                ))
+                .from(schedule)
+                .where(
+                        schedule.id.in(ids)
                 )
                 .fetch();
     }
@@ -217,12 +254,8 @@ public class ScheduleQueryRepository {
                 );
     }
 
-    private BooleanExpression isActive() {
+    private BooleanExpression isActiveFoodTruck() {
         return foodTruck.active;
-    }
-
-    private BooleanExpression isActiveSchedule() {
-        return schedule.active;
     }
 
     private BooleanExpression isNew(LocalDateTime lastMonth) {
@@ -262,5 +295,9 @@ public class ScheduleQueryRepository {
         return select(review.count().intValue())
                 .from(review)
                 .where(review.foodTruck.eq(schedule.foodTruck));
+    }
+
+    private BooleanExpression isEqualFoodTruckId(Long foodTruckId) {
+        return foodTruckId != null ? schedule.foodTruck.id.eq(foodTruckId) : null;
     }
 }

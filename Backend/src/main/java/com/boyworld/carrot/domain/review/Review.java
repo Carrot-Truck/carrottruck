@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Review Entity
@@ -51,6 +52,7 @@ public class Review extends TimeBaseEntity {
     private int grade;
 
     @Column(nullable = false)
+    @Setter
     private Boolean active;
 
     @Builder
@@ -63,7 +65,4 @@ public class Review extends TimeBaseEntity {
         this.active = active;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
 }

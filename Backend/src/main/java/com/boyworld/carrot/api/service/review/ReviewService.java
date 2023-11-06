@@ -19,7 +19,6 @@ import com.boyworld.carrot.domain.review.repository.CommentRepository;
 import com.boyworld.carrot.domain.review.repository.ReviewImageRepository;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
 import com.boyworld.carrot.file.S3Uploader;
-import com.boyworld.carrot.security.SecurityUtil;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -119,9 +118,8 @@ public class ReviewService {
      * read my review-list API
      * from SecurityUtil.getCurrentLoginId()
      */
-    public MyReviewResponse getMyReview() {
+    public MyReviewResponse getMyReview(String userEmail) {
         try {
-            String userEmail = SecurityUtil.getCurrentLoginId();
             Member member = memberRepository.findByEmail(userEmail).orElseThrow();
             List<Review> myReview = reviewRepository.findByMemberAndActive(member, true).orElseThrow();
             List<MyReviewDto> response = new ArrayList<>();
@@ -168,17 +166,16 @@ public class ReviewService {
      * delete my review API
      */
     @Transactional
-    public Boolean withdrawal(Long reviewId) {
+    public Boolean withdrawal(Long reviewId, String email) {
         try{
-            String email = SecurityUtil.getCurrentLoginId();
             Review review = reviewRepository.findById(reviewId).orElseThrow();
             // 만약 삭제하고자 하는 댓글의 email과 현재 로그인한 email이 동일하다면
             if(review.getMember().getEmail().equals(email)){
                 review.setActive(false); // 비활성화
+                return true;
             } else {
                 return false;
             }
-            return true;
         } catch (Exception e){
             return false;
         }

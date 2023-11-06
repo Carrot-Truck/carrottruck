@@ -36,7 +36,7 @@ public class StatisticsController {
     public ApiResponse<StatisticsBySalesResponse> getStatisticsBySales(@PathVariable Long foodTruckId,
                                                                        @RequestParam Integer year,
                                                                        @RequestParam Integer month,
-                                                                       @RequestParam Integer lastSalesId) {
+                                                                       @RequestParam Long lastSalesId) {
         log.debug("StatisticsController#getStatisticsBySales called !!!");
         log.debug("FoodTruckID={}, year={}, month={}, LastSalesId={}", foodTruckId, year, month, lastSalesId);
 

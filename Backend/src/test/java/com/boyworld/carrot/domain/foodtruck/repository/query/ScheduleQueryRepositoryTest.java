@@ -661,6 +661,8 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
 
     private Sale createSale(FoodTruck foodTruck, LocalDateTime endTime) {
         Sale sale = Sale.builder()
+                .address("sale address")
+                .orderable(true)
                 .foodTruck(foodTruck)
                 .latitude(BigDecimal.valueOf(35.204008))
                 .longitude(BigDecimal.valueOf(126.807271))

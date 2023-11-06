@@ -1207,6 +1207,8 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
 
     private Sale createSale(FoodTruck foodTruck, LocalDateTime startTime, BigDecimal latitude, BigDecimal longitude) {
         Sale sale = Sale.builder()
+                .address("sale address")
+                .orderable(true)
                 .foodTruck(foodTruck)
                 .latitude(latitude)
                 .longitude(longitude)

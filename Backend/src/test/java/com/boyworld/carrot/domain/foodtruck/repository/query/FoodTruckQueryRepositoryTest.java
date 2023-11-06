@@ -311,6 +311,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
                 .totalAmount(0)
                 .startTime(LocalDateTime.now().minusHours(1))
                 .endTime(endTime)
+                .orderable(true)
                 .active(true)
                 .build();
         return saleRepository.save(sale);

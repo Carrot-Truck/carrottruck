@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.service.menu;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.menu.response.CreateMenuResponse;
+import com.boyworld.carrot.api.controller.menu.response.MenuOptionResponse;
 import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.api.service.menu.dto.CreateMenuDto;
 import com.boyworld.carrot.api.service.menu.dto.CreateMenuOptionDto;
@@ -18,6 +19,7 @@ import com.boyworld.carrot.domain.menu.MenuInfo;
 import com.boyworld.carrot.domain.menu.repository.command.MenuImageRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * 메뉴 서비스 테스트
+ *
+ * @author 최영환
+ */
+@Slf4j
 class MenuServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -314,6 +322,86 @@ class MenuServiceTest extends IntegrationTestSupport {
                 .hasMessage("잘못된 접근입니다.");
 
         assertThatThrownBy(() -> menuService.deleteMenu(savedMenu.getId(), client1.getEmail()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+    }
+
+    @DisplayName("사업자는 본인 소유의 푸드트럭 메뉴에 메뉴 옵션을 등록할 수 있다.")
+    @Test
+    void createMenuOptionAsOwner() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Menu menu = Menu.builder()
+                .foodTruck(foodTruck)
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
+                .active(true)
+                .build();
+        Menu savedMenu = menuRepository.save(menu);
+
+        CreateMenuOptionDto dto = CreateMenuOptionDto.builder()
+                .menuOptionName("프리미엄 된장 소스")
+                .menuOptionPrice(1000)
+                .menuOptionDescription("동현 된장삼겹의 시그니쳐 소스")
+                .build();
+
+        // when
+        MenuOptionResponse response = menuService.createMenuOption(dto, vendor1.getEmail(), savedMenu.getId());
+        log.debug("response={}", response);
+
+        // then
+        assertThat(response)
+                .extracting("menuOptionName", "menuOptionPrice",
+                        "menuOptionDescription", "menuOptionSoldOut")
+                .containsExactly(dto.getMenuOptionName(), dto.getMenuOptionPrice(),
+                        dto.getMenuOptionDescription(), false);
+    }
+
+    @DisplayName("사업자는 본인 소유의 푸드트럭 메뉴에 메뉴 옵션을 등록할 수 있다.")
+    @Test
+    void createMenuOptionAsInValidMember() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Menu menu = Menu.builder()
+                .foodTruck(foodTruck)
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
+                .active(true)
+                .build();
+        Menu savedMenu = menuRepository.save(menu);
+
+        CreateMenuOptionDto dto = CreateMenuOptionDto.builder()
+                .menuOptionName("프리미엄 된장 소스")
+                .menuOptionPrice(1000)
+                .menuOptionDescription("동현 된장삼겹의 시그니쳐 소스")
+                .build();
+
+        // when // then
+        assertThatThrownBy(() -> menuService.createMenuOption(dto, vendor2.getEmail(), savedMenu.getId()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+
+        assertThatThrownBy(() -> menuService.createMenuOption(dto, client1.getEmail(), savedMenu.getId()))
                 .isInstanceOf(InValidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }

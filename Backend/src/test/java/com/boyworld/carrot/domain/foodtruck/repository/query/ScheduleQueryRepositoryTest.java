@@ -542,6 +542,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
             log.debug("schedule={}", schedule);
         }
 
+        scheduleRepository.deleteAllInBatch();
         List<ScheduleDto> schedules2 = scheduleQueryRepository.getSchedulesByFoodTruckId(foodTruck2.getId());
         for (ScheduleDto schedule : schedules2) {
             log.debug("schedule={}", schedule);
@@ -587,6 +588,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
                 20,
                 false);
         createSchedules(foodTruck1);
+        createSchedules(foodTruck2);
 
         Sale sale1 = createSale(foodTruck1, null);
         Sale sale2 = createSale(foodTruck2, null);
@@ -622,31 +624,31 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
                 BigDecimal.valueOf(126.807271),
                 LocalDateTime.now().minusHours(1),
                 LocalDateTime.now().plusHours(5),
-                DayOfWeek.FRIDAY.name()
+                LocalDateTime.now().getDayOfWeek().name(), foodTruck.getId() + "schedule1 address"
         );
 
         Schedule schedule2 = createSchedule(foodTruck,
                 BigDecimal.valueOf(35.204349),
                 BigDecimal.valueOf(126.807805),
-                LocalDateTime.now().plusHours(3),
-                LocalDateTime.now().plusHours(5),
-                DayOfWeek.SATURDAY.name()
+                LocalDateTime.now().plusDays(1).plusHours(3),
+                LocalDateTime.now().plusDays(1).plusHours(5),
+                LocalDateTime.now().plusDays(1).getDayOfWeek().name(), foodTruck.getId() + "schedule2 address"
         );
 
         Schedule schedule3 = createSchedule(foodTruck,
                 BigDecimal.valueOf(35.204349),
                 BigDecimal.valueOf(126.807805),
                 LocalDateTime.now().plusHours(5),
-                LocalDateTime.now().plusHours(7),
-                DayOfWeek.SATURDAY.name()
+                LocalDateTime.now().plusDays(2).plusHours(7),
+                LocalDateTime.now().plusDays(2).getDayOfWeek().name(), foodTruck.getId() + "schedule3 address"
         );
         List<Schedule> schedules = List.of(schedule1, schedule2, schedule3);
         scheduleRepository.saveAll(schedules);
     }
 
-    private Schedule createSchedule(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, LocalDateTime startTime, LocalDateTime endTime, String dayOfWeek) {
+    private Schedule createSchedule(FoodTruck foodTruck, BigDecimal latitude, BigDecimal longitude, LocalDateTime startTime, LocalDateTime endTime, String dayOfWeek, String address) {
         return Schedule.builder()
-                .address("주소정보")
+                .address(address)
                 .latitude(latitude)
                 .longitude(longitude)
                 .dayOfWeek(dayOfWeek)

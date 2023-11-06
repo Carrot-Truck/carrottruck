@@ -11,6 +11,8 @@ import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.menu.Menu;
 import com.boyworld.carrot.domain.menu.MenuInfo;
+import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
+import com.boyworld.carrot.domain.menu.repository.query.MenuQueryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

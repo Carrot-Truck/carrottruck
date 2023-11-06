@@ -9,12 +9,10 @@ import java.util.List;
 @Data
 public class MenuResponse {
 
-    private Boolean hasNext;
     private List<MenuDto> menus;
 
     @Builder
-    public MenuResponse(Boolean hasNext, List<MenuDto> menus) {
-        this.hasNext = hasNext;
+    public MenuResponse(List<MenuDto> menus) {
         this.menus = menus;
     }
 }

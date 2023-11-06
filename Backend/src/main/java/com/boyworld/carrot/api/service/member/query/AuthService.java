@@ -1,7 +1,7 @@
 package com.boyworld.carrot.api.service.member.query;
 
 import com.boyworld.carrot.api.service.member.dto.LoginDto;
-import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
+import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
@@ -116,11 +116,11 @@ public class AuthService {
      * 사업자 서비스에 접근하는게 일반 사용자인지 판별
      *
      * @param member 회원 엔티티
-     * @throws InvalidAccessException 일반 사용자가 사업자 서비스에 접근하는 경우
+     * @throws InValidAccessException 일반 사용자가 사업자 서비스에 접근하는 경우
      */
     private void checkInvalidAccess(Member member) {
         if (member.getRole().equals(Role.CLIENT)) {
-            throw new InvalidAccessException("잘못된 접근입니다.");
+            throw new InValidAccessException("잘못된 접근입니다.");
         }
     }
 }

@@ -4,7 +4,7 @@ package com.boyworld.carrot.api.service.member.command;
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.member.response.VendorInfoResponse;
 import com.boyworld.carrot.api.service.member.dto.CreateVendorInfoDto;
-import com.boyworld.carrot.api.service.member.error.InvalidAccessException;
+import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.VendorInfo;
@@ -75,7 +75,7 @@ class VendorInfoServiceTest extends IntegrationTestSupport {
 
         // when // then
         assertThatThrownBy(() -> vendorInfoService.createVendorInfo(dto, "ssafy@ssafy.com"))
-                .isInstanceOf(InvalidAccessException.class)
+                .isInstanceOf(InValidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }
 

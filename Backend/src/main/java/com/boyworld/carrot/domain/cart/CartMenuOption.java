@@ -17,7 +17,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @NoArgsConstructor
 @RedisHash("cartMenuOption")
-public class CartMenuOption extends TimeBaseEntity {
+public class CartMenuOption {
 
     @Id
     private Long id;

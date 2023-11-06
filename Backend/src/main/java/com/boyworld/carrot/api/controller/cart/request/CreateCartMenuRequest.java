@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.text.Collator;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Data
@@ -18,18 +20,12 @@ public class CreateCartMenuRequest {
     private Long foodTruckId;
 
     @NotNull
-    private String menuName;
-
-    @NotNull
-    private Integer menuPrice;
-
-    @NotNull
     private Long menuId;
 
     @NotNull
     private Integer cartMenuQuantity;
 
-    private List<CreateCartMenuOptionRequest> cartMenuOptions;
+    private List<Long> cartMenuOptionIds;
 
     @Builder
     public CreateCartMenuRequest(@NotNull Long foodTruckId, @NotNull String menuName, @NotNull Integer menuPrice, @NotNull Long menuId, @NotNull Integer cartMenuQuantity, List<CreateCartMenuOptionRequest> cartMenuOptions) {
@@ -48,9 +44,11 @@ public class CreateCartMenuRequest {
                 .menuPrice(this.menuPrice)
                 .menuId(this.menuId)
                 .cartMenuQuantity(this.cartMenuQuantity)
-                .cartMenuOptionDtos(this.cartMenuOptions.stream()
-                        .map(CreateCartMenuOptionRequest::toCreateCartMenuOptionDto)
-                        .collect(Collectors.toList()))
+                .cartMenuOptionDtos(Optional.ofNullable(this.cartMenuOptions)
+                        .map(options -> options.stream()
+                                .map(CreateCartMenuOptionRequest::toCreateCartMenuOptionDto)
+                                .collect(Collectors.toList()))
+                        .orElse(Collections.emptyList()))
                 .build();
     }
 }

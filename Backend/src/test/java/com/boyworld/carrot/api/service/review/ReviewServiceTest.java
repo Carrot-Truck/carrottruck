@@ -190,7 +190,28 @@ public class ReviewServiceTest extends IntegrationTestSupport {
     @DisplayName("사업자는 내 푸드트럭이 아닌 리뷰에 댓글을 남길 수 없다.")
     @Test
     void createCommentAtAnotherFoodTruck(){
+        Member member = createMember(Role.CLIENT, true);
+        Member vendor = createVendor(Role.VENDOR, true, "vendor@ssafy.com");
+        Member fakeVendor = createVendor(Role.VENDOR, true, "fakevendor@ssafy.com");
+        Category category = createCategory();
+        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+            "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+            "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+            40,
+            10,
+            true);
+        Sale sale = createSale(foodTruck);
+        Order order = createOrder(member, sale, foodTruck);
+        Review review = createReview(createReviewEntity(member, order, foodTruck));
 
+        // when
+        Boolean result = reviewService.createComment(CommentRequest.builder()
+            .comment("리뷰 감사합니다.")
+            .reviewId(review.getId())
+            .build(), fakeVendor.getEmail());
+
+        // then
+        assertThat(result).isFalse();
     }
 
     @DisplayName("사용자는 내가 작성한 리뷰 목록을 확인할 수 있다.")

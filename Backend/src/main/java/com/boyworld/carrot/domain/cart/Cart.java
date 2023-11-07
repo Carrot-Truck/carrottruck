@@ -28,9 +28,15 @@ public class Cart {
 
     @Builder
     public Cart(String id, Long foodTruckId, String foodTruckName, Integer totalPrice) {
-            this.id = id;
-            this.foodTruckId = foodTruckId;
-            this.foodTruckName = foodTruckName;
-            this.totalPrice = totalPrice;
-        }
+        this.id = id;
+        this.foodTruckId = foodTruckId;
+        this.foodTruckName = foodTruckName;
+        this.totalPrice = totalPrice;
     }
+
+    public void updateCartTotalPrice(Integer menuPrice) {
+        this.totalPrice += menuPrice;
+    }
+}
+
+

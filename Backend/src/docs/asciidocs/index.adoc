@@ -19,6 +19,10 @@ include::{docdir}/api/analysis.adoc[]
 == Auth API
 include::{docdir}/api/member/auth.adoc[]
 
+[[Cart-API]]
+== Cart API
+include::{docdir}/api/cart.adoc[]
+
 [[Client-API]]
 == Client API
 include::{docdir}/api/member/client.adoc[]

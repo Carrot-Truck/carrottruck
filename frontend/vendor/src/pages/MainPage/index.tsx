@@ -10,21 +10,31 @@ function MainPage() {
    // 데이터가 비어있는지 여부를 확인할 상태 변수를 정의합니다.
    const [dataEmpty, setDataEmpty] = useState(true); // 초기값은 true로 설정합니다.
    const navigate = useNavigate();
+   const accessToken = localStorage.getItem('accessToken');
+   const grantType = localStorage.getItem('grantType');
 
    useEffect (()=>{
     const getDataL = async () => {
       try {
-        const response = await axios.get('http://localhost:8001/food-truck/overview?lastFoodTruckId=');
+        const response = await axios.get('http://localhost:8001/food-truck/overview?lastFoodTruckId=',
+        {
+          headers: {
+            Authorization: `${grantType} ${accessToken}`,
+          },
+        });
         if (response.data.success) {
           setDataEmpty(response.data.items.length === 0);
         }
       } catch (error) {
         console.error('Error!!', error);
-        alert("로그인이 필요합니다.");
-        navigate('/login');
+        alert("푸드트럭 등록이 필요합니다.");
+        navigate('/registration');
       }
     };
-    getDataL();
+    if(localStorage.getItem('accessToken') !== null){ // 로그인 한 사용자라면
+      getDataL();
+    }
+    
    }, []);
 
   return (

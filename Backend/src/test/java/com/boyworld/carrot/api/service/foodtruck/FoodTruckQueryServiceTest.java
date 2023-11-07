@@ -38,6 +38,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -1198,8 +1199,8 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
                 .latitude(latitude)
                 .longitude(longitude)
                 .dayOfWeek(dayOfWeek)
-                .startTime(startTime)
-                .endTime(endTime)
+                .startTime(LocalTime.from(startTime))
+                .endTime(LocalTime.from(endTime))
                 .active(true)
                 .foodTruck(foodTruck)
                 .build();

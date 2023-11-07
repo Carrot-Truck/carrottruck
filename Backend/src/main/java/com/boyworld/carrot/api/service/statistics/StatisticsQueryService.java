@@ -83,8 +83,7 @@ public class StatisticsQueryService {
      * @return 매출통계 상세
      */
     public StatisticsBySalesDetailsResponse getStatisticsBySalesDetails(Long foodTruckId, Long salesId) {
-        return null;
-
+        return statisticsQueryRepository.getSaleDetail(foodTruckId, salesId);
     }
 
     /**

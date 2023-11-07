@@ -75,4 +75,8 @@ public class Schedule extends TimeBaseEntity {
         this.startTime = LocalTime.parse(startTime);
         this.endTime = LocalTime.parse(endTime);
     }
+
+    public void deActivate() {
+        this.active = false;
+    }
 }

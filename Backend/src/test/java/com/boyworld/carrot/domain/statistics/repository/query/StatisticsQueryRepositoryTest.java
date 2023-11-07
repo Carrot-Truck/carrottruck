@@ -90,25 +90,35 @@ public class StatisticsQueryRepositoryTest extends IntegrationTestSupport {
                 .build();
         menuRepository.saveAll(List.of(menu1, menu2));
 
-        Sale sale = createSale(foodTruck, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+        Sale sale1 = createSale(foodTruck, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
                 "광주광역시 광산구 장덕동",
                 10,
                 170000,
                 LocalDateTime.now().minusDays(3).minusHours(8),
                 LocalDateTime.now().minusDays(3).minusHours(4));
 
-        Order order1 = createOrder(client1, sale);
+        Order order1 = createOrder(client1, sale1);
         OrderMenu orderMenu1 = createOrderMenu(order1, menu1, 1);
         OrderMenu orderMenu2 = createOrderMenu(order1, menu2, 2);
 
-        Order order2 = createOrder(client2, sale);
+        Order order2 = createOrder(client2, sale1);
         OrderMenu orderMenu3 = createOrderMenu(order2, menu1, 1);
 
-        Order order3 = createOrder(client3, sale);
+        Order order3 = createOrder(client3, sale1);
         OrderMenu orderMenu4 = createOrderMenu(order3, menu2, 3);
 
+        Sale sale2 = createSale(foodTruck, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+                "광주광역시 광산구 장덕동",
+                10,
+                170000,
+                LocalDateTime.now().minusDays(3).minusHours(8),
+                LocalDateTime.now().minusDays(3).minusHours(4));
+
+        Order order4 = createOrder(client3, sale2);
+        OrderMenu orderMenu5 = createOrderMenu(order4, menu2, 10);
+
         StatisticsBySalesDetailsResponse response = statisticsQueryRepository
-                .getSaleDetail(foodTruck.getId(), sale.getId());
+                .getSaleDetail(foodTruck.getId(), sale1.getId());
 
         log.debug("StatisticsQRepo#StatisticsSalesDetailResponse={}", response);
     }

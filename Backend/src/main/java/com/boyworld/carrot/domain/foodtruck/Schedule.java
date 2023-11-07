@@ -68,4 +68,11 @@ public class Schedule extends TimeBaseEntity {
         this.foodTruck = foodTruck;
     }
 
+    // == business logic == //
+    public void editSchedule(String address, String dayOfWeek, String startTime, String endTime) {
+        this.address = address;
+        this.dayOfWeek = DayOfWeek.valueOf(dayOfWeek);
+        this.startTime = LocalTime.parse(startTime);
+        this.endTime = LocalTime.parse(endTime);
+    }
 }

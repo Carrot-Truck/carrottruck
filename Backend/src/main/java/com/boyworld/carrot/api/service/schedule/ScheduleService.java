@@ -68,7 +68,22 @@ public class ScheduleService {
      * @return 수정된 스케줄 정보
      */
     public ScheduleDetailResponse editSchedule(Long scheduleId, EditScheduleDto dto, String email) {
-        return null;
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        FoodTruck foodTruck = getFoodTruckById(dto.getFoodTruckId());
+        checkOwnerAccess(member, foodTruck);
+
+        Map<String, String> addressMap =
+                geocodingService.reverseGeocoding(dto.getLatitude(), dto.getLongitude(), "roadaddr");
+
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 스케줄입니다."));
+
+        schedule.editSchedule(addressMap.get("roadaddr"), dto.getDayOfWeek(),
+                dto.getStartTime(), dto.getEndTime());
+
+        return ScheduleDetailResponse.of(schedule);
     }
 
     /**

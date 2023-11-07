@@ -264,7 +264,6 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
 
         EditScheduleRequest request = EditScheduleRequest.builder()
                 .foodTruckId(1L)
-                .address("광주광역시 광산구 장덕로 5번길 16")
                 .latitude("37.5665")
                 .longitude("126.9780")
                 .dayOfWeek(DayOfWeek.TUESDAY.name())

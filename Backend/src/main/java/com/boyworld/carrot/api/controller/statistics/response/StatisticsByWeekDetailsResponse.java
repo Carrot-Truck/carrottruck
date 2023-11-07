@@ -1,8 +1,8 @@
 package com.boyworld.carrot.api.controller.statistics.response;
 
-import com.boyworld.carrot.api.service.statistics.dto.SalesByDayDto;
-import com.boyworld.carrot.api.service.statistics.dto.SalesByHourDto;
-import com.boyworld.carrot.api.service.statistics.dto.SalesByMenuDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByDayDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByHourDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByMenuDto;
 import lombok.Builder;
 import lombok.Data;
 

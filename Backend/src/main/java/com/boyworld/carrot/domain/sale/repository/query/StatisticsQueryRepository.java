@@ -1,10 +1,10 @@
 package com.boyworld.carrot.domain.sale.repository.query;
 
-import com.boyworld.carrot.api.service.statistics.dto.SummaryByMonthDto;
-import com.boyworld.carrot.api.service.statistics.dto.SummaryBySalesDto;
-import com.boyworld.carrot.api.service.statistics.dto.SummaryByWeekDto;
-import com.boyworld.carrot.api.service.statistics.dto.SalesByMenuDto;
-import com.boyworld.carrot.api.service.statistics.dto.StatisticsBySalesDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.SummaryByMonthDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.SummaryBySalesDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.SummaryByWeekDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByMenuDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.StatisticsBySalesDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;

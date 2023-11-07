@@ -1,7 +1,7 @@
 package com.boyworld.carrot.api.controller.statistics.response;
 
-import com.boyworld.carrot.api.service.statistics.dto.SalesByHourDto;
-import com.boyworld.carrot.api.service.statistics.dto.SalesByMenuDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByHourDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByMenuDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;

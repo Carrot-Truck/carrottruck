@@ -1,8 +1,6 @@
 package com.boyworld.carrot.domain.statistics.repository.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
-import com.boyworld.carrot.api.service.statistics.dto.SalesByMenuDto;
-import com.boyworld.carrot.api.service.statistics.dto.StatisticsBySalesDto;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;

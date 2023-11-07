@@ -39,4 +39,8 @@ public class Menu extends TimeBaseEntity {
         this.active = active;
         this.foodTruck = foodTruck;
     }
+
+    public void editMenuActive(Boolean active) {
+        this.active = active;
+    }
 }

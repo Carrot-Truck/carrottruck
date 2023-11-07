@@ -44,7 +44,7 @@ public class CartControllerDocsTest extends RestDocsSupport {
                 .foodTruckId(1l)
                 .menuId(1l)
                 .cartMenuQuantity(2)
-                .cartMenuOptionIds(new ArrayList<>(Arrays.asList(1l, 2l)))
+                .menuOptionIds(new ArrayList<>(Arrays.asList(1l, 2l)))
                 .build();
         // 요청파라미터 작성
 

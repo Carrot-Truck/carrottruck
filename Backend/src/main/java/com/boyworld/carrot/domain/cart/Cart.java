@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.util.List;
+
 /**
  * 장바구니 엔티티
  *
@@ -24,15 +26,18 @@ public class Cart {
     private Long foodTruckId;
     private String foodTruckName;
     private Integer totalPrice;
-//    private Boolean orderable; 조회시 확인
+    private List<String> cartMenuIds;
 
     @Builder
-    public Cart(String id, Long foodTruckId, String foodTruckName, Integer totalPrice) {
+    public Cart(String id, Long foodTruckId, String foodTruckName, Integer totalPrice, List<String> cartMenuIds) {
         this.id = id;
         this.foodTruckId = foodTruckId;
         this.foodTruckName = foodTruckName;
         this.totalPrice = totalPrice;
+        this.cartMenuIds = cartMenuIds;
     }
+
+
 
     public void updateCartTotalPrice(Integer menuPrice) {
         this.totalPrice += menuPrice;

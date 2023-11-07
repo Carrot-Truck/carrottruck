@@ -25,7 +25,6 @@ public class CartMenuOption {
     private Long menuOptionId;
     private String name;
     private Integer price;
-//    private Boolean soldOut; 조회시 확인
 
     @Builder
     public CartMenuOption(String id, String cartMenuId, Long menuOptionId, String name, Integer price) {

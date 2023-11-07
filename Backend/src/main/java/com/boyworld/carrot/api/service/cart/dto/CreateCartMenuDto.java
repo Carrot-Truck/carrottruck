@@ -15,14 +15,14 @@ public class CreateCartMenuDto {
     private Long foodTruckId;
     private Long menuId;
     private Integer cartMenuQuantity;
-    private List<Long> cartMenuOptionIds;
+    private List<Long> menuOptionIds;
 
     @Builder
-    public CreateCartMenuDto(Long foodTruckId, Long menuId, Integer cartMenuQuantity, List<Long> cartMenuOptionIds) {
+    public CreateCartMenuDto(Long foodTruckId, Long menuId, Integer cartMenuQuantity, List<Long> menuOptionIds) {
         this.foodTruckId = foodTruckId;
         this.menuId = menuId;
         this.cartMenuQuantity = cartMenuQuantity;
-        this.cartMenuOptionIds = cartMenuOptionIds;
+        this.menuOptionIds = menuOptionIds;
     }
 
     public CartMenu toEntity(Menu menu, String cartMenuId, String email) {

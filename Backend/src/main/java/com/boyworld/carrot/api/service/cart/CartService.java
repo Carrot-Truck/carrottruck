@@ -48,12 +48,14 @@ public class CartService {
                 .foodTruckId(1l)
                 .foodTruckName("푸드트럭이름")
                 .totalPrice(1000)
+                .cartMenuIds(new ArrayList<>(Arrays.asList("1", "2")))
                 .build();
         Cart cart1 = Cart.builder()
                 .id("email")
                 .foodTruckId(1l)
                 .foodTruckName("푸드트럭이름2")
                 .totalPrice(2000)
+                .cartMenuIds(new ArrayList<>(Arrays.asList("1", "2")))
                 .build();
         List<Cart> list = new ArrayList<>();
         list.add(cart);

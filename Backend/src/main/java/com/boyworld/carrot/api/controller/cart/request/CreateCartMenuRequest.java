@@ -25,15 +25,15 @@ public class CreateCartMenuRequest {
     @NotNull
     private Integer cartMenuQuantity;
 
-    private List<Long> cartMenuOptionIds;
+    private List<Long> menuOptionIds;
 
 
     @Builder
-    public CreateCartMenuRequest(Long foodTruckId, Long menuId, Integer cartMenuQuantity, List<Long> cartMenuOptionIds) {
+    public CreateCartMenuRequest(Long foodTruckId, Long menuId, Integer cartMenuQuantity, List<Long> menuOptionIds) {
         this.foodTruckId = foodTruckId;
         this.menuId = menuId;
         this.cartMenuQuantity = cartMenuQuantity;
-        this.cartMenuOptionIds = cartMenuOptionIds;
+        this.menuOptionIds = menuOptionIds;
     }
 
 
@@ -42,7 +42,7 @@ public class CreateCartMenuRequest {
                 .foodTruckId(this.foodTruckId)
                 .menuId(this.menuId)
                 .cartMenuQuantity(this.cartMenuQuantity)
-                .cartMenuOptionIds(this.cartMenuOptionIds)
+                .menuOptionIds(this.menuOptionIds)
                 .build();
     }
 }

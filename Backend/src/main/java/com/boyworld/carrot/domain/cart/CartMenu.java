@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.util.List;
+
 /**
  * 장바구니-메뉴 엔티티
  *
@@ -27,10 +29,10 @@ public class CartMenu {
     private Integer price;
     private Integer quantity;
     private String menuImageUrl;
-//    private Boolean soldOut; 조회시 확인
+    private List<String> cartMenuOptionIds;
 
     @Builder
-    public CartMenu(String id, String cartId, Long menuId, String name, Integer price, Integer quantity, String menuImageUrl) {
+    public CartMenu(String id, String cartId, Long menuId, String name, Integer price, Integer quantity, String menuImageUrl, List<String> cartMenuOptionIds) {
         this.id = id;
         this.cartId = cartId;
         this.menuId = menuId;
@@ -38,5 +40,6 @@ public class CartMenu {
         this.price = price;
         this.quantity = quantity;
         this.menuImageUrl = menuImageUrl;
+        this.cartMenuOptionIds = cartMenuOptionIds;
     }
 }

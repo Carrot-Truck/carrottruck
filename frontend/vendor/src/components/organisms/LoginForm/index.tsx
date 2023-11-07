@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Input from 'components/atoms/Input';
 import Button from 'components/atoms/Button';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,15 @@ function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem('accessToken');
+  const grantType = localStorage.getItem('grantType');
+
+  useEffect (()=>{
+    //TODO: 토큰검증해서 이미 로그인한 사용자라면 다시 메인페이지로 이동하게 해야해
+    if(grantType !== null && accessToken !== null){
+      navigate('/');
+    }
+  });
 
   const login = async () => {
     try {

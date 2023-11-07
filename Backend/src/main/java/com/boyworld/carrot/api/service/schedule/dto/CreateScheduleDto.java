@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
@@ -15,7 +14,6 @@ import java.time.LocalTime;
 public class CreateScheduleDto {
 
     private Long foodTruckId;
-    private String address;
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String dayOfWeek;
@@ -23,10 +21,9 @@ public class CreateScheduleDto {
     private String endTime;
 
     @Builder
-    public CreateScheduleDto(Long foodTruckId, String address, BigDecimal latitude, BigDecimal longitude,
+    public CreateScheduleDto(Long foodTruckId, BigDecimal latitude, BigDecimal longitude,
                              String dayOfWeek, String startTime, String endTime) {
         this.foodTruckId = foodTruckId;
-        this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.dayOfWeek = dayOfWeek;
@@ -34,9 +31,9 @@ public class CreateScheduleDto {
         this.endTime = endTime;
     }
 
-    public Schedule toEntity(FoodTruck foodtruck) {
+    public Schedule toEntity(FoodTruck foodtruck, String address) {
         return Schedule.builder()
-                .address(this.address)
+                .address(address)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
                 .dayOfWeek(this.dayOfWeek)

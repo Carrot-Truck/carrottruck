@@ -21,7 +21,7 @@ public class ScheduleDto {
         this.scheduleId = scheduleId;
         this.address = address;
         this.dayOfWeek = dayOfWeek.name();
-        this.startTime = startTime.format(DateTimeFormatter.ofPattern("hh:mm"));
-        this.endTime = endTime != null ? endTime.format(DateTimeFormatter.ofPattern("hh:mm")) : "null";
+        this.startTime = startTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+        this.endTime = endTime != null ? endTime.format(DateTimeFormatter.ofPattern("HH:mm")) : "null";
     }
 }

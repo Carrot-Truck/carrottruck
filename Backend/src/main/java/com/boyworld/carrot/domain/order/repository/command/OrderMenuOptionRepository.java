@@ -1,4 +1,4 @@
-package com.boyworld.carrot.domain.order.repository;
+package com.boyworld.carrot.domain.order.repository.command;
 
 import com.boyworld.carrot.domain.order.OrderMenuOption;
 import org.springframework.data.jpa.repository.JpaRepository;

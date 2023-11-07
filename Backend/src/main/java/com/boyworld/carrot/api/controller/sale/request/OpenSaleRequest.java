@@ -13,13 +13,15 @@ import lombok.NoArgsConstructor;
 public class OpenSaleRequest {
 
     Long foodTruckId;
+    String address;
     BigDecimal longitude;
     BigDecimal latitude;
     List<SaleMenuItem> saleMenuItems;
 
     @Builder
-    public OpenSaleRequest(Long foodTruckId, BigDecimal longitude, BigDecimal latitude, List<SaleMenuItem> saleMenuItems) {
+    public OpenSaleRequest(Long foodTruckId, String address, BigDecimal longitude, BigDecimal latitude, List<SaleMenuItem> saleMenuItems) {
         this.foodTruckId = foodTruckId;
+        this.address = address;
         this.longitude = longitude;
         this.latitude = latitude;
         this.saleMenuItems = saleMenuItems;
@@ -28,6 +30,7 @@ public class OpenSaleRequest {
     public OpenSaleDto toOpenSaleDto() {
         return OpenSaleDto.builder()
             .foodTruckId(this.foodTruckId)
+            .address(this.address)
             .longitude(this.longitude)
             .latitude(this.latitude)
             .saleMenuItems(this.saleMenuItems)

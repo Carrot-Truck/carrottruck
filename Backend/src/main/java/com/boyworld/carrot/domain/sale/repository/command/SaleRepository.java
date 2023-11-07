@@ -10,6 +10,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author 박은규
  */
 public interface SaleRepository extends JpaRepository<Sale, Long> {
-
-//    Optional<List<Sales>> findAllByFoodTruck(FoodTruck foodTruck);
 }

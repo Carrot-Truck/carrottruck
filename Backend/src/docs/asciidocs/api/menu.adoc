@@ -4,7 +4,7 @@
 ==== HTTP Request
 
 include::{snippets}/create-menu/http-request.adoc[]
-include::{snippets}/create-menu/request-fields.adoc[]
+include::{snippets}/create-menu/request-body.adoc[]
 
 ==== HTTP Response
 

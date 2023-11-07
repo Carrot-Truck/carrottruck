@@ -1,9 +1,9 @@
 package com.boyworld.carrot.api.service.statistics;
 
 import com.boyworld.carrot.api.controller.statistics.response.*;
-import com.boyworld.carrot.api.service.sale.dto.MonthlyStatisticsDto;
-import com.boyworld.carrot.api.service.sale.dto.SalesStatisticsDto;
-import com.boyworld.carrot.api.service.sale.dto.WeeklyStatisticsDto;
+import com.boyworld.carrot.api.service.statistics.dto.SummaryByMonthDto;
+import com.boyworld.carrot.api.service.statistics.dto.SummaryBySalesDto;
+import com.boyworld.carrot.api.service.statistics.dto.SummaryByWeekDto;
 import com.boyworld.carrot.api.service.statistics.dto.StatisticsByMonthDto;
 import com.boyworld.carrot.api.service.statistics.dto.StatisticsBySalesDto;
 import com.boyworld.carrot.api.service.statistics.dto.StatisticsByWeekDto;
@@ -50,11 +50,11 @@ public class StatisticsQueryService {
      */
     public StatisticsBySalesResponse getStatisticsBySales(
             Long foodTruckId, Integer year, Integer month, Long lastSalesId) {
-        List<SalesStatisticsDto> salesDtos = statisticsQueryRepository
+        List<SummaryBySalesDto> salesDtos = statisticsQueryRepository
                 .getSaleList(foodTruckId, year, month, lastSalesId);
 
         List<StatisticsBySalesDto> statisticsBySalesDtos = new ArrayList<>();
-        for (SalesStatisticsDto salesDto : salesDtos) {
+        for (SummaryBySalesDto salesDto : salesDtos) {
             int totalMinutes = (int)ChronoUnit.MINUTES.between(salesDto.getStartTime(), salesDto.getEndTime());
 
             StatisticsBySalesDto statisticsBySalesDto = StatisticsBySalesDto.builder()
@@ -98,10 +98,10 @@ public class StatisticsQueryService {
      * @return 매출통계 리스트
      */
     public StatisticsByWeekResponse getStatisticsByWeek(Long foodTruckId, Integer year, Integer lastWeek) {
-        List<WeeklyStatisticsDto> weeklyDtos = statisticsQueryRepository.getWeeklyList(foodTruckId, year, lastWeek);
+        List<SummaryByWeekDto> weeklyDtos = statisticsQueryRepository.getWeeklyList(foodTruckId, year, lastWeek);
 
         List<StatisticsByWeekDto> statisticsByWeekDtos = new ArrayList<>();
-        for (WeeklyStatisticsDto weeklyDto : weeklyDtos) {
+        for (SummaryByWeekDto weeklyDto : weeklyDtos) {
             int week = weeklyDto.getDays().intValue();
             LocalDate wednesday = calculateNthWednesday(year, week);
 
@@ -144,11 +144,11 @@ public class StatisticsQueryService {
      * @return 매출통계 리스트
      */
     public StatisticsByMonthResponse getStatisticsByMonth(Long foodTruckId, Integer year) {
-        List<MonthlyStatisticsDto> monthlyDtos = statisticsQueryRepository
+        List<SummaryByMonthDto> monthlyDtos = statisticsQueryRepository
                 .getStatisticsByMonth(foodTruckId, year);
 
         List<StatisticsByMonthDto> statisticsByMonthDtos = new ArrayList<>();
-        for (MonthlyStatisticsDto monthlyDto : monthlyDtos) {
+        for (SummaryByMonthDto monthlyDto : monthlyDtos) {
             StatisticsByMonthDto statisticsByMonthDto = StatisticsByMonthDto.builder()
                     .month(monthlyDto.getMonth())
                     .totalHours(monthlyDto.getTotalMinutes() / 60)

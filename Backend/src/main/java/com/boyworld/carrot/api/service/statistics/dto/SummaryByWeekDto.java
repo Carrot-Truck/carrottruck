@@ -1,10 +1,10 @@
-package com.boyworld.carrot.api.service.sale.dto;
+package com.boyworld.carrot.api.service.statistics.dto;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class WeeklyStatisticsDto {
+public class SummaryByWeekDto {
 
     private Long days;
 
@@ -13,7 +13,7 @@ public class WeeklyStatisticsDto {
     private Integer totalAmount;
 
     @Builder
-    public WeeklyStatisticsDto(Long days, Integer totalMinutes, Integer totalAmount) {
+    public SummaryByWeekDto(Long days, Integer totalMinutes, Integer totalAmount) {
         this.days = days;
         this.totalMinutes = totalMinutes;
         this.totalAmount = totalAmount;

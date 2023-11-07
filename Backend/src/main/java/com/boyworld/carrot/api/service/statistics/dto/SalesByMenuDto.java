@@ -10,12 +10,15 @@ public class SalesByMenuDto {
 
     private String menuName;
 
-    private SalesDto salesDto;
+    private Integer totalOrders;
+
+    private Integer totalSales;
 
     @Builder
     public SalesByMenuDto(Long menuId, String menuName, Integer totalOrders, Integer totalSales) {
         this.menuId = menuId;
         this.menuName = menuName;
-        this.salesDto = new SalesDto(totalOrders, totalSales);
+        this.totalOrders = totalOrders;
+        this.totalSales = totalSales;
     }
 }

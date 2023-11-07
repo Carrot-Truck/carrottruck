@@ -1,4 +1,4 @@
-package com.boyworld.carrot.api.service.sale.dto;
+package com.boyworld.carrot.api.service.statistics.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class SalesStatisticsDto {
+public class SummaryBySalesDto {
 
     private Long salesId;
 
@@ -19,8 +19,8 @@ public class SalesStatisticsDto {
     private Integer totalAmount;
 
     @Builder
-    public SalesStatisticsDto(Long salesId, LocalDateTime startTime, LocalDateTime endTime,
-                              String address, Integer totalAmount) {
+    public SummaryBySalesDto(Long salesId, LocalDateTime startTime, LocalDateTime endTime,
+                             String address, Integer totalAmount) {
         this.salesId = salesId;
         this.startTime = startTime;
         this.endTime = endTime;

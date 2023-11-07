@@ -25,6 +25,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -251,6 +252,104 @@ class ScheduleServiceTest extends IntegrationTestSupport {
                 .hasMessage("잘못된 접근입니다.");
 
         assertThatThrownBy(() -> scheduleService.editSchedule(schedule.getId(), dto, client1.getEmail()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+    }
+
+    @DisplayName("사업자는 본인 소유의 푸드트럭 스케줄을 삭제할 수 있다.")
+    @Test
+    void deleteScheduleAsOwner() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Schedule schedule = createSchedule(foodTruck,
+                BigDecimal.valueOf(37.5665),
+                BigDecimal.valueOf(126.978),
+                LocalDateTime.now().minusHours(1),
+                LocalDateTime.now().plusHours(5),
+                LocalDateTime.now().getDayOfWeek().name(),
+                foodTruck.getId() + " schedule1 address");
+
+        // when
+        Long deletedId = scheduleService.deleteSchedule(schedule.getId(), vendor1.getEmail());
+        log.debug("deletedId={}", deletedId);
+
+        Optional<Schedule> deleted = scheduleRepository.findById(schedule.getId());
+
+        // then
+        assertThat(deleted).isPresent();
+        assertThat(deleted.get().getActive()).isFalse();
+    }
+
+    @DisplayName("존재하지 않는 스케줄을 삭제하려고하면 예외가 발생한다.")
+    @Test
+    void deleteEmptyScheduleAsOwner() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Schedule schedule = createSchedule(foodTruck,
+                BigDecimal.valueOf(37.5665),
+                BigDecimal.valueOf(126.978),
+                LocalDateTime.now().minusHours(1),
+                LocalDateTime.now().plusHours(5),
+                LocalDateTime.now().getDayOfWeek().name(),
+                foodTruck.getId() + " schedule1 address");
+
+        // when // then
+        assertThatThrownBy(() -> scheduleService.deleteSchedule(-1L, vendor1.getEmail()))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("존재하지 않는 스케줄입니다.");
+    }
+
+    @DisplayName("일반 사용자나 푸드트럭 소유주가 아닐 경우 예외가 발생한다.")
+    @Test
+    void deleteScheduleAsInValidMember() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Schedule schedule = createSchedule(foodTruck,
+                BigDecimal.valueOf(37.5665),
+                BigDecimal.valueOf(126.978),
+                LocalDateTime.now().minusHours(1),
+                LocalDateTime.now().plusHours(5),
+                LocalDateTime.now().getDayOfWeek().name(),
+                foodTruck.getId() + " schedule1 address");
+
+        // when // then
+        assertThatThrownBy(() -> scheduleService.deleteSchedule(schedule.getId(), vendor2.getEmail()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+
+        assertThatThrownBy(() -> scheduleService.deleteSchedule(schedule.getId(), client1.getEmail()))
                 .isInstanceOf(InValidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }

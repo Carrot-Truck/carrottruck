@@ -210,12 +210,14 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                 .endTime("01:00")
                 .build();
 
-        given(scheduleQueryService.getSchedule(anyLong(), anyString()))
+        given(scheduleQueryService.getSchedule(anyLong(), anyLong(), anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
                         get("/schedule/{scheduleId}", 1L)
                                 .header("Authentication", "authentication")
+                                .param("scheduleId", "1")
+                                .queryParam("foodTruckId", "1")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -224,6 +226,9 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("scheduleId").description("푸드트럭 스케줄 식별키")
+                        ),
+                        queryParameters(
+                                parameterWithName("foodTruckId").description("푸드트럭 식별키")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)

@@ -64,6 +64,17 @@ include::{snippets}/pause-order/path-parameters.adoc[]
 include::{snippets}/pause-order/response-body.adoc[]
 include::{snippets}/pause-order/response-fields.adoc[]
 
+[[restart-order]]
+=== 주문 일시 정지 해제
+
+==== HTTP Request
+include::{snippets}/restart-order/http-request.adoc[]
+include::{snippets}/restart-order/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/restart-order/response-body.adoc[]
+include::{snippets}/restart-order/response-fields.adoc[]
+
 [[soldout-menu]]
 === 메뉴 품절 등록
 

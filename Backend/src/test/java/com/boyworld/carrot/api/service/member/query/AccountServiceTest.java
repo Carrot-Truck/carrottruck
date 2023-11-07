@@ -4,7 +4,6 @@ package com.boyworld.carrot.api.service.member.query;
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
-import com.boyworld.carrot.api.service.member.query.AccountService;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.VendorInfo;
@@ -53,7 +52,7 @@ class AccountServiceTest extends IntegrationTestSupport {
         String email = "ssafy@ssafy.com";
 
         // when
-        ClientResponse response = accountService.getClientInfo(email);
+        ClientResponse response = accountService.getMemberInfo(email);
 
         // then
         assertThat(response).isNotNull();
@@ -69,7 +68,7 @@ class AccountServiceTest extends IntegrationTestSupport {
         String email = "ssafy@ssafy.com";
 
         // when
-        ClientResponse response = accountService.getClientInfo(email);
+        ClientResponse response = accountService.getMemberInfo(email);
 
         // then
         assertThat(response).isNotNull();
@@ -85,7 +84,7 @@ class AccountServiceTest extends IntegrationTestSupport {
         String email = "ssafy@naver.com";
 
         // when // then
-        assertThatThrownBy(() -> accountService.getClientInfo(email))
+        assertThatThrownBy(() -> accountService.getMemberInfo(email))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("존재하지 않는 회원입니다.");
     }

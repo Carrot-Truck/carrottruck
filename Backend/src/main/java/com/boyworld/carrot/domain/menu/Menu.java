@@ -54,4 +54,8 @@ public class Menu extends TimeBaseEntity {
     public void deActivate() {
         this.active = false;
     }
+
+    public void editMenuActive(Boolean active) {
+        this.active = active;
+    }
 }

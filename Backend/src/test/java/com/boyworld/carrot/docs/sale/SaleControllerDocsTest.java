@@ -20,7 +20,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.controller.sale.SaleController;
 import com.boyworld.carrot.api.controller.sale.request.AcceptOrderRequest;
@@ -70,6 +69,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         OpenSaleRequest request = OpenSaleRequest.builder()
             .foodTruckId(1L)
+            .address("서울 마포구 동교로 104")
             .latitude(BigDecimal.valueOf(36.1234))
             .longitude(BigDecimal.valueOf(128.5678))
             .saleMenuItems(saleMenuItems)
@@ -84,7 +84,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .willReturn(response);
 
         mockMvc.perform(
-            post("/api/sale/open")
+            post("/sale/open")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -97,6 +97,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                     requestFields(
                         fieldWithPath("foodTruckId").type(JsonFieldType.NUMBER)
                             .description("푸드트럭 ID"),
+                        fieldWithPath("address").type(JsonFieldType.STRING)
+                            .description("푸드트럭 위치 - 도로명"),
                         fieldWithPath("longitude").type(JsonFieldType.NUMBER)
                             .description("푸드트럭 위치 - 경도"),
                         fieldWithPath("latitude").type(JsonFieldType.NUMBER)
@@ -193,7 +195,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         Long foodTruckId = 1L;
         mockMvc.perform(
-            get("/api/sale/processing/{foodTruckId}", foodTruckId)
+            get("/sale/processing/{foodTruckId}", foodTruckId)
                 .header("Authentication", "authentication")
         ).andDo(print())
             .andExpect(status().isOk())
@@ -321,7 +323,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         Long foodTruckId = 1L;
         mockMvc.perform(
-                get("/api/sale/complete/{foodTruckId}", foodTruckId)
+                get("/sale/complete/{foodTruckId}", foodTruckId)
                     .header("Authentication", "authentication")
             ).andDo(print())
             .andExpect(status().isOk())
@@ -388,7 +390,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .willReturn(1L);
 
         mockMvc.perform(
-            post("/api/sale/accept")
+            post("/sale/accept")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON)
         )
@@ -431,7 +433,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .willReturn(2L);
 
         mockMvc.perform(
-                post("/api/sale/decline")
+                post("/sale/decline")
                     .content(objectMapper.writeValueAsString(request))
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -470,7 +472,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         Long foodTruckId = 1L;
         mockMvc.perform(
-                put("/api/sale/pause/{foodTruckId}", foodTruckId)
+                put("/sale/pause/{foodTruckId}", foodTruckId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())
@@ -496,6 +498,41 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             );
     }
 
+    @DisplayName("주문 일시 정지 해제 API")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void restart() throws Exception {
+        given(saleService.restartOrder(anyLong(), anyString()))
+            .willReturn(1L);
+
+        Long foodTruckId = 1L;
+        mockMvc.perform(
+                put("/sale/restart/{foodTruckId}", foodTruckId)
+                    .header("Authentication", "authentication")
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(
+                document("restart-order",
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("foodTruckId")
+                            .description("푸드트럭 ID")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                            .description("코드"),
+                        fieldWithPath("status").type(JsonFieldType.STRING)
+                            .description("상태"),
+                        fieldWithPath("message").type(JsonFieldType.STRING)
+                            .description("메시지"),
+                        fieldWithPath("data").type(JsonFieldType.NUMBER)
+                            .description("주문 일시 정지 해제한 푸드트럭 ID")
+                    )
+                )
+            );
+    }
+
     @DisplayName("품절 메뉴 등록 API")
     @Test
     @WithMockUser(roles = "VENDOR")
@@ -505,7 +542,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         Long menuId = 1L;
         mockMvc.perform(
-                put("/api/sale/soldout/{menuId}", menuId)
+                put("/sale/soldout/{menuId}", menuId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())
@@ -549,7 +586,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         Long foodTruckId = 1L;
         mockMvc.perform(
-                put("/api/sale/close/{foodTruckId}", foodTruckId)
+                put("/sale/close/{foodTruckId}", foodTruckId)
                     .header("Authentication", "authentication")
             )
             .andDo(print())

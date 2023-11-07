@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * 푸드트럭 스케쥴 엔티티
@@ -41,11 +42,11 @@ public class Schedule extends TimeBaseEntity {
     @Column(nullable = false, length = 30)
     private DayOfWeek dayOfWeek;
 
-    @Column(nullable = false)
-    private LocalDateTime startTime;
+    @Column(nullable = false, columnDefinition = "TIME")
+    private LocalTime startTime;
 
-    @Column(nullable = false)
-    private LocalDateTime endTime;
+    @Column(nullable = false, columnDefinition = "TIME")
+    private LocalTime endTime;
 
     @Column(nullable = false)
     private Boolean active;
@@ -55,7 +56,8 @@ public class Schedule extends TimeBaseEntity {
     private FoodTruck foodTruck;
 
     @Builder
-    private Schedule(String address, BigDecimal latitude, BigDecimal longitude, String dayOfWeek, LocalDateTime startTime, LocalDateTime endTime, Boolean active, FoodTruck foodTruck) {
+    private Schedule(String address, BigDecimal latitude, BigDecimal longitude, String dayOfWeek,
+                     LocalTime startTime, LocalTime endTime, Boolean active, FoodTruck foodTruck) {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -66,4 +68,15 @@ public class Schedule extends TimeBaseEntity {
         this.foodTruck = foodTruck;
     }
 
+    // == business logic == //
+    public void editSchedule(String address, String dayOfWeek, String startTime, String endTime) {
+        this.address = address;
+        this.dayOfWeek = DayOfWeek.valueOf(dayOfWeek);
+        this.startTime = LocalTime.parse(startTime);
+        this.endTime = LocalTime.parse(endTime);
+    }
+
+    public void deActivate() {
+        this.active = false;
+    }
 }

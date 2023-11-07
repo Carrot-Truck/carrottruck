@@ -64,7 +64,7 @@ public class ScheduleController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        ScheduleResponse response = scheduleQueryService.getSchedules(foodTruckId, email);
+        ScheduleResponse response = scheduleQueryService.getSchedules(foodTruckId);
         log.debug("ScheduleResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -73,18 +73,19 @@ public class ScheduleController {
     /**
      * 푸드트럭 스케줄 상세 조회 API
      *
-     * @param scheduleId 조회할 스케줄 식별키
+     * @param scheduleId  조회할 스케줄 식별키
+     * @param foodTruckId 푸드트럭 식별키
      * @return 해당 스케줄 상세 정보
      */
     @GetMapping("/{scheduleId}")
-    public ApiResponse<ScheduleDetailResponse> getSchedule(@PathVariable Long scheduleId) {
+    public ApiResponse<ScheduleDetailResponse> getSchedule(@PathVariable Long scheduleId, @RequestParam Long foodTruckId) {
         log.debug("ScheduleController#getSchedule called");
         log.debug("scheduleId={}", scheduleId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        ScheduleDetailResponse response = scheduleQueryService.getSchedule(scheduleId, email);
+        ScheduleDetailResponse response = scheduleQueryService.getSchedule(scheduleId, foodTruckId, email);
         log.debug("ScheduleDetailResponse={}", response);
 
         return ApiResponse.ok(response);

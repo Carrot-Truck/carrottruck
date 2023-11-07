@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.service.analysis;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.analysis.response.StoreAnalysisResponse;
+import com.boyworld.carrot.domain.adong.AdongCode;
 import com.boyworld.carrot.domain.adong.repository.AdongCodeRepository;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.CategoryCode;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Slf4j
 public class AnalysisQueryServiceTest extends IntegrationTestSupport {
@@ -34,7 +36,9 @@ public class AnalysisQueryServiceTest extends IntegrationTestSupport {
     void getStoreAnalysis() {
         Category category = createCategory("한식");
         CategoryCode categoryCode = createCategoryCode(category, "I201");
+        AdongCode adongCode = createAdongCode();
 
+        // 광주광역시 광산구 수완동
         StoreAnalysisResponse response = analysisQueryService.getStoreAnalysis(
                 category.getId(),
                 new BigDecimal("35.19508792"),
@@ -60,5 +64,16 @@ public class AnalysisQueryServiceTest extends IntegrationTestSupport {
                 .active(true)
                 .build();
         return categoryCodeRepository.save(categoryCode);
+    }
+
+    private AdongCode createAdongCode() {
+        AdongCode adongCode = AdongCode.builder()
+                .adongCode("29200637")
+                .sido("광주광역시")
+                .sigungu("광산구")
+                .dong("수완동")
+                .createdDate(LocalDateTime.now())
+                .build();
+        return adongCodeRepository.save(adongCode);
     }
 }

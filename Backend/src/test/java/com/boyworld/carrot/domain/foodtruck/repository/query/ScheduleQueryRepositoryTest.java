@@ -19,7 +19,7 @@ import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.Status;
-import com.boyworld.carrot.domain.order.repository.OrderRepository;
+import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.domain.review.repository.ReviewRepository;
 import com.boyworld.carrot.domain.sale.Sale;
@@ -31,9 +31,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -553,6 +555,53 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(schedules2).isEmpty();
     }
 
+    @DisplayName("푸드트럭 스케줄 식별키로 스케줄을 조회할 수 있다.")
+    @Test
+    void getScheduleById() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        Schedule schedule = createSchedule(foodTruck,
+                BigDecimal.valueOf(37.5665),
+                BigDecimal.valueOf(126.9780),
+                LocalDateTime.now().minusHours(1),
+                LocalDateTime.now().plusHours(5),
+                LocalDateTime.now().getDayOfWeek().name(),
+                foodTruck.getId() + " schedule1 address"
+        );
+        Schedule savedSchedule = scheduleRepository.save(schedule);
+
+        // when
+        Optional<Schedule> result = scheduleQueryRepository.getScheduleById(schedule.getId());
+        Optional<Schedule> emptyResult = scheduleQueryRepository.getScheduleById(-1L);
+
+        // then
+        assertThat(result).isPresent();
+        assertThat(result.get())
+                .extracting("address", "dayOfWeek", "latitude", "longitude", "startTime", "endTime")
+                .containsExactly(savedSchedule.getAddress(),
+                        savedSchedule.getDayOfWeek(),
+                        savedSchedule.getLatitude(),
+                        savedSchedule.getLongitude(),
+                        savedSchedule.getStartTime(),
+                        savedSchedule.getEndTime());
+
+        assertThat(emptyResult).isEmpty();
+    }
+
     private Member createMember(Role role, String email) {
         Member member = Member.builder()
                 .email(email)
@@ -624,7 +673,8 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
                 BigDecimal.valueOf(126.807271),
                 LocalDateTime.now().minusHours(1),
                 LocalDateTime.now().plusHours(5),
-                LocalDateTime.now().getDayOfWeek().name(), foodTruck.getId() + "schedule1 address"
+                LocalDateTime.now().getDayOfWeek().name(),
+                foodTruck.getId() + " schedule1 address"
         );
 
         Schedule schedule2 = createSchedule(foodTruck,
@@ -652,8 +702,8 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
                 .latitude(latitude)
                 .longitude(longitude)
                 .dayOfWeek(dayOfWeek)
-                .startTime(startTime)
-                .endTime(endTime)
+                .startTime(LocalTime.from(startTime))
+                .endTime(LocalTime.from(endTime))
                 .active(true)
                 .foodTruck(foodTruck)
                 .build();

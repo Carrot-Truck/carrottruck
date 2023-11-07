@@ -8,11 +8,14 @@ public class SalesByHourDto {
 
     private Integer startHour;
 
-    private SalesDto salesDto;
+    private Integer totalOrders;
+
+    private Integer totalSales;
 
     @Builder
     public SalesByHourDto(Integer startHour, Integer totalOrders, Integer totalSales) {
         this.startHour = startHour;
-        this.salesDto = new SalesDto(totalOrders, totalSales);
+        this.totalOrders = totalOrders;
+        this.totalSales = totalSales;
     }
 }

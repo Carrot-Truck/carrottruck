@@ -1,9 +1,15 @@
 package com.boyworld.carrot.domain.menu.repository.query;
 
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
+import com.boyworld.carrot.api.service.sale.dto.SaleMenuItem;
+import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
+import com.boyworld.carrot.domain.menu.MenuOption;
+import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
+import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +18,7 @@ import java.util.List;
 
 import static com.boyworld.carrot.domain.menu.QMenu.menu;
 import static com.boyworld.carrot.domain.menu.QMenuImage.menuImage;
+import static com.boyworld.carrot.domain.menu.QMenuOption.menuOption;
 
 /**
  * 메뉴 조회 레포지토리
@@ -23,6 +30,9 @@ import static com.boyworld.carrot.domain.menu.QMenuImage.menuImage;
 public class MenuQueryRepository {
 
     private final JPAQueryFactory queryFactory;
+    private final MenuRepository menuRepository;
+    private final MenuOptionRepository menuOptionRepository;
+    private final FoodTruckQueryRepository foodTruckQueryRepository;
 
     /**
      * 푸드트럭 식별키로 메뉴 목록 조회 쿼리
@@ -88,8 +98,56 @@ public class MenuQueryRepository {
                 .fetchOne();
     }
 
+    @Transactional
+    public void setSaleMenuActive(Long foodTruckId, List<SaleMenuItem> saleMenuItems) {
+        List<Long> menuIds = queryFactory
+            .select(menu.id)
+            .from(menu)
+            .where(menu.foodTruck.id.eq(foodTruckId))
+            .fetch();
+
+        for (Long menuId: menuIds) {
+            menuRepository.findById(menuId).ifPresent(menu -> menu.editMenuActive(false));
+            List<Long> menuOptionIds = queryFactory
+                .select(menuOption.id)
+                .from(menuOption)
+                .where(menuOption.menu.id.eq(menuId))
+                .fetch();
+            for (Long menuOptionId: menuOptionIds) {
+                menuOptionRepository.findById(menuOptionId).ifPresent(menuOption -> menuOption.editMenuOptionActive(false));
+            }
+        }
+
+        for (SaleMenuItem item: saleMenuItems) {
+            Long menuId = item.getMenuId();
+            if (menuIds.contains(menuId)) {
+                menuRepository.findById(menuId).ifPresent(menu -> menu.editMenuActive(true));
+                for (Long optionId: item.getMenuOptionId()) {
+                    MenuOption option = menuOptionRepository.findById(optionId).orElse(null);
+                    if (option != null && option.getMenu().getId().equals(menuId)) {
+                        option.editMenuOptionActive(true);
+                    }
+                }
+            }
+        }
+    }
+
     private BooleanExpression isEqualMenuId(Long menuId) {
         return menuId != null ? menu.id.eq(menuId) : null;
+    }
+
+
+    public Boolean isMenuOwner(Long menuId, String email) {
+        Long foodTruckId = queryFactory.select(menu.foodTruck.id)
+            .from(menu)
+            .where(menu.id.eq(menuId))
+            .fetchOne();
+
+        if (foodTruckId != null) {
+            return foodTruckQueryRepository.isFoodTruckOwner(foodTruckId, email);
+        }
+
+        return false;
     }
 
     private BooleanExpression isEqualFoodTruckId(Long foodTruckId) {

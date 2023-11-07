@@ -315,3 +315,22 @@ CREATE TABLE IF NOT EXISTS `adong_code`
     `dong`          varchar(20) NULL,
     `created_date`  timestamp   NOT NULL
     );
+
+CREATE TABLE IF NOT EXISTS `sido` (
+	`sido_id` bigint primary key auto_increment,
+	`name` varchar(10) NOT NULL
+	);
+
+CREATE TABLE IF NOT EXISTS `sigungu` (
+	`sigungu_id` bigint primary key auto_increment,
+	`sido_id` bigint,
+	`name` varchar(10) NOT NULL,
+	FOREIGN KEY (`sido_id`) REFERENCES `sido` (`sido_id`)
+	);
+
+CREATE TABLE IF NOT EXISTS `dong` (
+	`dong_id` bigint primary key auto_increment,
+	`sigungu_id` bigint,
+	`name` varchar(10) NOT NULL,
+	FOREIGN KEY (`sigungu_id`) REFERENCES `sigungu` (`sigungu_id`)
+	);

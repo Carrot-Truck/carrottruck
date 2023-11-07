@@ -3,13 +3,11 @@ package com.boyworld.carrot.api.service.order;
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
-import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
-import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OrderService {
 
-    private final FoodTruckRepository foodTruckRepository;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
-    private final SaleRepository saleRepository;
     private final SaleQueryRepository saleQueryRepository;
 
     /**
@@ -89,7 +85,7 @@ public class OrderService {
 
         Order order = Order.builder()
             .member(memberRepository.findByEmail(email).orElse(null))
-            .sale(saleQueryRepository.getSaleOrderByCreatedTimeDesc(dto.getFoodTruckId()).orElse(null))
+            .sale(saleQueryRepository.getLatestSale(dto.getFoodTruckId()).orElse(null))
             .status(Status.PENDING)
             .totalPrice(dto.getTotalPrice())
             .active(true)

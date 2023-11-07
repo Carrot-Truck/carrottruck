@@ -9,17 +9,17 @@ public class StatisticsByMonthDto {
 
     private Integer month;
 
-    private StatisticsDto statisticsDto;
+    private Integer totalHours;
+
+    private Integer totalMinutes;
+
+    private Integer totalSales;
 
     @Builder
     public StatisticsByMonthDto(Integer month, Integer totalHours, Integer totalMinutes, Integer totalSales) {
         this.month = month;
-        this.statisticsDto = new StatisticsDto(totalHours, totalMinutes, totalSales);
-    }
-
-    @Builder
-    public StatisticsByMonthDto(StatisticsByMonthDto statisticsByMonthDto) {
-        this.month = statisticsByMonthDto.getMonth();
-        this.statisticsDto = statisticsByMonthDto.getStatisticsDto();
+        this.totalHours = totalHours;
+        this.totalMinutes = totalMinutes;
+        this.totalSales = totalSales;
     }
 }

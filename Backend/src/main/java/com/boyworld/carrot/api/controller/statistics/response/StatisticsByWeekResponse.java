@@ -21,4 +21,12 @@ public class StatisticsByWeekResponse {
         this.statisticsByWeek = statisticsByWeek;
         this.hasNext = hasNext;
     }
+
+    public static StatisticsByWeekResponse of(Integer year, List<StatisticsByWeekDto> statisticsByWeek, Boolean hasNext) {
+        return StatisticsByWeekResponse.builder()
+                .year(year)
+                .statisticsByWeek(statisticsByWeek)
+                .hasNext(hasNext)
+                .build();
+    }
 }

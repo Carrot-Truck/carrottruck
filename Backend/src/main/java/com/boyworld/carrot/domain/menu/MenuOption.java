@@ -38,4 +38,13 @@ public class MenuOption extends TimeBaseEntity {
         this.active = active;
         this.menu = menu;
     }
+
+    // == business logic == //
+    public void deActivate() {
+        this.active = false;
+    }
+
+    public void editMenuOptionActive(Boolean active) {
+        this.active = active;
+    }
 }

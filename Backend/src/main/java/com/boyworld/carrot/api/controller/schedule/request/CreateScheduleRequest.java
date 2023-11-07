@@ -1,29 +1,42 @@
 package com.boyworld.carrot.api.controller.schedule.request;
 
 import com.boyworld.carrot.api.service.schedule.dto.CreateScheduleDto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
 public class CreateScheduleRequest {
 
+    @NotNull
     private Long foodTruckId;
-    private String address;
+
+    @NotBlank
     private String latitude;
+
+    @NotBlank
     private String longitude;
-    private String days;
+
+    @NotBlank
+    private String dayOfWeek;
+
+    @NotNull
     private String startTime;
+
+    @NotNull
     private String endTime;
 
     @Builder
-    public CreateScheduleRequest(Long foodTruckId, String address, String latitude, String longitude, String days, String startTime, String endTime) {
+    public CreateScheduleRequest(Long foodTruckId, String latitude, String longitude, String dayOfWeek, String startTime, String endTime) {
         this.foodTruckId = foodTruckId;
-        this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.days = days;
+        this.dayOfWeek = dayOfWeek;
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -31,10 +44,9 @@ public class CreateScheduleRequest {
     public CreateScheduleDto toCreateScheduleDto() {
         return CreateScheduleDto.builder()
                 .foodTruckId(this.foodTruckId)
-                .address(this.address)
-                .latitude(this.latitude)
-                .longitude(this.longitude)
-                .days(this.days)
+                .latitude(new BigDecimal(this.latitude))
+                .longitude(new BigDecimal(this.longitude))
+                .dayOfWeek(this.dayOfWeek)
                 .startTime(this.startTime)
                 .endTime(this.endTime)
                 .build();

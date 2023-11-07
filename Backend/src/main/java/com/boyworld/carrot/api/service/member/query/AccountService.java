@@ -30,7 +30,7 @@ public class AccountService {
      * @return 로그인 중인 회원 정보
      * @throws NoSuchElementException 해당 이메일 회원 정보가 존재하지 않는 경우
      */
-    public ClientResponse getClientInfo(String email) {
+    public ClientResponse getMemberInfo(String email) {
         ClientResponse response = memberQueryRepository.getClientInfoByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
         log.debug("ClientResponse={}", response);

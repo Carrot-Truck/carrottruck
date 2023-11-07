@@ -155,7 +155,7 @@ public class AnalysisControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.sigungu").type(JsonFieldType.STRING)
                                         .description("분석한 시군구"),
                                 fieldWithPath("data.dong").type(JsonFieldType.STRING)
-                                        .description("분석한 읍면동(법정동)"),
+                                        .description("분석한 읍면동(행정동)"),
                                 fieldWithPath("data.radiusCount").type(JsonFieldType.NUMBER)
                                         .description("반경 범위 내 상가업소 수"),
                                 fieldWithPath("data.addressCount").type(JsonFieldType.NUMBER)

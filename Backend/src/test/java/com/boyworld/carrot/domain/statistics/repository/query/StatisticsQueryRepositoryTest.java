@@ -176,7 +176,7 @@ public class StatisticsQueryRepositoryTest extends IntegrationTestSupport {
                 .quantity(quantity)
                 .active(true)
                 .build();
-        order.setTotalPrice(quantity * menu.getMenuInfo().getPrice());
+        order.editOrderTotalPrice(order.getTotalPrice() + quantity * menu.getMenuInfo().getPrice());
         return orderMenuRepository.save(orderMenu);
     }
 

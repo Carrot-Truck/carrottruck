@@ -40,4 +40,9 @@ public class FoodTruckLike {
         this.member = member;
         this.foodTruck = foodTruck;
     }
+
+    // == business logic == //
+    public void toggleActive() {
+        this.active = !this.active;
+    }
 }

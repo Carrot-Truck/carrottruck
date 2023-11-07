@@ -7,15 +7,12 @@ import com.boyworld.carrot.api.service.statistics.dto.list.SummaryByMonthDto;
 import com.boyworld.carrot.api.service.statistics.dto.list.SummaryBySalesDto;
 import com.boyworld.carrot.api.service.statistics.dto.list.SummaryByWeekDto;
 import com.boyworld.carrot.api.service.statistics.dto.details.SalesByMenuDto;
-import com.boyworld.carrot.api.service.statistics.dto.list.StatisticsBySalesDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
-import static com.boyworld.carrot.domain.menu.QMenu.menu;
 import static com.boyworld.carrot.domain.order.QOrder.order;
 import static com.boyworld.carrot.domain.order.QOrderMenu.orderMenu;
 import static com.boyworld.carrot.domain.sale.QSale.sale;
@@ -101,11 +97,24 @@ public class StatisticsQueryRepository {
                 .from(orderMenu)
                 .innerJoin(order)
                 .on(order.id.eq(orderMenu.order.id))
+                .where(order.id.in(orderIds))
                 .groupBy(orderMenu.menu.id)
                 .orderBy(orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum().desc())
                 .fetch();
 
-        List<SalesByHourDto> salesByHour = null;
+        List<SalesByHourDto> salesByHour = queryFactory
+                .select(Projections.constructor(SalesByHourDto.class,
+                        order.createdDate.hour(),
+                        order.count(),
+                        orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum()
+                ))
+                .from(orderMenu)
+                .innerJoin(order)
+                .on(order.id.eq(orderMenu.order.id))
+                .where(order.id.in(orderIds))
+                .groupBy(order.createdDate.hour())
+                .orderBy(order.createdDate.hour().asc())
+                .fetch();
 
         return StatisticsBySalesDetailsResponse.of(locations, salesByMenu, salesByHour);
     }

@@ -16,25 +16,34 @@ function MainPage() {
    useEffect (()=>{
     const getDataL = async () => {
       try {
-        const response = await axios.get('http://localhost:8001/food-truck/overview?lastFoodTruckId=',
-        {
-          headers: {
-            Authorization: `${grantType} ${accessToken}`,
-          },
-        });
-        if (response.data.success) {
-          setDataEmpty(response.data.items.length === 0);
+        //TODO: 하기 코드를 token 검증 API 나오면 그 API로 교체해야함.
+        if(localStorage.getItem('accessToken') !== null){ // 로그인 한 사용자라면
+          try{
+            const response = await axios.get('http://localhost:8001/food-truck/overview?lastFoodTruckId=',
+            {
+              headers: {
+                Authorization: `${grantType} ${accessToken}`,
+              },
+            });
+            if (response.data.success) { // 정보를 받았고,
+              setDataEmpty(response.data.items.length === 0); // 그 정보가 비어있다면 true / 비어있지 않다면 false
+              console.log(response.data.items)
+            }
+          } catch(error){
+            
+          }
+        }else{
+          alert("로그인이 필요한 서비스입니다.");
+          navigate('/login');
         }
       } catch (error) {
         console.error('Error!!', error);
-        alert("푸드트럭 등록이 필요합니다.");
-        navigate('/registration');
+        alert("처리중 오류 발생! 다시 시도해주세요.");
+        navigate('/');
       }
     };
-    if(localStorage.getItem('accessToken') !== null){ // 로그인 한 사용자라면
-      getDataL();
-    }
     
+    getDataL();
    }, []);
 
   return (

@@ -3,8 +3,9 @@ import Input from 'components/atoms/Input';
 import Button from 'components/atoms/Button';
 // import { certEmailApi, checkEmailApi, joinApi, sendEmailApi } from 'utils/apis/auth';
 // import { yearToAge } from 'utils/common/yearToAge';
-// import { useNavigate } from 'react-router-dom';w
+import { useNavigate } from 'react-router-dom';
 import { JoinFormContainer } from './style';
+import axios from 'axios';
 
 // interface IJoinFormProps {
 //   email: string;
@@ -16,7 +17,7 @@ import { JoinFormContainer } from './style';
 // }
 
 function JoinForm() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [isDone, setIsDone] = useState(false);
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -29,24 +30,24 @@ function JoinForm() {
   const join = async () => {
     if (isDone) {
       try {
-        // const body = {
-        //   email,
-        //   password,
-        //   name,
-        //   phoneNumber,
-        //   nickname
-        // };
+        const body = {
+          email,
+          password,
+          name,
+          phoneNumber,
+          nickname
+        };
         // 회원가입 api작성
-        // const response = await
+        const response = await axios.post('http://localhost:8001/member/vendor/join', body);
 
-        // if (response.status === 201) {
-        //   alert('회원가입이 완료되었습니다!');
-        // navigate('/vendor/login');
-        // }
+        if (response.status === 201) {
+          alert('회원가입이 완료되었습니다!');
+        navigate('/login');
+        }
         return;
         // eslint-disable-next-line no-unreachable
       } catch (error) {
-        alert(error);
+        console.log(error);
       }
     }
     if (!email) {
@@ -57,13 +58,13 @@ function JoinForm() {
       alert('비밀번호를 입력해주세요');
     } else if (!passwordConfirm) {
       alert('비밀번호 확인을 입력해주세요');
-    } else if (!name) {
+    } else if(password !== passwordConfirm){
+      alert('비밀번호 확인 불일치!')
+    }else if (!name) {
       alert('이름을 입력해주세요');
     } else if (!nickname) {
       alert('닉네임을 입력해주세요');
-    } else {
-      alert('모든 정보를 입력해주세요');
-    }
+    } 
   };
 
   useEffect(() => {

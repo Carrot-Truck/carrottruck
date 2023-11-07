@@ -157,7 +157,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                 .schedules(List.of(schedule1, schedule2, schedule3))
                 .build();
 
-        given(scheduleQueryService.getSchedules(anyLong(), anyString()))
+        given(scheduleQueryService.getSchedules(anyLong()))
                 .willReturn(response);
 
         mockMvc.perform(

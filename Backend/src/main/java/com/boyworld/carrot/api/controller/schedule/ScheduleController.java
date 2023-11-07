@@ -64,7 +64,7 @@ public class ScheduleController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        ScheduleResponse response = scheduleQueryService.getSchedules(foodTruckId, email);
+        ScheduleResponse response = scheduleQueryService.getSchedules(foodTruckId);
         log.debug("ScheduleResponse={}", response);
 
         return ApiResponse.ok(response);

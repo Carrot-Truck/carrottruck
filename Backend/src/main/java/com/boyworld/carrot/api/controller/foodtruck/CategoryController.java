@@ -3,7 +3,6 @@ package com.boyworld.carrot.api.controller.foodtruck;
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.CategoryResponse;
 import com.boyworld.carrot.api.service.foodtruck.CategoryQueryService;
-import com.boyworld.carrot.api.service.foodtruck.CategoryService;
 import com.boyworld.carrot.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/category")
 public class CategoryController {
 
-    private final CategoryService categoryService;
     private final CategoryQueryService categoryQueryService;
 
     /**
      * 카테고리 목록 조회 API
-     * 
+     *
      * @return 서비스 내의 모든 카테고리 목록
      */
     @GetMapping

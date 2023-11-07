@@ -2,14 +2,12 @@ package com.boyworld.carrot.api.service.foodtruck;
 
 import com.boyworld.carrot.api.controller.foodtruck.response.CategoryDetailResponse;
 import com.boyworld.carrot.api.controller.foodtruck.response.CategoryResponse;
-import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.query.CategoryQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +21,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CategoryQueryService {
 
-    private final CategoryRepository categoryRepository;
     private final CategoryQueryRepository categoryQueryRepository;
 
     /**

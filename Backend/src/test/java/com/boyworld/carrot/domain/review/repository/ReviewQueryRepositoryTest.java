@@ -12,7 +12,7 @@ import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.Status;
-import com.boyworld.carrot.domain.order.repository.OrderRepository;
+import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
 import com.boyworld.carrot.domain.review.Comment;
 import com.boyworld.carrot.domain.review.Review;
 import com.boyworld.carrot.domain.review.ReviewImage;

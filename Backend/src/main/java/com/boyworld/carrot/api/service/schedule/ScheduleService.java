@@ -68,7 +68,21 @@ public class ScheduleService {
      * @return 수정된 스케줄 정보
      */
     public ScheduleDetailResponse editSchedule(Long scheduleId, EditScheduleDto dto, String email) {
-        return null;
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        FoodTruck foodTruck = getFoodTruckById(dto.getFoodTruckId());
+        checkOwnerAccess(member, foodTruck);
+
+        Map<String, String> addressMap =
+                geocodingService.reverseGeocoding(dto.getLatitude(), dto.getLongitude(), "roadaddr");
+
+        Schedule schedule = getScheduleById(scheduleId);
+
+        schedule.editSchedule(addressMap.get("roadaddr"), dto.getDayOfWeek(),
+                dto.getStartTime(), dto.getEndTime());
+
+        return ScheduleDetailResponse.of(schedule);
     }
 
     /**
@@ -79,7 +93,16 @@ public class ScheduleService {
      * @return 삭제된 스케줄 식별키
      */
     public Long deleteSchedule(Long scheduleId, String email) {
-        return null;
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        Schedule schedule = getScheduleById(scheduleId);
+
+        FoodTruck foodTruck = schedule.getFoodTruck();
+        checkOwnerAccess(member, foodTruck);
+
+        schedule.deActivate();
+        return schedule.getId();
     }
 
     /**
@@ -138,5 +161,16 @@ public class ScheduleService {
     private FoodTruck getFoodTruckById(Long foodTruckId) {
         return foodTruckRepository.findById(foodTruckId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 푸드트럭입니다."));
+    }
+
+    /**
+     * 스케줄 식별키로 스케줄 조회
+     *
+     * @param scheduleId 스케줄 식별키
+     * @return 식별키에 해당하는 스케줄 엔티티
+     */
+    private Schedule getScheduleById(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 스케줄입니다."));
     }
 }

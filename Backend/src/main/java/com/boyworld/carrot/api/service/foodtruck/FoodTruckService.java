@@ -8,10 +8,13 @@ import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.FoodTruckImage;
+import com.boyworld.carrot.domain.foodtruck.FoodTruckLike;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckImageRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckLikeRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckImageQueryRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckLikeQueryRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
@@ -42,6 +45,8 @@ public class FoodTruckService {
     private final FoodTruckQueryRepository foodTruckQueryRepository;
     private final FoodTruckImageRepository foodTruckImageRepository;
     private final FoodTruckImageQueryRepository foodTruckImageQueryRepository;
+    private final FoodTruckLikeRepository foodTruckLikeRepository;
+    private final FoodTruckLikeQueryRepository foodTruckLikeQueryRepository;
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
     private final S3Uploader s3Uploader;
@@ -128,7 +133,26 @@ public class FoodTruckService {
      * @return 푸드트럭 찜 정보
      */
     public FoodTruckLikeResponse foodTruckLike(FoodTruckLikeDto dto, String email) {
-        return null;
+        // TODO: 2023-11-07 리팩토링
+        Member member = getMemberByEmail(email);
+        FoodTruck foodTruck = getFoodTruckById(dto.getFoodTruckId());
+
+        // 활성화 체크
+        if (!member.getActive() && !foodTruck.getActive()) {
+            throw new InValidAccessException("잘못된 접근입니다.");
+        }
+
+        // 존재여부 체크
+        FoodTruckLike foodTruckLike = foodTruckLikeQueryRepository
+                .getFoodTruckLikeByMemberIdAndFoodTruckId(member.getId(), foodTruck.getId());
+
+        if (foodTruckLike == null) {
+            foodTruckLike = foodTruckLikeRepository.save(dto.toEntity(member, foodTruck));
+        } else {
+            foodTruckLike.toggleActive();
+        }
+
+        return FoodTruckLikeResponse.of(foodTruckLike);
     }
 
     /**

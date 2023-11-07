@@ -4,6 +4,7 @@ import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.OrderCondition;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
+import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
 import com.boyworld.carrot.domain.sale.QSale;
 import com.boyworld.carrot.domain.sale.Sale;
 import com.querydsl.core.types.Order;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
 import static com.boyworld.carrot.domain.SizeConstants.SEARCH_RANGE_METER;
@@ -28,6 +30,7 @@ import static com.boyworld.carrot.domain.foodtruck.QFoodTruck.foodTruck;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruckImage.foodTruckImage;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruckLike.foodTruckLike;
 import static com.boyworld.carrot.domain.member.QMember.member;
+import static com.boyworld.carrot.domain.order.QOrder.order;
 import static com.boyworld.carrot.domain.review.QReview.review;
 import static com.boyworld.carrot.domain.sale.QSale.sale;
 import static com.querydsl.jpa.JPAExpressions.select;
@@ -44,14 +47,15 @@ import static org.springframework.util.StringUtils.hasText;
 public class SaleQueryRepository {
 
     private final JPAQueryFactory queryFactory;
+    private final FoodTruckQueryRepository foodTruckQueryRepository;
 
     /**
      * 최신 영업 조회
      *
-     * @param
-     * @return
+     * @param foodTruckId 푸드트럭 Id
+     * @return Optional<Sale> 최신 영업
      */
-    public Optional<Sale> getSaleOrderByCreatedTimeDesc(Long foodTruckId) {
+    public Optional<Sale> getLatestSale(Long foodTruckId) {
 
         QSale sale = QSale.sale;
 
@@ -180,6 +184,47 @@ public class SaleQueryRepository {
                 .fetch();
     }
 
+    @Transactional
+    public void closeSale(Long saleId, LocalDateTime now) {
+        queryFactory
+            .update(sale)
+            .set(sale.endTime, now)
+            .where(sale.id.eq(saleId))
+            .execute();
+    }
+
+    public Boolean hasActiveSale(Long foodTruckId) {
+        return queryFactory.select(sale.count().goe(1L))
+            .from(sale)
+            .where(sale.foodTruck.id.eq(foodTruckId)
+                .and(isActiveSale())).fetchFirst();
+    }
+
+    public Boolean isSaleOwner(Long saleId, String email) {
+        Long foodTruckId = queryFactory.select(sale.foodTruck.id)
+            .from(sale)
+            .where(sale.id.eq(saleId))
+            .fetchOne();
+
+        if (foodTruckId != null) {
+            return foodTruckQueryRepository.isFoodTruckOwner(foodTruckId, email);
+        }
+
+        return false;
+    }
+
+    public Boolean isOrderOwner(Long orderId, String email) {
+        Long saleId = queryFactory.select(order.sale.id)
+            .from(order)
+            .where(order.id.eq(orderId))
+            .fetchOne();
+
+        if (saleId != null) {
+            return isSaleOwner(saleId, email);
+        }
+        return false;
+    }
+
     private BooleanExpression isEqualCategoryId(Long categoryId) {
         return categoryId != null ? foodTruck.category.id.eq(categoryId) : null;
     }
@@ -247,7 +292,7 @@ public class SaleQueryRepository {
 
     private JPQLQuery<Integer> getReviewCount() {
         return select(review.count().intValue())
-                .from(review)
-                .where(review.foodTruck.eq(sale.foodTruck));
+            .from(review)
+            .where(review.foodTruck.eq(sale.foodTruck));
     }
 }

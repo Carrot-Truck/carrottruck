@@ -5,6 +5,8 @@ import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.sale.Sale;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,8 +14,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 주문 엔티티
@@ -40,7 +44,8 @@ public class Order extends TimeBaseEntity {
     @JoinColumn(name = "sales_id", nullable = false)
     private Sale sale;
 
-    @Column(length = 100, nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10, nullable = false)
     private Status status;
 
     @Column
@@ -63,8 +68,12 @@ public class Order extends TimeBaseEntity {
         this.active = active;
     }
 
-    // == business logic ==//
-    public void editOrderTotalPrice(Integer totalPrice) {
-        this.totalPrice = totalPrice;
+    public void updateOrderStatus(Status status) {
+        this.status = status;
+    }
+
+    public void updateOrderStatusAndExpectTime(Status status, LocalDateTime expectTime) {
+        this.status = status;
+        this.expectTime = expectTime;
     }
 }

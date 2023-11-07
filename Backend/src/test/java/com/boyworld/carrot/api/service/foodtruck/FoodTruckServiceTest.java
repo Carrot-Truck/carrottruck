@@ -2,20 +2,23 @@ package com.boyworld.carrot.api.service.foodtruck;
 
 
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckLikeResponse;
 import com.boyworld.carrot.api.service.foodtruck.dto.CreateFoodTruckDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckLikeDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.UpdateFoodTruckDto;
 import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.FoodTruckImage;
+import com.boyworld.carrot.domain.foodtruck.FoodTruckLike;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckImageRepository;
+import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckLikeRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckImageQueryRepository;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
-import com.boyworld.carrot.file.S3Uploader;
 import com.boyworld.carrot.file.UploadFile;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -25,8 +28,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -59,6 +60,9 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private FoodTruckImageQueryRepository foodTruckImageQueryRepository;
+
+    @Autowired
+    private FoodTruckLikeRepository foodTruckLikeRepository;
 
     @DisplayName("사업자는 푸드트럭을 이미지 없이 생성할 수 있다.")
     @Test
@@ -317,7 +321,60 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
                 .isInstanceOf(InValidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }
-    
+
+    @DisplayName("사용자는 푸드트럭 찜을 할 수 있다.")
+    @Test
+    void createFoodTruckLike() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1);
+
+        FoodTruckLikeDto dto = FoodTruckLikeDto.builder()
+                .foodTruckId(foodTruck.getId())
+                .build();
+
+        // when
+        FoodTruckLikeResponse response = foodTruckService.foodTruckLike(dto, vendor1.getEmail());
+        log.debug("response={}", response);
+
+        // then
+        assertThat(response).extracting("foodTruckId", "isLiked")
+                .containsExactly(foodTruck.getId(), true);
+    }
+
+    @DisplayName("사용자는 푸드트럭 찜을 취소 할 수 있다.")
+    @Test
+    void cancelFoodTruckLike() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1);
+        createFoodTruckLike(vendor1, foodTruck);
+        createFoodTruckLike(vendor2, foodTruck);
+        createFoodTruckLike(client1, foodTruck);
+
+        FoodTruckLikeDto dto = FoodTruckLikeDto.builder()
+                .foodTruckId(foodTruck.getId())
+                .build();
+
+        // when
+        FoodTruckLikeResponse response = foodTruckService.foodTruckLike(dto, vendor1.getEmail());
+        log.debug("response={}", response);
+
+        // then
+        assertThat(response).extracting("foodTruckId", "isLiked")
+                .containsExactly(foodTruck.getId(), false);
+    }
+
     private Member createMember(Role role, boolean active, String email) {
         Member member = Member.builder()
                 .email(email)
@@ -365,5 +422,14 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
                 .active(true)
                 .build();
         return foodTruckRepository.save(foodTruck);
+    }
+
+    private void createFoodTruckLike(Member vendor1, FoodTruck foodTruck) {
+        FoodTruckLike foodTruckLike = FoodTruckLike.builder()
+                .member(vendor1)
+                .foodTruck(foodTruck)
+                .active(true)
+                .build();
+        foodTruckLikeRepository.save(foodTruckLike);
     }
 }

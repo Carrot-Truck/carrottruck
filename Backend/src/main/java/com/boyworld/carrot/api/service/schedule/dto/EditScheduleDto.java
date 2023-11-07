@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 public class EditScheduleDto {
 
     private Long foodTruckId;
-    private String address;
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String dayOfWeek;
@@ -20,10 +19,9 @@ public class EditScheduleDto {
     private String endTime;
 
     @Builder
-    public EditScheduleDto(Long foodTruckId, String address, BigDecimal latitude, BigDecimal longitude,
+    public EditScheduleDto(Long foodTruckId, BigDecimal latitude, BigDecimal longitude,
                            String dayOfWeek, String startTime, String endTime) {
         this.foodTruckId = foodTruckId;
-        this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.dayOfWeek = dayOfWeek;

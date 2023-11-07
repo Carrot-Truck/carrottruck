@@ -162,6 +162,27 @@ public class SaleController {
     }
 
     /**
+     * 주문 일시 정지 해제 API
+     *
+     * @param foodTruckId
+     * 일시 정지 해제할 푸드트럭 id
+     * @return 일시 정지 해제 처리 여부
+     */
+    @PutMapping("/restart/{foodTruckId}")
+    public ApiResponse<Long> restart(@PathVariable Long foodTruckId) {
+        log.debug("SaleController#restart called");
+        log.debug("foodTruckId={}", foodTruckId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long restartId = saleService.restartOrder(foodTruckId, email);
+        log.debug("restartId={}", restartId);
+
+        return ApiResponse.ok(restartId);
+    }
+
+    /**
      * 품절 메뉴 등록 API
      *
      * @param menuId 품절 등록할 메뉴 식별키

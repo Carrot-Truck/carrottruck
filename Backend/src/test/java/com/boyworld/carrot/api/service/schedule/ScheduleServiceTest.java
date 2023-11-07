@@ -25,6 +25,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * 스케줄 CUD 서비스 테스트
+ *
+ * @author 최영환
  */
 @Slf4j
 class ScheduleServiceTest extends IntegrationTestSupport {

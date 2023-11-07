@@ -85,8 +85,6 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                         requestFields(
                                 fieldWithPath("foodTruckId").type(JsonFieldType.NUMBER)
                                         .description("푸드트럭 식별키"),
-                                fieldWithPath("address").type(JsonFieldType.STRING)
-                                        .description("주소"),
                                 fieldWithPath("latitude").type(JsonFieldType.STRING)
                                         .description("위도"),
                                 fieldWithPath("longitude").type(JsonFieldType.STRING)

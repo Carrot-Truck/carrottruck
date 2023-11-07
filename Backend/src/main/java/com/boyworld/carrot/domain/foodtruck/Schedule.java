@@ -42,10 +42,10 @@ public class Schedule extends TimeBaseEntity {
     @Column(nullable = false, length = 30)
     private DayOfWeek dayOfWeek;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TIME")
     private LocalTime startTime;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TIME")
     private LocalTime endTime;
 
     @Column(nullable = false)

@@ -15,10 +15,10 @@ public class SalesByMenuDto {
     private Integer totalSales;
 
     @Builder
-    public SalesByMenuDto(Long menuId, String menuName, Integer totalOrders, Integer totalSales) {
+    public SalesByMenuDto(Long menuId, String menuName, Number totalOrders, Integer totalSales) {
         this.menuId = menuId;
         this.menuName = menuName;
-        this.totalOrders = totalOrders;
+        this.totalOrders = totalOrders.intValue();
         this.totalSales = totalSales;
     }
 }

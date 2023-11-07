@@ -52,10 +52,10 @@ public class SaleQueryRepository {
     /**
      * 최신 영업 조회
      *
-     * @param
-     * @return
+     * @param foodTruckId 푸드트럭 Id
+     * @return Optional<Sale> 최신 영업
      */
-    public Optional<Sale> getSaleOrderByCreatedTimeDesc(Long foodTruckId) {
+    public Optional<Sale> getLatestSale(Long foodTruckId) {
 
         QSale sale = QSale.sale;
 

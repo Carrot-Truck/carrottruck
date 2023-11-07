@@ -76,4 +76,9 @@ public class Order extends TimeBaseEntity {
         this.status = status;
         this.expectTime = expectTime;
     }
+
+    // == business logic ==//
+    public void editOrderTotalPrice(Integer totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 }

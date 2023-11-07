@@ -5,6 +5,7 @@ import Button from '../../components/atoms/Button';
 import SearchBar from '../../components/atoms/SearchBar';
 import FoodTruckMenu from 'components/organisms/FoodTruckMenu';
 import NaverMap from 'components/atoms/Map';
+import Navbar from 'components/organisms/Navbar';
 
 function MainPage() {
   const MapID = '0n8mf3dv6k';
@@ -27,6 +28,7 @@ function MainPage() {
       />
       <NaverMap clientId={MapID} markers={[{ latitude: 35.19398974745785, longitude: 126.813153026795 }]}></NaverMap>
       <FoodTruckMenu></FoodTruckMenu>
+      <Navbar></Navbar>
     </MainPageLayout>
   );
 }

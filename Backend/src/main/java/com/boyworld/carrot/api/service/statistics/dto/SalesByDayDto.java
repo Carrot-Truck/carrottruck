@@ -8,11 +8,14 @@ public class SalesByDayDto {
 
     private String day;
 
-    private SalesDto salesDto;
+    private Integer totalOrders;
+
+    private Integer totalSales;
 
     @Builder
     public SalesByDayDto(String day, Integer totalOrders, Integer totalSales) {
         this.day = day;
-        this.salesDto = new SalesDto(totalOrders, totalSales);
+        this.totalOrders = totalOrders;
+        this.totalSales = totalSales;
     }
 }

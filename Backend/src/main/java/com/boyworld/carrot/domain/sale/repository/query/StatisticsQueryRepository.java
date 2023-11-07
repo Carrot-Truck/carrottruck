@@ -1,11 +1,10 @@
 package com.boyworld.carrot.domain.sale.repository.query;
 
-import com.boyworld.carrot.api.service.sale.dto.MonthlyStatisticsDto;
-import com.boyworld.carrot.api.service.sale.dto.SalesStatisticsDto;
-import com.boyworld.carrot.api.service.sale.dto.WeeklyStatisticsDto;
+import com.boyworld.carrot.api.service.statistics.dto.SummaryByMonthDto;
+import com.boyworld.carrot.api.service.statistics.dto.SummaryBySalesDto;
+import com.boyworld.carrot.api.service.statistics.dto.SummaryByWeekDto;
 import com.boyworld.carrot.api.service.statistics.dto.SalesByMenuDto;
 import com.boyworld.carrot.api.service.statistics.dto.StatisticsBySalesDto;
-import com.boyworld.carrot.domain.order.Order;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -36,7 +35,7 @@ public class StatisticsQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<SalesStatisticsDto> getSaleList(Long foodTruckId, Integer year, Integer month, Long lastSalesId) {
+    public List<SummaryBySalesDto> getSaleList(Long foodTruckId, Integer year, Integer month, Long lastSalesId) {
         List<Long> ids = queryFactory
                 .select(sale.id)
                 .from(sale)
@@ -54,7 +53,7 @@ public class StatisticsQueryRepository {
         }
 
         return queryFactory
-                .select(Projections.constructor(SalesStatisticsDto.class,
+                .select(Projections.constructor(SummaryBySalesDto.class,
                         sale.id,
                         sale.startTime,
                         sale.endTime,
@@ -93,7 +92,7 @@ public class StatisticsQueryRepository {
         return null;
     }
 
-    public List<WeeklyStatisticsDto> getWeeklyList(Long foodTruckId, Integer year, Integer lastWeek) {
+    public List<SummaryByWeekDto> getWeeklyList(Long foodTruckId, Integer year, Integer lastWeek) {
         LocalDate startOfYearDate = LocalDate.of(year, Month.JANUARY, 1);
 
         while (startOfYearDate.getDayOfWeek() != DayOfWeek.WEDNESDAY) {
@@ -129,7 +128,7 @@ public class StatisticsQueryRepository {
         }
 
         return queryFactory
-                .select(Projections.constructor(WeeklyStatisticsDto.class,
+                .select(Projections.constructor(SummaryByWeekDto.class,
                         getWeek(startOfYearDateTime).floor(),
                         Expressions.numberTemplate(Integer.class, "TIMESTAMPDIFF(MINUTE, {0}, {1})",
                                 sale.startTime, sale.endTime).sum(),
@@ -142,7 +141,7 @@ public class StatisticsQueryRepository {
                 .fetch();
     }
 
-    public List<MonthlyStatisticsDto> getStatisticsByMonth(Long foodTruckId, Integer year) {
+    public List<SummaryByMonthDto> getStatisticsByMonth(Long foodTruckId, Integer year) {
         List<Long> ids = queryFactory
                 .select(sale.id)
                 .from(sale)
@@ -157,7 +156,7 @@ public class StatisticsQueryRepository {
         }
 
         return queryFactory
-                .select(Projections.constructor(MonthlyStatisticsDto.class,
+                .select(Projections.constructor(SummaryByMonthDto.class,
                         sale.startTime.month(),
                         Expressions.numberTemplate(Integer.class, "TIMESTAMPDIFF(MINUTE, {0}, {1})",
                                 sale.startTime, sale.endTime).sum(),

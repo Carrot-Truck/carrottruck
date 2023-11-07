@@ -129,11 +129,11 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("영업 종료 시간"),
                                 fieldWithPath("data.statisticsBySales[].address").type(JsonFieldType.STRING)
                                         .description("도로명 주소"),
-                                fieldWithPath("data.statisticsBySales[].statisticsDto.totalHours").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsBySales[].totalHours").type(JsonFieldType.NUMBER)
                                         .description("판매한 시간"),
-                                fieldWithPath("data.statisticsBySales[].statisticsDto.totalMinutes").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsBySales[].totalMinutes").type(JsonFieldType.NUMBER)
                                         .description("판매한 분"),
-                                fieldWithPath("data.statisticsBySales[].statisticsDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsBySales[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("총 매출액"),
                                 fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN)
                                         .description("다음 페이지 존재 여부")
@@ -263,11 +263,11 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("영업 종료 시간"),
                                 fieldWithPath("data.statisticsBySales.address").type(JsonFieldType.STRING)
                                         .description("도로명 주소"),
-                                fieldWithPath("data.statisticsBySales.statisticsDto.totalHours").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsBySales.totalHours").type(JsonFieldType.NUMBER)
                                         .description("판매한 시간"),
-                                fieldWithPath("data.statisticsBySales.statisticsDto.totalMinutes").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsBySales.totalMinutes").type(JsonFieldType.NUMBER)
                                         .description("판매한 분"),
-                                fieldWithPath("data.statisticsBySales.statisticsDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsBySales.totalSales").type(JsonFieldType.NUMBER)
                                         .description("총 매출액"),
                                 fieldWithPath("data.latitude").type(JsonFieldType.STRING)
                                         .description("영업 위치 위도"),
@@ -277,15 +277,15 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("메뉴 ID"),
                                 fieldWithPath("data.salesByMenu[].menuName").type(JsonFieldType.STRING)
                                         .description("메뉴 이름"),
-                                fieldWithPath("data.salesByMenu[].salesDto.totalOrders").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByMenu[].totalOrders").type(JsonFieldType.NUMBER)
                                         .description("주문 수"),
-                                fieldWithPath("data.salesByMenu[].salesDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByMenu[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("주문 매출액"),
                                 fieldWithPath("data.salesByHour[].startHour").type(JsonFieldType.NUMBER)
                                         .description("판매 시작 시간"),
-                                fieldWithPath("data.salesByHour[].salesDto.totalOrders").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByHour[].totalOrders").type(JsonFieldType.NUMBER)
                                         .description("주문 수"),
-                                fieldWithPath("data.salesByHour[].salesDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByHour[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("주문 매출액")
                                 )
                 ));
@@ -358,11 +358,11 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("주 시작일"),
                                 fieldWithPath("data.statisticsByWeek[].endDate").type(JsonFieldType.STRING)
                                         .description("주 종료일"),
-                                fieldWithPath("data.statisticsByWeek[].statisticsDto.totalHours").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByWeek[].totalHours").type(JsonFieldType.NUMBER)
                                         .description("판매한 시간"),
-                                fieldWithPath("data.statisticsByWeek[].statisticsDto.totalMinutes").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByWeek[].totalMinutes").type(JsonFieldType.NUMBER)
                                         .description("판매한 분"),
-                                fieldWithPath("data.statisticsByWeek[].statisticsDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByWeek[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("총 매출액"),
                                 fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN)
                                         .description("다음 페이지 존재 여부")
@@ -516,31 +516,31 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("주 시작일"),
                                 fieldWithPath("data.statisticsByWeek.endDate").type(JsonFieldType.STRING)
                                         .description("주 종료일"),
-                                fieldWithPath("data.statisticsByWeek.statisticsDto.totalHours").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByWeek.totalHours").type(JsonFieldType.NUMBER)
                                         .description("판매한 시간"),
-                                fieldWithPath("data.statisticsByWeek.statisticsDto.totalMinutes").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByWeek.totalMinutes").type(JsonFieldType.NUMBER)
                                         .description("판매한 분"),
-                                fieldWithPath("data.statisticsByWeek.statisticsDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByWeek.totalSales").type(JsonFieldType.NUMBER)
                                         .description("총 매출액"),
                                 fieldWithPath("data.salesByMenu[].menuId").type(JsonFieldType.NUMBER)
                                         .description("메뉴 ID"),
                                 fieldWithPath("data.salesByMenu[].menuName").type(JsonFieldType.STRING)
                                         .description("메뉴 이름"),
-                                fieldWithPath("data.salesByMenu[].salesDto.totalOrders").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByMenu[].totalOrders").type(JsonFieldType.NUMBER)
                                         .description("주문 수"),
-                                fieldWithPath("data.salesByMenu[].salesDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByMenu[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("주문 매출액"),
                                 fieldWithPath("data.salesByHour[].startHour").type(JsonFieldType.NUMBER)
                                         .description("판매 시작 시간"),
-                                fieldWithPath("data.salesByHour[].salesDto.totalOrders").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByHour[].totalOrders").type(JsonFieldType.NUMBER)
                                         .description("주문 수"),
-                                fieldWithPath("data.salesByHour[].salesDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByHour[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("주문 매출액"),
                                 fieldWithPath("data.salesByDay[].day").type(JsonFieldType.STRING)
                                         .description("영업 요일"),
-                                fieldWithPath("data.salesByDay[].salesDto.totalOrders").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByDay[].totalOrders").type(JsonFieldType.NUMBER)
                                         .description("주문 수"),
-                                fieldWithPath("data.salesByDay[].salesDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByDay[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("주문 매출액")
                         )
                 ));
@@ -605,11 +605,11 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("영업년도"),
                                 fieldWithPath("data.statisticsByMonth[].month").type(JsonFieldType.NUMBER)
                                         .description("영업월"),
-                                fieldWithPath("data.statisticsByMonth[].statisticsDto.totalHours").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByMonth[].totalHours").type(JsonFieldType.NUMBER)
                                         .description("판매한 시간"),
-                                fieldWithPath("data.statisticsByMonth[].statisticsDto.totalMinutes").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByMonth[].totalMinutes").type(JsonFieldType.NUMBER)
                                         .description("판매한 분"),
-                                fieldWithPath("data.statisticsByMonth[].statisticsDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByMonth[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("총 매출액")
                         )
                 ));
@@ -755,31 +755,31 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data.statisticsByMonth.month").type(JsonFieldType.NUMBER)
                                         .description("영업월"),
-                                fieldWithPath("data.statisticsByMonth.statisticsDto.totalHours").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByMonth.totalHours").type(JsonFieldType.NUMBER)
                                         .description("판매한 시간"),
-                                fieldWithPath("data.statisticsByMonth.statisticsDto.totalMinutes").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByMonth.totalMinutes").type(JsonFieldType.NUMBER)
                                         .description("판매한 분"),
-                                fieldWithPath("data.statisticsByMonth.statisticsDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.statisticsByMonth.totalSales").type(JsonFieldType.NUMBER)
                                         .description("총 매출액"),
                                 fieldWithPath("data.salesByMenu[].menuId").type(JsonFieldType.NUMBER)
                                         .description("메뉴 ID"),
                                 fieldWithPath("data.salesByMenu[].menuName").type(JsonFieldType.STRING)
                                         .description("메뉴 이름"),
-                                fieldWithPath("data.salesByMenu[].salesDto.totalOrders").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByMenu[].totalOrders").type(JsonFieldType.NUMBER)
                                         .description("주문 수"),
-                                fieldWithPath("data.salesByMenu[].salesDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByMenu[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("주문 매출액"),
                                 fieldWithPath("data.salesByHour[].startHour").type(JsonFieldType.NUMBER)
                                         .description("판매 시작 시간"),
-                                fieldWithPath("data.salesByHour[].salesDto.totalOrders").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByHour[].totalOrders").type(JsonFieldType.NUMBER)
                                         .description("주문 수"),
-                                fieldWithPath("data.salesByHour[].salesDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByHour[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("주문 매출액"),
                                 fieldWithPath("data.salesByDay[].day").type(JsonFieldType.STRING)
                                         .description("영업 요일"),
-                                fieldWithPath("data.salesByDay[].salesDto.totalOrders").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByDay[].totalOrders").type(JsonFieldType.NUMBER)
                                         .description("주문 수"),
-                                fieldWithPath("data.salesByDay[].salesDto.totalSales").type(JsonFieldType.NUMBER)
+                                fieldWithPath("data.salesByDay[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("주문 매출액")
                         )
                 ));

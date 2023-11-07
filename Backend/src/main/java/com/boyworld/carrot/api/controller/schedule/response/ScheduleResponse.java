@@ -15,4 +15,10 @@ public class ScheduleResponse {
     public ScheduleResponse(List<ScheduleDto> schedules) {
         this.schedules = schedules;
     }
+
+    public static ScheduleResponse of(List<ScheduleDto> schedules) {
+        return ScheduleResponse.builder()
+                .schedules(schedules)
+                .build();
+    }
 }

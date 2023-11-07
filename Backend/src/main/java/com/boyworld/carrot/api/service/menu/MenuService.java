@@ -17,6 +17,7 @@ import com.boyworld.carrot.domain.menu.MenuOption;
 import com.boyworld.carrot.domain.menu.repository.command.MenuImageRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
+import com.boyworld.carrot.domain.menu.repository.query.MenuImageQueryRepository;
 import com.boyworld.carrot.file.S3Uploader;
 import com.boyworld.carrot.file.UploadFile;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,7 @@ public class MenuService {
     private final MemberRepository memberRepository;
     private final MenuImageRepository menuImageRepository;
     private final MenuOptionRepository menuOptionRepository;
+    private final MenuImageQueryRepository menuImageQueryRepository;
     private final S3Uploader s3Uploader;
 
     /**
@@ -69,6 +71,98 @@ public class MenuService {
         List<MenuOption> menuOptions = createAllMenuOptions(menu, dto.getMenuOptionDtos());
 
         return CreateMenuResponse.of(menu, menuOptions.size());
+    }
+
+    /**
+     * 메뉴 수정
+     *
+     * @param dto   메뉴 정보
+     * @param file  이미지 파일
+     * @param email 현재 로그인 중인 회원 이메일
+     * @return 수정된 메뉴 식별키
+     */
+    public Long editMenu(EditMenuDto dto, MultipartFile file, String email) throws IOException {
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        Menu menu = getMenuByMenuId(dto.getMenuId());
+
+        FoodTruck foodTruck = menu.getFoodTruck();
+        checkOwnerAccess(member, foodTruck);
+
+        menu.editMenu(dto.getMenuName(), dto.getMenuDescription(), dto.getMenuPrice());
+
+        deleteMenuImage(dto.getMenuId());
+        createMenuImage(file, menu);
+
+        return menu.getId();
+    }
+
+    /**
+     * 메뉴 삭제
+     *
+     * @param menuId 메뉴 식별키
+     * @param email  현재 로그인 중인 회원 이메일
+     * @return 삭제된 메뉴 식별키
+     */
+    public Long deleteMenu(Long menuId, String email) {
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        Menu menu = getMenuByMenuId(menuId);
+
+        FoodTruck foodTruck = menu.getFoodTruck();
+        checkOwnerAccess(member, foodTruck);
+
+        menu.deActivate();
+
+        return menu.getId();
+    }
+
+    /**
+     * 메뉴 옵션 등록
+     *
+     * @param dto    메뉴 옵션 정보
+     * @param email  현재 로그인 중인 회원 이메일
+     * @param menuId 메뉴 식별키
+     * @return 등록된 메뉴 옵션 정보
+     */
+    public MenuOptionResponse createMenuOption(CreateMenuOptionDto dto, String email, Long menuId) {
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        Menu menu = getMenuByMenuId(menuId);
+
+        FoodTruck foodTruck = menu.getFoodTruck();
+        checkOwnerAccess(member, foodTruck);
+
+        MenuOption savedMenuOption = menuOptionRepository.save(dto.toEntity(menu));
+
+        return MenuOptionResponse.of(savedMenuOption);
+    }
+
+    /**
+     * 메뉴 옵션 삭제
+     *
+     * @param menuOptionId 삭제할 메뉴 옵션 식별키
+     * @param email        현재 로그인 중인 회원 이메일
+     * @return 삭제된 메뉴 옵션 식별키
+     */
+    public Long deleteMenuOption(Long menuOptionId, String email) {
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        MenuOption menuOption = menuOptionRepository.findById(menuOptionId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 메뉴 옵션입니다."));
+
+        Menu menu = menuOption.getMenu();
+
+        FoodTruck foodTruck = menu.getFoodTruck();
+        checkOwnerAccess(member, foodTruck);
+
+        menuOption.deActivate();
+
+        return menuOption.getId();
     }
 
     /**
@@ -130,6 +224,17 @@ public class MenuService {
     }
 
     /**
+     * 메뉴 식별키로 메뉴 조회
+     *
+     * @param menuId 메뉴 식별키
+     * @return 메뉴 엔티티
+     */
+    private Menu getMenuByMenuId(Long menuId) {
+        return menuRepository.findById(menuId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 메뉴 입니다."));
+    }
+
+    /**
      * 메뉴 옵션 일괄 생성
      *
      * @param menu 메뉴 엔티티
@@ -144,7 +249,7 @@ public class MenuService {
     }
 
     /**
-     * 푸드트럭 이미지 생성
+     * 메뉴 이미지 생성
      *
      * @param file 업로드된 파일
      * @param menu 저장된 메뉴
@@ -156,6 +261,18 @@ public class MenuService {
             UploadFile uploadFile = createUploadFile(storeFileName, file.getOriginalFilename());
 
             saveMenuImage(menu, uploadFile);
+        }
+    }
+
+    /**
+     * 메뉴 식별키에 해당하는 메뉴 이미지를 찾은 뒤, 존재한다면 삭제
+     *
+     * @param menuId 메뉴 식별키
+     */
+    private void deleteMenuImage(Long menuId) {
+        MenuImage menuImage = menuImageQueryRepository.getMenuImageByMenuId(menuId);
+        if (menuImage != null) {
+            menuImage.deActivate();
         }
     }
 
@@ -173,7 +290,7 @@ public class MenuService {
     }
 
     /**
-     * 푸드트럭 이미지 저장
+     * 메뉴 이미지 저장
      *
      * @param menu       저장된 푸드트럭 엔티티
      * @param uploadFile 업로드할 파일 정보
@@ -185,51 +302,5 @@ public class MenuService {
                 .active(true)
                 .build();
         menuImageRepository.save(image);
-    }
-
-    /**
-     * 메뉴 수정
-     *
-     * @param dto   메뉴 정보
-     * @param file  이미지 파일
-     * @param email 현재 로그인 중인 회원 이메일
-     * @return 수정된 메뉴 식별키
-     */
-    public Long editMenu(EditMenuDto dto, MultipartFile file, String email) {
-        return null;
-    }
-
-    /**
-     * 메뉴 삭제
-     *
-     * @param menuId 메뉴 식별키
-     * @param email  현재 로그인 중인 회원 이메일
-     * @return 삭제된 메뉴 식별키
-     */
-    public Long deleteMenu(Long menuId, String email) {
-        return null;
-    }
-
-    /**
-     * 메뉴 옵션 등록
-     *
-     * @param dto    메뉴 옵션 정보
-     * @param email  현재 로그인 중인 회원 이메일
-     * @param menuId 메뉴 식별키
-     * @return 등록된 메뉴 옵션 정보
-     */
-    public MenuOptionResponse createMenuOption(CreateMenuOptionDto dto, String email, Long menuId) {
-        return null;
-    }
-
-    /**
-     * 메뉴 옵션 삭제
-     *
-     * @param menuOptionId 삭제할 메뉴 옵션 식별키
-     * @param email        현재 로그인 중인 회원 이메일
-     * @return 삭제된 메뉴 옵션 식별키
-     */
-    public Long deleteMenuOption(Long menuOptionId, String email) {
-        return null;
     }
 }

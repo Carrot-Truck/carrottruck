@@ -9,6 +9,7 @@ export const JoinFormContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    text-align: left;
 
     padding: 1rem;
     // border: 1px solid var(--gray-300);

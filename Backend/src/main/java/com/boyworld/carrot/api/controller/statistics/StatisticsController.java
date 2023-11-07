@@ -71,20 +71,18 @@ public class StatisticsController {
      *
      * @param foodTruckId 푸드트럭 ID
      * @param year 연도
-     * @param lastStartDate 마지막으로 조회한 시작일
+     * @param lastWeek 마지막으로 조회한 영업주
      * @return 주별 매출 통계 요약 리스트
      */
     @GetMapping("/weekly")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<StatisticsByWeekResponse> getStatisticsByWeek(@PathVariable Long foodTruckId,
                                                                      @RequestParam Integer year,
-                                                                     @RequestParam(required = false) String lastStartDate) {
+                                                                     @RequestParam(required = false) Integer lastWeek) {
         log.debug("StatisticsController#getStatisticsByWeek called !!!");
-        log.debug("FoodTruckID={}, year={}, LastStartDate={}", foodTruckId, year, lastStartDate);
+        log.debug("FoodTruckID={}, year={}, LastStartDate={}", foodTruckId, year, lastWeek);
 
-        LocalDate last = LocalDate.parse(lastStartDate);
-
-        StatisticsByWeekResponse response = statisticsService.getStatisticsByWeek(foodTruckId, year, last);
+        StatisticsByWeekResponse response = statisticsService.getStatisticsByWeek(foodTruckId, year, lastWeek);
         log.debug("StatisticsByWeekResponse={}", response);
 
         return ApiResponse.ok(response);

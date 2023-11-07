@@ -5,9 +5,11 @@ import { SwitchButtonContainer } from './style';
 interface ISwitchButtonProps {
   selectedButton: number;
   setSelectedButton: (value: number) => void;
+  firstButton: string;
+  secondButton: string;
 }
 
-function SwitchButton({ selectedButton, setSelectedButton }: ISwitchButtonProps) {
+function SwitchButton({ selectedButton, setSelectedButton, firstButton, secondButton }: ISwitchButtonProps) {
   const handleClick = (buttonNumber: number) => {
     setSelectedButton(buttonNumber);
   };
@@ -18,14 +20,14 @@ function SwitchButton({ selectedButton, setSelectedButton }: ISwitchButtonProps)
         size="m"
         radius="l"
         color={selectedButton === 1 ? 'Primary' : 'SubFirst'}
-        text="로그인"
+        text={firstButton}
         handleClick={() => handleClick(1)}
       />
       <Button
         size="m"
         radius="l"
         color={selectedButton === 2 ? 'Primary' : 'SubFirst'}
-        text="회원가입"
+        text={secondButton}
         handleClick={() => handleClick(2)}
       />
     </SwitchButtonContainer>

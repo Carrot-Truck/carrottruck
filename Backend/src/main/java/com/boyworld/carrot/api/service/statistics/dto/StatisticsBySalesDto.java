@@ -16,7 +16,11 @@ public class StatisticsBySalesDto {
 
     private String address;
 
-    private StatisticsDto statisticsDto;
+    private Integer totalHours;
+
+    private Integer totalMinutes;
+
+    private Integer totalSales;
 
     @Builder
     public StatisticsBySalesDto(Long salesId, String date, String startTime, String endTime, String address, Integer totalHours, Integer totalMinutes, Integer totalSales) {
@@ -25,16 +29,8 @@ public class StatisticsBySalesDto {
         this.startTime = startTime;
         this.endTime = endTime;
         this.address = address;
-        this.statisticsDto = new StatisticsDto(totalHours, totalMinutes, totalSales);
-    }
-
-    @Builder
-    public StatisticsBySalesDto(StatisticsBySalesDto statisticsBySalesDto) {
-        this.salesId = statisticsBySalesDto.getSalesId();
-        this.date = statisticsBySalesDto.getDate();
-        this.startTime = statisticsBySalesDto.getStartTime();
-        this.endTime = statisticsBySalesDto.getDate();
-        this.address = statisticsBySalesDto.getAddress();
-        this.statisticsDto = statisticsBySalesDto.getStatisticsDto();
+        this.totalHours = totalHours;
+        this.totalMinutes = totalMinutes;
+        this.totalSales = totalSales;
     }
 }

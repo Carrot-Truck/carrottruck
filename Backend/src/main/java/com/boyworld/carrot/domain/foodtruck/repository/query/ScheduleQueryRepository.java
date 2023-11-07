@@ -3,6 +3,7 @@ package com.boyworld.carrot.domain.foodtruck.repository.query;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
 import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
+import com.boyworld.carrot.domain.foodtruck.Schedule;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.OrderCondition;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.querydsl.core.types.Order;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
 import static com.boyworld.carrot.domain.SizeConstants.SEARCH_RANGE_METER;
@@ -203,6 +205,23 @@ public class ScheduleQueryRepository {
                 .fetch();
     }
 
+    /**
+     * 스케줄 식별키로 스케줄 상세 조회 쿼리
+     *
+     * @param scheduleId 스케줄 식별키
+     * @return 스케줄 상세 정보
+     */
+    public Optional<Schedule> getScheduleById(Long scheduleId) {
+        return Optional.ofNullable(queryFactory
+                .selectFrom(schedule)
+                .where(
+                        isEqualScheduleId(scheduleId),
+                        schedule.foodTruck.active,
+                        schedule.active
+                )
+                .fetchOne());
+    }
+
     private BooleanExpression isEqualCategoryId(Long categoryId) {
         return categoryId != null ? foodTruck.category.id.eq(categoryId) : null;
     }
@@ -299,5 +318,9 @@ public class ScheduleQueryRepository {
 
     private BooleanExpression isEqualFoodTruckId(Long foodTruckId) {
         return foodTruckId != null ? schedule.foodTruck.id.eq(foodTruckId) : null;
+    }
+
+    private BooleanExpression isEqualScheduleId(Long scheduleId) {
+        return scheduleId != null ? schedule.id.eq(scheduleId) : null;
     }
 }

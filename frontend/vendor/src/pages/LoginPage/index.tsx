@@ -14,7 +14,12 @@ function LoginPage() {
         <BackSpace></BackSpace>
         <p>환영해요!</p>
       </div>
-      <SwitchButton selectedButton={selectedButton} setSelectedButton={setSelectedButton}></SwitchButton>
+      <SwitchButton
+        selectedButton={selectedButton}
+        setSelectedButton={setSelectedButton}
+        firstButton="로그인"
+        secondButton="회원가입"
+      ></SwitchButton>
       {selectedButton === 1 && <LoginForm />}
       {selectedButton === 2 && <JoinForm />}
     </LoginPageLayout>

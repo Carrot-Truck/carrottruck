@@ -20,7 +20,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.controller.sale.SaleController;
 import com.boyworld.carrot.api.controller.sale.request.AcceptOrderRequest;
@@ -70,6 +69,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         OpenSaleRequest request = OpenSaleRequest.builder()
             .foodTruckId(1L)
+            .address("서울 마포구 동교로 104")
             .latitude(BigDecimal.valueOf(36.1234))
             .longitude(BigDecimal.valueOf(128.5678))
             .saleMenuItems(saleMenuItems)
@@ -97,6 +97,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                     requestFields(
                         fieldWithPath("foodTruckId").type(JsonFieldType.NUMBER)
                             .description("푸드트럭 ID"),
+                        fieldWithPath("address").type(JsonFieldType.STRING)
+                            .description("푸드트럭 위치 - 도로명"),
                         fieldWithPath("longitude").type(JsonFieldType.NUMBER)
                             .description("푸드트럭 위치 - 경도"),
                         fieldWithPath("latitude").type(JsonFieldType.NUMBER)
@@ -491,6 +493,41 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                             .description("메시지"),
                         fieldWithPath("data").type(JsonFieldType.NUMBER)
                             .description("주문 일시 정지한 푸드트럭 ID")
+                    )
+                )
+            );
+    }
+
+    @DisplayName("주문 일시 정지 해제 API")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void restart() throws Exception {
+        given(saleService.restartOrder(anyLong(), anyString()))
+            .willReturn(1L);
+
+        Long foodTruckId = 1L;
+        mockMvc.perform(
+                put("/sale/restart/{foodTruckId}", foodTruckId)
+                    .header("Authentication", "authentication")
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(
+                document("restart-order",
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("foodTruckId")
+                            .description("푸드트럭 ID")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                            .description("코드"),
+                        fieldWithPath("status").type(JsonFieldType.STRING)
+                            .description("상태"),
+                        fieldWithPath("message").type(JsonFieldType.STRING)
+                            .description("메시지"),
+                        fieldWithPath("data").type(JsonFieldType.NUMBER)
+                            .description("주문 일시 정지 해제한 푸드트럭 ID")
                     )
                 )
             );

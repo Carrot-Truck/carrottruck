@@ -84,6 +84,7 @@ public class StatisticsQueryService {
      */
     public StatisticsBySalesDetailsResponse getStatisticsBySalesDetails(Long foodTruckId, Long salesId) {
         return null;
+
     }
 
     /**

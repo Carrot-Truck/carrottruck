@@ -3,10 +3,12 @@ package com.boyworld.carrot.domain.sale.repository.query;
 import com.boyworld.carrot.api.service.sale.dto.MonthlyStatisticsDto;
 import com.boyworld.carrot.api.service.sale.dto.SalesStatisticsDto;
 import com.boyworld.carrot.api.service.sale.dto.WeeklyStatisticsDto;
+import com.boyworld.carrot.api.service.statistics.dto.SalesByMenuDto;
+import com.boyworld.carrot.api.service.statistics.dto.StatisticsBySalesDto;
+import com.boyworld.carrot.domain.order.Order;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
+import static com.boyworld.carrot.domain.menu.QMenu.menu;
+import static com.boyworld.carrot.domain.order.QOrder.order;
+import static com.boyworld.carrot.domain.order.QOrderMenu.orderMenu;
 import static com.boyworld.carrot.domain.sale.QSale.sale;
 
 /**
@@ -60,6 +65,32 @@ public class StatisticsQueryRepository {
                 .where(sale.id.in(ids))
                 .orderBy(sale.id.desc())
                 .fetch();
+    }
+
+    public List<StatisticsBySalesDto> getSaleDetail(Long foodTruckId, Long salesId) {
+        List<Long> orderIds = queryFactory
+                .select(order.id)
+                .from(order)
+                .where(order.sale.id.eq(salesId))
+                .fetch();
+
+        List<SalesByMenuDto> menus = queryFactory
+                .select(Projections.constructor(SalesByMenuDto.class,
+                        orderMenu.menu.id,
+                        orderMenu.menu.menuInfo.name,
+                        order.count(),
+                        orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum()
+                ))
+                .from(orderMenu)
+                .innerJoin(order)
+                .on(order.id.eq(orderMenu.order.id))
+                .innerJoin(menu)
+                .on(orderMenu.menu.id.eq(menu.id))
+                .groupBy(orderMenu.menu.id)
+                .orderBy(orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum().desc())
+                .fetch();
+
+        return null;
     }
 
     public List<WeeklyStatisticsDto> getWeeklyList(Long foodTruckId, Integer year, Integer lastWeek) {

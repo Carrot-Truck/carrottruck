@@ -1,5 +1,8 @@
 package com.boyworld.carrot.domain.sale.repository.query;
 
+import com.boyworld.carrot.api.controller.statistics.response.StatisticsBySalesDetailsResponse;
+import com.boyworld.carrot.api.service.statistics.dto.details.LocationDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByHourDto;
 import com.boyworld.carrot.api.service.statistics.dto.list.SummaryByMonthDto;
 import com.boyworld.carrot.api.service.statistics.dto.list.SummaryBySalesDto;
 import com.boyworld.carrot.api.service.statistics.dto.list.SummaryByWeekDto;
@@ -8,9 +11,11 @@ import com.boyworld.carrot.api.service.statistics.dto.list.StatisticsBySalesDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -66,30 +71,43 @@ public class StatisticsQueryRepository {
                 .fetch();
     }
 
-    public List<StatisticsBySalesDto> getSaleDetail(Long foodTruckId, Long salesId) {
+    public StatisticsBySalesDetailsResponse getSaleDetail(Long foodTruckId, Long salesId) {
         List<Long> orderIds = queryFactory
                 .select(order.id)
                 .from(order)
                 .where(order.sale.id.eq(salesId))
                 .fetch();
 
-        List<SalesByMenuDto> menus = queryFactory
+        LocationDto locations = queryFactory
+                .select(Projections.constructor(LocationDto.class,
+                        sale.latitude,
+                        sale.longitude
+                ))
+                .from(sale)
+                .where(sale.id.eq(salesId))
+                .fetchOne();
+
+        if (locations == null) {
+            return null;
+        }
+
+        List<SalesByMenuDto> salesByMenu = queryFactory
                 .select(Projections.constructor(SalesByMenuDto.class,
                         orderMenu.menu.id,
                         orderMenu.menu.menuInfo.name,
-                        order.count(),
+                        orderMenu.quantity.sum(),
                         orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum()
                 ))
                 .from(orderMenu)
                 .innerJoin(order)
                 .on(order.id.eq(orderMenu.order.id))
-                .innerJoin(menu)
-                .on(orderMenu.menu.id.eq(menu.id))
                 .groupBy(orderMenu.menu.id)
                 .orderBy(orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum().desc())
                 .fetch();
 
-        return null;
+        List<SalesByHourDto> salesByHour = null;
+
+        return StatisticsBySalesDetailsResponse.of(locations, salesByMenu, salesByHour);
     }
 
     public List<SummaryByWeekDto> getWeeklyList(Long foodTruckId, Integer year, Integer lastWeek) {

@@ -318,19 +318,22 @@ CREATE TABLE IF NOT EXISTS `adong_code`
 
 CREATE TABLE IF NOT EXISTS `sido` (
 	`sido_id` bigint primary key auto_increment,
-	`name` varchar(10) NOT NULL
+	`name` varchar(10) NOT NULL,
+    UNIQUE KEY `unique_sido` (`name`)
 	);
 
 CREATE TABLE IF NOT EXISTS `sigungu` (
 	`sigungu_id` bigint primary key auto_increment,
 	`sido_id` bigint,
 	`name` varchar(10) NOT NULL,
-	FOREIGN KEY (`sido_id`) REFERENCES `sido` (`sido_id`)
+	FOREIGN KEY (`sido_id`) REFERENCES `sido` (`sido_id`),
+    UNIQUE KEY `unique_sigungu` (`sido_id`, `name`)
 	);
 
 CREATE TABLE IF NOT EXISTS `dong` (
 	`dong_id` bigint primary key auto_increment,
 	`sigungu_id` bigint,
 	`name` varchar(10) NOT NULL,
-	FOREIGN KEY (`sigungu_id`) REFERENCES `sigungu` (`sigungu_id`)
+	FOREIGN KEY (`sigungu_id`) REFERENCES `sigungu` (`sigungu_id`),
+    UNIQUE KEY `unique_dong` (`sigungu_id`, `name`)
 	);

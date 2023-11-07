@@ -61,20 +61,17 @@ public class MenuController {
      * 푸드트럭 메뉴 목록 조회
      *
      * @param foodTruckId 루드트럭 식별키
-     * @param lastMenuId  마지막으로 조회된 메뉴 식별키
      * @return 해당 푸드트럭의 메뉴 목록
      */
     @GetMapping
-    public ApiResponse<MenuResponse> getMenus(@RequestParam Long foodTruckId,
-                                              @RequestParam(required = false, defaultValue = "0") Long lastMenuId) {
+    public ApiResponse<MenuResponse> getMenus(@RequestParam Long foodTruckId) {
         log.debug("MenuController#getMenus called");
         log.debug("foodTruckId={}", foodTruckId);
-        log.debug("lastMenuId={}", lastMenuId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        MenuResponse response = menuQueryService.getMenus(foodTruckId, lastMenuId, email);
+        MenuResponse response = menuQueryService.getMenus(foodTruckId);
         log.debug("MenuResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -87,14 +84,15 @@ public class MenuController {
      * @return 메뉴 상세 정보 (옵션 포함)
      */
     @GetMapping("/{menuId}")
-    public ApiResponse<MenuDetailResponse> getMenu(@PathVariable Long menuId) {
+    public ApiResponse<MenuDetailResponse> getMenu(@PathVariable Long menuId, @RequestParam Long foodTruckId) {
         log.debug("MenuController#getMenu called");
         log.debug("menuId={}", menuId);
+        log.debug("foodTruckId={}", foodTruckId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        MenuDetailResponse response = menuQueryService.getMenu(menuId, email);
+        MenuDetailResponse response = menuQueryService.getMenu(foodTruckId);
         log.debug("MenuDetailResponse={}", response);
 
         return ApiResponse.ok(response);
@@ -110,8 +108,8 @@ public class MenuController {
      */
     @PatchMapping("/{menuId}")
     public ApiResponse<Long> editMenu(@PathVariable Long menuId,
-                                      @Valid @RequestPart(name = "request") EditMenuRequest request,
-                                      @RequestPart(required = false, name = "file") MultipartFile file) {
+                                      @Valid @RequestPart EditMenuRequest request,
+                                      @RequestPart MultipartFile file) throws IOException {
         log.debug("MenuController#editMenu called");
         log.debug("menuId={}", menuId);
         log.debug("EditMenuRequest={}", request);

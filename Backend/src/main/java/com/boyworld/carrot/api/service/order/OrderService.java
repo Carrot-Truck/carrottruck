@@ -3,12 +3,16 @@ package com.boyworld.carrot.api.service.order;
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
+import com.boyworld.carrot.api.service.order.dto.OrderItem;
+import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
+import com.boyworld.carrot.domain.order.repository.query.OrderQueryRepository;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,7 @@ public class OrderService {
 
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepository;
     private final SaleQueryRepository saleQueryRepository;
 
     /**
@@ -36,7 +41,14 @@ public class OrderService {
      * @return 사용자의 전체 주문 내역
      */
     public OrdersResponse getOrders(String email) {
-        return null;
+
+        Long memberId = memberRepository.findByEmail(email).map(Member::getId).orElse(null);
+
+        List<OrderItem> orderItems = orderQueryRepository.getOrderItems(memberId);
+
+        return OrdersResponse.builder()
+                .orderItems(orderItems)
+                .build();
     }
 
     /**
@@ -76,7 +88,7 @@ public class OrderService {
 
     /**
      * 주문 생성 API
-     * 
+     *
      * @param dto 주문 정보
      * @param email 로그인 중인 회원 이메일
      * @return 생성된 주문 식별키
@@ -84,12 +96,12 @@ public class OrderService {
     public Long createOrder(CreateOrderDto dto, String email) {
 
         Order order = Order.builder()
-            .member(memberRepository.findByEmail(email).orElse(null))
-            .sale(saleQueryRepository.getLatestSale(dto.getFoodTruckId()).orElse(null))
-            .status(Status.PENDING)
-            .totalPrice(dto.getTotalPrice())
-            .active(true)
-            .build();
+                .member(memberRepository.findByEmail(email).orElse(null))
+                .sale(saleQueryRepository.getLatestSale(dto.getFoodTruckId()).orElse(null))
+                .status(Status.PENDING)
+                .totalPrice(dto.getTotalPrice())
+                .active(true)
+                .build();
 
         Order createdOrder = orderRepository.save(order);
 

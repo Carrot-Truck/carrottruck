@@ -1,7 +1,6 @@
 package com.boyworld.carrot.api.service.fcm;
 
 import com.boyworld.carrot.api.service.fcm.dto.FCMNotificationRequestDto;
-import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.member.repository.query.MemberDeviceTokenQueryRepository;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -17,9 +16,8 @@ public class FCMNotificationService {
 
     private final FirebaseMessaging firebaseMessaging;
     private final MemberDeviceTokenQueryRepository memberDeviceTokenQueryRepository;
-    private final MemberRepository memberRepository;
 
-    public String sendNotificationByToken(FCMNotificationRequestDto dto) {
+    public void sendNotificationByToken(FCMNotificationRequestDto dto) {
         List<String> tokenList = memberDeviceTokenQueryRepository.getMembersLikeFoodTruck(dto.getFoodTruckId());
         Notification  notification = Notification.builder()
             .setTitle(dto.getTitle())
@@ -33,13 +31,12 @@ public class FCMNotificationService {
                 .putAllData(dto.getData())
                 .build();
 
+
             try {
                 firebaseMessaging.send(message);
-            } catch (FirebaseMessagingException e) {
-                e.printStackTrace();
-                return "알림 전송에 실패했습니다. 전송대상토큰: " + token;
+            } catch (FirebaseMessagingException ignored) {
+                //
             }
         }
-        return "알림 전송 성공: " + tokenList.size() + "건";
     }
 }

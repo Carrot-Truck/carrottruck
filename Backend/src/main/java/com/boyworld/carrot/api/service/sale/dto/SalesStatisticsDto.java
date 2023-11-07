@@ -3,11 +3,10 @@ package com.boyworld.carrot.api.service.sale.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class SalesDto {
+public class SalesStatisticsDto {
 
     private Long salesId;
 
@@ -15,20 +14,17 @@ public class SalesDto {
 
     private LocalDateTime endTime;
 
-    private BigDecimal latitude;
-
-    private BigDecimal longitude;
+    private String address;
 
     private Integer totalAmount;
 
     @Builder
-    public SalesDto(Long salesId, LocalDateTime startTime, LocalDateTime endTime,
-                    BigDecimal latitude, BigDecimal longitude, Integer totalAmount) {
+    public SalesStatisticsDto(Long salesId, LocalDateTime startTime, LocalDateTime endTime,
+                              String address, Integer totalAmount) {
         this.salesId = salesId;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.address = address;
         this.totalAmount = totalAmount;
     }
 }

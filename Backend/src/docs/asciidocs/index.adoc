@@ -66,3 +66,7 @@ include::{docdir}/api/member/vendor.adoc[]
 [[Vendor-Info-API]]
 == Vendor Info ApI
 include::{docdir}/api/member/vendor-info.adoc[]
+
+[[Address-API]]
+== Address API
+include::{docdir}/api/address.adoc[]

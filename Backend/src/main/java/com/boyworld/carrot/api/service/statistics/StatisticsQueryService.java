@@ -1,16 +1,21 @@
 package com.boyworld.carrot.api.service.statistics;
 
 import com.boyworld.carrot.api.controller.statistics.response.*;
-import com.boyworld.carrot.api.service.geocoding.GeocodingService;
-import com.boyworld.carrot.api.service.sale.dto.SalesDto;
+import com.boyworld.carrot.api.service.sale.dto.MonthlyStatisticsDto;
+import com.boyworld.carrot.api.service.sale.dto.SalesStatisticsDto;
+import com.boyworld.carrot.api.service.sale.dto.WeeklyStatisticsDto;
+import com.boyworld.carrot.api.service.statistics.dto.StatisticsByMonthDto;
 import com.boyworld.carrot.api.service.statistics.dto.StatisticsBySalesDto;
+import com.boyworld.carrot.api.service.statistics.dto.StatisticsByWeekDto;
 import com.boyworld.carrot.domain.sale.repository.query.StatisticsQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -30,8 +35,6 @@ import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
 @Transactional(readOnly = true)
 public class StatisticsQueryService {
 
-    private final GeocodingService geocodingService;
-
     private final StatisticsQueryRepository statisticsQueryRepository;
 
     /**
@@ -45,14 +48,13 @@ public class StatisticsQueryService {
      * @param lastSalesId 마지막으로 조회한 영업 ID
      * @return 매출통계 리스트
      */
-    public StatisticsBySalesResponse getStatisticsBySales(Long foodTruckId, Integer year, Integer month, Long lastSalesId) {
-        List<SalesDto> salesDtos = statisticsQueryRepository.getSaleList(foodTruckId, year, month, lastSalesId);
+    public StatisticsBySalesResponse getStatisticsBySales(
+            Long foodTruckId, Integer year, Integer month, Long lastSalesId) {
+        List<SalesStatisticsDto> salesDtos = statisticsQueryRepository
+                .getSaleList(foodTruckId, year, month, lastSalesId);
 
         List<StatisticsBySalesDto> statisticsBySalesDtos = new ArrayList<>();
-        for (SalesDto salesDto : salesDtos) {
-            String address = geocodingService.reverseGeocoding(salesDto.getLatitude(),
-                    salesDto.getLongitude(), "legalcode").get("legalcode");
-
+        for (SalesStatisticsDto salesDto : salesDtos) {
             int totalMinutes = (int)ChronoUnit.MINUTES.between(salesDto.getStartTime(), salesDto.getEndTime());
 
             StatisticsBySalesDto statisticsBySalesDto = StatisticsBySalesDto.builder()
@@ -60,7 +62,7 @@ public class StatisticsQueryService {
                     .date(salesDto.getStartTime().toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                     .startTime(salesDto.getStartTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME))
                     .endTime(salesDto.getEndTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME))
-                    .address(address)
+                    .address(salesDto.getAddress())
                     .totalHours(totalMinutes / 60)
                     .totalMinutes(totalMinutes % 60)
                     .totalSales(salesDto.getTotalAmount())
@@ -82,6 +84,7 @@ public class StatisticsQueryService {
      */
     public StatisticsBySalesDetailsResponse getStatisticsBySalesDetails(Long foodTruckId, Long salesId) {
         return null;
+
     }
 
     /**
@@ -91,11 +94,31 @@ public class StatisticsQueryService {
      *
      * @param foodTruckId 푸드트럭 ID
      * @param year 조회 연도
-     * @param lastStartDate 마지막으로 조회한 영업 시작일
+     * @param lastWeek 마지막으로 조회한 영업주
      * @return 매출통계 리스트
      */
-    public StatisticsByWeekResponse getStatisticsByWeek(Long foodTruckId, Integer year, LocalDate lastStartDate) {
-        return null;
+    public StatisticsByWeekResponse getStatisticsByWeek(Long foodTruckId, Integer year, Integer lastWeek) {
+        List<WeeklyStatisticsDto> weeklyDtos = statisticsQueryRepository.getWeeklyList(foodTruckId, year, lastWeek);
+
+        List<StatisticsByWeekDto> statisticsByWeekDtos = new ArrayList<>();
+        for (WeeklyStatisticsDto weeklyDto : weeklyDtos) {
+            int week = weeklyDto.getDays().intValue();
+            LocalDate wednesday = calculateNthWednesday(year, week);
+
+            StatisticsByWeekDto statisticsByWeekDto = StatisticsByWeekDto.builder()
+                    .startDate(wednesday.minusDays(3).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                    .endDate(wednesday.plusDays(3).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                    .totalHours(weeklyDto.getTotalMinutes() / 60)
+                    .totalMinutes(weeklyDto.getTotalMinutes() % 60)
+                    .totalSales(weeklyDto.getTotalAmount())
+                    .build();
+
+            statisticsByWeekDtos.add(statisticsByWeekDto);
+        }
+
+        Boolean hasNext = checkWeeklyHasNext(statisticsByWeekDtos);
+
+        return StatisticsByWeekResponse.of(year, statisticsByWeekDtos, hasNext);
     }
 
     /**
@@ -106,7 +129,8 @@ public class StatisticsQueryService {
      * @param endDate 조회 끝 시간
      * @return 매출통계 상세
      */
-    public StatisticsByWeekDetailsResponse getStatisticsByWeekDetails(Long foodTruckId, LocalDate startDate, LocalDate endDate) {
+    public StatisticsByWeekDetailsResponse getStatisticsByWeekDetails(
+            Long foodTruckId, LocalDate startDate, LocalDate endDate) {
         return null;
     }
 
@@ -120,7 +144,25 @@ public class StatisticsQueryService {
      * @return 매출통계 리스트
      */
     public StatisticsByMonthResponse getStatisticsByMonth(Long foodTruckId, Integer year) {
-        return null;
+        List<MonthlyStatisticsDto> monthlyDtos = statisticsQueryRepository
+                .getStatisticsByMonth(foodTruckId, year);
+
+        List<StatisticsByMonthDto> statisticsByMonthDtos = new ArrayList<>();
+        for (MonthlyStatisticsDto monthlyDto : monthlyDtos) {
+            StatisticsByMonthDto statisticsByMonthDto = StatisticsByMonthDto.builder()
+                    .month(monthlyDto.getMonth())
+                    .totalHours(monthlyDto.getTotalMinutes() / 60)
+                    .totalMinutes(monthlyDto.getTotalMinutes() % 60)
+                    .totalSales(monthlyDto.getTotalAmount())
+                    .build();
+
+            statisticsByMonthDtos.add(statisticsByMonthDto);
+        }
+
+        return StatisticsByMonthResponse.builder()
+                .year(year)
+                .statisticsByMonth(statisticsByMonthDtos)
+                .build();
     }
 
     /**
@@ -142,4 +184,23 @@ public class StatisticsQueryService {
         }
         return false;
     }
+
+    private boolean checkWeeklyHasNext(List<StatisticsByWeekDto> statisticsByWeekDtos) {
+        if (statisticsByWeekDtos.size() > PAGE_SIZE) {
+            statisticsByWeekDtos.remove(PAGE_SIZE);
+            return true;
+        }
+        return false;
+    }
+
+    private static LocalDate calculateNthWednesday(int year, int week) {
+        LocalDate date = LocalDate.of(year, Month.JANUARY, 1);
+
+        while (date.getDayOfWeek() != DayOfWeek.WEDNESDAY) {
+            date = date.plusDays(1);
+        }
+
+        return date.plusWeeks(week);
+    }
+
 }

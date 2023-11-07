@@ -2,6 +2,7 @@ package com.boyworld.carrot.domain.adong;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +24,7 @@ public class AdongCode {
     @Column(name = "adong_code_id")
     private Long id;
 
-    @Column(length = 8, nullable = false, unique = true)
+    @Column(length = 8, nullable = false)
     private String adong_code;
 
     @Column(length = 10, nullable = false)
@@ -37,4 +38,13 @@ public class AdongCode {
 
     @Column(nullable = false)
     private LocalDateTime createdDate;
+
+    @Builder
+    public AdongCode(String adongCode, String sido, String sigungu, String dong, LocalDateTime createdDate) {
+        this.adong_code = adongCode;
+        this.sido = sido;
+        this.sigungu = sigungu;
+        this.dong = dong;
+        this.createdDate = createdDate;
+    }
 }

@@ -1,0 +1,31 @@
+[[get-address-sido]]
+=== 시도 조회
+
+==== HTTP Request
+include::{snippets}/get-address-sido/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-address-sido/http-response.adoc[]
+include::{snippets}/get-address-sido/response-fields.adoc[]
+
+[[get-address-sigungu]]
+=== 시군구 조회
+
+==== HTTP Request
+include::{snippets}/get-address-sigungu/http-request.adoc[]
+include::{snippets}/get-address-sigungu/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-address-sigungu/http-response.adoc[]
+include::{snippets}/get-address-sigungu/response-fields.adoc[]
+
+[[get-address-dong]]
+=== 읍면동 조회
+
+==== HTTP Request
+include::{snippets}/get-address-dong/http-request.adoc[]
+include::{snippets}/get-address-dong/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-address-dong/http-response.adoc[]
+include::{snippets}/get-address-dong/response-fields.adoc[]

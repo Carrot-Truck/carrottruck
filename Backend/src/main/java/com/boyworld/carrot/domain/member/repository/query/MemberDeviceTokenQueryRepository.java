@@ -1,7 +1,6 @@
 package com.boyworld.carrot.domain.member.repository.query;
 
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruckLike.foodTruckLike;
-import static com.boyworld.carrot.domain.member.QMember.member;
 import static com.boyworld.carrot.domain.member.QMemberDeviceToken.memberDeviceToken;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,13 +12,15 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class MemberDeviceTokenQueryRepository {
 
-    private JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
     public List<String> getMembersLikeFoodTruck(Long foodTruckId) {
         List<Long> memberIdList = queryFactory
             .select(foodTruckLike.member.id)
             .from(foodTruckLike)
-            .where(foodTruckLike.foodTruck.id.eq(foodTruckId), member.active)
+            .where(foodTruckLike.foodTruck.id.eq(foodTruckId),
+                foodTruckLike.member.active.eq(true)
+                )
             .fetch();
 
         if (memberIdList != null) {

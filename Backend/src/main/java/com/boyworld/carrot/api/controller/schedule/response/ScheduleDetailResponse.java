@@ -8,17 +8,17 @@ public class ScheduleDetailResponse {
 
     private Long scheduleId;
     private String address;
-    private String days;
+    private String dayOfWeek;
     private String latitude;
     private String longitude;
     private String startTime;
     private String endTime;
 
     @Builder
-    public ScheduleDetailResponse(Long scheduleId, String address, String days, String latitude, String longitude, String startTime, String endTime) {
+    public ScheduleDetailResponse(Long scheduleId, String address, String dayOfWeek, String latitude, String longitude, String startTime, String endTime) {
         this.scheduleId = scheduleId;
         this.address = address;
-        this.days = days;
+        this.dayOfWeek = dayOfWeek;
         this.latitude = latitude;
         this.longitude = longitude;
         this.startTime = startTime;

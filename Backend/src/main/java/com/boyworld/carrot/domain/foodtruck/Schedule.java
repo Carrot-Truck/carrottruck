@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * 푸드트럭 스케쥴 엔티티
@@ -42,10 +43,10 @@ public class Schedule extends TimeBaseEntity {
     private DayOfWeek dayOfWeek;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
     @Column(nullable = false)
     private Boolean active;
@@ -55,7 +56,8 @@ public class Schedule extends TimeBaseEntity {
     private FoodTruck foodTruck;
 
     @Builder
-    private Schedule(String address, BigDecimal latitude, BigDecimal longitude, String dayOfWeek, LocalDateTime startTime, LocalDateTime endTime, Boolean active, FoodTruck foodTruck) {
+    private Schedule(String address, BigDecimal latitude, BigDecimal longitude, String dayOfWeek,
+                     LocalTime startTime, LocalTime endTime, Boolean active, FoodTruck foodTruck) {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 public class CreateScheduleRequest {
@@ -13,17 +15,17 @@ public class CreateScheduleRequest {
     private String address;
     private String latitude;
     private String longitude;
-    private String days;
+    private String dayOfWeek;
     private String startTime;
     private String endTime;
 
     @Builder
-    public CreateScheduleRequest(Long foodTruckId, String address, String latitude, String longitude, String days, String startTime, String endTime) {
+    public CreateScheduleRequest(Long foodTruckId, String address, String latitude, String longitude, String dayOfWeek, String startTime, String endTime) {
         this.foodTruckId = foodTruckId;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.days = days;
+        this.dayOfWeek = dayOfWeek;
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -32,9 +34,9 @@ public class CreateScheduleRequest {
         return CreateScheduleDto.builder()
                 .foodTruckId(this.foodTruckId)
                 .address(this.address)
-                .latitude(this.latitude)
-                .longitude(this.longitude)
-                .days(this.days)
+                .latitude(new BigDecimal(this.latitude))
+                .longitude(new BigDecimal(this.longitude))
+                .dayOfWeek(this.dayOfWeek)
                 .startTime(this.startTime)
                 .endTime(this.endTime)
                 .build();

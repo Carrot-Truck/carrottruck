@@ -19,7 +19,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -54,7 +54,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                 .address("광주광역시 광산구 장덕로 5번길 16")
                 .latitude("37.5665")
                 .longitude("126.9780")
-                .days("월요일")
+                .dayOfWeek(DayOfWeek.MONDAY.name())
                 .startTime("17:00")
                 .endTime("01:00")
                 .build();
@@ -62,7 +62,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
         ScheduleDetailResponse response = ScheduleDetailResponse.builder()
                 .scheduleId(1L)
                 .address("광주광역시 광산구 장덕로 5번길 16")
-                .days("월요일")
+                .dayOfWeek(DayOfWeek.MONDAY.name())
                 .latitude("37.5665")
                 .longitude("126.9780")
                 .startTime("17:00")
@@ -92,7 +92,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                                         .description("위도"),
                                 fieldWithPath("longitude").type(JsonFieldType.STRING)
                                         .description("경도"),
-                                fieldWithPath("days").type(JsonFieldType.STRING)
+                                fieldWithPath("dayOfWeek").type(JsonFieldType.STRING)
                                         .description("요일"),
                                 fieldWithPath("startTime").type(JsonFieldType.STRING)
                                         .description("시작 시간"),
@@ -116,7 +116,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                                         .description("위도"),
                                 fieldWithPath("data.longitude").type(JsonFieldType.STRING)
                                         .description("경도"),
-                                fieldWithPath("data.days").type(JsonFieldType.STRING)
+                                fieldWithPath("data.dayOfWeek").type(JsonFieldType.STRING)
                                         .description("요일"),
                                 fieldWithPath("data.startTime").type(JsonFieldType.STRING)
                                         .description("시작 시간"),
@@ -134,24 +134,24 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                 .scheduleId(1L)
                 .address("광주 광산구 장덕로5번길 16")
                 .dayOfWeek(DayOfWeek.MONDAY)
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now().plusHours(1))
+                .startTime(LocalTime.now())
+                .endTime(LocalTime.now().plusHours(1))
                 .build();
 
         ScheduleDto schedule2 = ScheduleDto.builder()
                 .scheduleId(2L)
                 .address("광주 광산구 장덕로5번길 16")
                 .dayOfWeek(DayOfWeek.TUESDAY)
-                .startTime(LocalDateTime.now().plusDays(1))
-                .endTime(LocalDateTime.now().plusDays(1).plusHours(1))
+                .startTime(LocalTime.now())
+                .endTime(LocalTime.now().plusHours(1))
                 .build();
 
         ScheduleDto schedule3 = ScheduleDto.builder()
                 .scheduleId(3L)
                 .address("")
                 .dayOfWeek(DayOfWeek.WEDNESDAY)
-                .startTime(LocalDateTime.now().plusDays(2))
-                .endTime(LocalDateTime.now().plusDays(2).plusHours(1))
+                .startTime(LocalTime.now())
+                .endTime(LocalTime.now().plusHours(1))
                 .build();
 
         ScheduleResponse response = ScheduleResponse.builder()
@@ -206,7 +206,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
         ScheduleDetailResponse response = ScheduleDetailResponse.builder()
                 .scheduleId(1L)
                 .address("광주광역시 광산구 장덕로 5번길 16")
-                .days("월요일")
+                .dayOfWeek("월요일")
                 .latitude("37.5665")
                 .longitude("126.9780")
                 .startTime("17:00")
@@ -245,7 +245,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                                         .description("위도"),
                                 fieldWithPath("data.longitude").type(JsonFieldType.STRING)
                                         .description("경도"),
-                                fieldWithPath("data.days").type(JsonFieldType.STRING)
+                                fieldWithPath("data.dayOfWeek").type(JsonFieldType.STRING)
                                         .description("요일"),
                                 fieldWithPath("data.startTime").type(JsonFieldType.STRING)
                                         .description("시작 시간"),
@@ -265,7 +265,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                 .address("광주광역시 광산구 장덕로 5번길 16")
                 .latitude("37.5665")
                 .longitude("126.9780")
-                .days("월요일")
+                .dayOfWeek(DayOfWeek.TUESDAY.name())
                 .startTime("17:00")
                 .endTime("01:00")
                 .build();
@@ -273,7 +273,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
         ScheduleDetailResponse response = ScheduleDetailResponse.builder()
                 .scheduleId(1L)
                 .address("광주광역시 광산구 장덕로 5번길 16")
-                .days("월요일")
+                .dayOfWeek(DayOfWeek.TUESDAY.name())
                 .latitude("37.5665")
                 .longitude("126.9780")
                 .startTime("17:00")
@@ -306,7 +306,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                                         .description("위도"),
                                 fieldWithPath("longitude").type(JsonFieldType.STRING)
                                         .description("경도"),
-                                fieldWithPath("days").type(JsonFieldType.STRING)
+                                fieldWithPath("dayOfWeek").type(JsonFieldType.STRING)
                                         .description("요일"),
                                 fieldWithPath("startTime").type(JsonFieldType.STRING)
                                         .description("시작 시간"),
@@ -330,7 +330,7 @@ public class ScheduleControllerDocsTest extends RestDocsSupport {
                                         .description("위도"),
                                 fieldWithPath("data.longitude").type(JsonFieldType.STRING)
                                         .description("경도"),
-                                fieldWithPath("data.days").type(JsonFieldType.STRING)
+                                fieldWithPath("data.dayOfWeek").type(JsonFieldType.STRING)
                                         .description("요일"),
                                 fieldWithPath("data.startTime").type(JsonFieldType.STRING)
                                         .description("시작 시간"),

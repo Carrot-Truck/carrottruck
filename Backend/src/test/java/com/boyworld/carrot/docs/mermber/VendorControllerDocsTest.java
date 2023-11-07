@@ -4,6 +4,7 @@ import com.boyworld.carrot.api.controller.member.VendorController;
 import com.boyworld.carrot.api.controller.member.request.EditMemberRequest;
 import com.boyworld.carrot.api.controller.member.request.JoinRequest;
 import com.boyworld.carrot.api.controller.member.request.WithdrawalRequest;
+import com.boyworld.carrot.api.controller.member.response.ClientResponse;
 import com.boyworld.carrot.api.controller.member.response.JoinMemberResponse;
 import com.boyworld.carrot.api.controller.member.response.VendorResponse;
 import com.boyworld.carrot.api.service.member.query.AccountService;
@@ -155,20 +156,19 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    @DisplayName("사업자 정보조회 API")
+    @DisplayName("로그인 중인 사업자 정보조회 API")
     @Test
     @WithMockUser(roles = "VENDOR")
     void getInfo() throws Exception {
-        VendorResponse response = VendorResponse.builder()
+        ClientResponse response = ClientResponse.builder()
                 .name("김동현")
                 .nickname("매미킴")
                 .email("ssafy@ssafy.com")
                 .phoneNumber("010-1234-1234")
-                .businessNumber("123456789")
                 .role(Role.VENDOR)
                 .build();
 
-        given(accountService.getVendorInfo(anyString()))
+        given(accountService.getMemberInfo(anyString()))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -194,8 +194,6 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                                         .description("이메일"),
                                 fieldWithPath("data.phoneNumber").type(JsonFieldType.STRING)
                                         .description("연락처"),
-                                fieldWithPath("data.businessNumber").type(JsonFieldType.STRING)
-                                        .description("사업자 번호"),
                                 fieldWithPath("data.role").type(JsonFieldType.STRING)
                                         .description("역할")
                         )

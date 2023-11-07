@@ -166,7 +166,7 @@ public class ClientControllerDocsTest extends RestDocsSupport {
                 .role(Role.CLIENT)
                 .build();
 
-        given(accountService.getClientInfo(anyString()))
+        given(accountService.getMemberInfo(anyString()))
                 .willReturn(response);
 
         mockMvc.perform(

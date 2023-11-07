@@ -77,7 +77,7 @@ public class ClientController {
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        ClientResponse response = accountService.getClientInfo(email);
+        ClientResponse response = accountService.getMemberInfo(email);
         log.debug("ClientResponse={}", response);
 
         return ApiResponse.ok(response);

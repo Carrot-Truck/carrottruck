@@ -10,8 +10,10 @@ import com.boyworld.carrot.api.service.sale.dto.OpenSaleDto;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
+import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
 import com.boyworld.carrot.domain.menu.repository.query.MenuQueryRepository;
-import com.boyworld.carrot.domain.order.repository.query.OrderQueryRepository;
+import com.boyworld.carrot.domain.order.Status;
+import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
 import com.boyworld.carrot.domain.sale.Sale;
 import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
@@ -36,10 +38,11 @@ public class SaleService {
 
     private final SaleRepository saleRepository;
     private final SaleQueryRepository saleQueryRepository;
-    private final OrderQueryRepository orderQueryRepository;
+    private final OrderRepository orderRepository;
     private final FoodTruckRepository foodTruckRepository;
     private final FoodTruckQueryRepository foodTruckQueryRepository;
     private final FCMNotificationService fcmNotificationService;
+    private final MenuRepository menuRepository;
     private final MenuQueryRepository menuQueryRepository;
 
     /**
@@ -51,16 +54,17 @@ public class SaleService {
     public OpenSaleResponse openSale(OpenSaleDto dto) {
 
         // foodTruckId에 해당하는 푸드트럭에 현재 종료하지 않은 영업이 있는지 확인
-        if (!saleQueryRepository.hasActiveSale(dto.getFoodTruckId())) {
+        if (saleQueryRepository.hasActiveSale(dto.getFoodTruckId())) {
             return null;
         }
 
         // 판매하지 않을 메뉴는 비활성화
-//        List<SaleMenuItem> saleMenuItemList = dto.getSaleMenuItems();
+        menuQueryRepository.setSaleMenuActive(dto.getFoodTruckId(), dto.getSaleMenuItems());
 
         // 새로운 영업 등록
         Sale sale = Sale.builder()
             .foodTruck(foodTruckRepository.findById(dto.getFoodTruckId()).orElse(null))
+            .address(dto.getAddress())
             .latitude(dto.getLatitude())
             .longitude(dto.getLongitude())
             .orderNumber(0)
@@ -70,7 +74,7 @@ public class SaleService {
             .active(true)
             .build();
 
-        saleRepository.save(sale);
+        Sale result = saleRepository.save(sale);
 
         // 내 푸드트럭 찜한 사용자에게 알림 발송
         Map<String, String> data = new HashMap<>();
@@ -85,8 +89,10 @@ public class SaleService {
                 .data(data)
                 .build());
 
-
-        return null;
+        return OpenSaleResponse.builder()
+            .saleId(result.getId())
+            .saleMenuItems(dto.getSaleMenuItems())
+            .build();
     }
 
     /**
@@ -102,7 +108,10 @@ public class SaleService {
         }
 
         // 2. 주문번호로 주문 조회, 상태 STATUS.PROCESSING 으로 변경
-        return orderQueryRepository.updateOrderAccepted(dto.getOrderId(), dto.getPrepareTime());
+        orderRepository.findById(dto.getOrderId())
+            .ifPresent(order -> order.updateOrderStatusAndExpectTime(Status.PROCESSING,
+                LocalDateTime.now().plusHours(9).plusMinutes(dto.getPrepareTime())));
+        return dto.getOrderId();
     }
 
     /**
@@ -118,7 +127,9 @@ public class SaleService {
         }
 
         // 2. 주문 번호로 주문 조회, 상태 STATUS.DECLINED 로 변경
-        return orderQueryRepository.updateOrderDeclined(dto.getOrderId(), dto.getReason());
+        log.debug("{}", dto.getOrderId());
+        orderRepository.findById(dto.getOrderId()).ifPresent(order -> order.updateOrderStatus(Status.DECLINED));
+        return dto.getOrderId();
     }
 
     /**
@@ -140,6 +151,25 @@ public class SaleService {
     }
 
     /**
+     * 주문 일시 정지 해제 API
+     *
+     * @param foodTruckId   주문 일시 정지 해제할 푸드트럭 식별키
+     * @param email         로그인한 사용자 이메일
+     * @return 주문 일시 정지 해제한 푸드트럭 식별키
+     */
+
+    public Long restartOrder(Long foodTruckId, String email) {
+        // 1. 로그인한 사용자가 해당 푸드트럭을 보유한 사업자인지 확인
+        if (!foodTruckQueryRepository.isFoodTruckOwner(foodTruckId, email)) {
+            return null;
+        }
+
+        // 2. 푸드트럭 활성화
+        foodTruckRepository.findById(foodTruckId).ifPresent(FoodTruck::activate);
+        return foodTruckId;
+    }
+
+    /**
      * 메뉴 품절 등록 API
      *
      * @param menuId    품절 등록할 메뉴 식별키
@@ -154,39 +184,37 @@ public class SaleService {
         }
 
         // 2. 맞으면 해당 menuId 비활성화
-        menuQueryRepository.deactivateMenu(menuId);
+        menuRepository.findById(menuId).ifPresent(menu -> menu.editMenuActive(false));
         return menuId;
     }
 
     /**
      * 영업 종료 API
      * 
-     * @param saleId    종료할 영업 식별키
+     * @param foodTruckId    영업 종료할 푸드트럭 식별키
      * @param email     로그인한 사용자 이메일
      * @return 종료한 영업 식별키
      */
-    public CloseSaleResponse closeSale(Long saleId, String email) {
+    public CloseSaleResponse closeSale(Long foodTruckId, String email) {
 
-        Sale sale = saleRepository.findById(saleId).orElse(null);
+        Sale sale = saleQueryRepository.getLatestSale(foodTruckId).orElse(null);
         // 1. 로그인한 사용자가 해당 영업의 푸드트럭을 보유한 사업자인지 확인
-        if (sale == null || saleQueryRepository.isSaleOwner(saleId, email)) {
+        if (sale == null || !saleQueryRepository.isSaleOwner(sale.getId(), email)) {
+            log.debug("test");
             return null;
         }
+        Long saleId = sale.getId();
 
         // 2. saleId로 영업 찾아서 endTime 저장
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().plusHours(9);
         saleQueryRepository.closeSale(saleId, now);
 
-        try {
-            return CloseSaleResponse.builder()
+        return CloseSaleResponse.builder()
                 .saleId(saleId)
                 .orderNumber(sale.getOrderNumber())
                 .totalAmount(sale.getTotalAmount())
                 .createdTime(sale.getCreatedDate())
                 .endTime(now)
                 .build();
-        } catch (Exception e) {
-            return null;
-        }
     }
 }

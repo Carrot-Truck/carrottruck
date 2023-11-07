@@ -12,10 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 /**
  * 주문 엔티티
@@ -63,5 +61,10 @@ public class Order extends TimeBaseEntity {
         this.expectTime = expectTime;
         this.totalPrice = totalPrice;
         this.active = active;
+    }
+
+    // == business logic ==//
+    public void editOrderTotalPrice(Integer totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

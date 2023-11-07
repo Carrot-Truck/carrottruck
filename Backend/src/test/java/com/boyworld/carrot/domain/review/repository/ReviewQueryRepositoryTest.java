@@ -323,6 +323,8 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
 
     private Sale createSale(FoodTruck foodTruck) {
         return saleRepository.save(Sale.builder()
+            .address("my address")
+            .orderable(true)
             .startTime(LocalDateTime.of(2023, 11, 2, 10, 0))
             .active(true)
             .longitude(BigDecimal.valueOf(130.21))

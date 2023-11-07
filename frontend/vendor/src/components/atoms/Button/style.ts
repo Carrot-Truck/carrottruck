@@ -12,7 +12,7 @@ export const ButtonWrapper = styled.button<IButtonWrapperProps>`
   border-radius: var(--radius-m);
   height: 48px;
   font-family: BMJUA;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 900;
 
   ${({ $size }) => ButtonSizeStyles[$size]}

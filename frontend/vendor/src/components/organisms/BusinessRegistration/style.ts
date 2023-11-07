@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-export const JoinFormContainer = styled.div`
+export const BusinessRegistrationContainer = styled.div`
   position: relative;
   height: calc(100vh - 76px);
   padding-top: 1rem;
 
-  .join-form {
+  .registration-form {
     display: flex;
     flex-direction: column;
     gap: 2rem;

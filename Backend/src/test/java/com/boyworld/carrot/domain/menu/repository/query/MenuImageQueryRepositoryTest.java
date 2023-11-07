@@ -1,16 +1,20 @@
-package com.boyworld.carrot.domain.foodtruck.repository.query;
+package com.boyworld.carrot.domain.menu.repository.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
-import com.boyworld.carrot.domain.foodtruck.FoodTruckImage;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
-import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckImageRepository;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.menu.Menu;
+import com.boyworld.carrot.domain.menu.MenuImage;
+import com.boyworld.carrot.domain.menu.MenuInfo;
+import com.boyworld.carrot.domain.menu.repository.command.MenuImageRepository;
+import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
 import com.boyworld.carrot.file.UploadFile;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +23,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * 푸드트럭 이미지 쿼리 레포지토리 테스트
+ * 메뉴 이미지 조회 레포지토리 테스트
  *
  * @author 최영환
  */
-class FoodTruckImageQueryRepositoryTest extends IntegrationTestSupport {
+@Slf4j
+class MenuImageQueryRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
-    private FoodTruckImageQueryRepository foodTruckImageQueryRepository;
+    private MenuImageQueryRepository menuImageQueryRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -41,11 +46,14 @@ class FoodTruckImageQueryRepositoryTest extends IntegrationTestSupport {
     private FoodTruckRepository foodTruckRepository;
 
     @Autowired
-    private FoodTruckImageRepository foodTruckImageRepository;
+    private MenuRepository menuRepository;
 
-    @DisplayName("푸드트럭 식별키로 푸드트럭 이미지를 조회할 수 있다.")
+    @Autowired
+    private MenuImageRepository menuImageRepository;
+
+    @DisplayName("메뉴 식별키로 메뉴 이미지를 조회한다.")
     @Test
-    void getFoodTruckImageByFoodTruckId() {
+    void getMenuImageByMenuId() {
         // given
         Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
 
@@ -58,43 +66,28 @@ class FoodTruckImageQueryRepositoryTest extends IntegrationTestSupport {
                 10,
                 true);
 
-        FoodTruckImage foodTruckImage = FoodTruckImage.builder()
+        Menu menu = Menu.builder()
                 .foodTruck(foodTruck)
-                .uploadFile(UploadFile.builder().storeFileName("test File").uploadFileName("test.img").build())
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
                 .active(true)
                 .build();
-        foodTruckImageRepository.save(foodTruckImage);
+        menu = menuRepository.save(menu);
+
+        MenuImage menuImage = MenuImage.builder()
+                .menu(menu)
+                .uploadFile(UploadFile.builder().storeFileName("testMenuImgFile").uploadFileName("test_menu.png").build())
+                .active(true)
+                .build();
+        menuImageRepository.save(menuImage);
 
         // when
-        FoodTruckImage result = foodTruckImageQueryRepository.getFoodTruckImageByFoodTruckId(foodTruck.getId());
+        MenuImage result = menuImageQueryRepository.getMenuImageByMenuId(menu.getId());
 
         // then
         assertThat(result).isNotNull();
         assertThat(result.getUploadFile()).extracting("storeFileName", "uploadFileName")
-                .containsExactly(foodTruckImage.getUploadFile().getStoreFileName(),
-                        foodTruckImage.getUploadFile().getUploadFileName());
-    }
-
-    @DisplayName("푸드트럭 식별키로 푸드트럭 이미지를 조회할 수 있다.")
-    @Test
-    void getFoodTruckImageByFoodTruckIdWithoutFoodTruckImage() {
-        // given
-        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
-
-        Category category = createCategory("고기/구이");
-
-        FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
-                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
-                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
-                40,
-                10,
-                true);
-
-        // when
-        FoodTruckImage result = foodTruckImageQueryRepository.getFoodTruckImageByFoodTruckId(foodTruck.getId());
-
-        // then
-        assertThat(result).isNull();
+                .containsExactly(menuImage.getUploadFile().getStoreFileName(),
+                        menuImage.getUploadFile().getUploadFileName());
     }
 
     private Member createMember(Role role, String email) {

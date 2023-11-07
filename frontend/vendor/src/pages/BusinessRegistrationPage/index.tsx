@@ -1,15 +1,14 @@
 import { useState } from 'react';
-import { LoginPageLayout } from './style';
+import { BusinessRegistrationLayout } from './style';
 import SwitchButton from 'components/organisms/SwitchButton';
+import BusinessRegistration from 'components/organisms/BusinessRegistration';
 import BackSpace from 'components/atoms/BackSpace';
-import LoginForm from 'components/organisms/LoginForm';
-import JoinForm from 'components/organisms/JoinForm';
 
-function LoginPage() {
+function BusinessRegistrationPage() {
   const [selectedButton, setSelectedButton] = useState(1);
 
   return (
-    <LoginPageLayout>
+    <BusinessRegistrationLayout>
       <div className="header">
         <BackSpace></BackSpace>
         <p>환영해요!</p>
@@ -17,13 +16,12 @@ function LoginPage() {
       <SwitchButton
         selectedButton={selectedButton}
         setSelectedButton={setSelectedButton}
-        firstButton="로그인"
-        secondButton="회원가입"
+        firstButton="사업자인증"
+        secondButton="푸드트럭등록"
       ></SwitchButton>
-      {selectedButton === 1 && <LoginForm />}
-      {selectedButton === 2 && <JoinForm />}
-    </LoginPageLayout>
+      <BusinessRegistration></BusinessRegistration>
+    </BusinessRegistrationLayout>
   );
 }
 
-export default LoginPage;
+export default BusinessRegistrationPage;

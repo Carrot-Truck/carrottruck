@@ -60,7 +60,7 @@ public class AddressController {
      * @param sigunguId 조회할 시군구 ID
      * @return 읍면동 ID, 이름 리스트
      */
-    @GetMapping("/sido/{sigunguId}")
+    @GetMapping("/dong/{sigunguId}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<AddressResponse> getDong(@PathVariable Long sigunguId) {
         log.debug("AddressController#getDong called !!!");

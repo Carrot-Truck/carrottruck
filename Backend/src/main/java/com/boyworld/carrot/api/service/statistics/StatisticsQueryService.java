@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -129,8 +130,8 @@ public class StatisticsQueryService {
      * @return 매출통계 상세
      */
     public StatisticsByWeekDetailsResponse getStatisticsByWeekDetails(
-            Long foodTruckId, LocalDate startDate, LocalDate endDate) {
-        return null;
+            Long foodTruckId, LocalDateTime startDate, LocalDateTime endDate) {
+        return statisticsQueryRepository.getWeeklyDetail(foodTruckId, startDate, endDate);
     }
 
     /**
@@ -173,7 +174,7 @@ public class StatisticsQueryService {
      * @return 매출통계 상세
      */
     public StatisticsByMonthDetailsResponse getStatisticsByMonthDetails(Long foodTruckId, Integer year, Integer month) {
-        return null;
+        return statisticsQueryRepository.getMonthlyDetail(foodTruckId, year, month);
     }
 
     private boolean checkSalesHasNext(List<StatisticsBySalesDto> StatisticsBySales) {

@@ -1,5 +1,8 @@
 package com.boyworld.carrot.api.service.cart.dto;
 
+import com.boyworld.carrot.domain.cart.Cart;
+import com.boyworld.carrot.domain.cart.CartMenu;
+import com.boyworld.carrot.domain.menu.Menu;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,19 +13,26 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateCartMenuDto {
     private Long foodTruckId;
-    private String menuName;
-    private Integer menuPrice;
     private Long menuId;
     private Integer cartMenuQuantity;
-    private List<CreateCartMenuOptionDto> cartMenuOptionDtos;
+    private List<Long> menuOptionIds;
 
     @Builder
-    public CreateCartMenuDto(Long foodTruckId, String menuName, Integer menuPrice, Long menuId, Integer cartMenuQuantity, List<CreateCartMenuOptionDto> cartMenuOptionDtos) {
+    public CreateCartMenuDto(Long foodTruckId, Long menuId, Integer cartMenuQuantity, List<Long> menuOptionIds) {
         this.foodTruckId = foodTruckId;
-        this.menuName = menuName;
-        this.menuPrice = menuPrice;
         this.menuId = menuId;
         this.cartMenuQuantity = cartMenuQuantity;
-        this.cartMenuOptionDtos = cartMenuOptionDtos;
+        this.menuOptionIds = menuOptionIds;
+    }
+
+    public CartMenu toEntity(Menu menu, String cartMenuId, String email) {
+        return CartMenu.builder()
+                .id(cartMenuId)
+                .cartId(email)
+                .menuId(menu.getId())
+                .name(menu.getMenuInfo().getName())
+                .price(menu.getMenuInfo().getPrice())
+                .quantity(this.cartMenuQuantity)
+                .build();
     }
 }

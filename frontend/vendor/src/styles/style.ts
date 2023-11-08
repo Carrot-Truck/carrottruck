@@ -77,6 +77,10 @@ export const ButtonSizeStyles = {
   full: css`
     width: 100%;
     height: 48px;
+  `,
+  big: css`
+    width: 70%;
+    height: 210px;
   `
 };
 

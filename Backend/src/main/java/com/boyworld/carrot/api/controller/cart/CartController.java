@@ -6,6 +6,7 @@ import com.boyworld.carrot.api.controller.cart.response.CartOrderResponse;
 import com.boyworld.carrot.api.controller.cart.response.CartResponse;
 import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.security.SecurityUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +29,12 @@ public class CartController {
     // 장바구니 추가
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Long> createCart(@Valid @RequestBody CreateCartMenuRequest request) {
+    public ApiResponse<Long> createCart(@Valid @RequestBody CreateCartMenuRequest request) throws JsonProcessingException {
         log.debug("CartController#createCart called");
         log.debug("CreateCartRequest = {}", request);
 
         String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
 
         Long saveId = cartService.createCart(request.toCreateMenuDto(), email);
         return ApiResponse.created(saveId);

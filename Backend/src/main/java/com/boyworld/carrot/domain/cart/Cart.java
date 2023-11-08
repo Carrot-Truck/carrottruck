@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.util.List;
+
 /**
  * 장바구니 엔티티
  *
@@ -18,18 +20,28 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @NoArgsConstructor
 @RedisHash("cart")
-public class Cart extends TimeBaseEntity {
+public class Cart {
     @Id
     private String id;
     private Long foodTruckId;
     private String foodTruckName;
     private Integer totalPrice;
+    private List<String> cartMenuIds;
 
     @Builder
-    public Cart(String id, Long foodTruckId, String foodTruckName, Integer totalPrice) {
-            this.id = id;
-            this.foodTruckId = foodTruckId;
-            this.foodTruckName = foodTruckName;
-            this.totalPrice = totalPrice;
-        }
+    public Cart(String id, Long foodTruckId, String foodTruckName, Integer totalPrice, List<String> cartMenuIds) {
+        this.id = id;
+        this.foodTruckId = foodTruckId;
+        this.foodTruckName = foodTruckName;
+        this.totalPrice = totalPrice;
+        this.cartMenuIds = cartMenuIds;
     }
+
+
+
+    public void updateCartTotalPrice(Integer menuPrice) {
+        this.totalPrice += menuPrice;
+    }
+}
+
+

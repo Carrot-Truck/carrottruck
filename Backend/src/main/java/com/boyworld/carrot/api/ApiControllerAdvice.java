@@ -2,6 +2,7 @@ package com.boyworld.carrot.api;
 
 import com.boyworld.carrot.api.service.member.error.DuplicateException;
 import com.boyworld.carrot.api.service.member.error.InValidAccessException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -77,6 +78,16 @@ public class ApiControllerAdvice {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(InValidAccessException.class)
     public ApiResponse<Object> inValidAccessException(InValidAccessException e) {
+        return ApiResponse.of(
+                HttpStatus.FORBIDDEN,
+                e.getMessage(),
+                null
+        );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(JsonProcessingException.class)
+    public ApiResponse<Object> jsonProcessingException(JsonProcessingException e) {
         return ApiResponse.of(
                 HttpStatus.BAD_REQUEST,
                 e.getMessage(),

@@ -11,7 +11,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-//@EnableRedisRepositories
+@EnableRedisRepositories
 @Configuration
 public class RedisConfig {
 
@@ -52,9 +52,9 @@ public class RedisConfig {
         // Hash 자료구조를 사용할 때 필요한 설정입니다.
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-
-        // RedisTemplate을 초기화합니다.
-        redisTemplate.afterPropertiesSet();
+//
+//        // RedisTemplate을 초기화합니다.
+//        redisTemplate.afterPropertiesSet();
 
         return redisTemplate;
     }

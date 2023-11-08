@@ -16,16 +16,14 @@ function LoginForm() {
   useEffect (()=>{
     const isValidUser = async () => {
       try {
-        const validToken = await axios.get('http://localhost:8001/member/vendor/info',
+        await axios.get('http://localhost:8001/member/vendor/info',
         {
           headers : {
             Authorization: `${grantType} ${accessToken}`,
           },
         });
-        console.log(validToken);
         return true;
       } catch(error){
-        console.log(error);
         return false;
       }
     };
@@ -45,7 +43,6 @@ function LoginForm() {
         password
       };
       const response = await axios.post('http://localhost:8001/auth/login/vendor', body);
-      console.log(response);
       // 로컬스토리지에 토큰 저장
       localStorage.setItem('accessToken', response.data.data.accessToken);
       localStorage.setItem('refreshToken', response.data.data.refreshToken);

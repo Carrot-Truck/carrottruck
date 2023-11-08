@@ -2,8 +2,11 @@ import { useState, useEffect, ChangeEvent } from 'react';
 import { FoodTruckRegistrationContainer } from './style';
 import Input from 'components/atoms/Input';
 import Button from 'components/atoms/Button';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function FoodTruckRegistrationForm() {
+  const navigate = useNavigate();
   const [isDone, setIsDone] = useState(false);
   const [categoryId, setCategoryId] = useState(0); // 카테고리 ID를 문자열로 저장
   const [foodTruckName, setfoodTruckName] = useState('');
@@ -13,6 +16,10 @@ function FoodTruckRegistrationForm() {
   const [originInfo, setOriginInfo] = useState('');
   const [prepareTime, setPrepareTime] = useState(0);
   const [waitLimits, setWaitLimits] = useState(0);
+  const accessToken = localStorage.getItem('accessToken');
+  const grantType = localStorage.getItem('grantType');
+  const APPLICATION_SPRING_SERVER_URL =
+  process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001/api';
 
   const categories = [
     { id: '1', name: '한식' },
@@ -24,7 +31,40 @@ function FoodTruckRegistrationForm() {
   const regist = async () => {
     if (isDone) {
       try {
-        return;
+        const formData = new FormData();
+        if(foodTruckPicture !== null){
+          // 파일 업로드 부분
+          formData.append('file', foodTruckPicture);
+        }
+        
+        // JSON 데이터 부분
+        const requestData = {
+          categoryId: categoryId,
+          foodTruckName: foodTruckName,
+          phoneNumber: phoneNumber,
+          content: content,
+          originInfo: originInfo,
+          prepareTime: prepareTime,
+          waitLimits: waitLimits
+        };
+
+        // JSON 데이터를 Blob로 변환 후 FormData에 추가
+        formData.append('request', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+
+        const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/food-truck/vendor`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `${grantType} ${accessToken}`,
+          },
+        });
+        console.log(response);
+        if(response.data.code === 210){
+          alert("푸드트럭 등록이 완료되었습니다.");
+          navigate('/');
+        }else{
+          alert("푸드트럭 등록 실패!\n다시 시도해주세요.");
+          navigate('/');
+        }
       } catch (error) {
         console.error('에러야...', error);
       }
@@ -110,7 +150,7 @@ function FoodTruckRegistrationForm() {
         </div>
         <div className="input">
           <span>가게 소갯말</span>
-          <Input placeholder="메뉴카테고리를 선택해주세요" value={content} setValue={setContent} type="text" />
+          <Input placeholder="가게 소갯말을 입력해주세요" value={content} setValue={setContent} type="text" />
         </div>
         <div className="input">
           <span>전화번호</span>

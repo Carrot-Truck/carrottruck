@@ -431,7 +431,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                 totalOrders *= (Math.random() - 0.5) * 2 * 0.25 + 1;
             }
             SalesByDayDto dayData = SalesByDayDto.builder()
-                    .day(daysName.get(i))
+                    .day(i)
                     .totalOrders(totalOrders)
                     .totalSales(totalSales * 100)
                     .build();
@@ -447,7 +447,8 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                 .salesByDay(days)
                 .build();
 
-        given(statisticsQueryService.getStatisticsByWeekDetails(anyLong(), any(LocalDate.class), any(LocalDate.class)))
+        given(statisticsQueryService.getStatisticsByWeekDetails(anyLong(),
+                any(LocalDateTime.class), any(LocalDateTime.class)))
                 .willReturn(response);
 
         Long fid = 1L;
@@ -494,7 +495,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("주문 수"),
                                 fieldWithPath("data.salesByHour[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("주문 매출액"),
-                                fieldWithPath("data.salesByDay[].day").type(JsonFieldType.STRING)
+                                fieldWithPath("data.salesByDay[].day").type(JsonFieldType.NUMBER)
                                         .description("영업 요일"),
                                 fieldWithPath("data.salesByDay[].totalOrders").type(JsonFieldType.NUMBER)
                                         .description("주문 수"),
@@ -654,7 +655,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                 totalOrders *= (Math.random() - 0.5) * 2 * 0.25 + 1;
             }
             SalesByDayDto dayData = SalesByDayDto.builder()
-                    .day(daysName.get(i))
+                    .day(i)
                     .totalOrders(totalOrders)
                     .totalSales(totalSales * 100)
                     .build();
@@ -717,7 +718,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("주문 수"),
                                 fieldWithPath("data.salesByHour[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("주문 매출액"),
-                                fieldWithPath("data.salesByDay[].day").type(JsonFieldType.STRING)
+                                fieldWithPath("data.salesByDay[].day").type(JsonFieldType.NUMBER)
                                         .description("영업 요일"),
                                 fieldWithPath("data.salesByDay[].totalOrders").type(JsonFieldType.NUMBER)
                                         .description("주문 수"),

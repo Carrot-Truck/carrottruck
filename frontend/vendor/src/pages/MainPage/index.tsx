@@ -28,7 +28,7 @@ function MainPage() {
       } catch (error) {
         const err = error as AxiosError;
         if(err.response?.status === 401){
-          alert('로그인 시간이 만료되었습니다. \n다시 로그인 해주세요.');
+          alert('로그인이 필요합니다.');
           return navigate('/login'); 
         }else{
           console.error('Error!!', error);

@@ -50,6 +50,7 @@ function JoinForm() {
         alert('이미 사용 중인 이메일입니다.');
         setIsEmailAvailable(false);
       } else {
+        alert('사용 가능한 이메일입니다.');
         setIsEmailAvailable(true);
       }
     } catch (error) {

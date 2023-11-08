@@ -14,7 +14,7 @@ function MainPage() {
    const accessToken = localStorage.getItem('accessToken');
    const grantType = localStorage.getItem('grantType');
    const APPLICATION_SPRING_SERVER_URL =
-   process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io' : 'http://localhost:8001';
+   process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001';
 
    useEffect (()=>{
     const isValidUser = async () => {

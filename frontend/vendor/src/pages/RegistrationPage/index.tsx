@@ -7,8 +7,8 @@ import BackSpace from 'components/atoms/BackSpace';
 import axios from 'axios';
 
 function RegistrationPage() {
-  const [selectedButton, setSelectedButton] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedButton, setSelectedButton] = useState(isLoading?2:1);
   const accessToken = localStorage.getItem('accessToken');
   const grantType = localStorage.getItem('grantType');
   const APPLICATION_SPRING_SERVER_URL =
@@ -25,6 +25,7 @@ function RegistrationPage() {
           },
         });
         console.log(validToken.data);  
+        setIsLoading(false);
       } catch (error) {
         setIsLoading(true);
       }

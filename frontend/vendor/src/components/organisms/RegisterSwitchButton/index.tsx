@@ -22,6 +22,7 @@ function SwitchButton({ selectedButton, setSelectedButton, firstButton, secondBu
         color={selectedButton === 1 ? 'Primary' : 'SubFirst'}
         text={firstButton}
         handleClick={() => handleClick(1)}
+        disabled={!disabled} 
       />
       <Button
         size="m"
@@ -29,7 +30,7 @@ function SwitchButton({ selectedButton, setSelectedButton, firstButton, secondBu
         color={selectedButton === 2 ? 'Primary' : 'SubFirst'}
         text={secondButton}
         handleClick={() => handleClick(2)}
-        disabled={disabled} // disabled 상태에 따라 버튼 활성화 여부 조절
+        disabled={disabled} 
       />
     </SwitchButtonContainer>
   );

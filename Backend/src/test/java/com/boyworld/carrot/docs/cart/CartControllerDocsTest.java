@@ -69,7 +69,7 @@ public class CartControllerDocsTest extends RestDocsSupport {
                                                 .description("장바구니에 담은 메뉴 ID"),
                                         fieldWithPath("cartMenuQuantity").type(JsonFieldType.NUMBER)
                                                 .description("장바구니에 담은 메뉴의 수량"),
-                                        fieldWithPath("cartMenuOptionIds").type(JsonFieldType.ARRAY)
+                                        fieldWithPath("menuOptionIds").type(JsonFieldType.ARRAY)
                                                 .description("잠바구니에 담은 메뉴의 옵션 ID 리스트")
                                 ),
                                 responseFields(

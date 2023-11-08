@@ -15,9 +15,12 @@ import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckReposito
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.menu.Menu;
+import com.boyworld.carrot.domain.menu.MenuImage;
 import com.boyworld.carrot.domain.menu.MenuOption;
+import com.boyworld.carrot.domain.menu.repository.command.MenuImageRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
+import com.boyworld.carrot.domain.menu.repository.query.MenuImageQueryRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -42,14 +45,15 @@ public class CartService {
     private final MemberRepository memberRepository;
     private final MenuRepository menuRepository;
     private final MenuOptionRepository menuOptionRepository;
+    private final MenuImageQueryRepository menuImageQueryRepository;
 
     public Long createCart(CreateCartMenuDto createCartMenuDto, String email) throws JsonProcessingException {
 
 //        Member member = getMemberByEmail(email);
 //
-//        FoodTruck foodTruck = getFoodTruckById(createCartMenuDto.getFoodTruckId());
-//
-//        Menu menu = getMenuById(createCartMenuDto.getMenuId());
+        FoodTruck foodTruck = getFoodTruckById(createCartMenuDto.getFoodTruckId());
+
+        Menu menu = getMenuById(createCartMenuDto.getMenuId());
 
         if (checkFieldKey(CART.getText(), email)) {
             // 회원 카트가 존재하는 경우
@@ -61,7 +65,7 @@ public class CartService {
                 // 푸드트럭이 같은 경우
                 // 장바구니의 총 금액 및 cartMenuIds 업데이트
                 log.debug("같은 푸드트럭의 메뉴 입니다! (saveUpdateCart실행)");
-                String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email);
+                String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email, foodTruck, menu);
                 saveUpdateCart(createCartMenuDto, cartMenuId, cart, email);
                 log.debug("장바구니에 메뉴가 추가되었습니다: {}", email);
 
@@ -77,8 +81,10 @@ public class CartService {
                     }
                     for (String cartMenuOptionPk : cartMenuOptionIds) {
                         deleteCartMenuOption(cartMenuOptionPk);
+                        log.debug("카트메뉴옵션을 삭제했습니다: {}", cartMenuOptionPk);
                     }
                     deleteCartMenu(cartMenuPk);
+                    log.debug("카트메뉴를 삭제했습니다: {}", cartMenuPk);
                 }
 //                cart.getCartMenuIds().forEach(cartMenuPk -> {
 //                    // cartMenuPk를 사용하여 CartMenu 객체를 가져옴
@@ -94,20 +100,19 @@ public class CartService {
 //                    // 모든 옵션이 삭제된 후, cartMenu를 삭제
 //                    deleteCartMenu(cartMenuPk);
 //                });
-                String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email);
-                saveNewCart(createCartMenuDto, cartMenuId, email);
+                String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email, foodTruck, menu);
+                saveNewCart(createCartMenuDto, cartMenuId, email, foodTruck);
                 log.debug("장바구니에 메뉴가 추가되었습니다: {}", email);
             }
         } else {
             // 회원 카트가 존재하지 않으면 카트 추가, 메뉴 추가, 메뉴 옵션 추가
             log.debug("사용자의 장바구니는 비어있습니다: {}", email);
-            String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email);
-            saveNewCart(createCartMenuDto, cartMenuId, email);
+            String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email, foodTruck, menu);
+            saveNewCart(createCartMenuDto, cartMenuId, email, foodTruck);
             log.debug("장바구니에 메뉴가 추가되었습니다: {}", email);
         }
 
         return createCartMenuDto.getMenuId();
-        // TODO: 2023-11-08 (008) 불러온 Entity 적용
     }
 
     public CartResponse getShoppingCart(String email) throws JsonProcessingException {
@@ -211,7 +216,7 @@ public class CartService {
         return cartMenuOptionDtos;
     }
 
-    public String saveCartMenuAndMenuOption(CreateCartMenuDto createCartMenuDto, String email) {
+    public String saveCartMenuAndMenuOption(CreateCartMenuDto createCartMenuDto, String email, FoodTruck foodTruck, Menu menu) {
         RedisAtomicLong cartMenuIndex = new RedisAtomicLong("cartMenuId", redisTemplate.getConnectionFactory());
         String cartMenuId = String.valueOf(cartMenuIndex.incrementAndGet());
         // 메뉴 고유 pk값 생성
@@ -230,28 +235,29 @@ public class CartService {
             // 메뉴 옵션 고유 pk값 생성
             cartMenuOptionIds.add(cartMenuOptionId);
 
-            // TODO: 2023-11-09 (009) MenuOption을 찾아 값 넣기
+            MenuOption menuOption = getMenuOptionById(menuOptionId);
+            // 메뉴 옵션 생성
             CartMenuOption cartMenuOption = CartMenuOption.builder()
                     .id(cartMenuOptionId)
                     .cartMenuId(cartMenuId)
                     .menuOptionId(menuOptionId)
-                    .name("name은 find한 메뉴옵션 이름을 넣어야함")
-                    .price(999)
+                    .name(menuOption.getMenuInfo().getName())
+                    .price(menuOption.getMenuInfo().getPrice())
                     .build();
 
             saveCartMenuOption(cartMenuOptionId, cartMenuOption);
             log.debug("cartMenuOption을 저장합니다: {}", cartMenuOptionId);
         }
-        // TODO: 2023-11-09 (009) Menu를 찾아 값 넣기
+        MenuImage menuImage = menuImageQueryRepository.getMenuImageByMenuId(menu.getId());
         CartMenu cartMenu = CartMenu.builder()
                 .id(cartMenuId)
                 .cartId(email)
                 .menuId(createCartMenuDto.getMenuId())
-                .name("name은 find한 메뉴 이름을 넣어야함")
-                .price(999)
+                .name(menu.getMenuInfo().getName())
+                .price(menu.getMenuInfo().getPrice())
                 .cartMenuTotalPrice(createCartMenuDto.getCartMenuTotalPrice())
                 .quantity(createCartMenuDto.getCartMenuQuantity())
-                .menuImageUrl("menuImageUrl은 find한 메뉴이미지url을 넣어야함")
+                .menuImageUrl(menuImage.getUploadFile().getStoreFileName())
                 .cartMenuOptionIds(cartMenuOptionIds)
                 .build();
 
@@ -260,12 +266,11 @@ public class CartService {
         return cartMenuId;
     }
 
-    public void saveNewCart(CreateCartMenuDto createCartMenuDto, String cartMenuId, String email) {
-        // TODO: 2023-11-09 (009) footTruck찾아 값 넣기
+    public void saveNewCart(CreateCartMenuDto createCartMenuDto, String cartMenuId, String email, FoodTruck foodTruck) {
         Cart cart = Cart.builder()
                 .id(email)
                 .foodTruckId(createCartMenuDto.getFoodTruckId())
-                .foodTruckName("foodTruckName은 find한 푸드트럭 이름을 넣어야함")
+                .foodTruckName(foodTruck.getName())
                 .totalPrice(createCartMenuDto.getCartMenuTotalPrice())
                 .cartMenuIds(Arrays.asList(cartMenuId))
                 .build();

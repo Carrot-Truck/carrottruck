@@ -25,4 +25,14 @@ public class StatisticsByWeekDetailsResponse {
         this.salesByHour = salesByHour;
         this.salesByDay = salesByDay;
     }
+
+    public static StatisticsByWeekDetailsResponse of(List<SalesByMenuDto> salesByMenu,
+                                                     List<SalesByHourDto> salesByHour,
+                                                     List<SalesByDayDto> salesByDay) {
+        return StatisticsByWeekDetailsResponse.builder()
+                .salesByMenu(salesByMenu)
+                .salesByHour(salesByHour)
+                .salesByDay(salesByDay)
+                .build();
+    }
 }

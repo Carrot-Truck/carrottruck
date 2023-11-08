@@ -196,6 +196,7 @@ public class CartService {
                 .menuId(createCartMenuDto.getMenuId())
                 .name("name은 find한 메뉴 이름을 넣어야함")
                 .price(999)
+                .cartMenuTotalPrice(createCartMenuDto.getCartMenuTotalPrice())
                 .quantity(createCartMenuDto.getCartMenuQuantity())
                 .menuImageUrl("menuImageUrl은 find한 메뉴이미지url을 넣어야함")
                 .cartMenuOptionIds(cartMenuOptionIds)
@@ -212,7 +213,7 @@ public class CartService {
                 .id(email)
                 .foodTruckId(createCartMenuDto.getFoodTruckId())
                 .foodTruckName("foodTruckName은 find한 푸드트럭 이름을 넣어야함")
-                .totalPrice(createCartMenuDto.getCartMenuPrice())
+                .totalPrice(createCartMenuDto.getCartMenuTotalPrice())
                 .cartMenuIds(Arrays.asList(cartMenuId))
                 .build();
         saveCart(email, cart);
@@ -222,7 +223,7 @@ public class CartService {
     public void saveUpdateCart(CreateCartMenuDto createCartMenuDto, String CartMemberId, Cart cart, String email) {
 
         log.debug("before cartTotalPrice: {}, before cartMenuIds: {}", cart.getTotalPrice(), cart.getCartMenuIds().toString());
-        cart.updateCartTotalPrice(createCartMenuDto.getCartMenuPrice());
+        cart.updateCartTotalPrice(createCartMenuDto.getCartMenuTotalPrice());
         cart.updateCartMenuIds(CartMemberId);
         log.debug("after cartTotalPrice: {}, after cartMenuIds: {}", cart.getTotalPrice(), cart.getCartMenuIds().toString());
         saveCart(email, cart);

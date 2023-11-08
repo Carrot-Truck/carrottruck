@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 매출통계 API
@@ -104,9 +105,10 @@ public class StatisticsController {
         log.debug("StatisticsController#getStatisticsByWeekDetails called !!!");
         log.debug("FoodTruckID={}, startDate={}, endDate={}", foodTruckId, startDate, endDate);
 
-        LocalDate start = LocalDate.parse(startDate);
-        LocalDate end = LocalDate.parse(endDate);
+        LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
+        LocalDateTime end = LocalDate.parse(endDate).atStartOfDay();
 
+        log.debug("Parsed Date start={}, end={}", start, end);
         StatisticsByWeekDetailsResponse response = statisticsService.getStatisticsByWeekDetails(foodTruckId, start, end);
         log.debug("StatisticsByWeekDetailsResponse={}", response);
 

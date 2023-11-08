@@ -51,39 +51,51 @@ public class CartService {
 
         if (checkFieldKey(CART.getText(), email)) {
             // 회원 카트가 존재하는 경우
-            Cart cart = getData(CART.getText(), email, Cart.class);
+            log.debug("사용자의 회원 카트가 존재합니다: {}", email);
+            // TODO: 2023-11-08 (008) 사용자의 이름으로 변경
+
+            Cart cart = getCart(email);
             if (cart.getFoodTruckId().equals(createCartMenuDto.getFoodTruckId())) {
                 // 푸드트럭이 같은 경우
                 // 장바구니의 총 금액 및 cartMenuIds 업데이트
+                log.debug("같은 푸드트럭의 메뉴 입니다! (saveUpdateCart실행)");
                 String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email);
                 saveUpdateCart(createCartMenuDto, cartMenuId, cart, email);
+                log.debug("장바구니에 메뉴가 추가되었습니다: {}", email);
 
             } else {
                 // 장바구니에 추가한 메뉴의 푸드트럭이 다른 경우
                 // 관련 메뉴 및 메뉴옵션 들 삭제하기
+                log.debug("다른 푸드트럭의 메뉴 입니다! (기존 카트 삭제 후 saveNewCart실행)");
                 for (String cartMenuPk : cart.getCartMenuIds()) {
-                    CartMenu cartMenu = getData(CARTMENU.getText(), cartMenuPk, CartMenu.class);
-                    log.debug("CartService#createCart#getCartMenu#getCartId: {}", cartMenu.getCartId());
-                    log.debug("CartService#createCart#getCartMenu#getId: {}", cartMenu.getId());
-                    for (String cartMenuOptionPk : cartMenu.getCartMenuOptionIds()) {
-                        // null
+                    CartMenu cartMenu = getCartMenu(cartMenuPk);
+                    List<String> cartMenuOptionIds = new ArrayList<>();
+                    if(cartMenu.getCartMenuOptionIds() != null) {
+                        cartMenuOptionIds = cartMenu.getCartMenuOptionIds();
+                    }
+                    for (String cartMenuOptionPk : cartMenuOptionIds) {
                         deleteCartMenuOption(cartMenuOptionPk);
                     }
                     deleteCartMenu(cartMenuPk);
                 }
                 String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email);
                 saveNewCart(createCartMenuDto, cartMenuId, email);
+                log.debug("장바구니에 메뉴가 추가되었습니다: {}", email);
             }
         } else {
             // 회원 카트가 존재하지 않으면 카트 추가, 메뉴 추가, 메뉴 옵션 추가
+            log.debug("사용자의 장바구니는 비어있습니다: {}", email);
             String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email);
             saveNewCart(createCartMenuDto, cartMenuId, email);
+            log.debug("장바구니에 메뉴가 추가되었습니다: {}", email);
         }
 
         return createCartMenuDto.getMenuId();
+        // TODO: 2023-11-08 (008) 불러온 Entity 적용
     }
 
-    public CartResponse getCart(String email) {
+    public CartResponse getShoppingCart(String email) {
+
         return null;
     }
 
@@ -99,17 +111,27 @@ public class CartService {
         return null;
     }
 
+    /**            (；′⌒`)                 **/
 
     public String saveCartMenuAndMenuOption(CreateCartMenuDto createCartMenuDto, String email) {
         RedisAtomicLong cartMenuIndex = new RedisAtomicLong("cartMenuId", redisTemplate.getConnectionFactory());
         String cartMenuId = String.valueOf(cartMenuIndex.incrementAndGet());
         // 메뉴 고유 pk값 생성
         List<String> cartMenuOptionIds = new ArrayList<>();
-        for (Long menuOptionId : createCartMenuDto.getMenuOptionIds()) {
+
+        // 옵션이 널일때 처리
+        List<Long> menuOptionIds = new ArrayList<>();
+        if(createCartMenuDto.getMenuOptionIds() != null) {
+            menuOptionIds = createCartMenuDto.getMenuOptionIds();
+        }
+
+
+        for (Long menuOptionId : menuOptionIds) {
             RedisAtomicLong cartMenuOptionIndex = new RedisAtomicLong("cartMenuOptionId", redisTemplate.getConnectionFactory());
             String cartMenuOptionId = String.valueOf(cartMenuOptionIndex.incrementAndGet());
             // 메뉴 옵션 고유 pk값 생성
             cartMenuOptionIds.add(cartMenuOptionId);
+
 
             CartMenuOption cartMenuOption = CartMenuOption.builder()
                     .id(cartMenuOptionId)
@@ -119,8 +141,8 @@ public class CartService {
                     .price(999)
                     .build();
 
-            saveData(CARTMENUOPTION.getText(), cartMenuOptionId, cartMenuOption);
-            log.debug("saveCartMenuAndMenuOption#save MenuOption: {}", cartMenuOption.getMenuOptionId());
+            saveCartMenuOption(cartMenuOptionId, cartMenuOption);
+            log.debug("cartMenuOption을 저장합니다: {}", cartMenuOptionId);
         }
         CartMenu cartMenu = CartMenu.builder()
                 .id(cartMenuId)
@@ -133,8 +155,8 @@ public class CartService {
                 .cartMenuOptionIds(cartMenuOptionIds)
                 .build();
 
-        saveData(CARTMENU.getText(), cartMenuId, cartMenu);
-        log.debug("saveCartMenuAndMenuOption#save Menu: {}", cartMenu.getMenuId());
+        saveCartMenu(cartMenuId, cartMenu);
+        log.debug("cartMenu를 저장합니다: {}", cartMenuId);
         return cartMenuId;
     }
 
@@ -146,16 +168,17 @@ public class CartService {
                 .totalPrice(createCartMenuDto.getCartMenuPrice())
                 .cartMenuIds(Arrays.asList(cartMenuId))
                 .build();
-        saveData(CART.getText(), email, cart);
-        log.debug("save Menu in Cart: {}", createCartMenuDto.getMenuOptionIds());
+        saveCart(email, cart);
+        log.debug("새 장바구니에 메뉴를 추가합니다: {}", cartMenuId);
     }
 
     public void saveUpdateCart(CreateCartMenuDto createCartMenuDto, String CartMemberId, Cart cart, String email) {
-        log.debug("before updateCart: {}", cart.getCartMenuIds().toString());
+
+        log.debug("before cartTotalPrice: {}, before cartMenuIds: {}", cart.getTotalPrice(), cart.getCartMenuIds().toString());
         cart.updateCartTotalPrice(createCartMenuDto.getCartMenuPrice());
         cart.updateCartMenuIds(CartMemberId);
-        log.debug("after updateCart: {}", cart.getCartMenuIds().toString());
-        saveData(CART.getText(), email, cart);
+        log.debug("after cartTotalPrice: {}, after cartMenuIds: {}", cart.getTotalPrice(), cart.getCartMenuIds().toString());
+        saveCart(email, cart);
     }
 
 
@@ -180,6 +203,23 @@ public class CartService {
     }
 
 
+    public boolean checkFieldKey(String hashKey, String fieldkey) {
+        return redisTemplate.opsForHash().hasKey(hashKey, fieldkey);
+    }
+
+    public void deleteCartMenuOption(String fieldkey) {
+        redisTemplate.opsForHash().delete(CARTMENUOPTION.getText(), fieldkey);
+    }
+
+    public void deleteCartMenu(String fieldkey) {
+        redisTemplate.opsForHash().delete(CARTMENU.getText(), fieldkey);
+    }
+
+    public void deleteCart(String fieldkey) {
+        redisTemplate.opsForHash().delete(CART.getText(), fieldkey);
+    }
+
+
     public <T> boolean saveData(String key, String field, T data) {
         try {
             String value = objectMapper.writeValueAsString(data);
@@ -191,6 +231,16 @@ public class CartService {
         }
     }
 
+    public <T> void saveCart(String field, T data) {
+        saveData(CART.getText(), field, data);
+    }
+    public <T> void saveCartMenu(String field, T data) {
+        saveData(CARTMENU.getText(), field, data);
+    }
+    public <T> void saveCartMenuOption(String field, T data) {
+        saveData(CARTMENUOPTION.getText(), field, data);
+    }
+
     public <T> T getData(String key, String field, Class<T> classType) throws JsonProcessingException {
 
         String jsonResult = (String) redisTemplate.opsForHash().get(key, field);
@@ -200,6 +250,18 @@ public class CartService {
             T obj = objectMapper.readValue(jsonResult, classType);
             return obj;
         }
+    }
+
+    public Cart getCart(String field) throws JsonProcessingException {
+        return getData(CART.getText(), field, Cart.class);
+    }
+
+    public CartMenu getCartMenu(String field) throws JsonProcessingException {
+        return getData(CARTMENU.getText(), field, CartMenu.class);
+    }
+
+    public CartMenuOption getMenuOption(String field) throws JsonProcessingException {
+        return getData(CARTMENUOPTION.getText(), field, CartMenuOption.class);
     }
 
     public Set getField(String key) throws JsonProcessingException {
@@ -222,20 +284,5 @@ public class CartService {
         }
     }
 
-    public boolean checkFieldKey(String hashKey, String fieldkey) {
-        return redisTemplate.opsForHash().hasKey(hashKey, fieldkey);
-    }
-
-    public void deleteCartMenuOption(String fieldkey) {
-        redisTemplate.opsForHash().delete(CARTMENUOPTION.getText(), fieldkey);
-    }
-
-    public void deleteCartMenu(String fieldkey) {
-        redisTemplate.opsForHash().delete(CARTMENU.getText(), fieldkey);
-    }
-
-    public void deleteCart(String fieldkey) {
-        redisTemplate.opsForHash().delete(CART.getText(), fieldkey);
-    }
 
 }

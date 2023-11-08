@@ -48,9 +48,11 @@ function MainPage() {
             Authorization: `${grantType} ${accessToken}`,
           },
         });
-        if (response.data.success) { // 정보를 받았고,
-          setDataEmpty(response.data.items.length === 0); // 그 정보가 비어있다면 true / 비어있지 않다면 false
-          console.log(response.data.items)
+        
+        if (response.data.code === 200) { // 정보를 받았고,
+          console.log(response.data.data.items);
+          setDataEmpty(response.data.data.items.length === 0); // 그 정보가 비어있다면 true / 비어있지 않다면 false
+          
         }
       }catch(error){
         console.log("error", error);

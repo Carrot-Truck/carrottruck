@@ -1,0 +1,10 @@
+[[create-cart]]
+=== 장바구니 추가
+
+==== HTTP Request
+include::{snippets}/create-cart/http-request.adoc[]
+include::{snippets}/create-cart/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/create-cart/response-body.adoc[]
+include::{snippets}/create-cart/response-fields.adoc[]

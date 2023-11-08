@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.util.List;
+
 /**
  * 장바구니-메뉴 엔티티
  *
@@ -17,25 +19,27 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @NoArgsConstructor
 @RedisHash("cartMenu")
-public class CartMenu extends TimeBaseEntity {
+public class CartMenu {
 
     @Id
-    private Long id;
+    private String id;
     private String cartId;
     private Long menuId;
     private String name;
     private Integer price;
-    private Boolean soldOut;
     private Integer quantity;
+    private String menuImageUrl;
+    private List<String> cartMenuOptionIds;
 
     @Builder
-    public CartMenu(Long id, String cartId, Long menuId, String name, Integer price, Boolean soldOut, Integer quantity) {
+    public CartMenu(String id, String cartId, Long menuId, String name, Integer price, Integer quantity, String menuImageUrl, List<String> cartMenuOptionIds) {
         this.id = id;
         this.cartId = cartId;
         this.menuId = menuId;
         this.name = name;
         this.price = price;
-        this.soldOut = soldOut;
         this.quantity = quantity;
+        this.menuImageUrl = menuImageUrl;
+        this.cartMenuOptionIds = cartMenuOptionIds;
     }
 }

@@ -1,9 +1,12 @@
 package com.boyworld.carrot.api.controller.member;
 
 import com.boyworld.carrot.api.ApiResponse;
+import com.boyworld.carrot.api.controller.member.request.AuthCheckEmailRequest;
+import com.boyworld.carrot.api.controller.member.request.AuthEmailRequest;
 import com.boyworld.carrot.api.controller.member.request.CheckEmailRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
 import com.boyworld.carrot.api.service.member.query.AuthService;
+import com.boyworld.carrot.client.mail.EmailMessage;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.security.TokenInfo;
 import jakarta.validation.Valid;
@@ -63,7 +66,7 @@ public class AuthController {
 
     /**
      * 회원 가입시 이메일 중복 체크 API
-     * 
+     *
      * @param request 중복 체크할 이메일
      * @return 존재하면 true, 존재하지 않으면 false
      */
@@ -78,4 +81,40 @@ public class AuthController {
         return ApiResponse.ok(result);
     }
 
+    /**
+     * 이메일 인증 번호 발송 API
+     *
+     * @param request 인증번호를 받을 이메일 (사용자 이메일)
+     * @return 200: 성공
+     */
+    @PostMapping("/email")
+    public ApiResponse<?> authEmail(@Valid @RequestBody AuthEmailRequest request) {
+        log.debug("AuthController#authEmail called");
+        log.debug("AuthEmailRequest={}", request);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(request.getEmail())
+                .subject("[당근트럭] 이메일 인증을 위한 인증 코드 발송")
+                .build();
+
+        authService.authEmail(emailMessage);
+
+        return ApiResponse.ok(null);
+    }
+
+    /**
+     * 이메일 인증번호 확인 API
+     *
+     * @param request 인증할 이메일, 인증번호
+     * @return 200: 성공
+     */
+    @PostMapping("/email/check")
+    public ApiResponse<?> checkAuthEmail(@Valid @RequestBody AuthCheckEmailRequest request) {
+        log.debug("AuthController#checkAuthEmail called");
+        log.debug("AuthCheckEmailRequest={}", request);
+
+        authService.authCheckEmail(request.getEmail(), request.getAuthNumber());
+
+        return ApiResponse.ok(null);
+    }
 }

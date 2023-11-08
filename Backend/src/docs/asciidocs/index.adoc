@@ -19,13 +19,21 @@ include::{docdir}/api/analysis.adoc[]
 == Auth API
 include::{docdir}/api/member/auth.adoc[]
 
+[[Cart-API]]
+== Cart API
+include::{docdir}/api/cart.adoc[]
+
 [[Client-API]]
 == Client API
 include::{docdir}/api/member/client.adoc[]
 
+[[Category-API]]
+== Category API
+include::{docdir}/api/foodtruck/category.adoc[]
+
 [[FoodTruck-API]]
 == FoodTruck API
-include::{docdir}/api/food-truck.adoc[]
+include::{docdir}/api/foodtruck/food-truck.adoc[]
 
 [[MemberAddress-API]]
 == Member Address API
@@ -33,7 +41,7 @@ include::{docdir}/api/member/member-address.adoc[]
 
 [[Menu-API]]
 == Menu API
-include::{docdir}/api/menu.adoc[]
+include::{docdir}/api/foodtruck/menu.adoc[]
 
 [[Order-API]]
 == Order API
@@ -49,7 +57,7 @@ include::{docdir}/api/sale.adoc[]
 
 [[Schedule-API]]
 == Schedule API
-include::{docdir}/api/schedule.adoc[]
+include::{docdir}/api/foodtruck/schedule.adoc[]
 
 [[Statistics-API]]
 == Statistics API

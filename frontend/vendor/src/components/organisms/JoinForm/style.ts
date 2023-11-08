@@ -27,6 +27,12 @@ export const JoinFormContainer = styled.div`
       gap: 5px;
     }
 
+    .inputbutton {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+    }
+
     .field-row {
       display: flex;
       flex-direction: row;

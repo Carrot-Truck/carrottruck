@@ -1,8 +1,8 @@
 package com.boyworld.carrot.docs.sale;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -31,6 +31,9 @@ import com.boyworld.carrot.api.service.order.OrderService;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.api.service.sale.SaleService;
+import com.boyworld.carrot.api.service.sale.dto.AcceptOrderDto;
+import com.boyworld.carrot.api.service.sale.dto.DeclineOrderDto;
+import com.boyworld.carrot.api.service.sale.dto.OpenSaleDto;
 import com.boyworld.carrot.api.service.sale.dto.SaleMenuItem;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import com.boyworld.carrot.domain.order.Status;
@@ -80,7 +83,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .saleMenuItems(saleMenuItems)
             .build();
 
-        given(saleService.openSale(request.toOpenSaleDto()))
+        given(saleService.openSale(any(OpenSaleDto.class), anyString()))
             .willReturn(response);
 
         mockMvc.perform(
@@ -386,7 +389,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .prepareTime(30)
             .build();
 
-        given(saleService.acceptOrder(eq(request.toAcceptOrderDto()), anyString()))
+        given(saleService.acceptOrder(any(AcceptOrderDto.class), anyString()))
             .willReturn(1L);
 
         mockMvc.perform(
@@ -429,7 +432,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .reason("개인 사정")
             .build();
 
-        given(saleService.declineOrder(eq(request.toDeclineOrderDto()), anyString()))
+        given(saleService.declineOrder(any(DeclineOrderDto.class), anyString()))
             .willReturn(2L);
 
         mockMvc.perform(

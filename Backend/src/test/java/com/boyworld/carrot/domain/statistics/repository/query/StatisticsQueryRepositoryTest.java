@@ -1,7 +1,9 @@
 package com.boyworld.carrot.domain.statistics.repository.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.controller.statistics.response.StatisticsByMonthDetailsResponse;
 import com.boyworld.carrot.api.controller.statistics.response.StatisticsBySalesDetailsResponse;
+import com.boyworld.carrot.api.controller.statistics.response.StatisticsByWeekDetailsResponse;
 import com.boyworld.carrot.domain.foodtruck.Category;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.CategoryRepository;
@@ -121,6 +123,178 @@ public class StatisticsQueryRepositoryTest extends IntegrationTestSupport {
                 .getSaleDetail(foodTruck.getId(), sale1.getId());
 
         log.debug("StatisticsQRepo#StatisticsSalesDetailResponse={}", response);
+    }
+
+    @DisplayName("주별 매출 통계 정보의 상세 정보를 조회한다.")
+    @Test
+    void getWeekDetail() {
+        Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "client1@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "client2@ssafy.com");
+        Member client3 = createMember(Role.CLIENT, "client3@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck1 = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                40,
+                10,
+                true);
+        FoodTruck foodTruck2 = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                40,
+                10,
+                true);
+
+        Menu menu1 = Menu.builder()
+                .foodTruck(foodTruck1)
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
+                .active(true)
+                .build();
+
+        Menu menu2 = Menu.builder()
+                .foodTruck(foodTruck1)
+                .menuInfo(MenuInfo.builder().name("메뉴2").price(15000).description("메뉴 설명2").soldOut(false).build())
+                .active(true)
+                .build();
+
+        Menu menu3 = Menu.builder()
+                .foodTruck(foodTruck1)
+                .menuInfo(MenuInfo.builder().name("메뉴2").price(99).description("메뉴 설명2").soldOut(false).build())
+                .active(true)
+                .build();
+        
+        menuRepository.saveAll(List.of(menu1, menu2, menu3));
+
+        Sale sale1 = createSale(foodTruck1, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+                "광주광역시 광산구 장덕동",
+                10,
+                170000,
+                LocalDateTime.now().minusDays(10).minusHours(8),
+                LocalDateTime.now().minusDays(10).minusHours(4));
+
+        Order order1 = createOrder(client1, sale1);
+        OrderMenu orderMenu1 = createOrderMenu(order1, menu1, 1);
+        OrderMenu orderMenu2 = createOrderMenu(order1, menu2, 2);
+
+        Order order2 = createOrder(client2, sale1);
+        OrderMenu orderMenu3 = createOrderMenu(order2, menu1, 1);
+
+        Order order3 = createOrder(client3, sale1);
+        OrderMenu orderMenu4 = createOrderMenu(order3, menu2, 3);
+
+        Sale sale2 = createSale(foodTruck1, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+                "광주광역시 광산구 장덕동",
+                10,
+                170000,
+                LocalDateTime.now().minusDays(2).minusHours(7),
+                LocalDateTime.now().minusDays(2).minusHours(4));
+
+        Order order4 = createOrder(client3, sale2);
+        OrderMenu orderMenu5 = createOrderMenu(order4, menu2, 10);
+
+        Sale sale3 = createSale(foodTruck2, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+                "광주광역시 광산구 장덕동",
+                10,
+                170000,
+                LocalDateTime.now().minusHours(7),
+                LocalDateTime.now());
+
+        Order order5 = createOrder(client1, sale3);
+        OrderMenu orderMenu6 = createOrderMenu(order5, menu1, 99);
+
+        StatisticsByWeekDetailsResponse response = statisticsQueryRepository
+                .getWeeklyDetail(foodTruck1.getId(), LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
+
+        log.debug("StatisticsQRepo#StatisticsByWeekDetailsResponse={}", response);
+    }
+
+    @DisplayName("월별 매출 통계 정보의 상세 정보를 조회한다.")
+    @Test
+    void getMonthDetail() {
+        Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "client1@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "client2@ssafy.com");
+        Member client3 = createMember(Role.CLIENT, "client3@ssafy.com");
+
+        Category category = createCategory("고기/구이");
+
+        FoodTruck foodTruck1 = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                40,
+                10,
+                true);
+        FoodTruck foodTruck2 = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                40,
+                10,
+                true);
+
+        Menu menu1 = Menu.builder()
+                .foodTruck(foodTruck1)
+                .menuInfo(MenuInfo.builder().name("메뉴1").price(10000).description("메뉴 설명1").soldOut(false).build())
+                .active(true)
+                .build();
+
+        Menu menu2 = Menu.builder()
+                .foodTruck(foodTruck1)
+                .menuInfo(MenuInfo.builder().name("메뉴2").price(15000).description("메뉴 설명2").soldOut(false).build())
+                .active(true)
+                .build();
+
+        Menu menu3 = Menu.builder()
+                .foodTruck(foodTruck1)
+                .menuInfo(MenuInfo.builder().name("메뉴2").price(99).description("메뉴 설명2").soldOut(false).build())
+                .active(true)
+                .build();
+
+        menuRepository.saveAll(List.of(menu1, menu2, menu3));
+
+        Sale sale1 = createSale(foodTruck1, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+                "광주광역시 광산구 장덕동",
+                10,
+                170000,
+                LocalDateTime.now().minusMonths(1).minusHours(8),
+                LocalDateTime.now().minusMonths(1).minusHours(4));
+
+        Order order1 = createOrder(client1, sale1);
+        OrderMenu orderMenu1 = createOrderMenu(order1, menu1, 1);
+        OrderMenu orderMenu2 = createOrderMenu(order1, menu2, 2);
+
+        Order order2 = createOrder(client2, sale1);
+        OrderMenu orderMenu3 = createOrderMenu(order2, menu1, 1);
+
+        Order order3 = createOrder(client3, sale1);
+        OrderMenu orderMenu4 = createOrderMenu(order3, menu2, 3);
+
+        Sale sale2 = createSale(foodTruck1, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+                "광주광역시 광산구 장덕동",
+                10,
+                170000,
+                LocalDateTime.now().minusDays(2).minusHours(7),
+                LocalDateTime.now().minusDays(2).minusHours(4));
+
+        Order order4 = createOrder(client3, sale2);
+        OrderMenu orderMenu5 = createOrderMenu(order4, menu2, 10);
+
+        Sale sale3 = createSale(foodTruck2, new BigDecimal("35.19508792"), new BigDecimal("126.8145971"),
+                "광주광역시 광산구 장덕동",
+                10,
+                170000,
+                LocalDateTime.now().minusHours(7),
+                LocalDateTime.now());
+
+        Order order5 = createOrder(client1, sale3);
+        OrderMenu orderMenu6 = createOrderMenu(order5, menu1, 99);
+
+        StatisticsByMonthDetailsResponse response = statisticsQueryRepository
+                .getMonthlyDetail(foodTruck1.getId(), LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue());
+
+        log.debug("StatisticsQRepo#StatisticsByMonthDetailsResponse={}", response);
     }
 
     private Member createMember(Role role, String email) {

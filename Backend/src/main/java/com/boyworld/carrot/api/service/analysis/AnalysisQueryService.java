@@ -163,8 +163,6 @@ public class AnalysisQueryService {
 
         String uriString = uriBuilder.build().toUriString();
 
-        log.debug("uri={}", uriString);
-
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Map> response = restTemplate.exchange(
                 URI.create(uriString),

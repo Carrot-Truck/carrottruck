@@ -1,4 +1,4 @@
-package com.boyworld.carrot.api.service.statistics.dto;
+package com.boyworld.carrot.api.service.statistics.dto.details;
 
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +13,9 @@ public class SalesByDayDto {
     private Integer totalSales;
 
     @Builder
-    public SalesByDayDto(String day, Integer totalOrders, Integer totalSales) {
+    public SalesByDayDto(String day, Number totalOrders, Integer totalSales) {
         this.day = day;
-        this.totalOrders = totalOrders;
+        this.totalOrders = totalOrders.intValue();
         this.totalSales = totalSales;
     }
 }

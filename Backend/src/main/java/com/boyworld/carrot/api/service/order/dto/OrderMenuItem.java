@@ -9,14 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderMenuItem {
 
+    Long id;
     Long menuId;
     Integer quantity;
-    List<Long> menuOptionIdList;
+    List<OrderMenuOptionItem> menuOptionList;
 
     @Builder
-    public OrderMenuItem(Long menuId, Integer quantity, List<Long> menuOptionIdList) {
+    public OrderMenuItem(Long id, Long menuId, Integer quantity, List<OrderMenuOptionItem> menuOptionList) {
         this.menuId = menuId;
         this.quantity = quantity;
-        this.menuOptionIdList = menuOptionIdList;
+        this.menuOptionList = menuOptionList;
     }
 }

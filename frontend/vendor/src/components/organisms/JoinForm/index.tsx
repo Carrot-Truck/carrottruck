@@ -19,7 +19,7 @@ function JoinForm() {
   const [isEmailAvailable, setIsEmailAvailable] = useState(false); // 이메일 중복검사 상태
   // const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 상태
   const APPLICATION_SPRING_SERVER_URL =
-   process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io' : 'http://localhost:8001';
+   process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001';
 
   // 정규식 패턴
   const emailRegExp =

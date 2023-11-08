@@ -46,9 +46,13 @@ public class Cart {
     public void decrementCartTotalPrice(Integer menuPrice) {
         this.totalPrice -= menuPrice;
     }
-    public void updateCartMenuIds(String cartMenuId) {
+    public void addCartMenuIds(String cartMenuId) {
         this.cartMenuIds.add(cartMenuId);
     }
+    public void removeCartMenuIds(String cartMenuId) {
+        this.cartMenuIds.remove(cartMenuId);
+    }
+
 }
 
 

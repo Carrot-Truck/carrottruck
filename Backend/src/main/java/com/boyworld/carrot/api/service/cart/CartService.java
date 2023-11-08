@@ -154,8 +154,29 @@ public class CartService {
     }
 
 
-    public String removeCartMenu(String cartMenuId, String email) {
-        return null;
+    public String removeCartMenu(String cartMenuId, String email) throws JsonProcessingException {
+        Cart cart = getCart(email);
+        CartMenu cartMenu = getCartMenu(cartMenuId);
+        List<String> cartMenuOptionIds = Optional.ofNullable(cartMenu.getCartMenuOptionIds())
+                .orElseGet(ArrayList::new);
+
+        for (String cartMenuOptionId : cartMenuOptionIds) {
+            deleteCartMenuOption(cartMenuOptionId);
+            log.debug("카트메뉴옵션을 삭제했습니다: {}", cartMenuOptionId);
+        }
+
+        deleteCartMenu(cartMenuId);
+
+        cart.removeCartMenuIds(cartMenuId);
+        log.debug("카트메뉴를 삭제했습니다: {}", cartMenuId);
+        if(cart.getCartMenuIds().isEmpty()) {
+            log.debug("카트에 메뉴가 없어 카트를 삭제합니다");
+            deleteCart(email);
+        }
+        else {
+            saveCart(email, cart);
+        }
+        return cartMenuId;
     }
 
     public CartOrderResponse getCartOrder(String email) {
@@ -251,7 +272,7 @@ public class CartService {
 
         log.debug("before cartTotalPrice: {}, before cartMenuIds: {}", cart.getTotalPrice(), cart.getCartMenuIds().toString());
         cart.incrementCartTotalPrice(createCartMenuDto.getCartMenuTotalPrice());
-        cart.updateCartMenuIds(CartMemberId);
+        cart.addCartMenuIds(CartMemberId);
         log.debug("after cartTotalPrice: {}, after cartMenuIds: {}", cart.getTotalPrice(), cart.getCartMenuIds().toString());
         saveCart(email, cart);
     }

@@ -85,7 +85,7 @@ public class CartController {
     // 장바구니 삭제
     @DeleteMapping("/{cartMenuId}")
     @ResponseStatus(HttpStatus.FOUND)
-    public ApiResponse<String> removeCartMenu(@PathVariable String cartMenuId) {
+    public ApiResponse<String> removeCartMenu(@PathVariable String cartMenuId) throws JsonProcessingException {
         log.debug("CartController#removeCart called");
 
         String email = SecurityUtil.getCurrentLoginId();
@@ -96,6 +96,7 @@ public class CartController {
 
         return ApiResponse.found(removeCartId);
     }
+
     // 주문하기 페이지 조회
     @GetMapping("/order")
     public ApiResponse<CartOrderResponse> getCartOrder() {

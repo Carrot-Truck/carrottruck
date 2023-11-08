@@ -25,23 +25,27 @@ public class CreateCartMenuRequest {
     @NotNull
     private Integer cartMenuQuantity;
 
+    @NotNull
+    private Integer cartMenuPrice;
+
     private List<Long> menuOptionIds;
 
 
     @Builder
-    public CreateCartMenuRequest(Long foodTruckId, Long menuId, Integer cartMenuQuantity, List<Long> menuOptionIds) {
+    public CreateCartMenuRequest(@NotNull Long foodTruckId, @NotNull Long menuId, @NotNull Integer cartMenuQuantity, @NotNull Integer cartMenuPrice, List<Long> menuOptionIds) {
         this.foodTruckId = foodTruckId;
         this.menuId = menuId;
         this.cartMenuQuantity = cartMenuQuantity;
+        this.cartMenuPrice = cartMenuPrice;
         this.menuOptionIds = menuOptionIds;
     }
-
 
     public CreateCartMenuDto toCreateMenuDto() {
         return CreateCartMenuDto.builder()
                 .foodTruckId(this.foodTruckId)
                 .menuId(this.menuId)
                 .cartMenuQuantity(this.cartMenuQuantity)
+                .cartMenuPrice(this.cartMenuPrice)
                 .menuOptionIds(this.menuOptionIds)
                 .build();
     }

@@ -43,94 +43,44 @@ public class CartService {
 
     public Long createCart(CreateCartMenuDto createCartMenuDto, String email) throws JsonProcessingException {
 
-//        Cart cart = Cart.builder()
-//                .id(email)
-//                .foodTruckId(1l)
-//                .foodTruckName("푸드트럭이름")
-//                .totalPrice(1000)
-//                .cartMenuIds(new ArrayList<>(Arrays.asList("1", "2")))
-//                .build();
-//        Cart cart1 = Cart.builder()
-//                .id("email")
-//                .foodTruckId(1l)
-//                .foodTruckName("푸드트럭이름2")
-//                .totalPrice(2000)
-//                .cartMenuIds(new ArrayList<>(Arrays.asList("3", "4")))
-//                .build();
-//
-//        saveData(CART.name(), email, cart);
-//        saveData(CART.name(), "q@q.com", cart1);
-//        Cart temp = getData(CART.name(), email, Cart.class);
-//        temp.getCartMenuIds().add("55");
-//        saveData(CART.name(), email, temp);
-
-        return 0l;
-
 //        Member member = getMemberByEmail(email);
 //
 //        FoodTruck foodTruck = getFoodTruckById(createCartMenuDto.getFoodTruckId());
 //
 //        Menu menu = getMenuById(createCartMenuDto.getMenuId());
-//
-//        List<MenuOption> menuOptions = createCartMenuDto.getCartMenuOptionIds().stream()
-//                .map(this::getMenuOptionById)
-//                .collect(Collectors.toList());
-//
-//        if(redisTemplate.hasKey(email)) {
-//            Cart cart = getData(CARTMENU.name(), email, Cart.class);
-//            if(cart.getFoodTruckId().equals(createCartMenuDto.getFoodTruckId())) {
-//                // 회원 카트가 존재하고 푸드트럭이 같으면 카트 총금액 변경, 메뉴 추가, 메뉴 옵션 추가
-//                cart.updateCartTotalPrice(menu.getMenuInfo().getPrice());
-//            }
-//            else {
-//                // 회원 카트가 존재하지만 푸드트럭이 다르면 메뉴 삭제, 메뉴 옵션 삭제
-////                redisTemplate.opsForValue().multiGet();
-//
-//                // 카트 추가, 메뉴 추가, 메뉴 옵션 추가
-//            }
-//        }
-//        else {
-//            // 회원 카트가 존재하지 않으면 카트 추가, 메뉴 추가, 메뉴 옵션 추가
-//            Cart cart = Cart.builder()
-//                    .id(email)
-//                    .foodTruckId(foodTruck.getId())
-//                    .foodTruckName(foodTruck.getName())
-//                    .totalPrice(menu.getMenuInfo().getPrice() * createCartMenuDto.getCartMenuQuantity())
-//                    .build();
-//
-//            saveData(email, cart);
-//            log.debug("cart 추가: {}", cart.getId());
-//        }
-//
-//
-//        // 기존의 메뉴가 있으며 옵션도 같으면 수량추가
-//        // 기존의 메뉴가 있지만 옵션이 다르면 메뉴 추가
-//        // 기존의 메뉴가 없으면 메뉴 추가
-//
-//        RedisAtomicLong cartMenuIndex = new RedisAtomicLong("cartMenuId", redisTemplate.getConnectionFactory());
-//        String cartMenuId = email + ":" + cartMenuIndex.incrementAndGet();
-//        // 카트메뉴 pk 생성
-//        saveData(cartMenuId, createCartMenuDto.toEntity(menu, cartMenuId, email));
-//        log.debug("cartMenu 추가: {}", cartMenuId);
-//
-//        if(createCartMenuDto.getCartMenuOptionIds() != null) {
-//            RedisAtomicLong cartMenuOptionIndex = new RedisAtomicLong("cartMenuOptionId", redisTemplate.getConnectionFactory());
-//            for(MenuOption menuOption : menuOptions) {
-//                String cartMenuOptionId = cartMenuId + ":" + cartMenuOptionIndex.incrementAndGet();
-//                // 카트메뉴옵션 pk 생성
-//                CartMenuOption cartMenuOption = CartMenuOption.builder()
-//                        .id(cartMenuOptionId)
-//                        .cartMenuId(cartMenuId)
-//                        .menuOptionId(menuOption.getId())
-//                        .name(menuOption.getMenuInfo().getName())
-//                        .price(menuOption.getMenuInfo().getPrice())
-//                        .build();
-//                saveData(cartMenuOptionId, cartMenuOption);
-//                log.debug("cartMenuOption 추가: {}", cartMenuOptionId);
-//            }
-//        }
-//
-//        return foodTruck.getId();
+
+        if (checkFieldKey(CART.getText(), email)) {
+            // 회원 카트가 존재하는 경우
+            Cart cart = getData(CART.getText(), email, Cart.class);
+            if (cart.getFoodTruckId().equals(createCartMenuDto.getFoodTruckId())) {
+                // 푸드트럭이 같은 경우
+                // 장바구니의 총 금액 및 cartMenuIds 업데이트
+                String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email);
+                saveUpdateCart(createCartMenuDto, cartMenuId, cart, email);
+
+            } else {
+                // 장바구니에 추가한 메뉴의 푸드트럭이 다른 경우
+                // 관련 메뉴 및 메뉴옵션 들 삭제하기
+                for (String cartMenuPk : cart.getCartMenuIds()) {
+                    CartMenu cartMenu = getData(CARTMENU.getText(), cartMenuPk, CartMenu.class);
+                    log.debug("CartService#createCart#getCartMenu#getCartId: {}", cartMenu.getCartId());
+                    log.debug("CartService#createCart#getCartMenu#getId: {}", cartMenu.getId());
+                    for (String cartMenuOptionPk : cartMenu.getCartMenuOptionIds()) {
+                        // null
+                        deleteCartMenuOption(cartMenuOptionPk);
+                    }
+                    deleteCartMenu(cartMenuPk);
+                }
+                String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email);
+                saveNewCart(createCartMenuDto, cartMenuId, email);
+            }
+        } else {
+            // 회원 카트가 존재하지 않으면 카트 추가, 메뉴 추가, 메뉴 옵션 추가
+            String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email);
+            saveNewCart(createCartMenuDto, cartMenuId, email);
+        }
+
+        return createCartMenuDto.getMenuId();
     }
 
     public CartResponse getCart(String email) {
@@ -147,6 +97,65 @@ public class CartService {
 
     public CartOrderResponse getCartOrder(String email) {
         return null;
+    }
+
+
+    public String saveCartMenuAndMenuOption(CreateCartMenuDto createCartMenuDto, String email) {
+        RedisAtomicLong cartMenuIndex = new RedisAtomicLong("cartMenuId", redisTemplate.getConnectionFactory());
+        String cartMenuId = String.valueOf(cartMenuIndex.incrementAndGet());
+        // 메뉴 고유 pk값 생성
+        List<String> cartMenuOptionIds = new ArrayList<>();
+        for (Long menuOptionId : createCartMenuDto.getMenuOptionIds()) {
+            RedisAtomicLong cartMenuOptionIndex = new RedisAtomicLong("cartMenuOptionId", redisTemplate.getConnectionFactory());
+            String cartMenuOptionId = String.valueOf(cartMenuOptionIndex.incrementAndGet());
+            // 메뉴 옵션 고유 pk값 생성
+            cartMenuOptionIds.add(cartMenuOptionId);
+
+            CartMenuOption cartMenuOption = CartMenuOption.builder()
+                    .id(cartMenuOptionId)
+                    .cartMenuId(cartMenuId)
+                    .menuOptionId(menuOptionId)
+                    .name("name은 find한 메뉴옵션 이름을 넣어야함")
+                    .price(999)
+                    .build();
+
+            saveData(CARTMENUOPTION.getText(), cartMenuOptionId, cartMenuOption);
+            log.debug("saveCartMenuAndMenuOption#save MenuOption: {}", cartMenuOption.getMenuOptionId());
+        }
+        CartMenu cartMenu = CartMenu.builder()
+                .id(cartMenuId)
+                .cartId(email)
+                .menuId(createCartMenuDto.getMenuId())
+                .name("name은 find한 메뉴 이름을 넣어야함")
+                .price(999)
+                .quantity(createCartMenuDto.getCartMenuQuantity())
+                .menuImageUrl("menuImageUrl은 find한 메뉴이미지url을 넣어야함")
+                .cartMenuOptionIds(cartMenuOptionIds)
+                .build();
+
+        saveData(CARTMENU.getText(), cartMenuId, cartMenu);
+        log.debug("saveCartMenuAndMenuOption#save Menu: {}", cartMenu.getMenuId());
+        return cartMenuId;
+    }
+
+    public void saveNewCart(CreateCartMenuDto createCartMenuDto, String cartMenuId, String email) {
+        Cart cart = Cart.builder()
+                .id(email)
+                .foodTruckId(createCartMenuDto.getFoodTruckId())
+                .foodTruckName("foodTruckName은 find한 푸드트럭 이름을 넣어야함")
+                .totalPrice(createCartMenuDto.getCartMenuPrice())
+                .cartMenuIds(Arrays.asList(cartMenuId))
+                .build();
+        saveData(CART.getText(), email, cart);
+        log.debug("save Menu in Cart: {}", createCartMenuDto.getMenuOptionIds());
+    }
+
+    public void saveUpdateCart(CreateCartMenuDto createCartMenuDto, String CartMemberId, Cart cart, String email) {
+        log.debug("before updateCart: {}", cart.getCartMenuIds().toString());
+        cart.updateCartTotalPrice(createCartMenuDto.getCartMenuPrice());
+        cart.updateCartMenuIds(CartMemberId);
+        log.debug("after updateCart: {}", cart.getCartMenuIds().toString());
+        saveData(CART.getText(), email, cart);
     }
 
 
@@ -212,4 +221,21 @@ public class CartService {
             return jsonResult;
         }
     }
+
+    public boolean checkFieldKey(String hashKey, String fieldkey) {
+        return redisTemplate.opsForHash().hasKey(hashKey, fieldkey);
+    }
+
+    public void deleteCartMenuOption(String fieldkey) {
+        redisTemplate.opsForHash().delete(CARTMENUOPTION.getText(), fieldkey);
+    }
+
+    public void deleteCartMenu(String fieldkey) {
+        redisTemplate.opsForHash().delete(CARTMENU.getText(), fieldkey);
+    }
+
+    public void deleteCart(String fieldkey) {
+        redisTemplate.opsForHash().delete(CART.getText(), fieldkey);
+    }
+
 }

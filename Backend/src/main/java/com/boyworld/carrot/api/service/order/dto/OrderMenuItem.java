@@ -16,6 +16,7 @@ public class OrderMenuItem {
 
     @Builder
     public OrderMenuItem(Long id, Long menuId, Integer quantity, List<OrderMenuOptionItem> menuOptionList) {
+        this.id = id;
         this.menuId = menuId;
         this.quantity = quantity;
         this.menuOptionList = menuOptionList;

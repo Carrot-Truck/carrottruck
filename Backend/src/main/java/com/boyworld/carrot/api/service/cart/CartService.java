@@ -43,26 +43,26 @@ public class CartService {
 
     public Long createCart(CreateCartMenuDto createCartMenuDto, String email) throws JsonProcessingException {
 
-        Cart cart = Cart.builder()
-                .id(email)
-                .foodTruckId(1l)
-                .foodTruckName("푸드트럭이름")
-                .totalPrice(1000)
-                .cartMenuIds(new ArrayList<>(Arrays.asList("1", "2")))
-                .build();
-        Cart cart1 = Cart.builder()
-                .id("email")
-                .foodTruckId(1l)
-                .foodTruckName("푸드트럭이름2")
-                .totalPrice(2000)
-                .cartMenuIds(new ArrayList<>(Arrays.asList("1", "2")))
-                .build();
-        List<Cart> list = new ArrayList<>();
-        list.add(cart);
-        list.add(cart1);
-
-        saveData(email, CARTMENU.name(), list);
-
+//        Cart cart = Cart.builder()
+//                .id(email)
+//                .foodTruckId(1l)
+//                .foodTruckName("푸드트럭이름")
+//                .totalPrice(1000)
+//                .cartMenuIds(new ArrayList<>(Arrays.asList("1", "2")))
+//                .build();
+//        Cart cart1 = Cart.builder()
+//                .id("email")
+//                .foodTruckId(1l)
+//                .foodTruckName("푸드트럭이름2")
+//                .totalPrice(2000)
+//                .cartMenuIds(new ArrayList<>(Arrays.asList("3", "4")))
+//                .build();
+//
+//        saveData(CART.name(), email, cart);
+//        saveData(CART.name(), "q@q.com", cart1);
+//        Cart temp = getData(CART.name(), email, Cart.class);
+//        temp.getCartMenuIds().add("55");
+//        saveData(CART.name(), email, temp);
 
         return 0l;
 

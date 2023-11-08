@@ -38,10 +38,7 @@ public class AddressControllerDocsTest extends RestDocsSupport {
 
         List<AddressInfoDto> addr = new ArrayList<>();
 
-        String[] sidos = new String[] {"강원도", "경기도", "충청북도", "충청남도", "인천광역시",
-                "부산광역시", "대구광역시", "서울특별시", "대전광역시", "울산광역시",
-                "광주광역시", "세종특별자치시", "전라남도", "전라북도", "경상북도",
-                "경상남도", "제주특별자치도"};
+        String[] sidos = new String[] {"강원도", "경기도", "광주광역시"};
 
         for (int i = 0; i < sidos.length; i++) {
             addr.add(AddressInfoDto.builder()
@@ -97,7 +94,7 @@ public class AddressControllerDocsTest extends RestDocsSupport {
                 .address(addr)
                 .build();
 
-        Long sid = 11L;
+        Long sid = 3L;
 
         given(addressQueryService.getSigungu(anyLong()))
                 .willReturn(response);
@@ -133,14 +130,7 @@ public class AddressControllerDocsTest extends RestDocsSupport {
 
         List<AddressInfoDto> addr = new ArrayList<>();
 
-        String[] dongs = new String[] {"송정동", "도산동", "도호동", "신촌동", "서봉동", "운수동", "선암동", "소촌동", "우산동",
-                "황룡동", "박호동", "비아동", "도천동", "수완동", "월계동", "쌍암동", "산월동", "신창동", "신가동", "운남동",
-                "안청동", "진곡동", "장덕동", "흑석동", "하남동", "장수동", "산정동", "월곡동", "등임동", "산막동", "고룡동",
-                "신룡동", "두정동", "임곡동", "광산동", "오산동", "사호동", "하산동", "유계동", "본덕동", "용봉동", "요기동",
-                "복룡동", "송대동", "옥동", "월전동", "장록동", "송촌동", "지죽동", "용동", "용곡동", "지정동", "명화동", "동산동",
-                "연산동", "도덕동", "송산동", "지평동", "오운동", "삼거동", "양동", "내산동", "대산동", "송학동", "신동", "삼도동",
-                "남산동", "송치동", "산수동", "선동", "지산동", "왕동", "북산동", "명도동", "동호동", "덕림동", "양산동", "동림동",
-                "오선동"};
+        String[] dongs = new String[] {"송정동", "도산동", "도호동"};
 
         for (int i = 0; i < dongs.length; i++) {
             addr.add(AddressInfoDto.builder()
@@ -153,7 +143,7 @@ public class AddressControllerDocsTest extends RestDocsSupport {
                 .address(addr)
                 .build();
 
-        Long sid = 139L;
+        Long sid = 5L;
 
         given(addressQueryService.getDong(anyLong()))
                 .willReturn(response);

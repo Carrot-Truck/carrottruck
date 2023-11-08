@@ -39,15 +39,16 @@ public class CartController {
         Long saveId = cartService.createCart(request.toCreateMenuDto(), email);
         return ApiResponse.created(saveId);
     }
+
     // 장바구니 조회
     @GetMapping
-    public ApiResponse<CartResponse> getCart() {
+    public ApiResponse<CartResponse> getShoppingCart() {
         log.debug("CartController#getCart called");
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email = {}", email);
 
-        CartResponse response = cartService.getCart(email);
+        CartResponse response = cartService.getShoppingCart(email);
         log.debug("CartResponse = {}", response);
 
         return ApiResponse.ok(response);

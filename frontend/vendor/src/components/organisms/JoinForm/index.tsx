@@ -18,6 +18,8 @@ function JoinForm() {
   const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태
   const [isEmailAvailable, setIsEmailAvailable] = useState(false); // 이메일 중복검사 상태
   // const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 상태
+  const APPLICATION_SPRING_SERVER_URL =
+   process.env.NODE_ENV === 'production' ? 'https://j9c107.p.ssafy.io' : 'http://localhost:8001';
 
   // 정규식 패턴
   const emailRegExp =
@@ -44,7 +46,7 @@ function JoinForm() {
       const body = {
         email
       };
-      const response = await axios.post('http://localhost:8001/auth/duplication/email', body);
+      const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/auth/duplication/email`, body);
       console.log(response.data.data);
       if (response.data.data) {
         alert('이미 사용 중인 이메일입니다.');
@@ -88,10 +90,10 @@ function JoinForm() {
             role,
           };
           // 회원가입 API 호출
-          const response = await axios.post('http://localhost:8001/member/vendor/join', body);
+          const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/member/vendor/join`, body);
 
           if (response.status === 201) {
-            const loginResponse = await axios.post('http://localhost:8001/auth/login/vendor', body);
+            const loginResponse = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/auth/login/vendor`, body);
 
             localStorage.setItem('accessToken', loginResponse.data.data.accessToken);
             localStorage.setItem('refreshToken', loginResponse.data.data.refreshToken);

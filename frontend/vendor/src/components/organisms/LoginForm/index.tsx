@@ -12,11 +12,13 @@ function LoginForm() {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('accessToken');
   const grantType = localStorage.getItem('grantType');
+  const APPLICATION_SPRING_SERVER_URL =
+   process.env.NODE_ENV === 'production' ? 'https://j9c107.p.ssafy.io' : 'http://localhost:8001';
 
   useEffect (()=>{
     const isValidUser = async () => {
       try {
-        await axios.get('http://localhost:8001/member/vendor/info',
+        await axios.get(`${APPLICATION_SPRING_SERVER_URL}/member/vendor/info`,
         {
           headers : {
             Authorization: `${grantType} ${accessToken}`,
@@ -42,7 +44,7 @@ function LoginForm() {
         email,
         password
       };
-      const response = await axios.post('http://localhost:8001/auth/login/vendor', body);
+      const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/auth/login/vendor`, body);
       // 로컬스토리지에 토큰 저장
       localStorage.setItem('accessToken', response.data.data.accessToken);
       localStorage.setItem('refreshToken', response.data.data.refreshToken);

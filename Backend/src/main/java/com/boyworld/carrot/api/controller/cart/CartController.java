@@ -42,7 +42,7 @@ public class CartController {
 
     // 장바구니 조회
     @GetMapping
-    public ApiResponse<CartResponse> getShoppingCart() {
+    public ApiResponse<CartResponse> getShoppingCart() throws JsonProcessingException {
         log.debug("CartController#getCart called");
 
         String email = SecurityUtil.getCurrentLoginId();

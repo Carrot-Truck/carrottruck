@@ -1,8 +1,8 @@
 package com.boyworld.carrot.docs.order;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -26,6 +26,7 @@ import com.boyworld.carrot.api.controller.order.request.CreateOrderRequest;
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
+import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.docs.RestDocsSupport;
@@ -63,17 +64,17 @@ public class OrderControllerDocsTest extends RestDocsSupport {
         orderMenuItems1.add(OrderMenuItem.builder()
             .menuId(1L)
             .quantity(1)
-            .menuOptionIdList(menuOptionIdList1)
+            .menuOptionList(menuOptionIdList1)
             .build());
         orderMenuItems1.add(OrderMenuItem.builder()
             .menuId(2L)
             .quantity(2)
-            .menuOptionIdList(menuOptionIdList2)
+            .menuOptionList(menuOptionIdList2)
             .build());
         orderMenuItems2.add(OrderMenuItem.builder()
             .menuId(2L)
             .quantity(1)
-            .menuOptionIdList(menuOptionIdList3)
+            .menuOptionList(menuOptionIdList3)
             .build());
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -164,13 +165,13 @@ public class OrderControllerDocsTest extends RestDocsSupport {
         orderMenuItems.add(OrderMenuItem.builder()
             .menuId(1L)
             .quantity(1)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+            .menuOptionList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
             .build());
 
         orderMenuItems.add(OrderMenuItem.builder()
             .menuId(2L)
             .quantity(2)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 4L)))
+            .menuOptionList(new ArrayList<>(Arrays.asList(1L, 4L)))
             .build());
 
         OrderResponse response = OrderResponse.builder()
@@ -184,7 +185,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                 .orderMenuItems(orderMenuItems)
                 .build()).build();
 
-        given(orderService.getOrder(anyLong(), anyString(), eq(Role.CLIENT)))
+        given(orderService.getOrder(anyLong(), anyString(), any(Role.class)))
             .willReturn(response);
 
         Long orderId = 1L;
@@ -253,13 +254,13 @@ public class OrderControllerDocsTest extends RestDocsSupport {
         orderMenuItems.add(OrderMenuItem.builder()
             .menuId(1L)
             .quantity(1)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+            .menuOptionList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
             .build());
 
         orderMenuItems.add(OrderMenuItem.builder()
             .menuId(2L)
             .quantity(2)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 4L)))
+            .menuOptionList(new ArrayList<>(Arrays.asList(1L, 4L)))
             .build());
 
         OrderResponse response = OrderResponse.builder()
@@ -276,7 +277,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                 .orderMenuItems(orderMenuItems)
                 .build()).build();
 
-        given(orderService.getOrder(anyLong(), anyString(), eq(Role.VENDOR)))
+        given(orderService.getOrder(anyLong(), anyString(), any(Role.class)))
             .willReturn(response);
 
         Long orderId = 1L;
@@ -345,13 +346,13 @@ public class OrderControllerDocsTest extends RestDocsSupport {
         orderMenuItems.add(OrderMenuItem.builder()
             .menuId(1L)
             .quantity(1)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+            .menuOptionList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
             .build());
 
         orderMenuItems.add(OrderMenuItem.builder()
             .menuId(2L)
             .quantity(2)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(2L, 4L)))
+            .menuOptionList(new ArrayList<>(Arrays.asList(2L, 4L)))
             .build());
 
         CreateOrderRequest request = CreateOrderRequest.builder()
@@ -360,7 +361,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
             .orderMenuItems(orderMenuItems)
             .build();
 
-        given(orderService.createOrder(eq(request.toCreateOrderDto()), anyString()))
+        given(orderService.createOrder(any(CreateOrderDto.class), anyString()))
             .willReturn(1L);
 
         mockMvc.perform(
@@ -407,7 +408,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = "CLIENT")
     void cancelOrder() throws Exception {
 
-        given(orderService.cancelOrder(eq(1L), anyString()))
+        given(orderService.cancelOrder(anyLong(), anyString()))
             .willReturn(1L);
 
         Long orderId = 1L;

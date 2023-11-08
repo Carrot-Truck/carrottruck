@@ -99,7 +99,7 @@ public class CartController {
 
     // 주문하기 페이지 조회
     @GetMapping("/order")
-    public ApiResponse<CartOrderResponse> getCartOrder() {
+    public ApiResponse<CartOrderResponse> getCartOrder() throws JsonProcessingException {
         log.debug("CartController#getCartOrder called");
 
         String email = SecurityUtil.getCurrentLoginId();

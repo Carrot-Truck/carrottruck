@@ -49,8 +49,6 @@ public class CartService {
 
     public Long createCart(CreateCartMenuDto createCartMenuDto, String email) throws JsonProcessingException {
 
-//        Member member = getMemberByEmail(email);
-//
         FoodTruck foodTruck = getFoodTruckById(createCartMenuDto.getFoodTruckId());
 
         Menu menu = getMenuById(createCartMenuDto.getMenuId());
@@ -189,8 +187,11 @@ public class CartService {
         return cartMenuId;
     }
 
-    public CartOrderResponse getCartOrder(String email) {
-        return null;
+    public CartOrderResponse getCartOrder(String email) throws JsonProcessingException {
+        Cart cart = getCart(email);
+        FoodTruck foodTruck = getFoodTruckById(cart.getFoodTruckId());
+        Member member = getMemberByEmail(email);
+        return CartOrderResponse.of(foodTruck, member, cart);
     }
 
     /**

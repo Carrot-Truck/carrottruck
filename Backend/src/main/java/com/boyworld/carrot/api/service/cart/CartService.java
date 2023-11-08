@@ -111,7 +111,13 @@ public class CartService {
     }
 
     public CartResponse getShoppingCart(String email) throws JsonProcessingException {
-        Cart cart = getCart(email);
+        Cart cart;
+        if (checkFieldKey(CART.getText(), email)) {
+            cart = getCart(email);
+        } else {
+            log.debug("카트가 비어있습니다: {}", email);
+            return null; // null
+        }
 //        List<CartMenu> cartMenuList = Optional.ofNullable(cart.getCartMenuIds())
 //                .orElseGet(ArrayList::new)
 //                .stream()
@@ -139,7 +145,7 @@ public class CartService {
         Cart cart = getCart(email);
         CartMenu cartMenu = getCartMenu(cartMenuId);
 
-        if(cartMenu.getQuantity().equals(1)) {
+        if (cartMenu.getQuantity().equals(1)) {
             return cartMenuId;
         }
         // 1이면 감소 불가
@@ -169,11 +175,10 @@ public class CartService {
 
         cart.removeCartMenuIds(cartMenuId);
         log.debug("카트메뉴를 삭제했습니다: {}", cartMenuId);
-        if(cart.getCartMenuIds().isEmpty()) {
+        if (cart.getCartMenuIds().isEmpty()) {
             log.debug("카트에 메뉴가 없어 카트를 삭제합니다");
             deleteCart(email);
-        }
-        else {
+        } else {
             saveCart(email, cart);
         }
         return cartMenuId;
@@ -352,6 +357,7 @@ public class CartService {
 
     public Cart getCart(String field) throws JsonProcessingException {
         return getData(CART.getText(), field, Cart.class);
+
     }
 
     public CartMenu getCartMenu(String field) throws JsonProcessingException {

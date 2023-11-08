@@ -76,6 +76,10 @@ dependencies {
 
 	// iamport payment
 	implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
+
+	//email
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 // iamport payment

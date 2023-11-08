@@ -2,7 +2,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MainPage from 'pages/MainPage';
 import LoginPage from 'pages/LoginPage';
-import RegistrationPage from 'pages/BusinessRegistrationPage';
+import RegistrationPage from 'pages/RegistrationPage';
 
 function RouteLink() {
   return (

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Navbar from 'components/organisms/Navbar';
 import RegistFoodTruckButton from 'components/organisms/RegistFoodTruckButton'
 import VendorMainForm from 'components/organisms/VendorMainForm'
+import { AxiosError } from 'axios';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,36 +15,54 @@ function MainPage() {
    const grantType = localStorage.getItem('grantType');
 
    useEffect (()=>{
-    const getDataL = async () => {
+    const isValidUser = async () => {
       try {
-        //TODO: 하기 코드를 token 검증 API 나오면 그 API로 교체해야함.
-        if(localStorage.getItem('accessToken') !== null){ // 로그인 한 사용자라면
-          try{
-            const response = await axios.get('http://localhost:8001/food-truck/overview?lastFoodTruckId=',
-            {
-              headers: {
-                Authorization: `${grantType} ${accessToken}`,
-              },
-            });
-            if (response.data.success) { // 정보를 받았고,
-              setDataEmpty(response.data.items.length === 0); // 그 정보가 비어있다면 true / 비어있지 않다면 false
-              console.log(response.data.items)
-            }
-          } catch(error){
-            
-          }
-        }else{
-          alert("로그인이 필요한 서비스입니다.");
-          navigate('/login');
-        }
+        const validToken = await axios.get('http://localhost:8001/member/vendor/info',
+        {
+          headers : {
+            Authorization: `${grantType} ${accessToken}`,
+          },
+        });
+        console.log(validToken);
+        return true;
       } catch (error) {
-        console.error('Error!!', error);
-        alert("처리중 오류 발생! 다시 시도해주세요.");
-        navigate('/');
+        const err = error as AxiosError;
+        if(err.response?.status === 401){
+          alert('로그인 시간이 만료되었습니다. \n다시 로그인 해주세요.');
+          return navigate('/login'); 
+        }else{
+          console.error('Error!!', error);
+          alert("알 수 없는 오류가 발생하였습니다. \n다시 로그인 해주세요.");
+          return navigate('/login'); // 리다이렉트하고 함수 종료
+        }
+      }
+    };
+    const hasVendorFoodTruck = async() => {
+        //TODO: 하기 코드를 token 검증 API 나오면 그 API로 교체해야함.
+      try{
+        const response = await axios.get('http://localhost:8001/food-truck/overview?lastFoodTruckId=',
+        {
+          headers: {
+            Authorization: `${grantType} ${accessToken}`,
+          },
+        });
+        if (response.data.success) { // 정보를 받았고,
+          setDataEmpty(response.data.items.length === 0); // 그 정보가 비어있다면 true / 비어있지 않다면 false
+          console.log(response.data.items)
+        }
+      }catch(error){
+        console.log("error", error);
+        alert('처리 중 에러 발생!');
+        navigate('/login');
       }
     };
     
-    getDataL();
+    // isValidUser 함수를 비동기로 호출하고 결과를 확인합니다.
+    isValidUser().then((isValid) => {
+      if (isValid) {
+        hasVendorFoodTruck();
+      }
+    });
    }, []);
 
   return (

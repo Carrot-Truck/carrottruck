@@ -14,11 +14,29 @@ function LoginForm() {
   const grantType = localStorage.getItem('grantType');
 
   useEffect (()=>{
-    //TODO: 토큰검증해서 이미 로그인한 사용자라면 다시 메인페이지로 이동하게 해야해
-    if(grantType !== null && accessToken !== null){
-      navigate('/');
-    }
-  });
+    const isValidUser = async () => {
+      try {
+        const validToken = await axios.get('http://localhost:8001/member/vendor/info',
+        {
+          headers : {
+            Authorization: `${grantType} ${accessToken}`,
+          },
+        });
+        console.log(validToken);
+        return true;
+      } catch(error){
+        console.log(error);
+        return false;
+      }
+    };
+    isValidUser().then((isValid) => {
+      if (isValid) {
+        navigate('/');
+      }
+    });
+  }, []);
+
+  
 
   const login = async () => {
     try {

@@ -1,4 +1,4 @@
-package com.boyworld.carrot.api.service.statistics.dto;
+package com.boyworld.carrot.api.service.statistics.dto.list;
 
 import lombok.Builder;
 import lombok.Data;

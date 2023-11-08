@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AdongCodeRepository extends JpaRepository<AdongCode, Long> {
+
+    AdongCode findAdongCodeByDong(String dong);
 }

@@ -1,12 +1,12 @@
 package com.boyworld.carrot.api.service.statistics;
 
 import com.boyworld.carrot.api.controller.statistics.response.*;
-import com.boyworld.carrot.api.service.statistics.dto.SummaryByMonthDto;
-import com.boyworld.carrot.api.service.statistics.dto.SummaryBySalesDto;
-import com.boyworld.carrot.api.service.statistics.dto.SummaryByWeekDto;
-import com.boyworld.carrot.api.service.statistics.dto.StatisticsByMonthDto;
-import com.boyworld.carrot.api.service.statistics.dto.StatisticsBySalesDto;
-import com.boyworld.carrot.api.service.statistics.dto.StatisticsByWeekDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.SummaryByMonthDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.SummaryBySalesDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.SummaryByWeekDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.StatisticsByMonthDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.StatisticsBySalesDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.StatisticsByWeekDto;
 import com.boyworld.carrot.domain.sale.repository.query.StatisticsQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,8 +83,7 @@ public class StatisticsQueryService {
      * @return 매출통계 상세
      */
     public StatisticsBySalesDetailsResponse getStatisticsBySalesDetails(Long foodTruckId, Long salesId) {
-        return null;
-
+        return statisticsQueryRepository.getSaleDetail(foodTruckId, salesId);
     }
 
     /**

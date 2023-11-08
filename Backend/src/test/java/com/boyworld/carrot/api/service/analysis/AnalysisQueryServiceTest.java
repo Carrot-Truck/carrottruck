@@ -67,13 +67,19 @@ public class AnalysisQueryServiceTest extends IntegrationTestSupport {
     }
 
     private AdongCode createAdongCode() {
-        AdongCode adongCode = AdongCode.builder()
+        AdongCode adongCode = adongCodeRepository.findAdongCodeByDong("수완동");
+        if (adongCode != null) {
+            return adongCode;
+        }
+
+        adongCode = AdongCode.builder()
                 .adongCode("29200637")
                 .sido("광주광역시")
                 .sigungu("광산구")
                 .dong("수완동")
                 .createdDate(LocalDateTime.now())
                 .build();
+
         return adongCodeRepository.save(adongCode);
     }
 }

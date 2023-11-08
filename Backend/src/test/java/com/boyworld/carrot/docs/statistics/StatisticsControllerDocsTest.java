@@ -3,7 +3,12 @@ package com.boyworld.carrot.docs.statistics;
 import com.boyworld.carrot.api.controller.statistics.StatisticsController;
 import com.boyworld.carrot.api.controller.statistics.response.*;
 import com.boyworld.carrot.api.service.statistics.StatisticsQueryService;
-import com.boyworld.carrot.api.service.statistics.dto.*;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByDayDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByHourDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByMenuDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.StatisticsByMonthDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.StatisticsBySalesDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.StatisticsByWeekDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -145,17 +150,6 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
     @Test
     void getStatisticsBySalesDetails() throws Exception {
 
-        StatisticsBySalesDto item = StatisticsBySalesDto.builder()
-                .salesId(1L)
-                .date(LocalDateTime.now().toLocalDate().minusDays(3).format(DateTimeFormatter.ISO_LOCAL_DATE))
-                .startTime(LocalDateTime.now().minusMinutes(345).toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME))
-                .endTime(LocalDateTime.now().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME))
-                .address("광주광역시 광산구 장덕로5번길 16")
-                .totalHours(5)
-                .totalMinutes(45)
-                .totalSales(113800)
-                .build();
-
         SalesByMenuDto menu1 = SalesByMenuDto.builder()
                 .menuId(1L)
                 .menuName("통베이컨 슈림프 디럭스")
@@ -218,7 +212,6 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         List<SalesByHourDto> hours = List.of(hour1, hour2, hour3, hour4, hour5, hour6);
 
         StatisticsBySalesDetailsResponse response = StatisticsBySalesDetailsResponse.builder()
-                .statisticsBySales(item)
                 .latitude(new BigDecimal("35.19684"))
                 .longitude(new BigDecimal("126.8108"))
                 .salesByMenu(menus)
@@ -253,22 +246,6 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("상태"),
                                 fieldWithPath("message").type(JsonFieldType.STRING)
                                         .description("메시지"),
-                                fieldWithPath("data.statisticsBySales.salesId").type(JsonFieldType.NUMBER)
-                                        .description("영업 ID"),
-                                fieldWithPath("data.statisticsBySales.date").type(JsonFieldType.STRING)
-                                        .description("영업일"),
-                                fieldWithPath("data.statisticsBySales.startTime").type(JsonFieldType.STRING)
-                                        .description("영업 시작 시간"),
-                                fieldWithPath("data.statisticsBySales.endTime").type(JsonFieldType.STRING)
-                                        .description("영업 종료 시간"),
-                                fieldWithPath("data.statisticsBySales.address").type(JsonFieldType.STRING)
-                                        .description("도로명 주소"),
-                                fieldWithPath("data.statisticsBySales.totalHours").type(JsonFieldType.NUMBER)
-                                        .description("판매한 시간"),
-                                fieldWithPath("data.statisticsBySales.totalMinutes").type(JsonFieldType.NUMBER)
-                                        .description("판매한 분"),
-                                fieldWithPath("data.statisticsBySales.totalSales").type(JsonFieldType.NUMBER)
-                                        .description("총 매출액"),
                                 fieldWithPath("data.latitude").type(JsonFieldType.STRING)
                                         .description("영업 위치 위도"),
                                 fieldWithPath("data.longitude").type(JsonFieldType.STRING)
@@ -377,14 +354,6 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         LocalDate startDate = LocalDateTime.now().toLocalDate().minusDays(6);
         LocalDate endDate = LocalDateTime.now().toLocalDate();
 
-        StatisticsByWeekDto item = StatisticsByWeekDto.builder()
-                .startDate(startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
-                .endDate(endDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
-                .totalHours(28)
-                .totalMinutes(36)
-                .totalSales(527700)
-                .build();
-
         SalesByMenuDto menu1 = SalesByMenuDto.builder()
                 .menuId(1L)
                 .menuName("통베이컨 슈림프 디럭스")
@@ -473,7 +442,6 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         }
 
         StatisticsByWeekDetailsResponse response = StatisticsByWeekDetailsResponse.builder()
-                .statisticsByWeek(item)
                 .salesByMenu(menus)
                 .salesByHour(hours)
                 .salesByDay(days)
@@ -512,16 +480,6 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("상태"),
                                 fieldWithPath("message").type(JsonFieldType.STRING)
                                         .description("메시지"),
-                                fieldWithPath("data.statisticsByWeek.startDate").type(JsonFieldType.STRING)
-                                        .description("주 시작일"),
-                                fieldWithPath("data.statisticsByWeek.endDate").type(JsonFieldType.STRING)
-                                        .description("주 종료일"),
-                                fieldWithPath("data.statisticsByWeek.totalHours").type(JsonFieldType.NUMBER)
-                                        .description("판매한 시간"),
-                                fieldWithPath("data.statisticsByWeek.totalMinutes").type(JsonFieldType.NUMBER)
-                                        .description("판매한 분"),
-                                fieldWithPath("data.statisticsByWeek.totalSales").type(JsonFieldType.NUMBER)
-                                        .description("총 매출액"),
                                 fieldWithPath("data.salesByMenu[].menuId").type(JsonFieldType.NUMBER)
                                         .description("메뉴 ID"),
                                 fieldWithPath("data.salesByMenu[].menuName").type(JsonFieldType.STRING)
@@ -619,13 +577,6 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
     @Test
     void getStatisticsByMonthDetails() throws Exception {
 
-        StatisticsByMonthDto item = StatisticsByMonthDto.builder()
-                .month(10)
-                .totalHours(87)
-                .totalMinutes(12)
-                .totalSales(1773200)
-                .build();
-
         SalesByMenuDto menu1 = SalesByMenuDto.builder()
                 .menuId(1L)
                 .menuName("통베이컨 슈림프 디럭스")
@@ -714,7 +665,6 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         }
 
         StatisticsByMonthDetailsResponse response = StatisticsByMonthDetailsResponse.builder()
-                .statisticsByMonth(item)
                 .salesByMenu(menus)
                 .salesByHour(hours)
                 .salesByDay(days)
@@ -753,14 +703,6 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("상태"),
                                 fieldWithPath("message").type(JsonFieldType.STRING)
                                         .description("메시지"),
-                                fieldWithPath("data.statisticsByMonth.month").type(JsonFieldType.NUMBER)
-                                        .description("영업월"),
-                                fieldWithPath("data.statisticsByMonth.totalHours").type(JsonFieldType.NUMBER)
-                                        .description("판매한 시간"),
-                                fieldWithPath("data.statisticsByMonth.totalMinutes").type(JsonFieldType.NUMBER)
-                                        .description("판매한 분"),
-                                fieldWithPath("data.statisticsByMonth.totalSales").type(JsonFieldType.NUMBER)
-                                        .description("총 매출액"),
                                 fieldWithPath("data.salesByMenu[].menuId").type(JsonFieldType.NUMBER)
                                         .description("메뉴 ID"),
                                 fieldWithPath("data.salesByMenu[].menuName").type(JsonFieldType.STRING)

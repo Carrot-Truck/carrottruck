@@ -2,6 +2,8 @@ package com.boyworld.carrot.api.service.member.query;
 
 import com.boyworld.carrot.api.service.member.dto.LoginDto;
 import com.boyworld.carrot.api.service.member.error.InValidAccessException;
+import com.boyworld.carrot.client.mail.EmailMessage;
+import com.boyworld.carrot.client.mail.MailSendClient;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
@@ -10,6 +12,8 @@ import com.boyworld.carrot.security.JwtTokenProvider;
 import com.boyworld.carrot.security.TokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -17,15 +21,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 인증 서비스
  *
  * @author 최영환
  */
+@Slf4j
 @Service
 @Transactional(readOnly = true)
-@Slf4j
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -33,6 +38,8 @@ public class AuthService {
     private final MemberQueryRepository memberQueryRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final MailSendClient mailSendClient;
+    private final RedisTemplate<String, String> redisTemplate;
 
     /**
      * 로그인
@@ -122,5 +129,35 @@ public class AuthService {
         if (member.getRole().equals(Role.CLIENT)) {
             throw new InValidAccessException("잘못된 접근입니다.");
         }
+    }
+
+    /**
+     * 이메일 인증 번호 발송
+     *
+     * @param emailMessage 인증번호를 받을 이메일 (사용자 이메일)
+     */
+    public void authEmail(EmailMessage emailMessage) {
+        String authNumber = mailSendClient.sendEmail(emailMessage, "email");
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+
+        valueOperations.set(emailMessage.getTo(), authNumber, 3, TimeUnit.MINUTES);
+    }
+
+    /**
+     * 이메일 인증 번호 확인
+     *
+     * @param email      인증할 이메일
+     * @param authNumber 발급된 인증번호
+     * @throws IllegalArgumentException 인증 실패 시
+     */
+    public void authCheckEmail(String email, String authNumber) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String storeAuthNumber = valueOperations.get(email);
+
+        if (!authNumber.equals(storeAuthNumber)) {
+            throw new IllegalArgumentException("인증 실패");
+        }
+
+        redisTemplate.delete(email);
     }
 }

@@ -368,6 +368,7 @@ public class StatisticsQueryServiceTest extends IntegrationTestSupport {
                 .totalAmount(totalAmount)
                 .startTime(startTime)
                 .endTime(endTime)
+                .orderable(true)
                 .active(true)
                 .build();
         return saleRepository.save(sale);

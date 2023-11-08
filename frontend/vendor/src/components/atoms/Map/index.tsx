@@ -38,7 +38,7 @@ const NaverMap: React.FC<INaverMapProps> = ({ clientId, markers }) => {
     const loadMap = (latitude: number, longitude: number) => {
       const mapOptions = {
         center: new window.naver.maps.LatLng(latitude, longitude),
-        zoom: 10
+        zoom: 15
       };
 
       const map = new window.naver.maps.Map(mapRef.current, mapOptions);

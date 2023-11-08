@@ -87,4 +87,9 @@ public class Order extends TimeBaseEntity {
 
         return this;
     }
+
+    // == business logic ==//
+    public void editOrderTotalPrice(Integer totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 }

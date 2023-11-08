@@ -1,6 +1,8 @@
 package com.boyworld.carrot.docs.mermber;
 
 import com.boyworld.carrot.api.controller.member.AuthController;
+import com.boyworld.carrot.api.controller.member.request.AuthCheckEmailRequest;
+import com.boyworld.carrot.api.controller.member.request.AuthEmailRequest;
 import com.boyworld.carrot.api.controller.member.request.CheckEmailRequest;
 import com.boyworld.carrot.api.controller.member.request.LoginRequest;
 import com.boyworld.carrot.api.service.member.query.AuthService;
@@ -173,6 +175,80 @@ public class AuthControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.BOOLEAN)
                                         .description("이메일 중복 여부")
+                        )
+                ));
+    }
+
+    @DisplayName("인증 메일 발송 API")
+    @Test
+    void authEmail() throws Exception {
+        AuthEmailRequest request = AuthEmailRequest.builder()
+                .email("ssafy@ssafy.com")
+                .build();
+
+        mockMvc.perform(
+                        post("/auth/email")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("auth-email",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("email").type(JsonFieldType.STRING)
+                                        .optional()
+                                        .description("인증 번호 발송할 이메일")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL)
+                                        .description("응답 데이터")
+                        )
+                ));
+    }
+
+    @DisplayName("인증 메일 확인 API")
+    @Test
+    void checkAuthEmail() throws Exception {
+        AuthCheckEmailRequest request = AuthCheckEmailRequest.builder()
+                .email("ssafy@ssafy.com")
+                .authNumber("74p30C0I")
+                .build();
+
+        mockMvc.perform(
+                        post("/auth/email/check")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("check-auth-email",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("email").type(JsonFieldType.STRING)
+                                        .optional()
+                                        .description("인증 번호 발송할 이메일"),
+                                fieldWithPath("authNumber").type(JsonFieldType.STRING)
+                                        .optional()
+                                        .description("인증 번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL)
+                                        .description("응답 데이터")
                         )
                 ));
     }

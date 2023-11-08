@@ -1,6 +1,6 @@
 package com.boyworld.carrot.api.controller.statistics.response;
 
-import com.boyworld.carrot.api.service.statistics.dto.StatisticsByWeekDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.StatisticsByWeekDto;
 import lombok.Builder;
 import lombok.Data;
 

@@ -45,4 +45,4 @@ out/
 .vscode/
 
 ### FCM secret key ###
-.json
+**/src/main/resources/firebase/*.json

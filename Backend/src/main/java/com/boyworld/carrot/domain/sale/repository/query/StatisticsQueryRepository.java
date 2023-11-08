@@ -1,10 +1,16 @@
 package com.boyworld.carrot.domain.sale.repository.query;
 
-import com.boyworld.carrot.api.service.statistics.dto.SummaryByMonthDto;
-import com.boyworld.carrot.api.service.statistics.dto.SummaryBySalesDto;
-import com.boyworld.carrot.api.service.statistics.dto.SummaryByWeekDto;
-import com.boyworld.carrot.api.service.statistics.dto.SalesByMenuDto;
-import com.boyworld.carrot.api.service.statistics.dto.StatisticsBySalesDto;
+import com.boyworld.carrot.api.controller.statistics.response.StatisticsByMonthDetailsResponse;
+import com.boyworld.carrot.api.controller.statistics.response.StatisticsBySalesDetailsResponse;
+import com.boyworld.carrot.api.controller.statistics.response.StatisticsByWeekDetailsResponse;
+import com.boyworld.carrot.api.service.statistics.dto.details.LocationDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByDayDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByHourDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.SummaryByMonthDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.SummaryBySalesDto;
+import com.boyworld.carrot.api.service.statistics.dto.list.SummaryByWeekDto;
+import com.boyworld.carrot.api.service.statistics.dto.details.SalesByMenuDto;
+import com.boyworld.carrot.domain.order.Status;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -17,9 +23,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
-import static com.boyworld.carrot.domain.menu.QMenu.menu;
 import static com.boyworld.carrot.domain.order.QOrder.order;
 import static com.boyworld.carrot.domain.order.QOrderMenu.orderMenu;
 import static com.boyworld.carrot.domain.sale.QSale.sale;
@@ -66,30 +72,42 @@ public class StatisticsQueryRepository {
                 .fetch();
     }
 
-    public List<StatisticsBySalesDto> getSaleDetail(Long foodTruckId, Long salesId) {
+    public StatisticsBySalesDetailsResponse getSaleDetail(Long foodTruckId, Long salesId) {
+        Long fid = queryFactory
+                .select(sale.foodTruck.id)
+                .from(sale)
+                .where(sale.id.eq(salesId))
+                .fetchOne();
+
+        if (fid == null || fid.longValue() != foodTruckId.longValue()) {
+            return null;
+        }
+
         List<Long> orderIds = queryFactory
                 .select(order.id)
                 .from(order)
-                .where(order.sale.id.eq(salesId))
+                .where(order.sale.id.eq(salesId),
+                        isCompleteOrder())
                 .fetch();
 
-        List<SalesByMenuDto> menus = queryFactory
-                .select(Projections.constructor(SalesByMenuDto.class,
-                        orderMenu.menu.id,
-                        orderMenu.menu.menuInfo.name,
-                        order.count(),
-                        orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum()
+        LocationDto locations = queryFactory
+                .select(Projections.constructor(LocationDto.class,
+                        sale.latitude,
+                        sale.longitude
                 ))
-                .from(orderMenu)
-                .innerJoin(order)
-                .on(order.id.eq(orderMenu.order.id))
-                .innerJoin(menu)
-                .on(orderMenu.menu.id.eq(menu.id))
-                .groupBy(orderMenu.menu.id)
-                .orderBy(orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum().desc())
-                .fetch();
+                .from(sale)
+                .where(sale.id.eq(salesId))
+                .fetchOne();
 
-        return null;
+        if (locations == null) {
+            return null;
+        }
+
+        List<SalesByMenuDto> salesByMenu = getSalesByMenu(orderIds);
+
+        List<SalesByHourDto> salesByHour = getSalesByHour(orderIds);
+
+        return StatisticsBySalesDetailsResponse.of(locations, salesByMenu, salesByHour);
     }
 
     public List<SummaryByWeekDto> getWeeklyList(Long foodTruckId, Integer year, Integer lastWeek) {
@@ -141,6 +159,25 @@ public class StatisticsQueryRepository {
                 .fetch();
     }
 
+    public StatisticsByWeekDetailsResponse getWeeklyDetail(Long foodTruckId, LocalDateTime startDate, LocalDateTime endDate) {
+        List<Long> salesIds = queryFactory
+                .select(sale.id)
+                .from(sale)
+                .where(sale.foodTruck.id.eq(foodTruckId),
+                        sale.startTime.between(startDate, endDate.plusDays(1)))
+                .fetch();
+
+        List<Long> orderIds = getOrderIds(salesIds);
+
+        List<SalesByMenuDto> salesByMenu = getSalesByMenu(orderIds);
+
+        List<SalesByHourDto> salesByHour = getSalesByHour(orderIds);
+
+        List<SalesByDayDto> salesByDay = getSalesByDay(orderIds);
+
+        return StatisticsByWeekDetailsResponse.of(salesByMenu, salesByHour, salesByDay);
+    }
+
     public List<SummaryByMonthDto> getStatisticsByMonth(Long foodTruckId, Integer year) {
         List<Long> ids = queryFactory
                 .select(sale.id)
@@ -169,6 +206,27 @@ public class StatisticsQueryRepository {
                 .fetch();
     }
 
+    public StatisticsByMonthDetailsResponse getMonthlyDetail(Long foodTruckId, Integer year, Integer month) {
+        List<Long> salesIds = queryFactory
+                .select(sale.id)
+                .from(sale)
+                .where(sale.foodTruck.id.eq(foodTruckId),
+                        sale.startTime.year().eq(year),
+                        sale.startTime.month().eq(month)
+                )
+                .fetch();
+
+        List<Long> orderIds = getOrderIds(salesIds);
+
+        List<SalesByMenuDto> salesByMenu = getSalesByMenu(orderIds);
+
+        List<SalesByHourDto> salesByHour = getSalesByHour(orderIds);
+
+        List<SalesByDayDto> salesByDay = getSalesByDay(orderIds);
+
+        return StatisticsByMonthDetailsResponse.of(salesByMenu, salesByHour, salesByDay);
+    }
+
     private BooleanExpression isLessThanLastSalesId(Long lastSalesId) {
         return lastSalesId != null ? sale.id.lt(lastSalesId) : null;
     }
@@ -188,5 +246,67 @@ public class StatisticsQueryRepository {
 
     private BooleanExpression isActiveSale() {
         return sale.active.isTrue();
+    }
+
+    private BooleanExpression isCompleteOrder() {
+        return order.status.eq(Status.COMPLETE);
+    }
+
+    private List<Long> getOrderIds(List<Long> salesIds) {
+        return queryFactory
+                .select(order.id)
+                .from(order)
+                .where(order.sale.id.in(salesIds),
+                        isCompleteOrder())
+                .fetch();
+    }
+
+    private List<SalesByMenuDto> getSalesByMenu(List<Long> orderIds) {
+        return queryFactory
+                .select(Projections.constructor(SalesByMenuDto.class,
+                        orderMenu.menu.id,
+                        orderMenu.menu.menuInfo.name,
+                        orderMenu.quantity.sum(),
+                        orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum()
+                ))
+                .from(orderMenu)
+                .innerJoin(order)
+                .on(order.id.eq(orderMenu.order.id))
+                .where(order.id.in(orderIds))
+                .groupBy(orderMenu.menu.id)
+                .orderBy(orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum().desc())
+                .fetch();
+    }
+
+    private List<SalesByHourDto> getSalesByHour(List<Long> orderIds) {
+        return queryFactory
+                .select(Projections.constructor(SalesByHourDto.class,
+                        order.createdDate.hour(),
+                        order.count(),
+                        orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum()
+                ))
+                .from(orderMenu)
+                .innerJoin(order)
+                .on(order.id.eq(orderMenu.order.id))
+                .where(order.id.in(orderIds))
+                .groupBy(order.createdDate.hour())
+                .orderBy(order.createdDate.hour().asc())
+                .fetch();
+    }
+
+    private List<SalesByDayDto> getSalesByDay(List<Long> orderIds) {
+        return queryFactory
+                .select(Projections.constructor(SalesByDayDto.class,
+                        order.createdDate.dayOfWeek(),
+                        order.count(),
+                        orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum()
+                ))
+                .from(orderMenu)
+                .innerJoin(order)
+                .on(order.id.eq(orderMenu.order.id))
+                .where(order.id.in(orderIds))
+                .groupBy(order.createdDate.dayOfWeek())
+                .orderBy(order.createdDate.dayOfWeek().asc())
+                .fetch();
     }
 }

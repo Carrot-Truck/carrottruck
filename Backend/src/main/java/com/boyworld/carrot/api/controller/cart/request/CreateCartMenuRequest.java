@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.text.Collator;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Data
@@ -18,39 +20,33 @@ public class CreateCartMenuRequest {
     private Long foodTruckId;
 
     @NotNull
-    private String menuName;
-
-    @NotNull
-    private Integer menuPrice;
-
-    @NotNull
     private Long menuId;
 
     @NotNull
     private Integer cartMenuQuantity;
 
-    private List<CreateCartMenuOptionRequest> cartMenuOptions;
+    @NotNull
+    private Integer cartMenuPrice;
+
+    private List<Long> menuOptionIds;
+
 
     @Builder
-    public CreateCartMenuRequest(@NotNull Long foodTruckId, @NotNull String menuName, @NotNull Integer menuPrice, @NotNull Long menuId, @NotNull Integer cartMenuQuantity, List<CreateCartMenuOptionRequest> cartMenuOptions) {
+    public CreateCartMenuRequest(@NotNull Long foodTruckId, @NotNull Long menuId, @NotNull Integer cartMenuQuantity, @NotNull Integer cartMenuPrice, List<Long> menuOptionIds) {
         this.foodTruckId = foodTruckId;
-        this.menuName = menuName;
-        this.menuPrice = menuPrice;
         this.menuId = menuId;
         this.cartMenuQuantity = cartMenuQuantity;
-        this.cartMenuOptions = cartMenuOptions;
+        this.cartMenuPrice = cartMenuPrice;
+        this.menuOptionIds = menuOptionIds;
     }
 
     public CreateCartMenuDto toCreateMenuDto() {
         return CreateCartMenuDto.builder()
                 .foodTruckId(this.foodTruckId)
-                .menuName(this.menuName)
-                .menuPrice(this.menuPrice)
                 .menuId(this.menuId)
                 .cartMenuQuantity(this.cartMenuQuantity)
-                .cartMenuOptionDtos(this.cartMenuOptions.stream()
-                        .map(CreateCartMenuOptionRequest::toCreateCartMenuOptionDto)
-                        .collect(Collectors.toList()))
+                .cartMenuPrice(this.cartMenuPrice)
+                .menuOptionIds(this.menuOptionIds)
                 .build();
     }
 }

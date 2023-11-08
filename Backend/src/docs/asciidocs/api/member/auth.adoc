@@ -30,3 +30,25 @@ include::{snippets}/check-email/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/check-email/http-response.adoc[]
 include::{snippets}/check-email/response-fields.adoc[]
+
+[[auth-email]]
+=== 이메일 인증 번호 발송
+
+==== HTTP Request
+include::{snippets}/auth-email/http-request.adoc[]
+include::{snippets}/auth-email/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/auth-email/http-response.adoc[]
+include::{snippets}/auth-email/response-fields.adoc[]
+
+[[check-auth-email]]
+=== 이메일 인증 번호 확인
+
+==== HTTP Request
+include::{snippets}/check-auth-email/http-request.adoc[]
+include::{snippets}/check-auth-email/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/check-auth-email/http-response.adoc[]
+include::{snippets}/check-auth-email/response-fields.adoc[]

@@ -81,4 +81,15 @@ public class Sale extends TimeBaseEntity {
         this.endTime = endTime;
         this.active = active;
     }
+
+    // == business logic == //
+
+    public Sale editOrderable (Boolean orderable) {
+        this.orderable = orderable;
+        return this;
+    }
+
+    public void editEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
 }

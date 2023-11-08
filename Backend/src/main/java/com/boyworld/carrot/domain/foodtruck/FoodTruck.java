@@ -2,7 +2,15 @@ package com.boyworld.carrot.domain.foodtruck;
 
 import com.boyworld.carrot.domain.TimeBaseEntity;
 import com.boyworld.carrot.domain.member.Member;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,9 +78,11 @@ public class FoodTruck extends TimeBaseEntity {
     }
 
     // == business logic ==//
-    public void editFoodTruck(String foodTruckName, Category category, String content, String phoneNumber,
-                              String originInfo, Integer prepareTime, Integer waitLimits) {
+    public void editFoodTruck(String foodTruckName, Category category, String content,
+        String phoneNumber,
+        String originInfo, Integer prepareTime, Integer waitLimits) {
         this.name = foodTruckName;
+        this.category = category;
         this.content = content;
         this.phoneNumber = phoneNumber;
         this.originInfo = originInfo;
@@ -80,7 +90,14 @@ public class FoodTruck extends TimeBaseEntity {
         this.waitLimits = waitLimits;
     }
 
-    public void activate() { this.active = true; }
+    public FoodTruck activate() {
+        this.active = true;
+        return this;
+    }
 
-    public void deActivate() { this.active = false; }
+    public FoodTruck deActivate() {
+        this.active = false;
+        return this;
+    }
+
 }

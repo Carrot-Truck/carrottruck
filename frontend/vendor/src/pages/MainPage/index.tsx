@@ -13,11 +13,13 @@ function MainPage() {
    const navigate = useNavigate();
    const accessToken = localStorage.getItem('accessToken');
    const grantType = localStorage.getItem('grantType');
+   const APPLICATION_SPRING_SERVER_URL =
+   process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io' : 'http://localhost:8001';
 
    useEffect (()=>{
     const isValidUser = async () => {
       try {
-        const validToken = await axios.get('http://localhost:8001/member/vendor/info',
+        const validToken = await axios.get(`${APPLICATION_SPRING_SERVER_URL}/member/vendor/info`,
         {
           headers : {
             Authorization: `${grantType} ${accessToken}`,
@@ -28,7 +30,7 @@ function MainPage() {
       } catch (error) {
         const err = error as AxiosError;
         if(err.response?.status === 401){
-          alert('로그인 시간이 만료되었습니다. \n다시 로그인 해주세요.');
+           alert('로그인이 필요합니다.');
           return navigate('/login'); 
         }else{
           console.error('Error!!', error);
@@ -40,7 +42,7 @@ function MainPage() {
     const hasVendorFoodTruck = async() => {
         //TODO: 하기 코드를 token 검증 API 나오면 그 API로 교체해야함.
       try{
-        const response = await axios.get('http://localhost:8001/food-truck/overview?lastFoodTruckId=',
+        const response = await axios.get(`${APPLICATION_SPRING_SERVER_URL}/food-truck/overview?lastFoodTruckId=`,
         {
           headers: {
             Authorization: `${grantType} ${accessToken}`,

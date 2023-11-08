@@ -39,10 +39,13 @@ public class Cart {
 
 
 
-    public void updateCartTotalPrice(Integer menuPrice) {
+    public void incrementCartTotalPrice(Integer menuPrice) {
         this.totalPrice += menuPrice;
     }
 
+    public void decrementCartTotalPrice(Integer menuPrice) {
+        this.totalPrice -= menuPrice;
+    }
     public void updateCartMenuIds(String cartMenuId) {
         this.cartMenuIds.add(cartMenuId);
     }

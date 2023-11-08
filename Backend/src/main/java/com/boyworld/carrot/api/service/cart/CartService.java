@@ -72,7 +72,7 @@ public class CartService {
                 for (String cartMenuPk : cart.getCartMenuIds()) {
                     CartMenu cartMenu = getCartMenu(cartMenuPk);
                     List<String> cartMenuOptionIds = new ArrayList<>();
-                    if(cartMenu.getCartMenuOptionIds() != null) {
+                    if (cartMenu.getCartMenuOptionIds() != null) {
                         cartMenuOptionIds = cartMenu.getCartMenuOptionIds();
                     }
                     for (String cartMenuOptionPk : cartMenuOptionIds) {
@@ -123,11 +123,38 @@ public class CartService {
     }
 
 
-    public Long editCartMenu(Long cartMenuId, String email) {
-        return null;
+    public String incrementCartMenu(String cartMenuId, String email) throws JsonProcessingException {
+        Cart cart = getCart(email);
+        CartMenu cartMenu = getCartMenu(cartMenuId);
+        log.debug("increment before cartTotalPrice: {}, before cartMenuQuantity: {}", cart.getTotalPrice(), cartMenu.getQuantity());
+        cart.incrementCartTotalPrice(cartMenu.getCartMenuTotalPrice());
+        cartMenu.incrementCartMenuQuantity();
+        log.debug("increment after cartTotalPrice: {}, after cartMenuQuantity: {}", cart.getTotalPrice(), cartMenu.getQuantity());
+        saveCart(email, cart);
+        saveCartMenu(cartMenuId, cartMenu);
+        return cartMenuId;
     }
 
-    public Long removeCartMenu(Long cartMenuId, String email) {
+    public String decrementCartMenu(String cartMenuId, String email) throws JsonProcessingException {
+        Cart cart = getCart(email);
+        CartMenu cartMenu = getCartMenu(cartMenuId);
+
+        if(cartMenu.getQuantity().equals(1)) {
+            return cartMenuId;
+        }
+        // 1이면 감소 불가
+
+        log.debug("decrement before cartTotalPrice: {}, before cartMenuQuantity: {}", cart.getTotalPrice(), cartMenu.getQuantity());
+        cart.decrementCartTotalPrice(cartMenu.getCartMenuTotalPrice());
+        cartMenu.decrementCartMenuQuantity();
+        log.debug("decrement after cartTotalPrice: {}, after cartMenuQuantity: {}", cart.getTotalPrice(), cartMenu.getQuantity());
+        saveCart(email, cart);
+        saveCartMenu(cartMenuId, cartMenu);
+        return cartMenuId;
+    }
+
+
+    public String removeCartMenu(String cartMenuId, String email) {
         return null;
     }
 
@@ -141,10 +168,10 @@ public class CartService {
 
     public List<CartMenuDto> getCartMenuDto(List<String> cartMenuIds) throws JsonProcessingException {
         List<CartMenuDto> cartMenuDtos = new ArrayList<>();
-        for(String cartMenuId: cartMenuIds) {
+        for (String cartMenuId : cartMenuIds) {
             CartMenu cartMenu = getCartMenu(cartMenuId);
             List<String> cartMenuOptionIds = Optional.ofNullable(cartMenu.getCartMenuOptionIds())
-                            .orElseGet(ArrayList::new);
+                    .orElseGet(ArrayList::new);
             cartMenuDtos.add(CartMenuDto.of(cartMenu, getCartMenuOptionDto(cartMenuOptionIds)));
         }
         return cartMenuDtos;
@@ -152,7 +179,7 @@ public class CartService {
 
     public List<CartMenuOptionDto> getCartMenuOptionDto(List<String> cartMenuOptionIds) throws JsonProcessingException {
         List<CartMenuOptionDto> cartMenuOptionDtos = new ArrayList<>();
-        for(String cartMenuOptionId: cartMenuOptionIds) {
+        for (String cartMenuOptionId : cartMenuOptionIds) {
             cartMenuOptionDtos.add(CartMenuOptionDto.of(getCartMenuOption(cartMenuOptionId)));
         }
         return cartMenuOptionDtos;
@@ -223,7 +250,7 @@ public class CartService {
     public void saveUpdateCart(CreateCartMenuDto createCartMenuDto, String CartMemberId, Cart cart, String email) {
 
         log.debug("before cartTotalPrice: {}, before cartMenuIds: {}", cart.getTotalPrice(), cart.getCartMenuIds().toString());
-        cart.updateCartTotalPrice(createCartMenuDto.getCartMenuTotalPrice());
+        cart.incrementCartTotalPrice(createCartMenuDto.getCartMenuTotalPrice());
         cart.updateCartMenuIds(CartMemberId);
         log.debug("after cartTotalPrice: {}, after cartMenuIds: {}", cart.getTotalPrice(), cart.getCartMenuIds().toString());
         saveCart(email, cart);

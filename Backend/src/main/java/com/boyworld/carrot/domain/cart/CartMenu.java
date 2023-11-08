@@ -44,4 +44,12 @@ public class CartMenu {
         this.menuImageUrl = menuImageUrl;
         this.cartMenuOptionIds = cartMenuOptionIds;
     }
+
+    public void incrementCartMenuQuantity() {
+        this.quantity += 1;
+    }
+
+    public void decrementCartMenuQuantity() {
+        this.quantity -= 1;
+    }
 }

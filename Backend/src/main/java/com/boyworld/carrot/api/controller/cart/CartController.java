@@ -54,29 +54,44 @@ public class CartController {
         return ApiResponse.ok(response);
     }
 
-    // 장바구니 수정
-    @PatchMapping("/{cartMenuId}")
-    public ApiResponse<Long> editCartMenu(@PathVariable Long cartMenuId) {
-        log.debug("CartController#editCart called");
+    // 장바구니 1추가
+    @PatchMapping("increment/{cartMenuId}")
+    public ApiResponse<String> incrementCartMenu(@PathVariable String cartMenuId) throws JsonProcessingException {
+        log.debug("CartController#incrementCartMenu called");
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email = {}", email);
 
-        Long editId = cartService.editCartMenu(cartMenuId, email);
+        String editId = cartService.incrementCartMenu(cartMenuId, email);
         log.debug("editId = {}", editId);
 
         return ApiResponse.ok(editId);
     }
+
+    // 장바구니 1추가
+    @PatchMapping("decrement/{cartMenuId}")
+    public ApiResponse<String> decrementCartMenu(@PathVariable String cartMenuId) throws JsonProcessingException {
+        log.debug("CartController#decrementCartMenu called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email = {}", email);
+
+        String editId = cartService.decrementCartMenu(cartMenuId, email);
+        log.debug("editId = {}", editId);
+
+        return ApiResponse.ok(editId);
+    }
+
     // 장바구니 삭제
     @DeleteMapping("/{cartMenuId}")
     @ResponseStatus(HttpStatus.FOUND)
-    public ApiResponse<Long> removeCartMenu(@PathVariable Long cartMenuId) {
+    public ApiResponse<String> removeCartMenu(@PathVariable String cartMenuId) {
         log.debug("CartController#removeCart called");
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email = {}", email);
 
-        Long removeCartId = cartService.removeCartMenu(cartMenuId, email);
+        String removeCartId = cartService.removeCartMenu(cartMenuId, email);
         log.debug("removeCartId = {}", removeCartId);
 
         return ApiResponse.found(removeCartId);

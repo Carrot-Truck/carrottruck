@@ -58,7 +58,7 @@ function FoodTruckRegistrationForm() {
           },
         });
         console.log(response);
-        if(response.data.code === 210){
+        if(response.data.code === 201){
           alert("푸드트럭 등록이 완료되었습니다.");
           navigate('/');
         }else{

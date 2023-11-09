@@ -7,7 +7,6 @@ import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
-import com.boyworld.carrot.api.service.sale.SaleService;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
@@ -121,15 +120,15 @@ public class OrderService {
 
     public OrderResponse getOrder(Long orderId, String email, Role role) {
 
-
+        Order order = getOrderById(orderId);
+        Member member = getMemberByEmail(email);
         if (role.equals(Role.CLIENT)) {
-
+            checkOwnerAccess(member, order);
         } else if (role.equals(Role.VENDOR)) {
-
+            checkOwnerAccess(member, order.getSale().getFoodTruck());
         }
 
-        Long memberId = memberRepository.findByEmail(email).map(Member::getId).orElse(null);
-        OrderItem orderItem = orderQueryRepository.getOrder(orderId, memberId, role);
+        OrderItem orderItem = orderQueryRepository.getOrder(orderId, member.getId(), role);
 
         return OrderResponse.builder()
             .orderItem(orderItem)

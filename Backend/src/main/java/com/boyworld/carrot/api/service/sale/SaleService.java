@@ -304,18 +304,6 @@ public class SaleService {
         return foodTruckRepository.findById(foodTruckId)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 푸드트럭입니다."));
     }
-
-    /**
-     * 영업 식별키로 영업 조회
-     *
-     * @param saleId 영업 식별키
-     * @return 영업 엔티티
-     * @throws NoSuchElementException 식별키에 해당하는 영업이 없는 경우
-     */
-    private Sale getSaleById(Long saleId) {
-        return saleRepository.findById(saleId)
-            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 영업입니다."));
-    }
     
     /**
      * 주문 식별키로 주문 조회

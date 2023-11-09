@@ -88,7 +88,7 @@ export const orderApi = axios.create({
 });
 
 export const paymentApi = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}`,
+  baseURL: `${process.env.REACT_APP_API_URL}/verifyIamport`,
   headers: {
     "Content-type": "application/json",
   },

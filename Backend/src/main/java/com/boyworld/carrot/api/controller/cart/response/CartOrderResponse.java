@@ -12,15 +12,13 @@ import lombok.NoArgsConstructor;
 public class CartOrderResponse {
     private String foodTruckName;
     private Integer prepareTime;
-    private String address;
     private String phoneNumber;
     private Integer totalPrice;
 
     @Builder
-    public CartOrderResponse(String foodTruckName, Integer prepareTime, String address, String phoneNumber, Integer totalPrice) {
+    public CartOrderResponse(String foodTruckName, Integer prepareTime, String phoneNumber, Integer totalPrice) {
         this.foodTruckName = foodTruckName;
         this.prepareTime = prepareTime;
-        this.address = address;
         this.phoneNumber = phoneNumber;
         this.totalPrice = totalPrice;
     }
@@ -29,7 +27,6 @@ public class CartOrderResponse {
         return CartOrderResponse.builder()
                 .foodTruckName(foodTruck.getName())
                 .prepareTime(foodTruck.getPrepareTime())
-//                .address(member)
                 .phoneNumber(member.getPhoneNumber())
                 .totalPrice(cart.getTotalPrice())
                 .build();

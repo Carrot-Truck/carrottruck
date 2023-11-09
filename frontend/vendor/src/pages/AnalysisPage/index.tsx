@@ -1,9 +1,13 @@
-// import { useEffect } from "react";
+import Navbar from "components/organisms/Navbar";
+import { AnalysisLayout } from "./style";
 
 function AnalysisPage() {
-    return (
-        <></>
-    );
+  return (
+    <AnalysisLayout>
+      analysis page
+      <Navbar />
+    </AnalysisLayout>
+  );
 }
 
 export default AnalysisPage;

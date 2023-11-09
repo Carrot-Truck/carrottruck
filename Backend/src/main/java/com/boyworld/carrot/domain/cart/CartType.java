@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum CartType {
-    CART("카트"),
-    CARTMENU("카트메뉴"),
-    CARTMENUOPTION("카트메뉴옵션");
+    CART("CART"),
+    CARTMENU("CARTMENU"),
+    CARTMENUOPTION("CARTMENUOPTION");
 
     private final String text;
 

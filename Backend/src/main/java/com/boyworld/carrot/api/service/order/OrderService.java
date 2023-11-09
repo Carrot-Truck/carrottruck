@@ -3,6 +3,7 @@ package com.boyworld.carrot.api.service.order;
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.member.error.InValidAccessException;
+import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
@@ -27,6 +28,7 @@ import com.boyworld.carrot.domain.sale.Sale;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,7 @@ public class OrderService {
     private final OrderMenuOptionRepository orderMenuOptionRepository;
     private final OrderQueryRepository orderQueryRepository;
     private final SaleQueryRepository saleQueryRepository;
+    private final CartService cartService;
     private final SaleService saleService;
 
     /**
@@ -130,12 +133,12 @@ public class OrderService {
     /**
      * 주문 생성 API
      *
-     * @param dto 주문 정보
      * @param email 로그인 중인 회원 이메일
      * @return 생성된 주문 식별키
      */
-    public Long createOrder(CreateOrderDto dto, String email) throws NoSuchElementException{
+    public Long createOrder(String email) throws JsonProcessingException {
 
+        CreateOrderDto dto = cartService.createOrderByCart(email);
         Member member = getMemberByEmail(email);
         FoodTruck foodTruck = getFoodTruckById(dto.getFoodTruckId());
 

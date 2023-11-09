@@ -8,7 +8,7 @@ export const GlobalStyles = createGlobalStyle`
         /* color */
         --main-color : #FFA126;
         --sub-color-1 : #FFD9A8;
-        --success-color : #00A3FF;
+        --success-color : #28B996;
         --danger-color : #ff2449;
         --white-color : #ffffff;
 

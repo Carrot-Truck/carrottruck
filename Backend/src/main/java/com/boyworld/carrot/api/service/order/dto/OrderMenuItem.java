@@ -1,6 +1,8 @@
 package com.boyworld.carrot.api.service.order.dto;
 
 import java.util.List;
+
+import com.boyworld.carrot.domain.cart.CartMenu;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,5 +22,13 @@ public class OrderMenuItem {
         this.menuId = menuId;
         this.quantity = quantity;
         this.menuOptionList = menuOptionList;
+    }
+
+    public static OrderMenuItem of(CartMenu cartMenu, List<Long> menuOptionIdList) {
+        return OrderMenuItem.builder()
+                .menuId(cartMenu.getMenuId())
+                .quantity(cartMenu.getQuantity())
+                .menuOptionIdList(menuOptionIdList)
+                .build();
     }
 }

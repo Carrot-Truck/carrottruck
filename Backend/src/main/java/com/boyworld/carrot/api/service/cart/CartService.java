@@ -5,6 +5,8 @@ import com.boyworld.carrot.api.controller.cart.response.CartResponse;
 import com.boyworld.carrot.api.service.cart.dto.CartMenuDto;
 import com.boyworld.carrot.api.service.cart.dto.CartMenuOptionDto;
 import com.boyworld.carrot.api.service.cart.dto.CreateCartMenuDto;
+import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
+import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.domain.cart.Cart;
 import com.boyworld.carrot.domain.cart.CartMenu;
 import com.boyworld.carrot.domain.cart.CartMenuOption;
@@ -192,6 +194,25 @@ public class CartService {
         FoodTruck foodTruck = getFoodTruckById(cart.getFoodTruckId());
         Member member = getMemberByEmail(email);
         return CartOrderResponse.of(foodTruck, member, cart);
+    }
+
+    public CreateOrderDto createOrderByCart(String email) throws JsonProcessingException {
+        Cart cart = getCart(email);
+
+        List<OrderMenuItem> orderMenuItems = new ArrayList<>();
+        for (String cartMenuId : cart.getCartMenuIds()) {
+            CartMenu cartMenu = getCartMenu(cartMenuId);
+            List<String> cartMenuOptionIds = Optional.ofNullable(cartMenu.getCartMenuOptionIds())
+                    .orElseGet(ArrayList::new);
+            List<Long> menuOptionIdList = new ArrayList<>();
+            for (String cartMenuOptionId : cartMenuOptionIds) {
+                CartMenuOption cartMenuOption = getCartMenuOption(cartMenuOptionId);
+                menuOptionIdList.add(cartMenuOption.getMenuOptionId());
+            }
+            orderMenuItems.add(OrderMenuItem.of(cartMenu, menuOptionIdList));
+        }
+
+        return CreateOrderDto.of(cart, orderMenuItems);
     }
 
     /**

@@ -360,7 +360,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
             .orderMenuItems(orderMenuItems)
             .build();
 
-        given(orderService.createOrder(eq(request.toCreateOrderDto()), anyString()))
+        given(orderService.createOrder(anyString()))
             .willReturn(1L);
 
         mockMvc.perform(

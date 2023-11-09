@@ -2,6 +2,7 @@ package com.boyworld.carrot.api.service.order;
 
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
+import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
@@ -9,6 +10,7 @@ import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final SaleQueryRepository saleQueryRepository;
+    private final CartService cartService;
 
     /**
      * 전체 주문내역 조회 API
@@ -76,12 +79,13 @@ public class OrderService {
 
     /**
      * 주문 생성 API
-     * 
-     * @param dto 주문 정보
+     *
      * @param email 로그인 중인 회원 이메일
      * @return 생성된 주문 식별키
      */
-    public Long createOrder(CreateOrderDto dto, String email) {
+    public Long createOrder(String email) throws JsonProcessingException {
+
+        CreateOrderDto dto = cartService.createOrderByCart(email);
 
         Order order = Order.builder()
             .member(memberRepository.findByEmail(email).orElse(null))

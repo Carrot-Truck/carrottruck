@@ -28,7 +28,7 @@ public class OrderMenuItem {
         return OrderMenuItem.builder()
                 .menuId(cartMenu.getMenuId())
                 .quantity(cartMenu.getQuantity())
-                .menuOptionIdList(menuOptionIdList)
+                .menuOptionList(menuOptionIdList)
                 .build();
     }
 }

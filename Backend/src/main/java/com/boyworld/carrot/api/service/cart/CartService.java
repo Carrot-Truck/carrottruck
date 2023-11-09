@@ -181,6 +181,7 @@ public class CartService {
         deleteCartMenu(cartMenuId);
 
         cart.removeCartMenuIds(cartMenuId);
+        cart.decrementCartTotalPrice(cartMenu.getCartMenuTotalPrice()*cartMenu.getQuantity());
         log.debug("카트메뉴를 삭제했습니다: {}", cartMenuId);
         if (cart.getCartMenuIds().isEmpty()) {
             log.debug("카트에 메뉴가 없어 카트를 삭제합니다");
@@ -315,7 +316,7 @@ public class CartService {
                 .id(email)
                 .foodTruckId(createCartMenuDto.getFoodTruckId())
                 .foodTruckName(foodTruck.getName())
-                .totalPrice(createCartMenuDto.getCartMenuTotalPrice())
+                .totalPrice(createCartMenuDto.getCartMenuTotalPrice()*createCartMenuDto.getCartMenuQuantity())
                 .cartMenuIds(Arrays.asList(cartMenuId))
                 .build();
         saveCart(email, cart);

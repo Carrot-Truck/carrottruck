@@ -7,6 +7,7 @@ import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.security.SecurityUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -118,13 +119,13 @@ public class OrderController {
      * @return 생성된 주문 식별키
      */
     @PostMapping("create")
-    public ApiResponse<Long> createOrder(@Valid @RequestBody CreateOrderRequest request) {
+    public ApiResponse<Long> createOrder() throws JsonProcessingException {
         log.debug("OrderController#createOrder called");
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        Long saveId = orderService.createOrder(request.toCreateOrderDto(), email);
+        Long saveId = orderService.createOrder(email);
         log.debug("saveId={}", saveId);
 
         return ApiResponse.created(saveId);

@@ -380,11 +380,11 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    @DisplayName("푸드트럭 상세조회 API")
+    @DisplayName("사용자 푸드트럭 상세조회 API")
     @Test
     @WithMockUser(roles = {"CLIENT", "VENDOR"})
-    void getFoodTruck() throws Exception {
-        FoodTruckDetailDto foodTruck = FoodTruckDetailDto.builder()
+    void getClientFoodTruck() throws Exception {
+        FoodTruckClientDetailDto foodTruck = FoodTruckClientDetailDto.builder()
                 .foodTruckId(1L)
                 .foodTruckName("동현 된장삼겹")
                 .phoneNumber("010-1234-5678")
@@ -400,7 +400,6 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .address("광주 광산구 장덕로 5번길 16")
                 .foodTruckImageUrl("imageUrl")
                 .isNew(true)
-                .isOwner(true)
                 .selected(true)
                 .vendorName("김동현")
                 .tradeName("동현 된장삼겹")
@@ -449,13 +448,14 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .endTime(LocalTime.now().plusHours(5))
                 .build();
 
-        FoodTruckDetailResponse response = FoodTruckDetailResponse.builder()
-                .foodTruck(foodTruck)
-                .menus(List.of(menu1, menu2))
-                .schedules(List.of(schedule1, schedule2, schedule3))
-                .build();
+        FoodTruckDetailResponse<FoodTruckClientDetailDto> response =
+                FoodTruckDetailResponse.of(
+                        foodTruck,
+                        List.of(menu1, menu2),
+                        List.of(schedule1, schedule2, schedule3)
+                );
 
-        given(foodTruckQueryService.getFoodTruck(anyLong(), anyString(), any(BigDecimal.class), any(BigDecimal.class)))
+        given(foodTruckQueryService.getClientFoodTruck(anyLong(), anyString(), any(BigDecimal.class), any(BigDecimal.class)))
                 .willReturn(response);
 
         mockMvc.perform(
@@ -511,6 +511,177 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("리뷰 개수"),
                                 fieldWithPath("data.foodTruck.distance").type(JsonFieldType.NUMBER)
                                         .description("현재 사용자와의 거리"),
+                                fieldWithPath("data.foodTruck.address").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 주소"),
+                                fieldWithPath("data.foodTruck.foodTruckImageUrl").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 이미지 저장 경로"),
+                                fieldWithPath("data.foodTruck.isNew").type(JsonFieldType.BOOLEAN)
+                                        .description("신규 등록 여부"),
+                                fieldWithPath("data.foodTruck.selected").type(JsonFieldType.BOOLEAN)
+                                        .description("현재 선택 푸드트럭 여부"),
+                                fieldWithPath("data.foodTruck.vendorName").type(JsonFieldType.STRING)
+                                        .description("대표자명"),
+                                fieldWithPath("data.foodTruck.tradeName").type(JsonFieldType.STRING)
+                                        .description("상호명"),
+                                fieldWithPath("data.foodTruck.businessNumber").type(JsonFieldType.STRING)
+                                        .description("사업자 등록번호"),
+                                fieldWithPath("data.menus").type(JsonFieldType.ARRAY)
+                                        .description("메뉴 리스트"),
+                                fieldWithPath("data.menus[].menuId").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 식별키"),
+                                fieldWithPath("data.menus[].menuName").type(JsonFieldType.STRING)
+                                        .description("메뉴명"),
+                                fieldWithPath("data.menus[].menuPrice").type(JsonFieldType.NUMBER)
+                                        .description("메뉴 가격"),
+                                fieldWithPath("data.menus[].menuDescription").type(JsonFieldType.STRING)
+                                        .description("메뉴 설명"),
+                                fieldWithPath("data.menus[].menuSoldOut").type(JsonFieldType.BOOLEAN)
+                                        .description("품절 여부"),
+                                fieldWithPath("data.menus[].menuImageUrl").type(JsonFieldType.STRING)
+                                        .description("메뉴 이미지 저장 경로"),
+                                fieldWithPath("data.schedules").type(JsonFieldType.ARRAY)
+                                        .description("운영시간 리스트"),
+                                fieldWithPath("data.schedules[].scheduleId").type(JsonFieldType.NUMBER)
+                                        .description("운영시간 식별키"),
+                                fieldWithPath("data.schedules[].address").type(JsonFieldType.STRING)
+                                        .description("주소"),
+                                fieldWithPath("data.schedules[].dayOfWeek").type(JsonFieldType.STRING)
+                                        .description("요일"),
+                                fieldWithPath("data.schedules[].startTime").type(JsonFieldType.STRING)
+                                        .description("시작 시간"),
+                                fieldWithPath("data.schedules[].endTime").type(JsonFieldType.STRING)
+                                        .description("종료 시간")
+                        )
+                ));
+    }
+
+    @DisplayName("사업자 푸드트럭 상세조회 API")
+    @Test
+    @WithMockUser(roles = {"VENDOR"})
+    void getVendorFoodTruck() throws Exception {
+        FoodTruckVendorDetailDto foodTruck = FoodTruckVendorDetailDto.builder()
+                .foodTruckId(1L)
+                .foodTruckName("동현 된장삼겹")
+                .phoneNumber("010-1234-5678")
+                .content("된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭")
+                .originInfo("돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)")
+                .isOpen(false)
+                .isLiked(true)
+                .prepareTime(30)
+                .avgGrade(4.5)
+                .likeCount(132)
+                .reviewCount(1324)
+                .address("광주 광산구 장덕로 5번길 16")
+                .foodTruckImageUrl("imageUrl")
+                .isNew(true)
+                .selected(true)
+                .vendorName("김동현")
+                .tradeName("동현 된장삼겹")
+                .businessNumber("123-45-23523")
+                .build();
+
+        MenuDto menu1 = MenuDto.builder()
+                .menuId(1L)
+                .menuName("달콤짭짤한 밥도둑 된장 삼겹살 구이")
+                .menuDescription("동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!")
+                .menuPrice(8900)
+                .menuSoldOut(false)
+                .menuImageUrl("imageUrl")
+                .build();
+
+        MenuDto menu2 = MenuDto.builder()
+                .menuId(2L)
+                .menuName("노른자 된장 삼겹살 덮밥")
+                .menuDescription("감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥")
+                .menuPrice(6900)
+                .menuSoldOut(false)
+                .menuImageUrl("imageUrl")
+                .build();
+
+        ScheduleDto schedule1 = ScheduleDto.builder()
+                .scheduleId(1L)
+                .address("광주 광산구 장덕로5번길 16")
+                .dayOfWeek(DayOfWeek.MONDAY)
+                .startTime(LocalTime.now())
+                .endTime(LocalTime.now().plusHours(5))
+                .build();
+
+        ScheduleDto schedule2 = ScheduleDto.builder()
+                .scheduleId(2L)
+                .address("광주 광산구 장덕로5번길 16")
+                .dayOfWeek(DayOfWeek.TUESDAY)
+                .startTime(LocalTime.now())
+                .endTime(LocalTime.now().plusHours(5))
+                .build();
+
+        ScheduleDto schedule3 = ScheduleDto.builder()
+                .scheduleId(3L)
+                .address("")
+                .dayOfWeek(DayOfWeek.WEDNESDAY)
+                .startTime(LocalTime.now())
+                .endTime(LocalTime.now().plusHours(5))
+                .build();
+
+        FoodTruckDetailResponse<FoodTruckVendorDetailDto> response =
+                FoodTruckDetailResponse.of(
+                        foodTruck,
+                        List.of(menu1, menu2),
+                        List.of(schedule1, schedule2, schedule3)
+                );
+
+        given(foodTruckQueryService.getVendorFoodTruckById(anyLong(), anyString()))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/food-truck/{foodTruckId}", foodTruck.getFoodTruckId())
+                                .header("Authentication", "authentication")
+                                .param("foodTruckId", "1")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("search-food-truck-detail",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("foodTruckId").description("푸드트럭 식별키")
+                        ),
+                        queryParameters(
+                                parameterWithName("latitude").description("현재 사용자의 위도"),
+                                parameterWithName("longitude").description("현재 사용자의 경도")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                        .description("푸드트럭 상세 조회 결과"),
+                                fieldWithPath("data.foodTruck").type(JsonFieldType.OBJECT)
+                                        .description("푸드트럭 상세 정보"),
+                                fieldWithPath("data.foodTruck.foodTruckId").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 식별키"),
+                                fieldWithPath("data.foodTruck.foodTruckName").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 이름"),
+                                fieldWithPath("data.foodTruck.phoneNumber").type(JsonFieldType.STRING)
+                                        .description("연락처"),
+                                fieldWithPath("data.foodTruck.content").type(JsonFieldType.STRING)
+                                        .description("가게 소개"),
+                                fieldWithPath("data.foodTruck.originInfo").type(JsonFieldType.STRING)
+                                        .description("원산지 정보"),
+                                fieldWithPath("data.foodTruck.isOpen").type(JsonFieldType.BOOLEAN)
+                                        .description("영업 상태"),
+                                fieldWithPath("data.foodTruck.isLiked").type(JsonFieldType.BOOLEAN)
+                                        .description("찜 여부"),
+                                fieldWithPath("data.foodTruck.prepareTime").type(JsonFieldType.NUMBER)
+                                        .description("예상 준비 시간"),
+                                fieldWithPath("data.foodTruck.avgGrade").type(JsonFieldType.NUMBER)
+                                        .description("평점"),
+                                fieldWithPath("data.foodTruck.likeCount").type(JsonFieldType.NUMBER)
+                                        .description("찜 개수"),
+                                fieldWithPath("data.foodTruck.reviewCount").type(JsonFieldType.NUMBER)
+                                        .description("리뷰 개수"),
                                 fieldWithPath("data.foodTruck.address").type(JsonFieldType.STRING)
                                         .description("푸드트럭 주소"),
                                 fieldWithPath("data.foodTruck.foodTruckImageUrl").type(JsonFieldType.STRING)

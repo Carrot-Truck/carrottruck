@@ -1,7 +1,8 @@
 package com.boyworld.carrot.domain.foodtruck.repository.query;
 
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckOverview;
-import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckDetailDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckClientDetailDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckVendorDetailDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPQLQuery;
@@ -97,7 +98,7 @@ public class FoodTruckQueryRepository {
     }
 
     /**
-     * 푸드트럭 상세 정보 조회 쿼리
+     * 푸드트럭 상세 정보 조회 쿼리 (일반 사용자용)
      *
      * @param foodTruckId 푸드트럭 식별키
      * @param email       현재 로그인 중인 사용자 이메일
@@ -105,7 +106,7 @@ public class FoodTruckQueryRepository {
      * @param currentLng  경도
      * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
      */
-    public FoodTruckDetailDto getFoodTruckById(Long foodTruckId, String email, BigDecimal currentLat, BigDecimal currentLng) {
+    public FoodTruckClientDetailDto getFoodTruckByIdAsClient(Long foodTruckId, String email, BigDecimal currentLat, BigDecimal currentLng) {
         NumberExpression<BigDecimal> distance = new CaseBuilder()
                 .when(sale.endTime.isNull())
                 .then(calculateDistance(currentLat, sale.latitude, currentLng, sale.longitude))
@@ -117,7 +118,7 @@ public class FoodTruckQueryRepository {
                 .otherwise(schedule.address);
 
         return queryFactory
-                .selectDistinct(Projections.constructor(FoodTruckDetailDto.class,
+                .selectDistinct(Projections.constructor(FoodTruckClientDetailDto.class,
                         foodTruck.id,
                         foodTruck.name,
                         foodTruck.phoneNumber,
@@ -130,6 +131,56 @@ public class FoodTruckQueryRepository {
                         getLikeCount(),
                         getReviewCount(),
                         distance,
+                        address,
+                        foodTruckImage.uploadFile.storeFileName,
+                        foodTruck.selected,
+                        isNew(LocalDateTime.now().minusMonths(1)),
+                        vendorInfo.vendorName,
+                        vendorInfo.tradeName,
+                        vendorInfo.businessNumber
+                ))
+                .from(foodTruck)
+                .join(foodTruck.vendor, member)
+                .leftJoin(vendorInfo).on(vendorInfo.member.eq(member), vendorInfo.active)
+                .leftJoin(menu).on(menu.foodTruck.eq(foodTruck), menu.active)
+                .leftJoin(foodTruckLike).on(foodTruckLike.foodTruck.eq(foodTruck), foodTruckLike.active)
+                .leftJoin(schedule).on(schedule.foodTruck.eq(foodTruck), schedule.active)
+                .leftJoin(review).on(review.foodTruck.eq(foodTruck), review.active)
+                .leftJoin(sale).on(sale.foodTruck.eq(foodTruck), sale.active)
+                .leftJoin(foodTruckImage).on(foodTruckImage.foodTruck.eq(foodTruck), foodTruckImage.active)
+                .where(
+                        isEqualFoodTruckId(foodTruckId),
+                        foodTruck.active
+                )
+                .fetchOne();
+    }
+
+    /**
+     * 푸드트럭 식별키로 푸드트럭 상세 조회 쿼리 (사업자용)
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @param email       현재 로그인 중인 사용자 이메일
+     * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
+     */
+    public FoodTruckVendorDetailDto getFoodTruckByIdAsVendor(Long foodTruckId, String email) {
+        StringExpression address = new CaseBuilder()
+                .when(sale.endTime.isNull())
+                .then(sale.address)
+                .otherwise(schedule.address);
+
+        return queryFactory
+                .selectDistinct(Projections.constructor(FoodTruckVendorDetailDto.class,
+                        foodTruck.id,
+                        foodTruck.name,
+                        foodTruck.phoneNumber,
+                        foodTruck.content,
+                        foodTruck.originInfo,
+                        sale.isNotNull().and(sale.endTime.isNull()),
+                        isLiked(email),
+                        foodTruck.prepareTime,
+                        getAvgGrade(),
+                        getLikeCount(),
+                        getReviewCount(),
                         address,
                         foodTruckImage.uploadFile.storeFileName,
                         foodTruck.selected,
@@ -149,21 +200,22 @@ public class FoodTruckQueryRepository {
                 .leftJoin(sale).on(sale.foodTruck.eq(foodTruck), sale.active)
                 .leftJoin(foodTruckImage).on(foodTruckImage.foodTruck.eq(foodTruck), foodTruckImage.active)
                 .where(
-                        foodTruck.id.eq(foodTruckId)
+                        isEqualFoodTruckId(foodTruckId),
+                        foodTruck.active
                 )
                 .fetchOne();
     }
 
     public Boolean isFoodTruckOwner(Long foodTruckId, String email) {
         return queryFactory
-            .select(foodTruck.id.count().goe(1L))
-            .from(foodTruck)
-            .join(foodTruck.vendor, member)
-            .where(
-                member.email.eq(email),
-                foodTruck.id.eq(foodTruckId)
-            )
-            .fetchFirst();
+                .select(foodTruck.id.count().goe(1L))
+                .from(foodTruck)
+                .join(foodTruck.vendor, member)
+                .where(
+                        member.email.eq(email),
+                        isEqualFoodTruckId(foodTruckId)
+                )
+                .fetchFirst();
     }
 
     private BooleanExpression isEqualEmail(String email) {
@@ -224,5 +276,9 @@ public class FoodTruckQueryRepository {
                         review.foodTruck.eq(foodTruck),
                         review.active
                 );
+    }
+
+    private BooleanExpression isEqualFoodTruckId(Long foodTruckId) {
+        return foodTruckId != null ? foodTruck.id.eq(foodTruckId) : null;
     }
 }

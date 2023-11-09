@@ -1062,11 +1062,11 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         createMenus(foodTruck1);
 
         // when
-        FoodTruckDetailResponse clientResponse = foodTruckQueryService.getFoodTruck(foodTruck1.getId(), client1.getEmail(),
+        FoodTruckDetailResponse clientResponse = foodTruckQueryService.getClientFoodTruck(foodTruck1.getId(), client1.getEmail(),
                 BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253));
         log.debug("clientResponse={}", clientResponse);
 
-        FoodTruckDetailResponse vendorResponse = foodTruckQueryService.getFoodTruck(foodTruck1.getId(), vendor1.getEmail(),
+        FoodTruckDetailResponse vendorResponse = foodTruckQueryService.getClientFoodTruck(foodTruck1.getId(), vendor1.getEmail(),
                 BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253));
         log.debug("vendorResponse={}", vendorResponse);
 

@@ -42,6 +42,10 @@ public class Cart {
     public void updateCartTotalPrice(Integer menuPrice) {
         this.totalPrice += menuPrice;
     }
+
+    public void updateCartMenuIds(String cartMenuId) {
+        this.cartMenuIds.add(cartMenuId);
+    }
 }
 
 

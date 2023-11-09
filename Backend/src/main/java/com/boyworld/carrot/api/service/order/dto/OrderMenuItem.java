@@ -12,10 +12,10 @@ public class OrderMenuItem {
     Long id;
     Long menuId;
     Integer quantity;
-    List<OrderMenuOptionItem> menuOptionList;
+    List<Long> menuOptionList;
 
     @Builder
-    public OrderMenuItem(Long id, Long menuId, Integer quantity, List<OrderMenuOptionItem> menuOptionList) {
+    public OrderMenuItem(Long id, Long menuId, Integer quantity, List<Long> menuOptionList) {
         this.id = id;
         this.menuId = menuId;
         this.quantity = quantity;

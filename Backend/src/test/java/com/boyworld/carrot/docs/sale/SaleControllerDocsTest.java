@@ -30,7 +30,6 @@ import com.boyworld.carrot.api.controller.sale.response.OpenSaleResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
-import com.boyworld.carrot.api.service.order.dto.OrderMenuOptionItem;
 import com.boyworld.carrot.api.service.sale.SaleService;
 import com.boyworld.carrot.api.service.sale.dto.AcceptOrderDto;
 import com.boyworld.carrot.api.service.sale.dto.DeclineOrderDto;
@@ -144,15 +143,9 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         List<OrderMenuItem> orderMenuItems1 = new ArrayList<>();
         List<OrderMenuItem> orderMenuItems2 = new ArrayList<>();
-        List<OrderMenuOptionItem> menuOptionIdList1 = new ArrayList<>();
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(2L).quantity(1).build());
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(4L).quantity(2).build());
-        List<OrderMenuOptionItem> menuOptionIdList2 = new ArrayList<>();
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(1L).quantity(3).build());
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(3L).quantity(1).build());
-        List<OrderMenuOptionItem> menuOptionIdList3 = new ArrayList<>();
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(1L).quantity(1).build());
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(2L).quantity(1).build());
+        List<Long> menuOptionIdList1 = new ArrayList<>(Arrays.asList(2L, 4L));
+        List<Long> menuOptionIdList2 = new ArrayList<>(Arrays.asList(1L, 3L));
+        List<Long> menuOptionIdList3 = new ArrayList<>(Arrays.asList(1L, 2L));
         orderMenuItems1.add(OrderMenuItem.builder()
             .id(1L)
             .menuId(1L)
@@ -251,18 +244,14 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                             .description("주문 완료 (예상) 시각"),
                         fieldWithPath("data.orderItems[].orderMenuItems").type(JsonFieldType.ARRAY)
                             .description("주문 메뉴 리스트"),
-                        fieldWithPath("data.orderItems[].orderMenuItems[].id").type(JsonFieldType.ARRAY)
+                        fieldWithPath("data.orderItems[].orderMenuItems[].id").type(JsonFieldType.NUMBER)
                             .description("주문 메뉴 식별키"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
                             .description("주문한 메뉴 ID"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
                             .description("주문 수량"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionList").type(JsonFieldType.ARRAY)
-                            .description("메뉴 옵션 ID 리스트"),
-                        fieldWithPath("orderMenuItems[].menuOptionList[].id").type(JsonFieldType.NUMBER)
-                                .description("메뉴 옵션 ID"),
-                        fieldWithPath("orderMenuItems[].menuOptionList[].quantity").type(JsonFieldType.NUMBER)
-                                .description("옵션 수량")
+                            .description("메뉴 옵션 ID 리스트")
                     )
                 )
             );
@@ -275,26 +264,24 @@ public class SaleControllerDocsTest extends RestDocsSupport {
 
         List<OrderMenuItem> orderMenuItems1 = new ArrayList<>();
         List<OrderMenuItem> orderMenuItems2 = new ArrayList<>();
-        List<OrderMenuOptionItem> menuOptionIdList1 = new ArrayList<>();
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(2L).quantity(1).build());
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(4L).quantity(2).build());
-        List<OrderMenuOptionItem> menuOptionIdList2 = new ArrayList<>();
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(1L).quantity(3).build());
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(3L).quantity(1).build());
-        List<OrderMenuOptionItem> menuOptionIdList3 = new ArrayList<>();
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(1L).quantity(1).build());
-        menuOptionIdList1.add(OrderMenuOptionItem.builder().id(2L).quantity(1).build());
+        List<Long> menuOptionIdList1 = new ArrayList<>(Arrays.asList(2L, 4L));
+        List<Long> menuOptionIdList2 = new ArrayList<>(Arrays.asList(1L, 3L));
+        List<Long> menuOptionIdList3 = new ArrayList<>(Arrays.asList(1L, 2L));
+
         orderMenuItems1.add(OrderMenuItem.builder()
+            .id(1L)
             .menuId(1L)
             .quantity(1)
             .menuOptionList(menuOptionIdList1)
             .build());
         orderMenuItems1.add(OrderMenuItem.builder()
+            .id(2L)
             .menuId(2L)
             .quantity(2)
             .menuOptionList(menuOptionIdList2)
             .build());
         orderMenuItems2.add(OrderMenuItem.builder()
+            .id(3L)
             .menuId(2L)
             .quantity(1)
             .menuOptionList(menuOptionIdList3)
@@ -391,11 +378,13 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                             .description("주문 완료 시각"),
                         fieldWithPath("data.orderItems[].orderMenuItems").type(JsonFieldType.ARRAY)
                             .description("주문 메뉴 리스트"),
+                        fieldWithPath("data.orderItems[].orderMenuItems[].id").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 식별키"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
-                            .description("주문 메뉴 ID"),
+                            .description("주문한 메뉴 ID"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
                             .description("주문 수량"),
-                        fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                        fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionList").type(JsonFieldType.ARRAY)
                             .description("메뉴 옵션 ID 리스트")
                     )
                 )

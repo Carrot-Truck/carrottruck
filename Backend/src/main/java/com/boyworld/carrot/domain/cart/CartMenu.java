@@ -27,19 +27,29 @@ public class CartMenu {
     private Long menuId;
     private String name;
     private Integer price;
+    private Integer cartMenuTotalPrice;
     private Integer quantity;
     private String menuImageUrl;
     private List<String> cartMenuOptionIds;
 
     @Builder
-    public CartMenu(String id, String cartId, Long menuId, String name, Integer price, Integer quantity, String menuImageUrl, List<String> cartMenuOptionIds) {
+    public CartMenu(String id, String cartId, Long menuId, String name, Integer price, Integer cartMenuTotalPrice, Integer quantity, String menuImageUrl, List<String> cartMenuOptionIds) {
         this.id = id;
         this.cartId = cartId;
         this.menuId = menuId;
         this.name = name;
         this.price = price;
+        this.cartMenuTotalPrice = cartMenuTotalPrice;
         this.quantity = quantity;
         this.menuImageUrl = menuImageUrl;
         this.cartMenuOptionIds = cartMenuOptionIds;
+    }
+
+    public void incrementCartMenuQuantity() {
+        this.quantity += 1;
+    }
+
+    public void decrementCartMenuQuantity() {
+        this.quantity -= 1;
     }
 }

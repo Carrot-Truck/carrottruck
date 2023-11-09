@@ -9,10 +9,10 @@ import { ReactComponent as Foodtruck } from 'assets/icons/foodtruck.svg';
 function Navbar() {
   return (
     <NavbarContainer>
-      <NavbarItem svg={Salesstatistics} text="매출통계" to="" />
-      <NavbarItem svg={Schedule} text="스케줄" to="" />
+      <NavbarItem svg={Salesstatistics} text="매출통계" to="/statistics" />
+      <NavbarItem svg={Schedule} text="스케줄" to="/schedule" />
       <NavbarItem svg={MainPage} text="메인" to="/" />
-      <NavbarItem svg={Commercialanalysis} text="상권분석" to="" />
+      <NavbarItem svg={Commercialanalysis} text="상권분석" to="/analysis" />
       <NavbarItem svg={Foodtruck} text="푸드트럭" to="/foodtruck" />
     </NavbarContainer>
   );

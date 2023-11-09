@@ -13,7 +13,7 @@ function Navbar() {
       <NavbarItem svg={Schedule} text="스케줄" to="" />
       <NavbarItem svg={MainPage} text="메인" to="/" />
       <NavbarItem svg={Commercialanalysis} text="상권분석" to="" />
-      <NavbarItem svg={Foodtruck} text="푸드트럭" to="" />
+      <NavbarItem svg={Foodtruck} text="푸드트럭" to="/foodtruck" />
     </NavbarContainer>
   );
 }

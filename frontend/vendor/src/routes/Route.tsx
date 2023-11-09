@@ -4,6 +4,7 @@ import MainPage from 'pages/MainPage';
 import LoginPage from 'pages/LoginPage';
 import RegistrationPage from 'pages/RegistrationPage';
 import FoodTruckPage from 'pages/FoodTruckPage';
+import FoodMenuDetailPage from 'pages/FoodMenuDetailPage';
 
 function RouteLink() {
   return (
@@ -13,6 +14,7 @@ function RouteLink() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registration" element={<RegistrationPage />} />
         <Route path="/foodtruck" element={<FoodTruckPage />} />
+        <Route path="/foodtruck/menu/:menuId" element={<FoodMenuDetailPage />} />
       </Routes>
     </BrowserRouter>
   );

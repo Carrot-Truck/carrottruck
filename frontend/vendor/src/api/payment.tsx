@@ -1,3 +1,3 @@
-import { paymentApi } from "./index";
+import { paymentApi } from './index';
 
-const api = paymentApi
+const api = paymentApi;

@@ -5,15 +5,25 @@ import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
+import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
+import com.boyworld.carrot.api.service.sale.SaleService;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.menu.Menu;
+import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
+import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
 import com.boyworld.carrot.domain.order.Order;
+import com.boyworld.carrot.domain.order.OrderMenu;
+import com.boyworld.carrot.domain.order.OrderMenuOption;
 import com.boyworld.carrot.domain.order.Status;
+import com.boyworld.carrot.domain.order.repository.command.OrderMenuOptionRepository;
+import com.boyworld.carrot.domain.order.repository.command.OrderMenuRepository;
 import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
 import com.boyworld.carrot.domain.order.repository.query.OrderQueryRepository;
+import com.boyworld.carrot.domain.sale.Sale;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,9 +45,14 @@ public class OrderService {
 
     private final FoodTruckRepository foodTruckRepository;
     private final MemberRepository memberRepository;
+    private final MenuRepository menuRepository;
+    private final MenuOptionRepository menuOptionRepository;
     private final OrderRepository orderRepository;
+    private final OrderMenuRepository orderMenuRepository;
+    private final OrderMenuOptionRepository orderMenuOptionRepository;
     private final OrderQueryRepository orderQueryRepository;
     private final SaleQueryRepository saleQueryRepository;
+    private final SaleService saleService;
 
     /**
      * 전체 주문내역 조회 API
@@ -47,9 +62,9 @@ public class OrderService {
      */
     public OrdersResponse getOrders(String email) {
 
-        Long memberId = memberRepository.findByEmail(email).map(Member::getId).orElse(null);
-
-        List<OrderItem> orderItems = orderQueryRepository.getClientOrderItems(memberId);
+        List<OrderItem> orderItems = memberRepository.findByEmail(email).map(Member::getId).map(
+            orderQueryRepository::getClientOrderItems
+        ).orElseThrow();
 
         return OrdersResponse.builder()
                 .orderItems(orderItems)
@@ -86,7 +101,6 @@ public class OrderService {
     public OrdersResponse getCompleteOrders(Long foodTruckId, String email) {
 
         Long memberId = memberRepository.findByEmail(email).map(Member::getId).orElse(null);
-
         List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, memberId, Status.COMPLETE);
 
         return OrdersResponse.builder()
@@ -106,7 +120,6 @@ public class OrderService {
     public OrderResponse getOrder(Long orderId, String email, Role role) {
 
         Long memberId = memberRepository.findByEmail(email).map(Member::getId).orElse(null);
-
         OrderItem orderItem = orderQueryRepository.getOrder(orderId, memberId, role);
 
         return OrderResponse.builder()
@@ -121,14 +134,13 @@ public class OrderService {
      * @param email 로그인 중인 회원 이메일
      * @return 생성된 주문 식별키
      */
-    public Long createOrder(CreateOrderDto dto, String email) {
+    public Long createOrder(CreateOrderDto dto, String email) throws NoSuchElementException{
 
         Member member = getMemberByEmail(email);
         FoodTruck foodTruck = getFoodTruckById(dto.getFoodTruckId());
-        checkOwnerAccess(member, foodTruck);
 
         Order order = Order.builder()
-                .member(memberRepository.findByEmail(email).orElse(null))
+                .member(member)
                 .sale(saleQueryRepository.getLatestSale(dto.getFoodTruckId()).orElse(null))
                 .status(Status.PENDING)
                 .totalPrice(dto.getTotalPrice())
@@ -137,6 +149,29 @@ public class OrderService {
 
         Order createdOrder = orderRepository.save(order);
 
+        for (OrderMenuItem item: dto.getOrderMenuItems()) {
+            OrderMenu orderMenu = OrderMenu.builder()
+                .order(getOrderById(order.getId()))
+                .menu(getMenuById(item.getMenuId()))
+                .quantity(item.getQuantity())
+                .active(true)
+                .build();
+
+            OrderMenu createdOrderMenu = orderMenuRepository.save(orderMenu);
+
+            for (Long optionId: item.getMenuOptionList()) {
+                OrderMenuOption orderMenuOption = OrderMenuOption.builder()
+                    .menuOption(menuOptionRepository.findById(optionId).orElseThrow())
+                    .orderMenu(orderMenuRepository.findById(createdOrderMenu.getId()).orElseThrow())
+                    .quantity(1)
+                    .active(true)
+                    .build();
+
+                orderMenuOptionRepository.save(orderMenuOption);
+            }
+        }
+
+        pauseByWaitLimit(dto.getFoodTruckId(), foodTruck.getWaitLimits());
         return createdOrder.getId();
     }
 
@@ -157,6 +192,8 @@ public class OrderService {
             throw new InValidAccessException("처리 중인 주문은 취소할 수 없습니다.");
         }
 
+        FoodTruck foodTruck = order.getSale().getFoodTruck();
+        pauseByWaitLimit(foodTruck.getId(), foodTruck.getWaitLimits());
         return order.editOrderStatus(Status.CANCELLED).getId();
     }
 
@@ -220,5 +257,28 @@ public class OrderService {
     private FoodTruck getFoodTruckById(Long foodTruckId) {
         return foodTruckRepository.findById(foodTruckId)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 푸드트럭입니다."));
+    }
+
+    /**
+     *  메뉴 식별키로 메뉴 엔티티 조회
+     *
+     * @param menuId 메뉴 식별키
+     * @return 메뉴 엔티티
+     * @throws NoSuchElementException 식별키에 해당하는 메뉴가 없는 경우
+     */
+    private Menu getMenuById(Long menuId) {
+        return menuRepository.findById(menuId)
+            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 메뉴입니다."));
+    }
+
+    private void pauseByWaitLimit(Long foodTruckId, Integer waitLimit) {
+        Sale sale = saleQueryRepository.getLatestSale(foodTruckId).orElseThrow();
+        Boolean isOrderable = sale.getOrderable();
+        Boolean isExploded = orderQueryRepository.isOrdersExploded(foodTruckId, waitLimit);
+        if (isOrderable && isExploded) {
+            sale.editOrderable(false);
+        } else if (!isOrderable && !isExploded) {
+            sale.editOrderable(true);
+        }
     }
 }

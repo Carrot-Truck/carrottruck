@@ -19,6 +19,7 @@ import com.boyworld.carrot.domain.menu.repository.query.MenuQueryRepository;
 import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
+import com.boyworld.carrot.domain.order.repository.query.OrderQueryRepository;
 import com.boyworld.carrot.domain.sale.Sale;
 import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
@@ -46,6 +47,7 @@ public class SaleService {
     private final SaleRepository saleRepository;
     private final SaleQueryRepository saleQueryRepository;
     private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepository;
     private final FoodTruckRepository foodTruckRepository;
     private final FCMNotificationService fcmNotificationService;
     private final MenuRepository menuRepository;
@@ -83,6 +85,7 @@ public class SaleService {
             .build();
 
         Sale result = saleRepository.save(sale);
+        result.editOrderable(true);
 
         // 내 푸드트럭 찜한 사용자에게 알림 발송
         Map<String, String> data = new HashMap<>();
@@ -116,8 +119,13 @@ public class SaleService {
         checkOwnerAccess(member, order);
 
         // 2. 주문번호로 주문 조회, 상태 STATUS.PROCESSING 으로 변경
-        return order.editOrderStatusAndExpectTime(Status.PROCESSING,
-                LocalDateTime.now().plusHours(9).plusMinutes(dto.getPrepareTime())).getId();
+        order = order.editOrderStatusAndExpectTime(Status.PROCESSING,
+                LocalDateTime.now().plusHours(9).plusMinutes(dto.getPrepareTime()));
+
+        FoodTruck foodTruck = order.getSale().getFoodTruck();
+        pauseByWaitLimit(foodTruck.getId(), foodTruck.getWaitLimits());
+
+        return order.getId();
     }
 
     /**
@@ -134,7 +142,12 @@ public class SaleService {
 
         // 2. 주문 번호로 주문 조회, 상태 STATUS.DECLINED 로 변경
         log.debug("{}", dto.getOrderId());
-        return order.editOrderStatus(Status.DECLINED).getId();
+        order.editOrderStatus(Status.DECLINED);
+
+        FoodTruck foodTruck = order.getSale().getFoodTruck();
+        pauseByWaitLimit(foodTruck.getId(), foodTruck.getWaitLimits());
+
+        return order.getId();
     }
 
     /**
@@ -151,7 +164,12 @@ public class SaleService {
 
         // 2. 주문 번호로 주문 조회, 상태 STATUS.DECLINED 로 변경
         log.debug("{}", dto.getOrderId());
-        return order.editOrderStatus(Status.COMPLETE).getId();
+        order.editOrderStatus(Status.COMPLETE);
+
+        FoodTruck foodTruck = order.getSale().getFoodTruck();
+        pauseByWaitLimit(foodTruck.getId(), foodTruck.getWaitLimits());
+
+        return order.getId();
     }
 
     /**
@@ -207,7 +225,7 @@ public class SaleService {
         checkOwnerAccess(member, menu);
 
         // 2. 맞으면 해당 menuId 비활성화
-        return menu.activate().getId();
+        return menu.deActivate().getId();
     }
 
     /**
@@ -230,6 +248,7 @@ public class SaleService {
         );
         LocalDateTime now = LocalDateTime.now().plusHours(9);
         sale.editEndTime(now);
+        sale.editOrderable(false);
 
         return CloseSaleResponse.builder()
                 .saleId(sale.getId())
@@ -240,7 +259,7 @@ public class SaleService {
                 .build();
     }
 
-    public Boolean hasActiveSale(Long foodTruckId) {
+    private Boolean hasActiveSale(Long foodTruckId) {
         return saleQueryRepository.getLatestSale(foodTruckId).map(Sale::getEndTime).orElse(null) == null;
     }
 
@@ -320,5 +339,12 @@ public class SaleService {
     private Menu getMenuById(Long menuId) {
         return menuRepository.findById(menuId)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 메뉴입니다."));
+    }
+
+    private void pauseByWaitLimit(Long foodTruckId, Integer waitLimit) {
+        if (orderQueryRepository.isOrdersExploded(foodTruckId, waitLimit)) {
+            saleQueryRepository.getLatestSale(foodTruckId).ifPresent(
+                sale -> sale.editOrderable(false));
+        }
     }
 }

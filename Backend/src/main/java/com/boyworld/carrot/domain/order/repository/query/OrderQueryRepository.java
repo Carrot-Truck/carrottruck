@@ -7,7 +7,6 @@ import static com.boyworld.carrot.domain.sale.QSale.sale;
 
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
-import com.boyworld.carrot.api.service.order.dto.OrderMenuOptionItem;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
@@ -58,14 +57,11 @@ public class OrderQueryRepository {
                     .where(orderMenu.order.id.eq(orderItem.getOrderId()))
                     .fetch();
 
-            List<OrderMenuOptionItem> menuOptionIds = new ArrayList<>();
+            List<Long> menuOptionIds = new ArrayList<>();
 
             for (OrderMenuItem orderMenuItem: orderMenuItems) {
                 menuOptionIds.addAll(queryFactory
-                        .select(Projections.constructor(OrderMenuOptionItem.class,
-                            orderMenuOption.menuOption.id,
-                            orderMenuOption.quantity)
-                        )
+                        .select(orderMenuOption.menuOption.id)
                         .from(orderMenuOption)
                         .where(orderMenuOption.orderMenu.id.eq(orderMenuItem.getMenuId()))
                         .fetch());
@@ -118,10 +114,8 @@ public class OrderQueryRepository {
                 .fetch();
 
             for (OrderMenuItem orderMenuItem: orderMenuItems) {
-                List<OrderMenuOptionItem> menuOptionIds = new ArrayList<>(queryFactory
-                    .select(Projections.constructor(OrderMenuOptionItem.class,
-                            orderMenuOption.menuOption.id,
-                            orderMenuOption.quantity))
+                List<Long> menuOptionIds = new ArrayList<>(queryFactory
+                    .select(orderMenuOption.menuOption.id)
                     .from(orderMenuOption)
                     .where(orderMenuOption.orderMenu.id.eq(orderMenuItem.getId()))
                     .fetch());
@@ -159,13 +153,11 @@ public class OrderQueryRepository {
             .where(orderMenu.order.id.eq(orderItem.getOrderId()))
             .fetch();
 
-        List<OrderMenuOptionItem> menuOptionIds = new ArrayList<>();
+        List<Long> menuOptionIds = new ArrayList<>();
 
         for (OrderMenuItem orderMenuItem: orderMenuItems) {
             menuOptionIds.addAll(queryFactory
-                .select(Projections.constructor(OrderMenuOptionItem.class,
-                        orderMenuOption.menuOption.id,
-                    orderMenuOption.quantity))
+                .select(orderMenuOption.menuOption.id)
                 .from(orderMenuOption)
                 .where(orderMenuOption.orderMenu.id.eq(orderMenuItem.getMenuId()))
                 .fetch());
@@ -179,5 +171,17 @@ public class OrderQueryRepository {
         }
 
         return orderItem;
+    }
+
+    public Boolean isOrdersExploded(Long foodTruckId, Integer waitLimit) {
+        return queryFactory
+            .select(order.id.count().goe(waitLimit))
+            .from(order)
+            .where(
+                order.sale.id.eq(saleQueryRepository.getLatestSale(foodTruckId).orElseThrow().getId()),
+                order.sale.foodTruck.id.eq(foodTruckId),
+                order.status.eq(Status.PENDING)
+            )
+            .fetchFirst();
     }
 }

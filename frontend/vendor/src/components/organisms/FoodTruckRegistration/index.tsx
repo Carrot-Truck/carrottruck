@@ -57,7 +57,6 @@ function FoodTruckRegistrationForm() {
             Authorization: `${grantType} ${accessToken}`,
           },
         });
-        console.log(response);
         if(response.data.code === 201){
           alert("푸드트럭 등록이 완료되었습니다.");
           navigate('/');
@@ -66,7 +65,7 @@ function FoodTruckRegistrationForm() {
           navigate('/');
         }
       } catch (error) {
-        console.error('에러야...', error);
+        console.error('error: ', error);
       }
     }
     if (!foodTruckName) {

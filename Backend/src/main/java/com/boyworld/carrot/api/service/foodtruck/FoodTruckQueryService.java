@@ -175,7 +175,7 @@ public class FoodTruckQueryService {
      * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
      */
     public FoodTruckDetailResponse<FoodTruckVendorDetailDto> getVendorFoodTruckById(Long foodTruckId, String email) {
-        FoodTruckVendorDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruckId, email);
+        FoodTruckVendorDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruckId);
         List<MenuDto> menus = menuQueryRepository.getMenusByFoodTruckId(foodTruckId);
         List<ScheduleDto> schedules = scheduleQueryRepository.getSchedulesByFoodTruckId(foodTruckId);
         return FoodTruckDetailResponse.of(foodTruck, menus, schedules);

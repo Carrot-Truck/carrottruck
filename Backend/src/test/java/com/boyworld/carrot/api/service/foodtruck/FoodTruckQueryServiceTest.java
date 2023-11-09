@@ -1072,14 +1072,10 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(clientResponse).isNotNull();
-        assertThat(clientResponse.getFoodTruck()).extracting("isOwner")
-                .isEqualTo(false);
         assertThat(clientResponse.getMenus()).hasSize(2);
         assertThat(clientResponse.getSchedules()).hasSize(3);
 
         assertThat(vendorResponse).isNotNull();
-        assertThat(vendorResponse.getFoodTruck()).extracting("isOwner")
-                .isEqualTo(true);
         assertThat(vendorResponse.getMenus()).hasSize(2);
         assertThat(vendorResponse.getSchedules()).hasSize(3);
     }

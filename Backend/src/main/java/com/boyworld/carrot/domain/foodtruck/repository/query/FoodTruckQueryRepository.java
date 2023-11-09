@@ -23,7 +23,6 @@ import static com.boyworld.carrot.domain.foodtruck.QFoodTruckLike.foodTruckLike;
 import static com.boyworld.carrot.domain.foodtruck.QSchedule.schedule;
 import static com.boyworld.carrot.domain.member.QMember.member;
 import static com.boyworld.carrot.domain.member.QVendorInfo.vendorInfo;
-import static com.boyworld.carrot.domain.menu.QMenu.menu;
 import static com.boyworld.carrot.domain.review.QReview.review;
 import static com.boyworld.carrot.domain.sale.QSale.sale;
 import static com.querydsl.jpa.JPAExpressions.select;
@@ -127,9 +126,9 @@ public class FoodTruckQueryRepository {
                         sale.isNotNull().and(sale.endTime.isNull()),
                         isLiked(email),
                         foodTruck.prepareTime,
-                        getAvgGrade(),
-                        getLikeCount(),
-                        getReviewCount(),
+                        getAvgGrade(foodTruckId),
+                        getLikeCount(foodTruckId),
+                        getReviewCount(foodTruckId),
                         distance,
                         address,
                         foodTruckImage.uploadFile.storeFileName,
@@ -142,7 +141,6 @@ public class FoodTruckQueryRepository {
                 .from(foodTruck)
                 .join(foodTruck.vendor, member)
                 .leftJoin(vendorInfo).on(vendorInfo.member.eq(member), vendorInfo.active)
-                .leftJoin(menu).on(menu.foodTruck.eq(foodTruck), menu.active)
                 .leftJoin(foodTruckLike).on(foodTruckLike.foodTruck.eq(foodTruck), foodTruckLike.active)
                 .leftJoin(schedule).on(schedule.foodTruck.eq(foodTruck), schedule.active)
                 .leftJoin(review).on(review.foodTruck.eq(foodTruck), review.active)
@@ -159,33 +157,21 @@ public class FoodTruckQueryRepository {
      * 푸드트럭 식별키로 푸드트럭 상세 조회 쿼리 (사업자용)
      *
      * @param foodTruckId 푸드트럭 식별키
-     * @param email       현재 로그인 중인 사용자 이메일
      * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
      */
-    public FoodTruckVendorDetailDto getFoodTruckByIdAsVendor(Long foodTruckId, String email) {
-        StringExpression address = new CaseBuilder()
-                .when(sale.endTime.isNull())
-                .then(sale.address)
-                .otherwise(schedule.address);
-
+    public FoodTruckVendorDetailDto getFoodTruckByIdAsVendor(Long foodTruckId) {
         return queryFactory
-                .selectDistinct(Projections.constructor(FoodTruckVendorDetailDto.class,
+                .select(Projections.constructor(FoodTruckVendorDetailDto.class,
                         foodTruck.id,
                         foodTruck.name,
                         foodTruck.phoneNumber,
                         foodTruck.content,
                         foodTruck.originInfo,
-                        sale.isNotNull().and(sale.endTime.isNull()),
-                        isLiked(email),
                         foodTruck.prepareTime,
-                        getAvgGrade(),
-                        getLikeCount(),
-                        getReviewCount(),
-                        address,
+                        getAvgGrade(foodTruckId),
+                        getReviewCount(foodTruckId),
                         foodTruckImage.uploadFile.storeFileName,
                         foodTruck.selected,
-                        isNew(LocalDateTime.now().minusMonths(1)),
-                        isEqualEmail(email),
                         vendorInfo.vendorName,
                         vendorInfo.tradeName,
                         vendorInfo.businessNumber
@@ -193,11 +179,7 @@ public class FoodTruckQueryRepository {
                 .from(foodTruck)
                 .join(foodTruck.vendor, member)
                 .leftJoin(vendorInfo).on(vendorInfo.member.eq(member), vendorInfo.active)
-                .leftJoin(menu).on(menu.foodTruck.eq(foodTruck), menu.active)
-                .leftJoin(foodTruckLike).on(foodTruckLike.foodTruck.eq(foodTruck), foodTruckLike.active)
-                .leftJoin(schedule).on(schedule.foodTruck.eq(foodTruck), schedule.active)
                 .leftJoin(review).on(review.foodTruck.eq(foodTruck), review.active)
-                .leftJoin(sale).on(sale.foodTruck.eq(foodTruck), sale.active)
                 .leftJoin(foodTruckImage).on(foodTruckImage.foodTruck.eq(foodTruck), foodTruckImage.active)
                 .where(
                         isEqualFoodTruckId(foodTruckId),
@@ -251,29 +233,29 @@ public class FoodTruckQueryRepository {
                 .otherwise(false);
     }
 
-    private JPQLQuery<Integer> getLikeCount() {
+    private JPQLQuery<Integer> getLikeCount(Long foodTruckId) {
         return select(foodTruckLike.count().intValue())
                 .from(foodTruckLike)
                 .where(
-                        foodTruckLike.foodTruck.eq(foodTruck),
+                        foodTruckLike.foodTruck.id.eq(foodTruckId),
                         foodTruckLike.active
                 );
     }
 
-    private JPQLQuery<Double> getAvgGrade() {
+    private JPQLQuery<Double> getAvgGrade(Long foodTruckId) {
         return select(review.grade.sum().divide(review.count()).doubleValue())
                 .from(review)
                 .where(
-                        review.foodTruck.eq(foodTruck),
+                        review.foodTruck.id.eq(foodTruckId),
                         review.active
                 );
     }
 
-    private JPQLQuery<Integer> getReviewCount() {
+    private JPQLQuery<Integer> getReviewCount(Long foodTruckId) {
         return select(review.count().intValue())
                 .from(review)
                 .where(
-                        review.foodTruck.eq(foodTruck),
+                        review.foodTruck.id.eq(foodTruckId),
                         review.active
                 );
     }

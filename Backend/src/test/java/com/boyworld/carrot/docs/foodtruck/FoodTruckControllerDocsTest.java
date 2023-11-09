@@ -459,7 +459,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/food-truck/{foodTruckId}", foodTruck.getFoodTruckId())
+                        get("/food-truck/client/{foodTruckId}", foodTruck.getFoodTruckId())
                                 .header("Authentication", "authentication")
                                 .param("latitude", "35.1595")
                                 .param("longitude", "126.8526")
@@ -565,15 +565,10 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .phoneNumber("010-1234-5678")
                 .content("된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭")
                 .originInfo("돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)")
-                .isOpen(false)
-                .isLiked(true)
                 .prepareTime(30)
                 .avgGrade(4.5)
-                .likeCount(132)
                 .reviewCount(1324)
-                .address("광주 광산구 장덕로 5번길 16")
                 .foodTruckImageUrl("imageUrl")
-                .isNew(true)
                 .selected(true)
                 .vendorName("김동현")
                 .tradeName("동현 된장삼겹")
@@ -633,7 +628,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .willReturn(response);
 
         mockMvc.perform(
-                        get("/food-truck/{foodTruckId}", foodTruck.getFoodTruckId())
+                        get("/food-truck/vendor/{foodTruckId}", foodTruck.getFoodTruckId())
                                 .header("Authentication", "authentication")
                                 .param("foodTruckId", "1")
                 )
@@ -644,10 +639,6 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("foodTruckId").description("푸드트럭 식별키")
-                        ),
-                        queryParameters(
-                                parameterWithName("latitude").description("현재 사용자의 위도"),
-                                parameterWithName("longitude").description("현재 사용자의 경도")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.NUMBER)
@@ -670,28 +661,16 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("가게 소개"),
                                 fieldWithPath("data.foodTruck.originInfo").type(JsonFieldType.STRING)
                                         .description("원산지 정보"),
-                                fieldWithPath("data.foodTruck.isOpen").type(JsonFieldType.BOOLEAN)
-                                        .description("영업 상태"),
-                                fieldWithPath("data.foodTruck.isLiked").type(JsonFieldType.BOOLEAN)
-                                        .description("찜 여부"),
                                 fieldWithPath("data.foodTruck.prepareTime").type(JsonFieldType.NUMBER)
                                         .description("예상 준비 시간"),
                                 fieldWithPath("data.foodTruck.avgGrade").type(JsonFieldType.NUMBER)
                                         .description("평점"),
-                                fieldWithPath("data.foodTruck.likeCount").type(JsonFieldType.NUMBER)
-                                        .description("찜 개수"),
                                 fieldWithPath("data.foodTruck.reviewCount").type(JsonFieldType.NUMBER)
                                         .description("리뷰 개수"),
-                                fieldWithPath("data.foodTruck.address").type(JsonFieldType.STRING)
-                                        .description("푸드트럭 주소"),
                                 fieldWithPath("data.foodTruck.foodTruckImageUrl").type(JsonFieldType.STRING)
                                         .description("푸드트럭 이미지 저장 경로"),
-                                fieldWithPath("data.foodTruck.isNew").type(JsonFieldType.BOOLEAN)
-                                        .description("신규 등록 여부"),
                                 fieldWithPath("data.foodTruck.selected").type(JsonFieldType.BOOLEAN)
                                         .description("현재 선택 푸드트럭 여부"),
-                                fieldWithPath("data.foodTruck.isOwner").type(JsonFieldType.BOOLEAN)
-                                        .description("푸드트럭 사업자 여부"),
                                 fieldWithPath("data.foodTruck.vendorName").type(JsonFieldType.STRING)
                                         .description("대표자명"),
                                 fieldWithPath("data.foodTruck.tradeName").type(JsonFieldType.STRING)

@@ -55,7 +55,6 @@ public class OrderService {
     private final OrderQueryRepository orderQueryRepository;
     private final SaleQueryRepository saleQueryRepository;
     private final CartService cartService;
-    private final SaleService saleService;
 
     /**
      * 전체 주문내역 조회 API
@@ -121,6 +120,13 @@ public class OrderService {
      */
 
     public OrderResponse getOrder(Long orderId, String email, Role role) {
+
+
+        if (role.equals(Role.CLIENT)) {
+
+        } else if (role.equals(Role.VENDOR)) {
+
+        }
 
         Long memberId = memberRepository.findByEmail(email).map(Member::getId).orElse(null);
         OrderItem orderItem = orderQueryRepository.getOrder(orderId, memberId, role);

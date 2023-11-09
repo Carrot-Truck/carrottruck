@@ -69,7 +69,7 @@ function JoinForm() {
   // 이메일 인증 요청
   const requestEmailVerification = async () => {
     try {
-      setSentEmailCode(false);
+      setSentEmailCode(true);
       // 이메일 인증 요청 API 호출
       const body = {
         email: email
@@ -177,11 +177,11 @@ function JoinForm() {
       <div className="join-form">
         <div className="inputButton">
           <span>이메일 아이디</span>
-          <Input placeholder="example@example.com" value={email} setValue={setEmail} type="text"/>
+          <Input placeholder="example@example.com" value={email} setValue={setEmail} type="text" disabled = {sentEmailCode}/>
           {/* 유효성에 따라 버튼 활성화/비활성화 */}
-          <Button color="Primary" size="m" radius="m" text="중복검사" handleClick={checkEmailAvailability} disabled={isEmailValid} />
+          <Button color="Primary" size="m" radius="m" text="중복검사" handleClick={checkEmailAvailability} disabled={isEmailValid || sentEmailCode} />
           <span> </span>
-          <Button color="Primary" size="m" radius="m" text="인증받기" handleClick={requestEmailVerification} disabled={!isEmailAvailable || isEmailVerified} />
+          <Button color="Primary" size="m" radius="m" text="인증받기" handleClick={requestEmailVerification} disabled={!isEmailAvailable || sentEmailCode } />
         </div>
         <div>
           {sentEmailCode && (
@@ -190,6 +190,7 @@ function JoinForm() {
               value={authNumber}
               setValue={setAuthNumber}
               type="text"
+              disabled={isEmailVerified}
             />
           )}
           {sentEmailCode && (

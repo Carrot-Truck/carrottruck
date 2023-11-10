@@ -1,11 +1,17 @@
-// import Button from "components/atoms/BigButton";
 import { SelectAddressContainer } from "./style";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getDong, getSigungu, getSido } from "api/address";
+import Loading from "components/atoms/Loading";
+import { AxiosResponse } from "axios";
+import ButtonOutline from "components/atoms/ButtonOutline";
 
 interface ISelectAddressProps {
   sidoId: number | null;
+  setSidoId: React.Dispatch<React.SetStateAction<number | null>>;
   sigunguId: number | null;
+  setSigunguId: React.Dispatch<React.SetStateAction<number | null>>;
+  dongId: number | null;
+  setDongId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 interface AddressItem {
@@ -13,18 +19,28 @@ interface AddressItem {
   name: string;
 }
 
-interface AddressResponse {
-  data: AddressItem[];
-}
+const getData = (response: AxiosResponse) => {
+  return response.data.data;
+};
 
-function SelectAddress({ sidoId, sigunguId }: ISelectAddressProps) {
+function SelectAddress({
+  sidoId,
+  setSidoId,
+  sigunguId,
+  setSigunguId,
+  dongId,
+  setDongId,
+}: ISelectAddressProps) {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [addressNames, setAddressNames] = useState<AddressItem[]>([]);
+
   useEffect(() => {
-    console.log(1);
     const fetchData = async () => {
       if (sidoId == null) {
         getSido(
-          ({ data }: AddressResponse) => {
-            console.log("!!", data);
+          (response: AxiosResponse) => {
+            const data = getData(response);
+            setAddressNames(data.address);
           },
           (error: any) => {
             console.log(error);
@@ -33,8 +49,9 @@ function SelectAddress({ sidoId, sigunguId }: ISelectAddressProps) {
       } else if (sigunguId == null) {
         getSigungu(
           sidoId,
-          (data: Promise<AddressResponse>) => {
-            console.log(data);
+          (response: AxiosResponse) => {
+            const data = getData(response);
+            setAddressNames(data.address);
           },
           (error: any) => {
             console.log(error);
@@ -43,19 +60,87 @@ function SelectAddress({ sidoId, sigunguId }: ISelectAddressProps) {
       } else {
         getDong(
           sigunguId,
-          (data: Promise<AddressResponse>) => {
-            console.log(data);
+          (response: AxiosResponse) => {
+            const data = getData(response);
+            setAddressNames(data.address);
           },
           (error: any) => {
             console.log(error);
           }
         );
       }
+      setLoading(false);
     };
     fetchData();
   }, []);
 
-  return <SelectAddressContainer></SelectAddressContainer>;
+  useEffect(() => {
+    setLoading(true);
+    const fetchData = async () => {
+      if (sidoId == null) {
+        getSido(
+          (response: AxiosResponse) => {
+            const data = getData(response);
+            setAddressNames(data.address);
+          },
+          (error: any) => {
+            console.log(error);
+          }
+        );
+      } else if (sigunguId == null) {
+        getSigungu(
+          sidoId,
+          (response: AxiosResponse) => {
+            const data = getData(response);
+            setAddressNames(data.address);
+          },
+          (error: any) => {
+            console.log(error);
+          }
+        );
+      } else {
+        getDong(
+          sigunguId,
+          (response: AxiosResponse) => {
+            const data = getData(response);
+            setAddressNames(data.address);
+          },
+          (error: any) => {
+            console.log(error);
+          }
+        );
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, [sidoId, sigunguId]);
+
+  return (
+    <SelectAddressContainer>
+      {loading ? (
+        <Loading />
+      ) : (
+        addressNames.map((data: AddressItem) => (
+          <ButtonOutline
+            key={data.id}
+            size="s"
+            radius="s"
+            color="Normal"
+            text={data.name}
+            handleClick={() => {
+              if (!sidoId) {
+                setSidoId(data.id);
+              } else if (!sigunguId) {
+                setSigunguId(data.id);
+              } else if (!dongId) {
+                setDongId(data.id);
+              }
+            }}
+          />
+        ))
+      )}
+    </SelectAddressContainer>
+  );
 }
 
 export default SelectAddress;

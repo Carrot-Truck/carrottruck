@@ -10,6 +10,8 @@ import org.springframework.data.redis.core.RedisHash;
 
 import java.util.List;
 
+import static com.boyworld.carrot.domain.StringConstants.NO_IMG;
+
 /**
  * 장바구니-메뉴 엔티티
  *
@@ -39,7 +41,7 @@ public class CartMenu {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.menuImageUrl = menuImageUrl;
+        this.menuImageUrl = menuImageUrl != null ? menuImageUrl : NO_IMG;
         this.cartMenuOptionIds = cartMenuOptionIds;
     }
 }

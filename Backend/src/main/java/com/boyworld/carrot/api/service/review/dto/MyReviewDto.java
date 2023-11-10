@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static com.boyworld.carrot.domain.StringConstants.NO_IMG;
+
 /**
  * To show Review entity
  *
@@ -34,7 +36,7 @@ public class MyReviewDto {
         this.grade = grade;
         this.content = content;
         this.createdDate = createdDate;
-        this.imageUrl = imageUrl;
+        this.imageUrl = imageUrl != null ? imageUrl : NO_IMG;
     }
 
     public static MyReviewDto of(Review review){

@@ -3,6 +3,8 @@ package com.boyworld.carrot.api.service.menu.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import static com.boyworld.carrot.domain.StringConstants.NO_IMG;
+
 @Data
 public class MenuDto {
 
@@ -20,6 +22,6 @@ public class MenuDto {
         this.menuPrice = menuPrice;
         this.menuDescription = menuDescription;
         this.menuSoldOut = menuSoldOut;
-        this.menuImageUrl = menuImageUrl;
+        this.menuImageUrl = menuImageUrl != null ? menuImageUrl : NO_IMG;
     }
 }

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import static com.boyworld.carrot.domain.StringConstants.NO_IMG;
+
 @Data
 @NoArgsConstructor
 public class CartMenuDto {
@@ -23,7 +25,7 @@ public class CartMenuDto {
         this.menuName = menuName;
         this.menuPrice = menuPrice;
         this.cartMenuQuantity = cartMenuQuantity;
-        this.menuImageUrl = menuImageUrl;
+        this.menuImageUrl = menuImageUrl != null ? menuImageUrl : NO_IMG;
         this.cartMenuOptionDtos = cartMenuOptionDtos;
     }
 }

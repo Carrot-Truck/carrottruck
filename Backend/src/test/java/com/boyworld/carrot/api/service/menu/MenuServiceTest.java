@@ -69,7 +69,7 @@ class MenuServiceTest extends IntegrationTestSupport {
     @Test
     void createMenuWithMenuImageAndOptions() throws IOException {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -121,7 +121,7 @@ class MenuServiceTest extends IntegrationTestSupport {
     @Test
     void createMenuInValidAccess() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -173,7 +173,7 @@ class MenuServiceTest extends IntegrationTestSupport {
     @Test
     void editMenuWithMenuImageAndOptions() throws IOException {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -219,7 +219,7 @@ class MenuServiceTest extends IntegrationTestSupport {
     @Test
     void editMenuInValidAccess() throws IOException {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -265,7 +265,7 @@ class MenuServiceTest extends IntegrationTestSupport {
     @Test
     void deleteMenuAsOwner() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -297,7 +297,7 @@ class MenuServiceTest extends IntegrationTestSupport {
     @Test
     void deleteMenuAsInValidMember() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
 
@@ -331,7 +331,7 @@ class MenuServiceTest extends IntegrationTestSupport {
     @Test
     void createMenuOptionAsOwner() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -371,7 +371,7 @@ class MenuServiceTest extends IntegrationTestSupport {
     @Test
     void createMenuOptionAsInValidMember() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
 
@@ -411,7 +411,7 @@ class MenuServiceTest extends IntegrationTestSupport {
     @Test
     void deleteMenuOptionAsOwner() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -453,7 +453,7 @@ class MenuServiceTest extends IntegrationTestSupport {
     @Test
     void deleteMenuOptionAsInValidMember() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
 

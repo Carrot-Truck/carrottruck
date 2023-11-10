@@ -44,7 +44,7 @@ class VendorInfoQueryRepositoryTest extends IntegrationTestSupport {
         VendorInfo vendorInfo = createVendorInfo(member);
 
         // when
-        Optional<VendorInfoResponse> response = vendorInfoQueryRepository.getVendorInfoByEmail("ssafy@ssafy.com");
+        Optional<VendorInfoResponse> response = vendorInfoQueryRepository.getVendorInfoByEmail("ssafy@gmail.com");
 
         // then
         assertThat(response.isPresent()).isTrue();
@@ -59,7 +59,7 @@ class VendorInfoQueryRepositoryTest extends IntegrationTestSupport {
         Member member = createMember(Role.VENDOR);
 
         // when
-        Optional<VendorInfoResponse> response = vendorInfoQueryRepository.getVendorInfoByEmail("ssafy@ssafy.com");
+        Optional<VendorInfoResponse> response = vendorInfoQueryRepository.getVendorInfoByEmail("ssafy@gmail.com");
 
         // then
         assertThat(response.isEmpty()).isTrue();
@@ -67,7 +67,7 @@ class VendorInfoQueryRepositoryTest extends IntegrationTestSupport {
 
     private Member createMember(Role role) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")

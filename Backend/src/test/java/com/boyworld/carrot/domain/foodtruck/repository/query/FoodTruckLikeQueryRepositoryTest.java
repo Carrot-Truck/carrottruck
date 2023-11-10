@@ -49,7 +49,7 @@ class FoodTruckLikeQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckLikeByMemberIdAndFoodTruckId() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
         Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
         Category category1 = createCategory("고기/구이");
@@ -73,7 +73,7 @@ class FoodTruckLikeQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getEmptyFoodTruckLikeByMemberIdAndFoodTruckId() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
         Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
         Category category1 = createCategory("고기/구이");

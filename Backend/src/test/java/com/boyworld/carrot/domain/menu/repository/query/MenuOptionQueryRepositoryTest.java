@@ -56,7 +56,7 @@ class MenuOptionQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getMenuOptionsByMenuId() {
         // given
-        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -100,7 +100,7 @@ class MenuOptionQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getEmptyMenuOptionsByMenuId() {
         // given
-        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 

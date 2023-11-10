@@ -56,14 +56,14 @@ public class SurveyServiceTest extends IntegrationTestSupport {
 
         log.debug("createSurvey#request={}", request);
 
-        CreateSurveyResponse response = surveyService.createSurvey(request.toCreateSurveyDto(), "ssafy@ssafy.com");
+        CreateSurveyResponse response = surveyService.createSurvey(request.toCreateSurveyDto(), "ssafy@gmail.com");
 
         log.debug("createSurvey#response={}", response);
     }
 
     private Member createMember(Role role, boolean active) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")

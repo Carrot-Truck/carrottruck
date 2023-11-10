@@ -17,7 +17,7 @@ public class CreateFoodTruckRequest {
     @NotBlank
     private String foodTruckName;
     @NotBlank
-    @Pattern(regexp = "^010-\\\\d{3,4}=\\\\d{4}$")
+    @Pattern(regexp = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$")
     private String phoneNumber;
     private String content;
     private String originInfo;

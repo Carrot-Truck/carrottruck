@@ -18,7 +18,7 @@ public class EditMemberRequest {
     private String nickname;
 
     @NotBlank
-    @Pattern(regexp = "^010-\\\\d{3,4}=\\\\d{4}$")
+    @Pattern(regexp = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$")
     private String phoneNumber;
 
 

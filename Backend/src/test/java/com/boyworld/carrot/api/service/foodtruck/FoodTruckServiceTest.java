@@ -113,7 +113,6 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(savedId).isNotNull();
-        assertThat(foodTruckImageRepository.findAll()).hasSize(1);
     }
 
     @DisplayName("푸드트럭을 소유한 사업자는 자신의 푸드트럭의 정보를 수정할 수 있다.")

@@ -13,19 +13,18 @@ function LoginForm() {
   const accessToken = localStorage.getItem('accessToken');
   const grantType = localStorage.getItem('grantType');
   const APPLICATION_SPRING_SERVER_URL =
-  process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001/api';
+    process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001/api';
 
-  useEffect (()=>{
+  useEffect(() => {
     const isValidUser = async () => {
       try {
-        await axios.get(`${APPLICATION_SPRING_SERVER_URL}/member/vendor/info`,
-        {
-          headers : {
-            Authorization: `${grantType} ${accessToken}`,
-          },
+        await axios.get(`${APPLICATION_SPRING_SERVER_URL}/member/vendor/info`, {
+          headers: {
+            Authorization: `${grantType} ${accessToken}`
+          }
         });
         return true;
-      } catch(error){
+      } catch (error) {
         return false;
       }
     };
@@ -35,8 +34,6 @@ function LoginForm() {
       }
     });
   }, []);
-
-  
 
   const login = async () => {
     try {
@@ -53,7 +50,7 @@ function LoginForm() {
       // 이벤트를 발생시켜 AuthProvider의 함수를 실행.
       const memberLoginEvent = new Event('memberLogin');
       window.dispatchEvent(memberLoginEvent);
-      alert("로그인 성공!!");
+      alert('로그인 성공!!');
       // 홈으로 이동
       navigate('/');
     } catch (error) {
@@ -69,9 +66,7 @@ function LoginForm() {
         <Input type="password" value={password} setValue={setPassword} placeholder="비밀번호" />
       </FieldSet>
       <Button text="로그인" color="Primary" size="full" radius="s" handleClick={login} />
-      {showErrorMessage && (
-        <p style={{ color: 'red' }}>아이디/패스워드를 확인하세요</p>
-      )}
+      {showErrorMessage && <p style={{ color: 'red' }}>아이디/패스워드를 확인하세요</p>}
     </LoginFormContainer>
   );
 }

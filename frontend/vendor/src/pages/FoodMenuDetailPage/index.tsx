@@ -44,7 +44,7 @@ function FoodMenuDetailPage() {
 
   const navigate = useNavigate();
   const menuModify = () => {
-    navigate('/');
+    navigate(-1);
   };
   // 메뉴 옵션의 체크 상태를 관리하는 상태를 선언
   // 초기 상태로 모든 옵션을 체크되지 않은 상태(false)로 설정
@@ -87,7 +87,7 @@ function FoodMenuDetailPage() {
           onToggle={() => toggleCheck(menuOption.menuOptionId)}
         ></MenuOption>
       ))}
-      <Button text="인증" color="Primary" size="full" radius="s" handleClick={menuModify} />
+      <Button text="수정" color="Primary" size="full" radius="s" handleClick={menuModify} />
     </FoodMenuDetailLayout>
   );
 }

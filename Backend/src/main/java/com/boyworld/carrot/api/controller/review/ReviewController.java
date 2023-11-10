@@ -69,12 +69,12 @@ public class ReviewController {
      * @return MyReviewResponse : List of MyReviewDto(reviewId, foodTruck, grade, createdDate, content)
      */
     @GetMapping
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<MyReviewResponse> getMyReview() {
         log.debug("ReviewController#getMyReview called !!!");
 
         MyReviewResponse response = reviewService.getMyReview(SecurityUtil.getCurrentLoginId());
-        return ApiResponse.found(response);
+        return ApiResponse.ok(response);
     }
 
     /**
@@ -83,11 +83,13 @@ public class ReviewController {
      * @return FoodTruckReviewResponse : averageGrade and List of FoodTruckReviewDto(reviewId, grade, content)
      */
     @GetMapping("/{foodTruckId}")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.OK)
     public ApiResponse<FoodTruckReviewResponse> getFoodTruckReview(@Valid @PathVariable Long foodTruckId){
         log.debug("ReviewController#getFoodTruckReview called! Food truck id = {}", foodTruckId);
         FoodTruckReviewResponse response = reviewService.getFoodTruckReview(foodTruckId);
-        return ApiResponse.found(response);
+        System.out.println(response.getFoodTruckReviewDtoList());
+        System.out.println(response.getAverageGrade());
+        return ApiResponse.ok(response);
     }
 
     /**

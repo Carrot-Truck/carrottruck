@@ -2,10 +2,13 @@ import { useState, useEffect, ChangeEvent } from 'react';
 import { FoodTruckModifyContainer } from './style';
 import Input from 'components/atoms/Input';
 import Button from 'components/atoms/Button';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {editFoodTruck} from 'api/foodtruck/foodTruck'
+import { AxiosResponse, AxiosError } from 'axios';
+// import { setPhoneNumber } from 'slices/userSlice/userSlice';
 
-function FoodTruckModifyForm() {
+
+function FoodTruckModifyForm({ foodTruck } : any) {
   const navigate = useNavigate();
   const [isDone, setIsDone] = useState(false);
   const [categoryId, setCategoryId] = useState(0); // 카테고리 ID를 문자열로 저장
@@ -16,10 +19,6 @@ function FoodTruckModifyForm() {
   const [originInfo, setOriginInfo] = useState('');
   const [prepareTime, setPrepareTime] = useState(0);
   const [waitLimits, setWaitLimits] = useState(0);
-  const accessToken = localStorage.getItem('accessToken');
-  const grantType = localStorage.getItem('grantType');
-  const APPLICATION_SPRING_SERVER_URL =
-    process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001/api';
 
   const categories = [
     { id: '1', name: '한식' },
@@ -28,15 +27,30 @@ function FoodTruckModifyForm() {
     // 다른 카테고리들...
   ];
 
+  const handleSuccess = (response: AxiosResponse) => {
+    if(response.data.code === 200){
+      alert('푸드트럭 수정이 완료되었습니다.');
+    }else{
+      alert('푸드트럭 등록 실패!\n다시 시도해주세요.');
+    }
+    navigate('/');
+  }
+
+  const handleFail = (response: AxiosError) => {
+    console.log("Error ", response);
+    alert('푸드트럭 등록 실패!\n다시 시도해주세요.');
+    navigate('/');
+  }
+
   const regist = async () => {
     if (isDone) {
       try {
         const formData = new FormData();
-        if (foodTruckPicture !== null) {
+        if(foodTruckPicture !== null){
           // 파일 업로드 부분
           formData.append('file', foodTruckPicture);
         }
-
+        
         // JSON 데이터 부분
         const requestData = {
           categoryId: categoryId,
@@ -49,30 +63,17 @@ function FoodTruckModifyForm() {
         };
 
         // JSON 데이터를 Blob로 변환 후 FormData에 추가
+        // JSON 데이터를 Blob으로 변환 후 FormData에 추가
         formData.append('request', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
 
-        const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/food-truck/vendor`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `${grantType} ${accessToken}`
-          }
-        });
-        console.log(response);
-        if (response.data.code === 210) {
-          alert('푸드트럭 등록이 완료되었습니다.');
-          navigate('/');
-        } else {
-          alert('푸드트럭 등록 실패!\n다시 시도해주세요.');
-          navigate('/');
-        }
+        // JSON.stringify를 사용하지 않고 formData 객체를 그대로 전달
+        editFoodTruck(foodTruck.foodTruckId, formData, handleSuccess, handleFail);
       } catch (error) {
         console.error('에러야...', error);
       }
     }
     if (!foodTruckName) {
       alert('푸드트럭 이름을 입력해주세요');
-    } else if (!foodTruckPicture) {
-      alert('푸드트럭 사진을 넣어주세요');
     } else if (!categoryId) {
       alert('카테고리를 골라주세요');
     } else if (!content) {
@@ -89,9 +90,14 @@ function FoodTruckModifyForm() {
   };
 
   useEffect(() => {
+    setfoodTruckName(foodTruck.foodTruckName);
+    setContent(foodTruck.content);
+    setphoneNumber(foodTruck.phoneNumber);
+    setOriginInfo(foodTruck.originInfo);
+    setPrepareTime(foodTruck.prepareTime);
+        
     if (
       foodTruckName &&
-      foodTruckPicture &&
       categoryId &&
       content &&
       phoneNumber &&
@@ -103,7 +109,7 @@ function FoodTruckModifyForm() {
     } else {
       setIsDone(false);
     }
-  }, [foodTruckName, foodTruckPicture, categoryId, content, phoneNumber, prepareTime, waitLimits, originInfo]);
+  }, [foodTruckName, categoryId, content, phoneNumber, prepareTime, waitLimits, originInfo]);
 
   // 파일이 선택되었을 때 호출될 핸들러입니다.
   // ChangeEvent<HTMLInputElement>는 TypeScript에서 input 변경 이벤트의 타입입니다.
@@ -185,7 +191,7 @@ function FoodTruckModifyForm() {
         color={isDone ? 'Primary' : 'SubFirst'}
         size="full"
         radius="m"
-        text={isDone ? '푸드트럭등록' : '작성 중 이세요'}
+        text={isDone ? '푸드트럭수정' : '작성 중 이세요'}
       />
     </FoodTruckModifyContainer>
   );

@@ -15,6 +15,12 @@ function LoginForm() {
   const APPLICATION_SPRING_SERVER_URL =
   process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001/api';
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      login();
+    }
+  };
+
   useEffect (()=>{
     const isValidUser = async () => {
       try {
@@ -65,8 +71,20 @@ function LoginForm() {
     <LoginFormContainer>
       {/* <DownIcon /> */}
       <FieldSet>
-        <Input type="text" value={email} setValue={setEmail} placeholder="이메일 아이디" />
-        <Input type="password" value={password} setValue={setPassword} placeholder="비밀번호" />
+        <Input
+            type="text"
+            value={email}
+            setValue={setEmail}
+            placeholder="이메일 아이디"
+            onKeyPress={handleKeyPress} // 엔터 키 이벤트 추가
+          />
+          <Input
+            type="password"
+            value={password}
+            setValue={setPassword}
+            placeholder="비밀번호"
+            onKeyPress={handleKeyPress} // 엔터 키 이벤트 추가
+          />
       </FieldSet>
       <Button text="로그인" color="Primary" size="full" radius="s" handleClick={login} />
       {showErrorMessage && (

@@ -40,7 +40,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
     @Test
     void login() throws Exception {
         LoginRequest request = LoginRequest.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .password("ssafy1234")
                 .build();
 
@@ -92,7 +92,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
     @Test
     void loginVendor() throws Exception {
         LoginRequest request = LoginRequest.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .password("ssafy1234")
                 .build();
 
@@ -144,7 +144,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
     @Test
     void checkEmail() throws Exception {
         CheckEmailRequest request = CheckEmailRequest.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .build();
 
         Boolean result = false;
@@ -183,7 +183,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
     @Test
     void authEmail() throws Exception {
         AuthEmailRequest request = AuthEmailRequest.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .build();
 
         mockMvc.perform(
@@ -218,7 +218,7 @@ public class AuthControllerDocsTest extends RestDocsSupport {
     @Test
     void checkAuthEmail() throws Exception {
         AuthCheckEmailRequest request = AuthCheckEmailRequest.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .authNumber("74p30C0I")
                 .build();
 

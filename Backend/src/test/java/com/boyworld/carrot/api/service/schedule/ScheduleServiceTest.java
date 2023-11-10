@@ -60,7 +60,7 @@ class ScheduleServiceTest extends IntegrationTestSupport {
     @Test
     void createScheduleAsOwner() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -95,7 +95,7 @@ class ScheduleServiceTest extends IntegrationTestSupport {
     @Test
     void createScheduleAsInValidMember() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
 
@@ -131,7 +131,7 @@ class ScheduleServiceTest extends IntegrationTestSupport {
     @Test
     void editScheduleAsOwner() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -174,7 +174,7 @@ class ScheduleServiceTest extends IntegrationTestSupport {
     @Test
     void editEmptyScheduleAsOwner() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -212,7 +212,7 @@ class ScheduleServiceTest extends IntegrationTestSupport {
     @Test
     void editScheduleAsInValidMember() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
 
@@ -260,7 +260,7 @@ class ScheduleServiceTest extends IntegrationTestSupport {
     @Test
     void deleteScheduleAsOwner() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -294,7 +294,7 @@ class ScheduleServiceTest extends IntegrationTestSupport {
     @Test
     void deleteEmptyScheduleAsOwner() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -323,7 +323,7 @@ class ScheduleServiceTest extends IntegrationTestSupport {
     @Test
     void deleteScheduleAsInValidMember() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
 

@@ -68,13 +68,13 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void createFoodTruckAsVendorWithoutImage() throws IOException {
         // given
-        Member member = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Category category = createCategory("고기/구이");
 
         CreateFoodTruckDto dto = getCreateFoodTruckDto(category);
 
         // when
-        Long savedId = foodTruckService.createFoodTruck(dto, "ssafy@ssafy.com", null);
+        Long savedId = foodTruckService.createFoodTruck(dto, "ssafy@gmail.com", null);
 
         // then
         assertThat(savedId).isNotNull();
@@ -84,13 +84,13 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void createFoodTruckAsClient() throws IOException {
         // given
-        Member member = createMember(Role.CLIENT, true, "ssafy@ssafy.com");
+        Member member = createMember(Role.CLIENT, true, "ssafy@gmail.com");
         Category category = createCategory("고기/구이");
 
         CreateFoodTruckDto dto = getCreateFoodTruckDto(category);
 
         // when // then
-        assertThatThrownBy(() -> foodTruckService.createFoodTruck(dto, "ssafy@ssafy.com", null))
+        assertThatThrownBy(() -> foodTruckService.createFoodTruck(dto, "ssafy@gmail.com", null))
                 .isInstanceOf(InValidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }
@@ -99,7 +99,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void createFoodTruckAsVendorWithImage() throws IOException {
         // given
-        Member member = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Category category = createCategory("고기/구이");
 
         String path = "test.png";
@@ -109,7 +109,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         CreateFoodTruckDto dto = getCreateFoodTruckDto(category);
 
         // when
-        Long savedId = foodTruckService.createFoodTruck(dto, "ssafy@ssafy.com", file);
+        Long savedId = foodTruckService.createFoodTruck(dto, "ssafy@gmail.com", file);
 
         // then
         assertThat(savedId).isNotNull();
@@ -119,7 +119,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void editFoodTruckAsOwner() throws IOException {
         // given
-        Member member = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
@@ -155,7 +155,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void editFoodTruckAsMember() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
         Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
         Category category1 = createCategory("고기/구이");
@@ -188,7 +188,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void editFoodTruckAsOwnerWithImage() throws IOException {
         // given
-        Member member = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
@@ -239,7 +239,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void editFoodTruckAsOwnerWithCreateImage() throws IOException {
         // given
-        Member member = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
@@ -283,7 +283,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void deleteFoodTruckAsOwner() {
         // given
-        Member member = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
@@ -303,7 +303,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void deleteFoodTruckAsMember() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
         Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
         Category category1 = createCategory("고기/구이");
@@ -325,7 +325,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void createFoodTruckLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
         Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
         Category category1 = createCategory("고기/구이");
@@ -350,7 +350,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
     @Test
     void cancelFoodTruckLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
         Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
         Category category1 = createCategory("고기/구이");

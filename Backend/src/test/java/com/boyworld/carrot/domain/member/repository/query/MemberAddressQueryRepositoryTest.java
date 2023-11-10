@@ -109,7 +109,7 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
         MemberAddress memberAddress = createMemberAddress(member, "주소1", true, true);
 
         // when
-        Long result = memberAddressQueryRepository.getSelectedCountByEmail("ssafy@ssafy.com");
+        Long result = memberAddressQueryRepository.getSelectedCountByEmail("ssafy@gmail.com");
 
         // then
         assertThat(result).isEqualTo(1);
@@ -122,7 +122,7 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
         Member member = createMember(Role.CLIENT);
 
         // when
-        Long result = memberAddressQueryRepository.getSelectedCountByEmail("ssafy@ssafy.com");
+        Long result = memberAddressQueryRepository.getSelectedCountByEmail("ssafy@gmail.com");
 
         // then
         assertThat(result).isZero();
@@ -130,7 +130,7 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
 
     private Member createMember(Role role) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")

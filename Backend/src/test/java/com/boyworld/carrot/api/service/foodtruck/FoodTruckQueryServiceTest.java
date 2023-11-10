@@ -88,7 +88,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckOverviewsAsVendor() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -115,7 +115,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getEmptyFoodTruckOverviewsAsVendor() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member vendor3 = createMember(Role.VENDOR, "bye@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
@@ -140,7 +140,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckOverviewsAsClient() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -160,7 +160,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getAllFoodTruckMarkers() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -187,7 +187,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getEmptyAllFoodTruckMarkers() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -212,7 +212,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getAllFoodTruckMarkersWithCategoryId() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -237,7 +237,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getAllFoodTruckMarkersWithKeyword() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -262,7 +262,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckMarkersWithoutCondition() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -287,7 +287,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getEmptyFoodTruckMarkers() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -312,7 +312,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckMarkersWithCategoryId() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -336,7 +336,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckMarkersWithKeyword() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -354,14 +354,14 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(response.getMarkerCount()).isNotZero();
-        assertThat(response.getMarkerItems()).isEmpty();
+        assertThat(response.getMarkerItems()).isNotEmpty();
     }
 
     @DisplayName("사용자는 검색 조건 없이 가까운 순으로 현재 위치 기준 반경 1Km 이내의 푸드트럭 목록을 조회할 수 있다.")
     @Test
     void getFoodTrucksWithoutConditionOrderByDistance() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -390,7 +390,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithCategoryIdOrderByDistance() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -419,7 +419,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithKeywordOrderByDistance() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -448,7 +448,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithoutConditionOrderByLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -475,7 +475,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithCategoryIdOrderByLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -504,7 +504,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithKeywordOrderByLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -533,7 +533,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithoutConditionOrderByReview() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -560,7 +560,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithConditionOrderByReview() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -589,7 +589,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithKeywordOrderByReview() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -618,7 +618,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithoutConditionOrderByGrade() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -645,7 +645,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithConditionOrderByGrade() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -674,7 +674,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithKeywordOrderByGrade() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -703,7 +703,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithoutConditionOrderByDistance() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -732,7 +732,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithCategoryIdOrderByDistance() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -761,7 +761,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithKeywordOrderByDistance() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -790,7 +790,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithoutConditionOrderByLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -817,7 +817,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithCategoryIdOrderByLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -846,7 +846,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithKeywordOrderByLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -875,7 +875,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithoutConditionOrderByReview() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -902,7 +902,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithConditionOrderByReview() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -931,7 +931,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpebFoodTrucksWithKeywordOrderByReview() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -960,7 +960,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithoutConditionOrderByGrade() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -987,7 +987,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithConditionOrderByGrade() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -1016,7 +1016,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getOpenFoodTrucksWithKeywordOrderByGrade() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -1045,7 +1045,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getFoodTruck() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");

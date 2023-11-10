@@ -19,17 +19,15 @@ function JoinForm() {
   const [isEmailAvailable, setIsEmailAvailable] = useState(false); // 이메일 중복검사 상태
   // const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 상태
   const APPLICATION_SPRING_SERVER_URL =
-   process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001/api';
+    process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001/api';
 
   // 정규식 패턴
-  const emailRegExp =
-    /^[A-Za-z0-9_]+[A-Za-z0-9]*[@]{1}[A-Za-z0-9]+[A-Za-z0-9]*[.]{1}[A-Za-z]{1,3}$/;
-    // 비밀번호 유효성 검사 함수
+  const emailRegExp = /^[A-Za-z0-9_]+[A-Za-z0-9]*[@]{1}[A-Za-z0-9]+[A-Za-z0-9]*[.]{1}[A-Za-z]{1,3}$/;
+  // 비밀번호 유효성 검사 함수
   const isPasswordValid = (password: string) => {
     const passwordRegExp = /^(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,16}$/;
     return passwordRegExp.test(password);
   };
-
 
   // 이메일 입력값이 변경될 때 유효성 검사 수행
   useEffect(() => {
@@ -79,7 +77,8 @@ function JoinForm() {
   // 회원 가입
   const join = async () => {
     if (isDone && isEmailAvailable) {
-      if (isPasswordValid(password)) { // 비밀번호 유효성 검사 추가
+      if (isPasswordValid(password)) {
+        // 비밀번호 유효성 검사 추가
         try {
           const body = {
             email,
@@ -87,7 +86,7 @@ function JoinForm() {
             name,
             phoneNumber,
             nickname,
-            role,
+            role
           };
           // 회원가입 API 호출
           const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/member/vendor/join`, body);
@@ -109,7 +108,7 @@ function JoinForm() {
         } catch (error) {
           console.error('Error during registration', error);
         }
-      } else{
+      } else {
         alert('비밀번호는 8~16자이고, 특수문자 1개를 포함해야 합니다.');
       }
     } else {
@@ -119,10 +118,10 @@ function JoinForm() {
         alert('유효한 이메일 형식이 아닙니다.');
       } else if (!isEmailAvailable) {
         alert('이미 사용 중인 이메일입니다.');
-      // } else if (!isEmailVerified) {
-      //   alert('이메일 인증이 완료되지 않았습니다.');
-      // } 
-      }else if (!phoneNumber) {
+        // } else if (!isEmailVerified) {
+        //   alert('이메일 인증이 완료되지 않았습니다.');
+        // }
+      } else if (!phoneNumber) {
         alert('전화번호를 입력해주세요.');
       } else if (!password) {
         alert('비밀번호를 입력해주세요');
@@ -151,9 +150,16 @@ function JoinForm() {
       <div className="join-form">
         <div className="inputButton">
           <span>이메일 아이디</span>
-          <Input placeholder="example@example.com" value={email} setValue={setEmail} type="text"/>
+          <Input placeholder="example@example.com" value={email} setValue={setEmail} type="text" />
           {/* 유효성에 따라 버튼 활성화/비활성화 */}
-          <Button color="Primary" size="full" radius="m" text="중복검사" handleClick={checkEmailAvailability} disabled={!isEmailValid} />
+          <Button
+            color="Primary"
+            size="full"
+            radius="m"
+            text="중복검사"
+            handleClick={checkEmailAvailability}
+            disabled={!isEmailValid}
+          />
           {/* <button onClick={requestEmailVerification} disabled={!isEmailAvailable}>
             인증받기
           </button> */}

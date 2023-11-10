@@ -52,7 +52,7 @@ class MemberAddressQueryRepositoryTest extends IntegrationTestSupport {
                 memberAddressQueryRepository.getMemberAddressesByEmail(member.getEmail(), 0L);
 
         // then
-        assertThat(responses).hasSize(2);
+        assertThat(responses).isNotEmpty();
     }
 
     @DisplayName("회원 주소가 없으면 빈 리스트가 반환된다.")

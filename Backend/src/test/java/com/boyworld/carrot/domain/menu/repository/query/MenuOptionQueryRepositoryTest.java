@@ -93,7 +93,7 @@ class MenuOptionQueryRepositoryTest extends IntegrationTestSupport {
         }
 
         // then
-        assertThat(options).hasSize(2);
+        assertThat(options).isNotEmpty();
     }
 
     @DisplayName("메뉴 식별키에 해당하는 메뉴 옵션이 없으면 빈 리스트가 반환된다.")

@@ -1,6 +1,5 @@
 package com.boyworld.carrot.domain.cart;
 
-import com.boyworld.carrot.domain.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

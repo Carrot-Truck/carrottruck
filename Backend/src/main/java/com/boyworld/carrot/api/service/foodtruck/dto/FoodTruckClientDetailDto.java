@@ -30,9 +30,9 @@ public class FoodTruckClientDetailDto {
 
     @Builder
     public FoodTruckClientDetailDto(Long foodTruckId, String foodTruckName, String phoneNumber, String content,
-                                    String originInfo, Boolean isOpen, Boolean isLiked, Integer prepareTime, Double avgGrade,
-                                    Integer likeCount, Integer reviewCount, BigDecimal distance, String address,
-                                    String foodTruckImageUrl, Boolean selected, Boolean isNew,
+                                    String originInfo, boolean isOpen, boolean isLiked, int prepareTime,
+                                    double avgGrade, int likeCount, int reviewCount, double distance,
+                                    String address, String foodTruckImageUrl, boolean selected, boolean isNew,
                                     String vendorName, String tradeName, String businessNumber) {
         this.foodTruckId = foodTruckId;
         this.foodTruckName = foodTruckName;
@@ -45,7 +45,7 @@ public class FoodTruckClientDetailDto {
         this.avgGrade = avgGrade;
         this.likeCount = likeCount;
         this.reviewCount = reviewCount;
-        this.distance = distance;
+        this.distance = new BigDecimal(distance);
         this.address = address;
         this.foodTruckImageUrl = foodTruckImageUrl;
         this.selected = selected;

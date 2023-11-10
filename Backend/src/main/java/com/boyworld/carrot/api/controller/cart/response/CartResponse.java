@@ -1,6 +1,5 @@
 package com.boyworld.carrot.api.controller.cart.response;
 
-import com.boyworld.carrot.api.controller.menu.response.MenuResponse;
 import com.boyworld.carrot.api.service.cart.dto.CartMenuDto;
 import com.boyworld.carrot.domain.cart.Cart;
 import jakarta.validation.constraints.NotBlank;

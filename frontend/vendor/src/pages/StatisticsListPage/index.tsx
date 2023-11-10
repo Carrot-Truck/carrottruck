@@ -1,5 +1,3 @@
-// import { useEffect } from "react";
-
 import Navbar from "components/organisms/Navbar";
 import { StatisticsListLayout } from "./style";
 

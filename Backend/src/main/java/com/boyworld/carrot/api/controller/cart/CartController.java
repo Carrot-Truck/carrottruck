@@ -54,7 +54,7 @@ public class CartController {
         return ApiResponse.ok(response);
     }
 
-    // 장바구니 1추가
+    // 장바구니 1 추가
     @PatchMapping("increment/{cartMenuId}")
     public ApiResponse<String> incrementCartMenu(@PathVariable String cartMenuId) throws JsonProcessingException {
         log.debug("CartController#incrementCartMenu called");
@@ -68,7 +68,7 @@ public class CartController {
         return ApiResponse.ok(editId);
     }
 
-    // 장바구니 1추가
+    // 장바구니 1 감소
     @PatchMapping("decrement/{cartMenuId}")
     public ApiResponse<String> decrementCartMenu(@PathVariable String cartMenuId) throws JsonProcessingException {
         log.debug("CartController#decrementCartMenu called");

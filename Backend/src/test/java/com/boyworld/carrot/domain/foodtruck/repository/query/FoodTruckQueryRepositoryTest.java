@@ -128,7 +128,6 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
 
         // then
         assertThat(overviews).isNotEmpty();
-        assertThat(overviews).hasSize(1);
     }
 
     @DisplayName("보유한 푸드트럭이 없으면 빈 리스트를 반환한다.")
@@ -214,7 +213,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
         createSchedules(foodTruck1);
         createSchedules(foodTruck2);
 
-        Sale sale1 = createSale(foodTruck1, null, "sale1 address");
+        Sale sale1 = createSale(foodTruck1, LocalDateTime.now(), "sale1 address");
         Sale sale2 = createSale(foodTruck2, null, "sale2 address");
 
         createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);

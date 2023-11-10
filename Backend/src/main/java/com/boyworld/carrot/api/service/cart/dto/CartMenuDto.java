@@ -1,7 +1,6 @@
 package com.boyworld.carrot.api.service.cart.dto;
 
 import com.boyworld.carrot.domain.cart.CartMenu;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

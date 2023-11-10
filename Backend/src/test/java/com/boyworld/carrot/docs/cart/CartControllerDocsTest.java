@@ -51,7 +51,6 @@ public class CartControllerDocsTest extends RestDocsSupport {
                 .foodTruckId(1l)
                 .menuId(1l)
                 .cartMenuQuantity(2)
-                .menuPrice(999)
                 .cartMenuTotalPrice(9999)
                 .menuOptionIds(new ArrayList<>(Arrays.asList(1l, 2l)))
                 .build();
@@ -78,8 +77,6 @@ public class CartControllerDocsTest extends RestDocsSupport {
                                                 .description("장바구니에 담은 메뉴 ID"),
                                         fieldWithPath("cartMenuQuantity").type(JsonFieldType.NUMBER)
                                                 .description("장바구니에 담은 메뉴의 수량"),
-                                        fieldWithPath("menuPrice").type(JsonFieldType.NUMBER)
-                                                .description("장바구니에 담은 메뉴의 단일 금액"),
                                         fieldWithPath("cartMenuTotalPrice").type(JsonFieldType.NUMBER)
                                                 .description("장바구니에 담은 메뉴 및 메뉴옵션을 더한 금액"),
                                         fieldWithPath("menuOptionIds").type(JsonFieldType.ARRAY)

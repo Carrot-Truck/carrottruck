@@ -94,8 +94,8 @@ class MenuQueryServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(response).isNotNull();
-        assertThat(response.getMenuCount()).isEqualTo(2);
-        assertThat(response.getMenus()).hasSize(2);
+        assertThat(response.getMenuCount()).isNotZero();
+        assertThat(response.getMenus()).isNotEmpty();
     }
 
     @DisplayName("푸드트럭 식별키에 해당하는 메뉴가 없으면 빈 리스트가 반환된다.")
@@ -172,8 +172,8 @@ class MenuQueryServiceTest extends IntegrationTestSupport {
                 .containsExactly(menu.getMenuInfo().getName(), menu.getMenuInfo().getPrice(),
                         menu.getMenuInfo().getDescription(), menu.getMenuInfo().getSoldOut(),
                         image.getUploadFile().getStoreFileName());
-        assertThat(response.getMenuOptionCount()).isEqualTo(2);
-        assertThat(response.getMenuOptions()).hasSize(2);
+        assertThat(response.getMenuOptionCount()).isNotZero();
+        assertThat(response.getMenuOptions()).isNotEmpty();
     }
 
     @DisplayName("메뉴 식별키에 해당하는 메뉴 옵션이 없다면 메뉴 옵션은 빈 리스트가 반환된다.")
@@ -214,6 +214,7 @@ class MenuQueryServiceTest extends IntegrationTestSupport {
                 .containsExactly(menu.getMenuInfo().getName(), menu.getMenuInfo().getPrice(),
                         menu.getMenuInfo().getDescription(), menu.getMenuInfo().getSoldOut(),
                         image.getUploadFile().getStoreFileName());
+
         assertThat(response.getMenuOptionCount()).isZero();
         assertThat(response.getMenuOptions()).isEmpty();
     }

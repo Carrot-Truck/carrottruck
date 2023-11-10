@@ -106,15 +106,68 @@ public class FoodTruckQueryRepository {
      * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
      */
     public FoodTruckClientDetailDto getFoodTruckByIdAsClient(Long foodTruckId, String email, BigDecimal currentLat, BigDecimal currentLng) {
-        NumberExpression<BigDecimal> distance = new CaseBuilder()
-                .when(sale.endTime.isNull())
-                .then(calculateDistance(currentLat, sale.latitude, currentLng, sale.longitude))
-                .otherwise(calculateDistance(currentLat, schedule.latitude, currentLng, schedule.longitude));
+//        NumberExpression<BigDecimal> distance = new CaseBuilder()
+//                .when(sale.endTime.isNull())
+//                .then(calculateDistance(currentLat, sale.latitude, currentLng, sale.longitude))
+//                .otherwise(calculateDistance(currentLat, schedule.latitude, currentLng, schedule.longitude));
 
-        StringExpression address = new CaseBuilder()
-                .when(sale.endTime.isNull())
-                .then(sale.address)
-                .otherwise(schedule.address);
+//        StringExpression address = new CaseBuilder()
+//                .when(sale.endTime.isNull())
+//                .then(sale.address)
+//                .otherwise(schedule.address);
+
+        Boolean isOpen = queryFactory
+                .select(sale.endTime.isNull())
+                .from(sale)
+                .where(
+                        sale.foodTruck.id.eq(foodTruckId),
+                        sale.endTime.isNull(),
+                        sale.foodTruck.active,
+                        sale.active
+                )
+                .fetchFirst();
+
+        JPQLQuery<String> address = queryFactory
+                .select(sale.address)
+                .from(sale)
+                .where(
+                        sale.foodTruck.id.eq(foodTruckId),
+                        sale.endTime.isNull(),
+                        sale.foodTruck.active,
+                        sale.active
+                );
+
+        JPQLQuery<Double> distance = queryFactory
+                .select(calculateDistance(currentLat, sale.latitude, currentLng, sale.longitude).doubleValue())
+                .from(sale)
+                .where(
+                        sale.foodTruck.id.eq(foodTruckId),
+                        sale.endTime.isNotNull(),
+                        sale.foodTruck.active,
+                        sale.active
+                );
+
+        if (isOpen == null || !isOpen) {
+            address = queryFactory
+                    .select(schedule.address)
+                    .from(schedule)
+                    .where(
+                            schedule.foodTruck.id.eq(foodTruckId),
+                            schedule.dayOfWeek.eq(LocalDateTime.now().getDayOfWeek()),
+                            schedule.active,
+                            schedule.foodTruck.active
+                    );
+
+            distance = queryFactory
+                    .select(calculateDistance(currentLat, schedule.latitude, currentLng, schedule.longitude).doubleValue())
+                    .from(schedule)
+                    .where(
+                            schedule.foodTruck.id.eq(foodTruckId),
+                            schedule.dayOfWeek.eq(LocalDateTime.now().getDayOfWeek()),
+                            schedule.active,
+                            schedule.foodTruck.active
+                    );
+        }
 
         return queryFactory
                 .selectDistinct(Projections.constructor(FoodTruckClientDetailDto.class,
@@ -208,9 +261,9 @@ public class FoodTruckQueryRepository {
         return lastFoodTruckId != null ? foodTruck.id.gt(lastFoodTruckId) : null;
     }
 
-    private NumberTemplate<BigDecimal> calculateDistance(BigDecimal currentLat, NumberPath<BigDecimal> targetLat,
+    private NumberTemplate<Double> calculateDistance(BigDecimal currentLat, NumberPath<BigDecimal> targetLat,
                                                          BigDecimal currentLng, NumberPath<BigDecimal> targetLng) {
-        return Expressions.numberTemplate(BigDecimal.class,
+        return Expressions.numberTemplate(Double.class,
                 "ST_DISTANCE_SPHERE(POINT({0}, {1}), POINT({2}, {3}))",
                 currentLng, currentLat, targetLng, targetLat);
     }

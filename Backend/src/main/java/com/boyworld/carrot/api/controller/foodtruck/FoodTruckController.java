@@ -7,6 +7,8 @@ import com.boyworld.carrot.api.controller.foodtruck.request.UpdateFoodTruckReque
 import com.boyworld.carrot.api.controller.foodtruck.response.*;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckClientDetailDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckVendorDetailDto;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
@@ -157,30 +159,53 @@ public class FoodTruckController {
     }
 
     /**
-     * 푸드트럭 상세조회 API
+     * 푸드트럭 상세조회 API (일반 사용자용)
      *
      * @param foodTruckId 푸드트럭 식별키
      * @param latitude        위도
      * @param longitude       경도
      * @return 푸드트럭 상세 정보
      */
-    @GetMapping("/{foodTruckId}")
-    public ApiResponse<FoodTruckDetailResponse> getFoodTruck(@PathVariable Long foodTruckId,
-                                                             @RequestParam BigDecimal latitude,
-                                                             @RequestParam BigDecimal longitude) {
+    @GetMapping("/client/{foodTruckId}")
+    public ApiResponse<FoodTruckDetailResponse<FoodTruckClientDetailDto>> getFoodTruck(@PathVariable Long foodTruckId,
+                                                                                       @RequestParam BigDecimal latitude,
+                                                                                       @RequestParam BigDecimal longitude) {
         log.debug("FoodTruckController#getFoodTruck called");
         log.debug("truckId={}", foodTruckId);
 
         String email = SecurityUtil.getCurrentLoginId();
         log.debug("email={}", email);
 
-        FoodTruckDetailResponse response = foodTruckQueryService.getFoodTruck(foodTruckId, email,
-                latitude, longitude);
+        FoodTruckDetailResponse<FoodTruckClientDetailDto> response =
+                foodTruckQueryService.getClientFoodTruck(foodTruckId, email, latitude, longitude);
         log.debug("FoodTruckDetailResponse={}", response);
 
         return ApiResponse.ok(response);
     }
 
+    /**
+     * 푸드트럭 상세조회 API (사업자용)
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @return 푸드트럭 상세 정보
+     */
+    @GetMapping("/vendor/{foodTruckId}")
+    public ApiResponse<FoodTruckDetailResponse<FoodTruckVendorDetailDto>> getVendorFoodTruckById(
+            @PathVariable Long foodTruckId) {
+
+        log.debug("FoodTruckController#getFoodTruck called");
+        log.debug("truckId={}", foodTruckId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        FoodTruckDetailResponse<FoodTruckVendorDetailDto> response =
+                foodTruckQueryService.getVendorFoodTruckById(foodTruckId, email);
+        log.debug("FoodTruckDetailResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+    
     /**
      * 푸드트럭 수정 API
      *

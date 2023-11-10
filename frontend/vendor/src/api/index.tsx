@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const authorization = `${localStorage["grantType"]} ${localStorage["acessToken"]}`;
+export const authorization = `${localStorage["grantType"]} ${localStorage["accessToken"]}`;
 
 export const analysisApi = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/analysis`,

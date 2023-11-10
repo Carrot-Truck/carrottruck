@@ -14,10 +14,12 @@ function JoinForm() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [name, setName] = useState('');
   const [nickname, setNickname] = useState('');
+  const [authNumber, setAuthNumber] = useState('');
   const role = 'VENDOR';
   const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태
   const [isEmailAvailable, setIsEmailAvailable] = useState(false); // 이메일 중복검사 상태
-  // const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 상태
+  const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 상태
+  const [sentEmailCode, setSentEmailCode] = useState(false); // 이메일 인증 코드 발송 상태
   const APPLICATION_SPRING_SERVER_URL =
    process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001/api';
 
@@ -38,6 +40,9 @@ function JoinForm() {
     } else {
       setIsEmailValid(false);
     }
+    setIsEmailValid(false);
+    setIsEmailVerified(false);
+    setSentEmailCode(false);
   }, [email]);
 
   // 이메일 중복검사
@@ -62,19 +67,41 @@ function JoinForm() {
   };
 
   // 이메일 인증 요청
-  // const requestEmailVerification = async () => {
-  //   try {
-  //     // 이메일 인증 요청 API 호출
-  //     // ...
+  const requestEmailVerification = async () => {
+    try {
+      setSentEmailCode(true);
+      // 이메일 인증 요청 API 호출
+      const body = {
+        email: email
+      }
+      const emailAuthResponse = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/auth/email`, body);
+      if(emailAuthResponse.data.code === 200){
+        alert('이메일로 인증 번호가 전송되었습니다.');
+        setSentEmailCode(true);
+      }
+    } catch (error) {
+      alert('사용이 불가능한 이메일입니다. 다른 번호를 사용해주세요.')
+      setIsEmailVerified(false);
+    }
+  };
 
-  //     // 인증 이메일을 사용자 이메일 주소로 보냈습니다.
-  //     setIsEmailVerified(true);
-  //     alert('이메일로 인증 번호가 전송되었습니다.');
-  //   } catch (error) {
-  //     console.error('Error requesting email verification', error);
-  //     setIsEmailVerified(false);
-  //   }
-  // };
+  const checkAuthCode = async () => {
+    try{
+      setSentEmailCode(true);
+      const code = {
+        email: email,
+        authNumber: authNumber
+      }
+      const emailCodeResponse = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/auth/email/check`, code);
+      if(emailCodeResponse.data.code === 200){
+        setIsEmailVerified(true);
+        alert("인증이 완료되었습니다.")
+      }
+    }catch(error){
+      alert("인증번호가 틀렸습니다.");
+      setIsEmailVerified(false);
+    }
+  }
 
   // 회원 가입
   const join = async () => {
@@ -119,10 +146,9 @@ function JoinForm() {
         alert('유효한 이메일 형식이 아닙니다.');
       } else if (!isEmailAvailable) {
         alert('이미 사용 중인 이메일입니다.');
-      // } else if (!isEmailVerified) {
-      //   alert('이메일 인증이 완료되지 않았습니다.');
-      // } 
-      }else if (!phoneNumber) {
+      } else if (!isEmailVerified) {
+        alert('이메일 인증이 완료되지 않았습니다.');
+      } else if (!phoneNumber) {
         alert('전화번호를 입력해주세요.');
       } else if (!password) {
         alert('비밀번호를 입력해주세요');
@@ -151,12 +177,25 @@ function JoinForm() {
       <div className="join-form">
         <div className="inputButton">
           <span>이메일 아이디</span>
-          <Input placeholder="example@example.com" value={email} setValue={setEmail} type="text"/>
+          <Input placeholder="example@example.com" value={email} setValue={setEmail} type="text" disabled = {sentEmailCode}/>
           {/* 유효성에 따라 버튼 활성화/비활성화 */}
-          <Button color="Primary" size="full" radius="m" text="중복검사" handleClick={checkEmailAvailability} disabled={!isEmailValid} />
-          {/* <button onClick={requestEmailVerification} disabled={!isEmailAvailable}>
-            인증받기
-          </button> */}
+          <Button color="Primary" size="m" radius="m" text="중복검사" handleClick={checkEmailAvailability} disabled={isEmailValid || sentEmailCode} />
+          <span> </span>
+          <Button color="Primary" size="m" radius="m" text="인증받기" handleClick={requestEmailVerification} disabled={!isEmailAvailable || sentEmailCode } />
+        </div>
+        <div>
+          {sentEmailCode && (
+            <Input
+              placeholder="인증코드입력"
+              value={authNumber}
+              setValue={setAuthNumber}
+              type="text"
+              disabled={isEmailVerified}
+            />
+          )}
+          {sentEmailCode && (
+            <Button color="Primary" size="m" radius="m" text="인증번호확인" handleClick={checkAuthCode} disabled={isEmailVerified} />
+          )}
         </div>
         <div className="field">
           <span>전화번호</span>
@@ -192,11 +231,11 @@ function JoinForm() {
       </div>
       <Button
         handleClick={join}
-        color={isDone && isEmailAvailable ? 'Primary' : 'SubFirst'}
+        color={isDone && isEmailVerified ? 'Primary' : 'SubFirst'}
         size="full"
         radius="m"
-        text={isDone && isEmailAvailable ? '회원가입' : '모든 칸을 입력하세요'}
-        disabled={!isDone || !isEmailAvailable}
+        text={isDone && isEmailVerified ? '회원가입' : '모든 칸을 입력하세요'}
+        disabled={!isDone || !isEmailVerified}
       />
     </JoinFormContainer>
   );

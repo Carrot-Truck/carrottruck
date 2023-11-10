@@ -4,6 +4,7 @@ import { getDong, getSigungu, getSido } from "api/address";
 import Loading from "components/atoms/Loading";
 import { AxiosResponse } from "axios";
 import ButtonOutline from "components/atoms/ButtonOutline";
+import UnselectAddress from "components/atoms/UnselectAddress";
 
 interface ISelectAddressProps {
   sidoId: number | null;
@@ -75,6 +76,7 @@ function SelectAddress({
   }, []);
 
   useEffect(() => {
+    setAddressNames([]);
     setLoading(true);
     const fetchData = async () => {
       if (sidoId == null) {
@@ -117,6 +119,14 @@ function SelectAddress({
 
   return (
     <SelectAddressContainer>
+      {sidoId && (
+        <UnselectAddress
+          sidoId={sidoId}
+          setSidoId={setSidoId}
+          sigunguId={sigunguId}
+          setSigunguId={setSigunguId}
+        />
+      )}
       {loading ? (
         <Loading />
       ) : (
@@ -125,7 +135,7 @@ function SelectAddress({
             key={data.id}
             size="s"
             radius="s"
-            color="Normal"
+            color="Primary"
             text={data.name}
             handleClick={() => {
               if (!sidoId) {

@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { ButtonRadiusStyles, ButtonSizeStyles } from "../../../styles/style";
+import { ButtonOutlineColorStyles, ButtonRadiusStyles, ButtonSizeStyles } from "styles/style";
 
 interface IButtonOutlineWrapperProps {
   $size: "s" | "m" | "l" | "full";
@@ -12,12 +12,12 @@ export const ButtonOutlineWrapper = styled.button<IButtonOutlineWrapperProps>`
   border-radius: var(--radius-m);
   height: 48px;
   font-family: BMJUA;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 900;
 
   ${({ $size }) => ButtonSizeStyles[$size]}
   ${({ $radius }) => ButtonRadiusStyles[$radius]}
-	${({ $color }) => ButtonColorStyles[$color]}
+	${({ $color }) => ButtonOutlineColorStyles[$color]}
 	${({ disabled }) =>
     disabled
       ? css`

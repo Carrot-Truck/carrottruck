@@ -9,6 +9,7 @@ import StatisticsListPage from "pages/StatisticsListPage";
 import StatisticsPage from "pages/StatisticsPage";
 import SurveyPage from "pages/SurveyPage";
 import SchedulePage from "pages/SchedulePage";
+import FoodTruckModifyPage from "pages/FoodTruckModifyPage";
 
 function RouteLink() {
   return (
@@ -23,6 +24,7 @@ function RouteLink() {
         <Route path="/statistics" element={<StatisticsPage />} />
         <Route path="/survey" element={<SurveyPage />} />
         <Route path="/schedule" element={<SchedulePage />} />
+        <Route path="/foodtruck/modify" element={<FoodTruckModifyPage />} />
       </Routes>
     </BrowserRouter>
   );

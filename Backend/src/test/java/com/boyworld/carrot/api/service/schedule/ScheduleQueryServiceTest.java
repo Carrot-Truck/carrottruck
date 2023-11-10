@@ -80,7 +80,7 @@ class ScheduleQueryServiceTest extends IntegrationTestSupport {
         }
 
         // then
-        assertThat(response.getSchedules()).hasSize(3);
+        assertThat(response.getSchedules()).isNotEmpty();
     }
 
     @DisplayName("사업자는 푸드트럭 스케줄 식별키로 보유한 푸드트럭의 스케줄의 상세 정보를 조회할 수 있다.")

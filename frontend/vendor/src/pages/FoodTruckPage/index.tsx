@@ -20,6 +20,10 @@ function FoodTruckPage() {
   const [selectedButton, setSelectedButton] = useState(1);
   // ( 현재 선택된 푸드트럭 id 가져와야해 ) -> 우선순위 보류
 
+  const navigateToModifyPage = () => {
+    navigate('/foodtruck/modify');
+  };
+
   const buttonClick = (buttonNumber: number) => {
     setSelectedButton(buttonNumber);
   };
@@ -148,7 +152,7 @@ function FoodTruckPage() {
       <div style={{ flexGrow: 1 }}>
         <div className="header">
           <BackSpace></BackSpace>
-          <img src={ModifyButton} alt="" />
+          <img src={ModifyButton} alt=""  onClick={navigateToModifyPage}/>
         </div>
         <img className="headerImage" src={foodTruck.foodTruckImageUrl} alt="" />
         <div className="storeInfo">

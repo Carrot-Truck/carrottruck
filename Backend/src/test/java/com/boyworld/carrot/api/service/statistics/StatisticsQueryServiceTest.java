@@ -46,7 +46,7 @@ public class StatisticsQueryServiceTest extends IntegrationTestSupport {
     @DisplayName("사업자는 영업별 매출 통계 리스트를 확인할 수 있다.")
     @Test
     void getStatisticsBySales() {
-        Member member = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, "ssafy@gmail.com");
         Category category = createCategory("한식");
         FoodTruck foodTruck = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
                 "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
@@ -89,7 +89,7 @@ public class StatisticsQueryServiceTest extends IntegrationTestSupport {
     @DisplayName("사업자는 주별 매출 통계 리스트를 확인할 수 있다.")
     @Test
     void getStatisticsByWeek() {
-        Member member = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, "ssafy@gmail.com");
         Category category = createCategory("한식");
         FoodTruck foodTruck = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
                 "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
@@ -258,7 +258,7 @@ public class StatisticsQueryServiceTest extends IntegrationTestSupport {
     @DisplayName("사업자는 월별 매출 통계 리스트를 확인할 수 있다.")
     @Test
     void getStatisticsByMonth() {
-        Member member = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, "ssafy@gmail.com");
         Category category = createCategory("한식");
         FoodTruck foodTruck = createFoodTruck(member, category, "동현 된장삼겹", "010-1234-5678",
                 "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",

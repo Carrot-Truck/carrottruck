@@ -58,7 +58,7 @@ class MenuQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getMenusByFoodTruckId() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
 
         Category category1 = createCategory("고기/구이");
@@ -94,7 +94,7 @@ class MenuQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getMenusByFoodTruckIdWithEmpty() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
 
         Category category1 = createCategory("고기/구이");
@@ -132,7 +132,7 @@ class MenuQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getMenuById() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
 
         Category category1 = createCategory("고기/구이");

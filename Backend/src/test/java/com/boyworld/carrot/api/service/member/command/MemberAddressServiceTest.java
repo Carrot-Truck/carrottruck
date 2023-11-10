@@ -46,7 +46,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
         Member member = createMember(Role.CLIENT, true);
 
         // when
-        MemberAddressDetailResponse response = memberAddressService.createMemberAddress("주소", "ssafy@ssafy.com");
+        MemberAddressDetailResponse response = memberAddressService.createMemberAddress("주소", "ssafy@gmail.com");
         log.debug("response={}", response);
 
         // then
@@ -62,7 +62,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
         MemberAddress memberAddress = createMemberaddress(member, true);
 
         // when
-        MemberAddressDetailResponse response = memberAddressService.createMemberAddress("주소", "ssafy@ssafy.com");
+        MemberAddressDetailResponse response = memberAddressService.createMemberAddress("주소", "ssafy@gmail.com");
         log.debug("response={}", response);
 
         // then
@@ -77,7 +77,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
         Member member = createMember(Role.CLIENT, false);
 
         // when // then
-        assertThatThrownBy(() -> memberAddressService.createMemberAddress("주소", "ssafy@ssafy.com"))
+        assertThatThrownBy(() -> memberAddressService.createMemberAddress("주소", "ssafy@gmail.com"))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("이미 탈퇴한 회원입니다.");
     }
@@ -166,7 +166,7 @@ public class MemberAddressServiceTest extends IntegrationTestSupport {
 
     private Member createMember(Role role, boolean active) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")

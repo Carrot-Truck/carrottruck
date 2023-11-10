@@ -48,7 +48,7 @@ public class VendorControllerDocsTest extends RestDocsSupport {
     @Test
     void join() throws Exception {
         JoinRequest request = JoinRequest.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("닉네임")
                 .password("ssafy1234")
                 .name("김싸피")
@@ -57,7 +57,7 @@ public class VendorControllerDocsTest extends RestDocsSupport {
                 .build();
 
         JoinMemberResponse response = JoinMemberResponse.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .name("김싸피")
                 .nickname("닉네임")
                 .phoneNumber("010-1234-5678")
@@ -118,7 +118,7 @@ public class VendorControllerDocsTest extends RestDocsSupport {
     @Test
     void withdrawal() throws Exception {
         WithdrawalRequest request = WithdrawalRequest.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .password("ssafy1234")
                 .build();
 
@@ -163,7 +163,7 @@ public class VendorControllerDocsTest extends RestDocsSupport {
         ClientResponse response = ClientResponse.builder()
                 .name("김동현")
                 .nickname("매미킴")
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .phoneNumber("010-1234-1234")
                 .role(Role.VENDOR)
                 .build();
@@ -213,7 +213,7 @@ public class VendorControllerDocsTest extends RestDocsSupport {
         VendorResponse response = VendorResponse.builder()
                 .name("박동현")
                 .nickname("매미킴123")
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .phoneNumber("010-1234-5678")
                 .businessNumber("123456789")
                 .role(Role.VENDOR)

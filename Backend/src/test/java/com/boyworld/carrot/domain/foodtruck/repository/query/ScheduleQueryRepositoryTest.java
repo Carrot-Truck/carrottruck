@@ -80,7 +80,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getPositionsByCondition() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -106,7 +106,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getEmptyPositionsByCondition() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -130,7 +130,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getEmptyPositionsByConditionWithCategoryId() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -170,7 +170,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getEmptyPositionsByConditionWithKeyword() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -194,7 +194,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithoutConditionOrderByDistance() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -222,7 +222,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithCategoryIdOrderByDistance() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -250,7 +250,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithKeywordOrderByDistance() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -278,7 +278,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithoutConditionOrderByLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -305,7 +305,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithCategoryIdOrderByLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -333,7 +333,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithKeywordOrderByLike() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -361,7 +361,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithoutConditionOrderByReview() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -387,7 +387,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithConditionOrderByReview() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -415,7 +415,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithKeywordOrderByReview() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -443,7 +443,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithoutConditionOrderByGrade() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -469,7 +469,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithConditionOrderByGrade() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -497,7 +497,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTrucksWithKeywordOrderByGrade() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -525,7 +525,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getSchedulesByFoodTruckId() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -558,7 +558,7 @@ class ScheduleQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getScheduleById() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");

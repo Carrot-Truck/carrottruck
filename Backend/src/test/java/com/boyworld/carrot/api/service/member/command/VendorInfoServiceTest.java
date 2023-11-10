@@ -54,7 +54,7 @@ class VendorInfoServiceTest extends IntegrationTestSupport {
                 .build();
 
         // when
-        VendorInfoResponse response = vendorInfoService.createVendorInfo(dto, "ssafy@ssafy.com");
+        VendorInfoResponse response = vendorInfoService.createVendorInfo(dto, "ssafy@gmail.com");
 
         // then
         assertThat(response).extracting("tradeName", "vendorName", "businessNumber", "phoneNumber")
@@ -74,7 +74,7 @@ class VendorInfoServiceTest extends IntegrationTestSupport {
                 .build();
 
         // when // then
-        assertThatThrownBy(() -> vendorInfoService.createVendorInfo(dto, "ssafy@ssafy.com"))
+        assertThatThrownBy(() -> vendorInfoService.createVendorInfo(dto, "ssafy@gmail.com"))
                 .isInstanceOf(InValidAccessException.class)
                 .hasMessage("잘못된 접근입니다.");
     }
@@ -139,7 +139,7 @@ class VendorInfoServiceTest extends IntegrationTestSupport {
 
     private Member createMember(Role role) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")

@@ -75,7 +75,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getSelectedCountByEmail() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
 
         Category category1 = createCategory("고기/구이");
@@ -94,7 +94,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getSelectedCountByEmailWithoutSelected() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
 
         Category category1 = createCategory("고기/구이");
@@ -114,7 +114,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckOverviewsByEmail() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
 
         Category category1 = createCategory("고기/구이");
@@ -134,7 +134,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getEmptyFoodTruckOverviewsByEmail() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member vendor3 = createMember(Role.VENDOR, "hello@ssafy.com");
 
@@ -155,7 +155,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckByIdAsClient() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -194,7 +194,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckByIdAsClientWithoutSale() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -233,7 +233,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckByIdAsClientWithoutOthers() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -261,7 +261,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckByIdAsVendor() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
@@ -295,7 +295,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckByIdAsVendorWithoutOthers() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
         Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");

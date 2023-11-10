@@ -1,97 +1,136 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FoodTruckLayout } from './style';
 import BackSpace from 'components/atoms/BackSpace';
 import Button from 'components/atoms/Button';
-
+import { useNavigate } from 'react-router-dom';
 import Pocha from 'assets/imgs/image 21.png';
 import ModifyButton from 'assets/icons/modify_icon.svg';
-import EmptyHeart from 'assets/icons/empty_heart.svg';
-import Pin from 'assets/icons/pin.svg';
+// import EmptyHeart from 'assets/icons/empty_heart.svg';
+// import Pin from 'assets/icons/pin.svg';
 import Star from 'assets/icons/star.svg';
 import FoodTruckMenu from 'components/organisms/FoodTruckMenu';
+import {getFoodTruckOverviews} from 'api/foodtruck/foodTruck';
+import {getFoodTruckReview} from 'api/review'
+import {getMenus} from 'api/menu'
+import { AxiosResponse, AxiosError } from 'axios';
 
 function FoodTruckPage() {
-  const foodTruck = {
-    foodTruckDetail: {
-      foodTruckId: 1,
-      foodTruckName: '동현 된장삼겹',
-      phoneNumber: '010-1234-5678',
-      content: '된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭',
-      originInfo: '돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)',
-      isOpen: true,
-      isLiked: true,
-      prepareTime: 30,
-      grade: 4.5,
-      reviewCount: 1324,
-      distance: 123,
-      address: '광주 광산구 장덕로 5번길 16',
-      foodTruckImageId: 1,
-      isNew: true,
-      vendorName: '김동현',
-      tradeName: '동현 된장삼겹',
-      businessNumber: '123-45-23523'
-    },
+  const navigate = useNavigate();
+  const [selectedButton, setSelectedButton] = useState(1);
+  // ( 현재 선택된 푸드트럭 id 가져와야해 ) -> 우선순위 보류
+
+  const buttonClick = (buttonNumber: number) => {
+    setSelectedButton(buttonNumber);
+  };
+  const [foodTruck, setFoodTruck] = useState({
+    foodTruckId: 0,
+    foodTruckName: '',
+    content: '',
+    originInfo: '',
+    prepareTime: 0,
+    grade: 0,
+    reviewCount: 0,
+    foodTruckImageId: 0,
     menus: [
       {
-        menuId: 1,
-        menuName: '달콤짭짤한 밥도둑 된장 삼겹살 구이',
-        menuPrice: 8900,
-        menuDescription: '동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!',
+        menuId: 0,
+        menuName: '',
+        menuPrice: 0,
+        menuDescription: '',
         menuSoldOut: false,
-        menuImageId: 1
-      },
-      {
-        menuId: 2,
-        menuName: '노른자 된장 삼겹살 덮밥',
-        menuPrice: 6900,
-        menuDescription: '감칠맛이 터져버린 한그릇 뚝딱 삼겹살 덮밥',
-        menuSoldOut: false,
-        menuImageId: 2
+        menuImageId: 0
       }
     ],
     schedules: [
       {
-        scheduleId: 1,
-        address: '광주 광산구 장덕로5번길 16',
-        days: '월요일',
-        startTime: '17:00',
-        endTime: '01:00'
-      },
-      {
-        scheduleId: 2,
-        address: '광주 광산구 장덕로5번길 16',
-        days: '화요일',
-        startTime: '17:00',
-        endTime: '01:00'
-      },
-      {
-        scheduleId: 3,
+        scheduleId: 0,
         address: '',
-        days: '수요일',
+        days: '',
         startTime: '',
         endTime: ''
       }
     ],
     reviews: [
       {
-        reviewId: 1,
-        nickname: '아닌데?소대장',
-        grade: 4,
-        content: '정말 맛있게 먹었어요'
-      },
-      {
-        reviewId: 2,
-        nickname: '어서와',
-        grade: 5,
-        content: '안주로 최고에요!! 너무 맛있어서 숙취에 시달릴만큼 많이 마셨어요'
+        reviewId: 0,
+        nickname: '',
+        grade: 0,
+        content: '',
+        imageUrl: ''
       }
     ]
-  };
-  const [selectedButton, setSelectedButton] = useState(1);
+  });
 
-  const buttonClick = (buttonNumber: number) => {
-    setSelectedButton(buttonNumber);
+  const afterUpdateMenu = (response: AxiosResponse) => {
+    console.log('Menu data fetched successfully', response);
+    const menusData = response.data.data.menus;
+    const menuCount = response.data.data.menuCount;
+  
+    setFoodTruck(prevState => {
+      // 메뉴 갯수가 0이면 메뉴를 비워주고, 아니면 새로운 메뉴 데이터로 업데이트
+      if (menuCount === 0) {
+        return { ...prevState, menus: [] };
+      } else {
+        return { ...prevState, menus: menusData };
+      }
+    });
+  }
+
+  const afterUpdateReview = (response: AxiosResponse) => {
+    console.log('Review data fetched successfully', response);
+    const averageGrade = response.data.data.averageGrade;
+    const foodTruckReviewDtoList = response.data.data.foodTruckDtoList;
+    
+    setFoodTruck(prevState =>{
+      // 현재 상태와 비교하여 값이 다를 때만 업데이트
+      if (prevState.grade !== averageGrade || prevState.reviews !== foodTruckReviewDtoList) {
+        return {
+          ...prevState,
+          grade: averageGrade,
+          reviews: foodTruckReviewDtoList
+        };
+      } else {
+        return prevState; // 상태가 변하지 않으면 이전 상태를 반환하여 업데이트 방지
+      }
+    });
+
+  }
+  
+  const updateFoodTruckId = (response: AxiosResponse) => {
+    const newFoodTruckId = response.data.data.items[response.data.data.items.length-1].foodTruckId;
+    const newFoodTruckName = response.data.data.items[response.data.data.items.length-1].foodTruckName;
+    
+    setFoodTruck(prevState => {
+      // 현재 상태와 비교하여 값이 다를 때만 업데이트
+      if (prevState.foodTruckId !== newFoodTruckId || prevState.foodTruckName !== newFoodTruckName) {
+        return {
+          ...prevState,
+          foodTruckId: newFoodTruckId,
+          foodTruckName: newFoodTruckName
+        };
+      } else {
+        return prevState; // 상태가 변하지 않으면 이전 상태를 반환하여 업데이트 방지
+      }
+    });
+    getMenus(newFoodTruckId, afterUpdateMenu, handleFail);
+    getFoodTruckReview(newFoodTruckId, afterUpdateReview, handleFail);
   };
+
+  // handleFail 함수 수정
+  const handleFail = (error: AxiosError) => {
+    console.error('Error fetching data', error);
+    alert('등록된 푸트드럭이 없습니다.\n먼저 푸드트럭을 등록해주세요.');
+    navigate('/');
+  };
+
+  const lastFoodTruckId = {
+    lastFoodTruckId: ''
+  };
+
+  useEffect(() => {
+    // 내 푸트드럭 ID 조회하는 메서드
+    getFoodTruckOverviews(lastFoodTruckId, updateFoodTruckId, handleFail);
+  }, []); // 의존성 배열이 필요하면 추가합니다.
 
   return (
     <FoodTruckLayout>
@@ -102,22 +141,22 @@ function FoodTruckPage() {
       <img className="headerImage" src={Pocha} alt="" />
       <div className="storeInfo">
         <div className="foodTruckName">
-          <span>{foodTruck.foodTruckDetail.foodTruckName}</span>
-          <img src={EmptyHeart} alt="" />
+          <span>{foodTruck.foodTruckName}</span>
+          {/* <img src={EmptyHeart} alt="" /> */}
         </div>
-        <div className="location">
+        {/* <div className="location">
           <span>{foodTruck.foodTruckDetail.address} </span>
 
           <span> {foodTruck.foodTruckDetail.distance}m </span>
           <img src={Pin} alt="" />
-        </div>
+        </div> */}
         <div className="review">
           <div>
             <img src={Star} alt="" />
-            <span>({foodTruck.foodTruckDetail.grade})</span>
-            <span>{foodTruck.foodTruckDetail.reviewCount}</span>
+            <span>({foodTruck.grade})</span>
+            <span>{foodTruck.reviewCount}</span>
           </div>
-          {foodTruck.foodTruckDetail.isOpen ? <span id="open">open</span> : <span id="close">close</span>}
+          {/* {foodTruck.foodTruckDetail.isOpen ? <span id="open">open</span> : <span id="close">close</span>} */}
         </div>
       </div>
       <div className="switchButton">
@@ -143,7 +182,9 @@ function FoodTruckPage() {
           handleClick={() => buttonClick(3)}
         />
       </div>
-      {selectedButton === 1 && <FoodTruckMenu menus={foodTruck.menus}></FoodTruckMenu>}
+      {selectedButton === 1 && foodTruck.menus.length > 0 && (
+        <FoodTruckMenu menus={foodTruck.menus} />
+      )}
       {/* {selectedButton === 2 && } */}
       {/* {selectedButton === 3 && } */}
     </FoodTruckLayout>

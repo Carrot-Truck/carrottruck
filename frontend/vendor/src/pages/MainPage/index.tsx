@@ -29,7 +29,7 @@ function MainPage() {
         return true;
       } catch (error) {
         const err = error as AxiosError;
-        if(err.response?.status === 401){
+        if(err.response?.status === 400 || err.response?.status === 401){
            alert('로그인이 필요합니다.');
           return navigate('/login'); 
         }else{

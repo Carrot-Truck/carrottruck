@@ -9709,3 +9709,45 @@ values  (46, 1, '가회동'),
         (5028, 249, '양양읍'),
         (5032, 249, '현남면'),
         (5031, 249, '현북면');
+
+-- members
+INSERT INTO `members` (active, role, phone_number, name, email, nickname, encrypted_pwd)
+VALUES (true, 'VENDOR', '010-1234-5678', '김싸피', 'ssafy@ssafy.com', '김싸피',
+        '$2a$10$Yie4X4XlVeXFhh6/SXqAYudC1fgPadxVDX1DoWTAA435Y2z5UR4Hm'),
+       (true, 'CLIENT', '010-5370-9638', '최영환', 'longbright0804@gmail.com', '건조기',
+        '$2a$10$qA3WtSYU0EHbBrgb8xPtHeZhT4reLlaIUca2FtYRRKQTi6f9ivuwS'),
+       (true, 'CLIENT', '010-9130-9942', '김동현', 'qhfh12@gmail.com', '매미킴',
+        '$2a$10$wUXN3.19iFAwLwDtiEBpsOc9g4i2k8qD1QIeFqqHnmQcc72fwLw56'),
+       (true, 'CLIENT', '010-7925-2928', '박건후', 'gunhoo2016@gmail.com', '아닌데?소대장',
+        '$2a$10$xIXllebmoy8WTAgGqgusBO5SgKrdy70N6k/JqmaCm0sIrB6O.bN7q'),
+       (true, 'CLIENT', '010-2638-5572', '박은규', 'parkeg1223@gmail.com', '네~',
+        '$2a$10$7uMhXxEzu6mknTnsQq57Quz7bI4obLutwx7gN1iB5MiX8elIcEHe.'),
+       (true, 'CLIENT', '010-2538-3835', '양진형', 'jinhyugn@gmail.com', '어서와',
+        '$2a$10$8taighh1ozBRDGr0LHkjYOOzrtKvgmpFUhz40pwZd1MlEVqZnA1sa'),
+       (true, 'CLIENT', '010-9512-7065', '이정찬', 'jeongchanlee0113@gmail.com', '고인',
+        '$2a$10$pxkt..My6UTBy57SGgYhM.e4lj5SScpIi5eVLoksSxoXIbDjepHgK');
+
+-- vendor_info
+INSERT INTO `vendor_info` (active, vendor_id, vendor_name, trade_name, business_number, phone_number)
+VALUES (true, 1, '김싸피', '당근트럭', '123-45-67890', '010-1234-5678');
+
+-- food_truck
+INSERT INTO `food_truck` (active, prepare_time, selected, wait_limits, category_id, vendor_id, phone_number, name,
+                          content, origin_info)
+VALUES (true, 40, true, 10, 1, 1, '010-1234-5678', '동현 된장삼겹', '된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭',
+        '돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)');
+
+-- menu
+INSERT INTO `menu` (active, price, sold_out, food_truck_id, name, description)
+VALUES (true, 14000, false, 1, '달콤짭짭한 밥도둑 된장 삼겹살', '동현 된장삼겹의 시그니쳐. 오직 된장 삼겹살 구이만!'),
+       (true, 14000, false, 1, '달콤짭짤 오독오독 된장 오돌뼈', '동현 된장삼겹만의 된장 오돌뼈!'),
+       (true, 14000, false, 1, '달콤짭짤 쫄깃쫄깃 된장 가브리살', '동현 된장삼겹만의 된장 가브리살!'),
+       (true, 14000, false, 1, '달콤짭짤 부드러운 된장 항정살', '동현 된장삼겹만의 된장 항정살!'),
+       (true, 8000, false, 1, '달콤짭짤 술 안주 된장 껍데기', '동현 된장삼겹만의 된장 소스와 함께 먹는 껍데기!'),
+       (true, 14000, false, 1, '달콤짭짤 술 안주 된장 갈매기살', '동현 된장삼겹만의 된장 갈매기살!'),
+       (true, 15000, false, 1, '달콤짭짤 술 안주 매운닭발', '동현 된장삼겹만의 새로운 도전 매운닭발!');
+
+-- food_truck_schedule
+INSERT INTO `food_truck_schedule` (active, end_time, latitude, longitude, start_time, food_truck_id, day_of_week,
+                                   address)
+VALUES (true, '19:00:00', 35.202430, 126.809444, '09:00:00', 1, 'MONDAY', '광주광역시 광산구 하남산단6번로 107');

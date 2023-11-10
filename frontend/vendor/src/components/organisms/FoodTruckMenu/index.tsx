@@ -10,7 +10,7 @@ interface Menu {
   menuPrice: number;
   menuDescription: string;
   menuSoldOut: boolean;
-  menuImageId: number;
+  menuImageUrl: string;
 }
 
 interface IFoodTruckMenuProps {

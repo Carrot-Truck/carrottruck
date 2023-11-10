@@ -27,8 +27,13 @@ export async function getFoodTruck(foodTruckId: number, data: Object, success: a
     await api.get(`/${foodTruckId}`, { params: data }).then(success).catch(fail);
 }
 
-export async function editFoodTruck(foodTruckId: number, data: Object, success: any, fail: any) {
-    await api.patch(`/${foodTruckId}`, data).then(success).catch(fail);
+export async function editFoodTruck(foodTruckId: number, data: FormData, success: any, fail: any) {
+    const config = {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    };
+    await api.patch(`/${foodTruckId}`, data, config).then(success).catch(fail);
 }
 
 export async function deleteFoodTruck(foodTruckId: number, success: any, fail: any) {

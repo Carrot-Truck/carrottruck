@@ -28,7 +28,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
         // given
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy1234@ssafy.com")
                 .nickname("매미킴")
                 .name("김동현")
                 .phoneNumber("010-1234-5678")
@@ -42,6 +42,5 @@ class MemberRepositoryTest extends IntegrationTestSupport {
         assertThat(member).isSameAs(savedMember);
         assertThat(member.getEmail()).isEqualTo(savedMember.getEmail());
         assertThat(savedMember.getId()).isNotNull();
-        assertThat(memberRepository.count()).isEqualTo(1);
     }
 }

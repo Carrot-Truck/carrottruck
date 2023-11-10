@@ -184,6 +184,7 @@ public class CartService {
         deleteCartMenu(cartMenuId);
 
         cart.removeCartMenuIds(cartMenuId);
+        cart.decrementCartTotalPrice(cartMenu.getCartMenuTotalPrice()*cartMenu.getQuantity());
         log.debug("카트메뉴를 삭제했습니다: {}", cartMenuId);
         if (cart.getCartMenuIds().isEmpty()) {
             log.debug("카트에 메뉴가 없어 카트를 삭제합니다");
@@ -296,6 +297,10 @@ public class CartService {
             log.debug("cartMenuOption을 저장합니다: {}", cartMenuOptionId);
         }
         MenuImage menuImage = menuImageQueryRepository.getMenuImageByMenuId(menu.getId());
+        String image = " "; // TODO: 2023-11-10 이미지가 없으면 없는 이미지의 S3주소 넣기
+        if(menuImage != null) {
+            image = menuImage.getUploadFile().getStoreFileName();
+        }
         CartMenu cartMenu = CartMenu.builder()
                 .id(cartMenuId)
                 .cartId(email)
@@ -304,7 +309,7 @@ public class CartService {
                 .price(menu.getMenuInfo().getPrice())
                 .cartMenuTotalPrice(createCartMenuDto.getCartMenuTotalPrice())
                 .quantity(createCartMenuDto.getCartMenuQuantity())
-                .menuImageUrl(menuImage.getUploadFile().getStoreFileName())
+                .menuImageUrl(image)
                 .cartMenuOptionIds(cartMenuOptionIds)
                 .build();
 
@@ -318,7 +323,7 @@ public class CartService {
                 .id(email)
                 .foodTruckId(createCartMenuDto.getFoodTruckId())
                 .foodTruckName(foodTruck.getName())
-                .totalPrice(createCartMenuDto.getCartMenuTotalPrice())
+                .totalPrice(createCartMenuDto.getCartMenuTotalPrice()*createCartMenuDto.getCartMenuQuantity())
                 .cartMenuIds(Arrays.asList(cartMenuId))
                 .build();
         saveCart(email, cart);

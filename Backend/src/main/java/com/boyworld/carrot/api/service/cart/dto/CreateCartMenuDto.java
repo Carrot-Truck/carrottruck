@@ -14,17 +14,15 @@ public class CreateCartMenuDto {
     private Long foodTruckId;
     private Long menuId;
     private Integer cartMenuQuantity;
-    private Integer menuPrice;
     private Integer cartMenuTotalPrice;
     private List<Long> menuOptionIds;
 
 
     @Builder
-    public CreateCartMenuDto(Long foodTruckId, Long menuId, Integer cartMenuQuantity, Integer menuPrice, Integer cartMenuTotalPrice, List<Long> menuOptionIds) {
+    public CreateCartMenuDto(Long foodTruckId, Long menuId, Integer cartMenuQuantity, Integer cartMenuTotalPrice, List<Long> menuOptionIds) {
         this.foodTruckId = foodTruckId;
         this.menuId = menuId;
         this.cartMenuQuantity = cartMenuQuantity;
-        this.menuPrice = menuPrice;
         this.cartMenuTotalPrice = cartMenuTotalPrice;
         this.menuOptionIds = menuOptionIds;
     }

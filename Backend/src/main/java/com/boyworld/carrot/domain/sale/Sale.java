@@ -92,4 +92,9 @@ public class Sale extends TimeBaseEntity {
     public void editEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
+
+    public void incrementOrderNumber() { this.orderNumber++; }
+
+    public void editTotalAmount(Integer price) { this.totalAmount += price; }
+
 }

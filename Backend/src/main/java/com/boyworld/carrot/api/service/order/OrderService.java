@@ -24,6 +24,7 @@ import com.boyworld.carrot.domain.order.repository.command.OrderMenuRepository;
 import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
 import com.boyworld.carrot.domain.order.repository.query.OrderQueryRepository;
 import com.boyworld.carrot.domain.sale.Sale;
+import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -52,6 +53,7 @@ public class OrderService {
     private final OrderMenuRepository orderMenuRepository;
     private final OrderMenuOptionRepository orderMenuOptionRepository;
     private final OrderQueryRepository orderQueryRepository;
+    private final SaleRepository saleRepository;
     private final SaleQueryRepository saleQueryRepository;
     private final CartService cartService;
 
@@ -179,6 +181,8 @@ public class OrderService {
             }
         }
 
+        getSaleById(order.getSale().getId()).incrementOrderNumber();
+
         pauseByWaitLimit(dto.getFoodTruckId(), foodTruck.getWaitLimits());
         return createdOrder.getId();
     }
@@ -245,7 +249,7 @@ public class OrderService {
     }
 
     /**
-     * 이메일로 회원 엔티티 조회
+     * 주문 식별키로 주문 엔티티 조회
      *
      * @param orderId 주문 식별 키
      * @return 주문 식별 키에 해당하는 주문 엔티티
@@ -253,6 +257,17 @@ public class OrderService {
     private Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 주문입니다."));
+    }
+
+    /**
+     * 영업 식별키로 영업 엔티티 조회
+     *
+     * @param saleId 영업 식별 키
+     * @return 영업 식별 키에 해당하는 영업 엔티티
+     */
+    private Sale getSaleById(Long saleId) {
+        return saleRepository.findById(saleId)
+            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 영업입니다."));
     }
 
     /**

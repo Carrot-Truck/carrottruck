@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,11 @@ public class SaleService {
         checkOwnerAccess(member, foodTruck);
 
         // foodTruckId에 해당하는 푸드트럭에 현재 종료하지 않은 영업이 있는지 확인
-        if (hasActiveSale(dto.getFoodTruckId())) return null;
+        if (hasActiveSale(dto.getFoodTruckId())) {
+            log.debug("has processing sale of foodTruck {}", dto.getFoodTruckId());
+            return null;
+        }
+
 
         // 판매하지 않을 메뉴는 비활성화
         menuQueryRepository.setSaleMenuActive(dto.getFoodTruckId(), dto.getSaleMenuItems());
@@ -166,6 +171,8 @@ public class SaleService {
         log.debug("{}", dto.getOrderId());
         order.editOrderStatus(Status.COMPLETE);
 
+        getSaleById(order.getSale().getId()).editTotalAmount(order.getTotalPrice());
+
         FoodTruck foodTruck = order.getSale().getFoodTruck();
         pauseByWaitLimit(foodTruck.getId(), foodTruck.getWaitLimits());
 
@@ -260,7 +267,11 @@ public class SaleService {
     }
 
     private Boolean hasActiveSale(Long foodTruckId) {
-        return saleQueryRepository.getLatestSale(foodTruckId).map(Sale::getEndTime).orElse(null) == null;
+        Optional<Sale> saleOptional = saleQueryRepository.getLatestSale(foodTruckId);
+        if (saleOptional.isPresent() && saleOptional.get().getEndTime() == null) {
+            return true;
+        } else
+            return false;
     }
 
     private void checkOwnerAccess(Member member, FoodTruck foodTruck) {
@@ -315,6 +326,17 @@ public class SaleService {
     private Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 주문입니다."));
+    }
+
+    /**
+     * 영업 식별키로 영업 엔티티 조회
+     *
+     * @param saleId 영업 식별 키
+     * @return 영업 식별 키에 해당하는 영업 엔티티
+     */
+    private Sale getSaleById(Long saleId) {
+        return saleRepository.findById(saleId)
+            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 영업입니다."));
     }
 
     /**

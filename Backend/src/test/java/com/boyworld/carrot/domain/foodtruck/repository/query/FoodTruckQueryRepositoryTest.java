@@ -2,7 +2,8 @@ package com.boyworld.carrot.domain.foodtruck.repository.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckOverview;
-import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckDetailDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckClientDetailDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckVendorDetailDto;
 import com.boyworld.carrot.domain.foodtruck.*;
 import com.boyworld.carrot.domain.foodtruck.repository.command.*;
 import com.boyworld.carrot.domain.member.Member;
@@ -153,7 +154,7 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("사용자는 푸드트럭 식별키와 현재 자신의 위도 경도, 이메일로 푸드트럭을 조회할 수 있다.")
     @Test
-    void getFoodTruckById() {
+    void getFoodTruckByIdAsClient() {
         // given
         Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
@@ -174,7 +175,6 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
         createSchedules(foodTruck1);
         createSchedules(foodTruck2);
 
-//        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), "sale1 address");
         Sale sale1 = createSale(foodTruck1, null, "sale1 address");
         Sale sale2 = createSale(foodTruck2, null, "sale2 address");
 
@@ -183,8 +183,138 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
         createOrdersAndReviews(client1, client2, foodTruck1, foodTruck2, sale1, sale2);
 
         // when
-        FoodTruckDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckById(foodTruck1.getId(), client1.getEmail(),
+        FoodTruckClientDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsClient(foodTruck1.getId(), client1.getEmail(),
                 BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253));
+        log.debug("foodTruck={}", foodTruck);
+
+        // then
+        assertThat(foodTruck).isNotNull();
+    }
+
+    @DisplayName("사용자는 푸드트럭 식별키와 현재 자신의 위도 경도, 이메일로 영업중이지 않은 푸드트럭을 조회할 수 있다.")
+    @Test
+    void getFoodTruckByIdAsClientWithoutSale() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        List<FoodTruck> foodTrucks = createFoodTrucks(vendor1, vendor2, category1, category2);
+        FoodTruck foodTruck1 = foodTrucks.get(0);
+        FoodTruck foodTruck2 = foodTrucks.get(1);
+
+        createFoodTruckImage(foodTruck1);
+
+        createSchedules(foodTruck1);
+        createSchedules(foodTruck2);
+
+        Sale sale1 = createSale(foodTruck1, LocalDateTime.now(), "sale1 address");
+        Sale sale2 = createSale(foodTruck2, null, "sale2 address");
+
+        createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);
+
+        createOrdersAndReviews(client1, client2, foodTruck1, foodTruck2, sale1, sale2);
+
+        // when
+        FoodTruckClientDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsClient(foodTruck1.getId(), client1.getEmail(),
+                BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253));
+        log.debug("foodTruck={}", foodTruck);
+
+        // then
+        assertThat(foodTruck).isNotNull();
+    }
+
+    @DisplayName("사용자는 푸드트럭 식별키와 현재 자신의 위도 경도, 이메일로 다른 테이블 데이터가 없는 푸드트럭을 조회할 수 있다.")
+    @Test
+    void getFoodTruckByIdAsClientWithoutOthers() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        List<FoodTruck> foodTrucks = createFoodTrucks(vendor1, vendor2, category1, category2);
+        FoodTruck foodTruck1 = foodTrucks.get(0);
+        FoodTruck foodTruck2 = foodTrucks.get(1);
+
+        // when
+        FoodTruckClientDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsClient(foodTruck1.getId(), client1.getEmail(),
+                BigDecimal.valueOf(35.2094264), BigDecimal.valueOf(126.807253));
+        log.debug("foodTruck={}", foodTruck);
+
+        // then
+        assertThat(foodTruck).isNotNull();
+    }
+
+
+    @DisplayName("사업자는 푸드트럭 식별키로 푸드트럭을 조회할 수 있다.")
+    @Test
+    void getFoodTruckByIdAsVendor() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        List<FoodTruck> foodTrucks = createFoodTrucks(vendor1, vendor2, category1, category2);
+        FoodTruck foodTruck1 = foodTrucks.get(0);
+        FoodTruck foodTruck2 = foodTrucks.get(1);
+
+        createFoodTruckImage(foodTruck1);
+
+        Sale sale1 = createSale(foodTruck1, null, "sale1 address");
+        Sale sale2 = createSale(foodTruck2, null, "sale2 address");
+
+        createOrdersAndReviews(client1, client2, foodTruck1, foodTruck2, sale1, sale2);
+
+        // when
+        FoodTruckVendorDetailDto foodTruck =
+                foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruck1.getId());
+        log.debug("foodTruck={}", foodTruck);
+
+        // then
+        assertThat(foodTruck).isNotNull();
+    }
+
+    @DisplayName("사업자는 푸드트럭 식별키로 푸드트럭을 조회할 수 있다.")
+    @Test
+    void getFoodTruckByIdAsVendorWithoutOthers() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        List<FoodTruck> foodTrucks = createFoodTrucks(vendor1, vendor2, category1, category2);
+        FoodTruck foodTruck1 = foodTrucks.get(0);
+        FoodTruck foodTruck2 = foodTrucks.get(1);
+
+        createFoodTruckImage(foodTruck1);
+
+        // when
+        FoodTruckVendorDetailDto foodTruck =
+                foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruck1.getId());
         log.debug("foodTruck={}", foodTruck);
 
         // then

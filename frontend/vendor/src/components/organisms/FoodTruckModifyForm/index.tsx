@@ -74,8 +74,6 @@ function FoodTruckModifyForm({ foodTruck } : any) {
     }
     if (!foodTruckName) {
       alert('푸드트럭 이름을 입력해주세요');
-    } else if (!foodTruckPicture) {
-      alert('푸드트럭 사진을 넣어주세요');
     } else if (!categoryId) {
       alert('카테고리를 골라주세요');
     } else if (!content) {
@@ -92,7 +90,6 @@ function FoodTruckModifyForm({ foodTruck } : any) {
   };
 
   useEffect(() => {
-    console.log(foodTruck);
     setfoodTruckName(foodTruck.foodTruckName);
     setContent(foodTruck.content);
     setphoneNumber(foodTruck.phoneNumber);
@@ -101,7 +98,6 @@ function FoodTruckModifyForm({ foodTruck } : any) {
         
     if (
       foodTruckName &&
-      foodTruckPicture &&
       categoryId &&
       content &&
       phoneNumber &&
@@ -113,7 +109,7 @@ function FoodTruckModifyForm({ foodTruck } : any) {
     } else {
       setIsDone(false);
     }
-  }, [foodTruckName, foodTruckPicture, categoryId, content, phoneNumber, prepareTime, waitLimits, originInfo]);
+  }, [foodTruckName, categoryId, content, phoneNumber, prepareTime, waitLimits, originInfo]);
 
   // 파일이 선택되었을 때 호출될 핸들러입니다.
   // ChangeEvent<HTMLInputElement>는 TypeScript에서 input 변경 이벤트의 타입입니다.

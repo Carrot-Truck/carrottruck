@@ -25,6 +25,7 @@ function RouteLink() {
         <Route path="/statistics" element={<StatisticsPage />} />
         <Route path="/survey" element={<SurveyPage />} />
         <Route path="/schedule" element={<SchedulePage />} />
+        <Route path="/foodtruck/modify" element={<FoodTruckModifyPage />} />
       </Routes>
     </BrowserRouter>
   );

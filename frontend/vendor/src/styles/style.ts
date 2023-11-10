@@ -154,27 +154,27 @@ export const CheckTextButtonStyles = {
 // ButtonOutline
 export const ButtonOutlineColorStyles = {
   Normal: css`
-    border-color: var(--gray-100);
+    border: 1px solid var(--gray-100);
     color: var(--gray-500);
   `,
   Primary: css`
-    border-color: var(--main-color);
-    color: var(--white-color);
+    border: 1px solid var(--main-color);
+    color: var(--black-color);
   `,
   SubFirst: css`
-    border-color: var(--sub-color-1);
-    color: var(--white-color);
+    border: 1px solid var(--sub-color-1);
+    color: var(--black-color);
   `,
   SubSecond: css`
-    border-color: var(--sub-color-2);
-    color: var(--white-color);
+    border: 1px solid var(--sub-color-2);
+    color: var(--black-color);
   `,
   Danger: css`
-    border-color: var(--danger-color);
-    color: var(--white-color);
+    border: 1px solid var(--danger-color);
+    color: var(--black-color);
   `,
   Success: css`
-    border-color: var(--success-color);
-    color: var(--white-color);
+    border: 1px solid var(--success-color);
+    color: var(--black-color);
   `,
 };

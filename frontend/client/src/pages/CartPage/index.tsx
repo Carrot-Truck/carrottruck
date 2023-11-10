@@ -1,12 +1,13 @@
-// import { CartPageLayout } from './style';
+import { CartPageLayout } from './style';
 
-// function CartPage() {
-//     return (
-//         <CartPageLayout>
+function CartPage() {
+    return (
+        <CartPageLayout>
+            <div className="header">
+                <p>환영해요!</p>
+            </div>
+        </CartPageLayout>
+    );
+}
 
-//         </CartPageLayout>
-
-//     );
-// }
-
-// export default CartPage;
+export default CartPage;

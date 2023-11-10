@@ -466,7 +466,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("search-food-truck-detail",
+                .andDo(document("client-search-food-truck-detail",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -634,7 +634,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("search-food-truck-detail",
+                .andDo(document("vendor-search-food-truck-detail",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(

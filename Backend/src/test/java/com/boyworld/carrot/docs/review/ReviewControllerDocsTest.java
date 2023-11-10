@@ -195,7 +195,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
                 get("/review")
                     .header("Authentication", "authentication")
             ).andDo(print())
-            .andExpect(status().isFound())
+            .andExpect(status().isOk())
             .andDo(
                 document("get-my-review",
                     preprocessResponse(prettyPrint()),
@@ -252,7 +252,7 @@ public class ReviewControllerDocsTest extends RestDocsSupport {
         mockMvc.perform(
                 get("/review/1")
             ).andDo(print())
-            .andExpect(status().isFound())
+            .andExpect(status().isOk())
             .andDo(
                 document("get-food-truck-review",
                     preprocessResponse(prettyPrint()),

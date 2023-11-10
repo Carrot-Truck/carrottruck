@@ -1,5 +1,9 @@
 package com.boyworld.carrot.api.service.cart;
 
+import static com.boyworld.carrot.domain.cart.CartType.CART;
+import static com.boyworld.carrot.domain.cart.CartType.CARTMENU;
+import static com.boyworld.carrot.domain.cart.CartType.CARTMENUOPTION;
+
 import com.boyworld.carrot.api.controller.cart.response.CartOrderResponse;
 import com.boyworld.carrot.api.controller.cart.response.CartResponse;
 import com.boyworld.carrot.api.service.cart.dto.CartMenuDto;
@@ -10,8 +14,6 @@ import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.domain.cart.Cart;
 import com.boyworld.carrot.domain.cart.CartMenu;
 import com.boyworld.carrot.domain.cart.CartMenuOption;
-import com.boyworld.carrot.domain.cart.CartType;
-import com.boyworld.carrot.domain.cart.repository.CartRepository;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
@@ -19,22 +21,23 @@ import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
 import com.boyworld.carrot.domain.menu.Menu;
 import com.boyworld.carrot.domain.menu.MenuImage;
 import com.boyworld.carrot.domain.menu.MenuOption;
-import com.boyworld.carrot.domain.menu.repository.command.MenuImageRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
 import com.boyworld.carrot.domain.menu.repository.query.MenuImageQueryRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.boyworld.carrot.domain.cart.CartType.*;
 
 @Slf4j
 @Service
@@ -181,6 +184,7 @@ public class CartService {
         deleteCartMenu(cartMenuId);
 
         cart.removeCartMenuIds(cartMenuId);
+        cart.decrementCartTotalPrice(cartMenu.getCartMenuTotalPrice()*cartMenu.getQuantity());
         log.debug("카트메뉴를 삭제했습니다: {}", cartMenuId);
         if (cart.getCartMenuIds().isEmpty()) {
             log.debug("카트에 메뉴가 없어 카트를 삭제합니다");
@@ -293,6 +297,10 @@ public class CartService {
             log.debug("cartMenuOption을 저장합니다: {}", cartMenuOptionId);
         }
         MenuImage menuImage = menuImageQueryRepository.getMenuImageByMenuId(menu.getId());
+        String image = " "; // TODO: 2023-11-10 이미지가 없으면 없는 이미지의 S3주소 넣기
+        if(menuImage != null) {
+            image = menuImage.getUploadFile().getStoreFileName();
+        }
         CartMenu cartMenu = CartMenu.builder()
                 .id(cartMenuId)
                 .cartId(email)
@@ -301,7 +309,7 @@ public class CartService {
                 .price(menu.getMenuInfo().getPrice())
                 .cartMenuTotalPrice(createCartMenuDto.getCartMenuTotalPrice())
                 .quantity(createCartMenuDto.getCartMenuQuantity())
-                .menuImageUrl(menuImage.getUploadFile().getStoreFileName())
+                .menuImageUrl(image)
                 .cartMenuOptionIds(cartMenuOptionIds)
                 .build();
 
@@ -315,7 +323,7 @@ public class CartService {
                 .id(email)
                 .foodTruckId(createCartMenuDto.getFoodTruckId())
                 .foodTruckName(foodTruck.getName())
-                .totalPrice(createCartMenuDto.getCartMenuTotalPrice())
+                .totalPrice(createCartMenuDto.getCartMenuTotalPrice()*createCartMenuDto.getCartMenuQuantity())
                 .cartMenuIds(Arrays.asList(cartMenuId))
                 .build();
         saveCart(email, cart);

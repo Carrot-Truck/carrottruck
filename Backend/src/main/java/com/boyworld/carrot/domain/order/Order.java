@@ -68,13 +68,24 @@ public class Order extends TimeBaseEntity {
         this.active = active;
     }
 
-    public void updateOrderStatus(Status status) {
+    // == business logic == //
+    public Order editOrderStatus(Status status) {
         this.status = status;
+
+        return this;
     }
 
-    public void updateOrderStatusAndExpectTime(Status status, LocalDateTime expectTime) {
+    public Order editOrderStatusAndExpectTime(Status status, LocalDateTime expectTime) {
         this.status = status;
         this.expectTime = expectTime;
+
+        return this;
+    }
+
+    public Order editOrderActive(Boolean active) {
+        this.active = active;
+
+        return this;
     }
 
     // == business logic ==//

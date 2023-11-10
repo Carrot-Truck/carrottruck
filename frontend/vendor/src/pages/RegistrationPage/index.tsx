@@ -26,8 +26,10 @@ function RegistrationPage() {
         });
         console.log(validToken.data);  
         setIsLoading(false);
+        setSelectedButton(2);
       } catch (error) {
         setIsLoading(true);
+        setSelectedButton(1);
       }
     }
     fetchData();

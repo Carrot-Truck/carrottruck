@@ -396,7 +396,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .avgGrade(4.5)
                 .likeCount(132)
                 .reviewCount(1324)
-                .distance(BigDecimal.valueOf(123.123))
+//                .distance(BigDecimal.valueOf(123.123))
+                .distance(123.123)
                 .address("광주 광산구 장덕로 5번길 16")
                 .foodTruckImageUrl("imageUrl")
                 .isNew(true)
@@ -466,7 +467,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("search-food-truck-detail",
+                .andDo(document("client-search-food-truck-detail",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -634,7 +635,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("search-food-truck-detail",
+                .andDo(document("vendor-search-food-truck-detail",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(

@@ -19,6 +19,10 @@ export async function getFoodTruckOverviews(data: Object, success: any, fail: an
     await api.get(`/overview`, { params: data }).then(success).catch(fail);
 }
 
+export async function getFoodTruckDetails(data: number, success: any, fail: any) {
+    await api.get(`/vendor/${data}`, { params: { foodTruckId: data } }).then(success).catch(fail);
+}
+
 export async function getFoodTruck(foodTruckId: number, data: Object, success: any, fail: any) {
     await api.get(`/${foodTruckId}`, { params: data }).then(success).catch(fail);
 }

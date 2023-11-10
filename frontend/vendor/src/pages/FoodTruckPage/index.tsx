@@ -3,7 +3,7 @@ import { FoodTruckLayout } from './style';
 import BackSpace from 'components/atoms/BackSpace';
 import Button from 'components/atoms/Button';
 import { useNavigate } from 'react-router-dom';
-import Pocha from 'assets/imgs/image 21.png';
+// import Pocha from 'assets/imgs/image 21.png';
 import ModifyButton from 'assets/icons/modify_icon.svg';
 // import EmptyHeart from 'assets/icons/empty_heart.svg';
 // import Pin from 'assets/icons/pin.svg';
@@ -11,7 +11,7 @@ import Star from 'assets/icons/star.svg';
 import FoodTruckMenu from 'components/organisms/FoodTruckMenu';
 import {getFoodTruckOverviews} from 'api/foodtruck/foodTruck';
 import {getFoodTruckReview} from 'api/review'
-import {getMenus} from 'api/menu'
+import {getFoodTruckDetails} from 'api/foodtruck/foodTruck'
 import { AxiosResponse, AxiosError } from 'axios';
 
 function FoodTruckPage() {
@@ -30,7 +30,7 @@ function FoodTruckPage() {
     prepareTime: 0,
     grade: 0,
     reviewCount: 0,
-    foodTruckImageId: 0,
+    foodTruckImageUrl: 'https://carrottruck.s3.ap-northeast-2.amazonaws.com/%EB%8B%B9%EA%B7%BC%ED%8A%B8%EB%9F%AD%EB%A1%9C%EA%B3%A0.png',
     menus: [
       {
         menuId: 0,
@@ -65,13 +65,22 @@ function FoodTruckPage() {
     console.log('Menu data fetched successfully', response);
     const menusData = response.data.data.menus;
     const menuCount = response.data.data.menuCount;
+    const foodTruckData = response.data.data.foodTruck;
   
     setFoodTruck(prevState => {
       // 메뉴 갯수가 0이면 메뉴를 비워주고, 아니면 새로운 메뉴 데이터로 업데이트
-      if (menuCount === 0) {
-        return { ...prevState, menus: [] };
+      if (menuCount === 0 ) {
+        if(foodTruckData === null){
+          return { ...prevState, menus: [] };
+        }else{
+          return { ...prevState, menus: [], content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl}
+        }
       } else {
-        return { ...prevState, menus: menusData };
+        if(foodTruckData === null){
+          return { ...prevState, menus: menusData };
+        }else{
+          return { ...prevState, menus: menusData, content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl}
+        }
       }
     });
   }
@@ -113,7 +122,7 @@ function FoodTruckPage() {
         return prevState; // 상태가 변하지 않으면 이전 상태를 반환하여 업데이트 방지
       }
     });
-    getMenus(newFoodTruckId, afterUpdateMenu, handleFail);
+    getFoodTruckDetails(newFoodTruckId, afterUpdateMenu, handleFail);
     getFoodTruckReview(newFoodTruckId, afterUpdateReview, handleFail);
   };
 
@@ -139,7 +148,7 @@ function FoodTruckPage() {
         <BackSpace></BackSpace>
         <img src={ModifyButton} alt="" />
       </div>
-      <img className="headerImage" src={Pocha} alt="" />
+      <img className="headerImage" src={foodTruck.foodTruckImageUrl} alt="" />
       <div className="storeInfo">
         <div className="foodTruckName">
           <span>{foodTruck.foodTruckName}</span>
@@ -159,6 +168,7 @@ function FoodTruckPage() {
           </div>
           {/* {foodTruck.foodTruckDetail.isOpen ? <span id="open">open</span> : <span id="close">close</span>} */}
         </div>
+        <span style={{ textAlign: 'left' }}>{foodTruck.content}</span>
       </div>
       <div className="switchButton">
         <Button

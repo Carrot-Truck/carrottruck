@@ -1,12 +1,12 @@
-// import { useEffect } from "react";
-
 import Navbar from "components/organisms/Navbar";
 import { SurveyLayout } from "./style";
+import SelectAddress from "components/organisms/SelectAddress";
 
 function SurveyPage() {
   return (
     <SurveyLayout>
-      survey page
+      surveyPage
+      <SelectAddress sidoId={null} sigunguId={null} />
       <Navbar />
     </SurveyLayout>
   );

@@ -31,6 +31,7 @@ export const JoinFormContainer = styled.div`
       display: flex;
       flex-direction: row;
       gap: 5px;
+      margin-right: 3rem;
     }
 
     .field-row {

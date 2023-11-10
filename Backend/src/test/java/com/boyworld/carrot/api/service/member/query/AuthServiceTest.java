@@ -86,7 +86,7 @@ class AuthServiceTest extends IntegrationTestSupport {
     @Test
     void checkEmailWithTrue() {
         // given
-        String email = "ssafy@ssafy.com";
+        String email = "ssafy@gmail.com";
         String role = "CLIENT";
 
         Member member = createMember(Role.CLIENT);
@@ -112,7 +112,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
     private Member createMember(Role role) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")
@@ -125,7 +125,7 @@ class AuthServiceTest extends IntegrationTestSupport {
 
     private LoginDto createLoginDto(String password) {
         return LoginDto.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .password(password)
                 .build();
     }

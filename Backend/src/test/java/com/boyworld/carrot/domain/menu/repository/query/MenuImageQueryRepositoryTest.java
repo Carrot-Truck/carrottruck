@@ -55,7 +55,7 @@ class MenuImageQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getMenuImageByMenuId() {
         // given
-        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 

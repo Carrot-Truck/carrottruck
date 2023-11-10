@@ -65,7 +65,7 @@ class MenuQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getMenus() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
 
         Category category1 = createCategory("고기/구이");
@@ -102,7 +102,7 @@ class MenuQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getEmptyMenus() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
 
         Category category1 = createCategory("고기/구이");
@@ -125,7 +125,7 @@ class MenuQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getMenu() {
         // given
-        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -180,7 +180,7 @@ class MenuQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getMenuWithEmptyOptions() {
         // given
-        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -223,7 +223,7 @@ class MenuQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getMenuThrowException() {
         // given
-        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 

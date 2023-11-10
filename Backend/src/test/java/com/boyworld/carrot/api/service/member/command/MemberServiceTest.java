@@ -48,7 +48,7 @@ class MemberServiceTest extends IntegrationTestSupport {
     void join() {
         // given
         JoinMemberDto dto = JoinMemberDto.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .password("password")
                 .name("김동현")
@@ -62,7 +62,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         // then
         assertThat(response)
                 .extracting("email", "nickname", "name", "phoneNumber", "role")
-                .containsExactlyInAnyOrder("ssafy@ssafy.com", "매미킴", "김동현", "010-1234-5678", "CLIENT");
+                .containsExactlyInAnyOrder("ssafy@gmail.com", "매미킴", "김동현", "010-1234-5678", "CLIENT");
     }
 
     @DisplayName("회원 가입 시 이미 사용 중인 이메일이라면 예외가 발생한다.")
@@ -70,7 +70,7 @@ class MemberServiceTest extends IntegrationTestSupport {
     void joinWithDuplicateEmail() {
         // given
         JoinMemberDto dto = JoinMemberDto.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .password("password")
                 .name("김동현")
@@ -92,7 +92,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         Member member = createMember(Role.CLIENT, true);
         EditMemberDto dto = EditMemberDto.builder()
                 .name("박동현")
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴123")
                 .phoneNumber("010-5678-1234")
                 .build();
@@ -102,7 +102,7 @@ class MemberServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(response).extracting("name", "nickname", "email", "phoneNumber", "role")
-                .containsExactlyInAnyOrder("박동현", "매미킴123", "ssafy@ssafy.com", "010-5678-1234", "CLIENT");
+                .containsExactlyInAnyOrder("박동현", "매미킴123", "ssafy@gmail.com", "010-5678-1234", "CLIENT");
     }
 
     @DisplayName("사업자는 회원 정보 수정을 할 수 있다.")
@@ -113,7 +113,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         VendorInfo vendorInfo = createVendorInfo(member);
         EditMemberDto dto = EditMemberDto.builder()
                 .name("박동현")
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴123")
                 .phoneNumber("010-5678-1234")
                 .build();
@@ -124,7 +124,7 @@ class MemberServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(response).extracting("name", "nickname", "email", "phoneNumber", "role", "businessNumber")
-                .containsExactlyInAnyOrder("박동현", "매미킴123", "ssafy@ssafy.com", "010-5678-1234", "VENDOR", "123456789");
+                .containsExactlyInAnyOrder("박동현", "매미킴123", "ssafy@gmail.com", "010-5678-1234", "VENDOR", "123456789");
     }
 
     @DisplayName("탈퇴한 회원의 정보 수정을 요청하면 예외가 발생한다.")
@@ -134,7 +134,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         Member member = createMember(Role.CLIENT, false);
         EditMemberDto dto = EditMemberDto.builder()
                 .name("박동현")
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴123")
                 .phoneNumber("010-5678-1234")
                 .build();
@@ -152,7 +152,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         // given
         EditMemberDto dto = EditMemberDto.builder()
                 .name("박동현")
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴123")
                 .phoneNumber("010-5678-1234")
                 .build();
@@ -185,7 +185,7 @@ class MemberServiceTest extends IntegrationTestSupport {
         Member member = createMember(Role.CLIENT, false);
 
         // when // then
-        assertThatThrownBy(() -> memberService.withdrawal("ssafy@ssafy.com", "ssafy1234"))
+        assertThatThrownBy(() -> memberService.withdrawal("ssafy@gmail.com", "ssafy1234"))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("이미 탈퇴한 회원입니다.");
     }
@@ -206,7 +206,7 @@ class MemberServiceTest extends IntegrationTestSupport {
 
     private Member createMember(Role role, boolean active) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")

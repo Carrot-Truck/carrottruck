@@ -47,7 +47,7 @@ class FoodTruckImageQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckImageByFoodTruckId() {
         // given
-        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -79,7 +79,7 @@ class FoodTruckImageQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckImageByFoodTruckIdWithoutFoodTruckImage() {
         // given
-        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 

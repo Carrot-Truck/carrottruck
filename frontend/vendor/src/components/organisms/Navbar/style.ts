@@ -7,4 +7,6 @@ export const NavbarContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   background: var(--gray-100);
+  position: fixed; // 고정 위치
+  bottom: 0;       // 화면 하단에 위치
 `;

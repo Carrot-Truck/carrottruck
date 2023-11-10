@@ -145,61 +145,63 @@ function FoodTruckPage() {
 
   return (
     <FoodTruckLayout>
-      <div className="header">
-        <BackSpace></BackSpace>
-        <img src={ModifyButton} alt="" />
-      </div>
-      <img className="headerImage" src={foodTruck.foodTruckImageUrl} alt="" />
-      <div className="storeInfo">
-        <div className="foodTruckName">
-          <span>{foodTruck.foodTruckName}</span>
-          {/* <img src={EmptyHeart} alt="" /> */}
+      <div style={{ flexGrow: 1 }}>
+        <div className="header">
+          <BackSpace></BackSpace>
+          <img src={ModifyButton} alt="" />
         </div>
-        {/* <div className="location">
-          <span>{foodTruck.foodTruckDetail.address} </span>
-
-          <span> {foodTruck.foodTruckDetail.distance}m </span>
-          <img src={Pin} alt="" />
-        </div> */}
-        <div className="review">
-          <div>
-            <img src={Star} alt="" />
-            <span>({foodTruck.grade})</span>
-            <span>{foodTruck.reviewCount}</span>
+        <img className="headerImage" src={foodTruck.foodTruckImageUrl} alt="" />
+        <div className="storeInfo">
+          <div className="foodTruckName">
+            <span>{foodTruck.foodTruckName}</span>
+            {/* <img src={EmptyHeart} alt="" /> */}
           </div>
-          {/* {foodTruck.foodTruckDetail.isOpen ? <span id="open">open</span> : <span id="close">close</span>} */}
+          {/* <div className="location">
+            <span>{foodTruck.foodTruckDetail.address} </span>
+
+            <span> {foodTruck.foodTruckDetail.distance}m </span>
+            <img src={Pin} alt="" />
+          </div> */}
+          <div className="review">
+            <div>
+              <img src={Star} alt="" />
+              <span>({foodTruck.grade})</span>
+              <span>{foodTruck.reviewCount}</span>
+            </div>
+            {/* {foodTruck.foodTruckDetail.isOpen ? <span id="open">open</span> : <span id="close">close</span>} */}
+          </div>
+          <span style={{ textAlign: 'left' }}>{foodTruck.content}</span>
         </div>
-        <span style={{ textAlign: 'left' }}>{foodTruck.content}</span>
+        <div className="switchButton">
+          <Button
+            size="m"
+            radius="l"
+            color={selectedButton === 1 ? 'Primary' : 'SubFirst'}
+            text="메뉴"
+            handleClick={() => buttonClick(1)}
+          />
+          <Button
+            size="m"
+            radius="l"
+            color={selectedButton === 2 ? 'Primary' : 'SubFirst'}
+            text="가게정보"
+            handleClick={() => buttonClick(2)}
+          />
+          <Button
+            size="m"
+            radius="l"
+            color={selectedButton === 3 ? 'Primary' : 'SubFirst'}
+            text="리뷰"
+            handleClick={() => buttonClick(3)}
+          />
+        </div>
+        {selectedButton === 1 && foodTruck.menus.length > 0 && (
+          <FoodTruckMenu menus={foodTruck.menus} />
+        )}
+        {/* {selectedButton === 2 && } */}
+        {/* {selectedButton === 3 && } */}
+        <Navbar/>
       </div>
-      <div className="switchButton">
-        <Button
-          size="m"
-          radius="l"
-          color={selectedButton === 1 ? 'Primary' : 'SubFirst'}
-          text="메뉴"
-          handleClick={() => buttonClick(1)}
-        />
-        <Button
-          size="m"
-          radius="l"
-          color={selectedButton === 2 ? 'Primary' : 'SubFirst'}
-          text="가게정보"
-          handleClick={() => buttonClick(2)}
-        />
-        <Button
-          size="m"
-          radius="l"
-          color={selectedButton === 3 ? 'Primary' : 'SubFirst'}
-          text="리뷰"
-          handleClick={() => buttonClick(3)}
-        />
-      </div>
-      {selectedButton === 1 && foodTruck.menus.length > 0 && (
-        <FoodTruckMenu menus={foodTruck.menus} />
-      )}
-      {/* {selectedButton === 2 && } */}
-      {/* {selectedButton === 3 && } */}
-      <Navbar/>
     </FoodTruckLayout>
   );
 }

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Navbar from "components/organisms/Navbar";
 import { FoodTruckLayout } from './style';
 import BackSpace from 'components/atoms/BackSpace';
 import Button from 'components/atoms/Button';
@@ -199,7 +198,6 @@ function FoodTruckPage() {
       )}
       {/* {selectedButton === 2 && } */}
       {/* {selectedButton === 3 && } */}
-      <Navbar />
     </FoodTruckLayout>
   );
 }

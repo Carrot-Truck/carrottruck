@@ -97,6 +97,7 @@ function FoodTruckPage() {
   }
   
   const updateFoodTruckId = (response: AxiosResponse) => {
+    console.log(response);
     const newFoodTruckId = response.data.data.items[response.data.data.items.length-1].foodTruckId;
     const newFoodTruckName = response.data.data.items[response.data.data.items.length-1].foodTruckName;
     

@@ -39,7 +39,7 @@ function FoodTruckPage() {
         menuPrice: 0,
         menuDescription: '',
         menuSoldOut: false,
-        menuImageId: 0
+        menuImageUrl: ''
       }
     ],
     schedules: [

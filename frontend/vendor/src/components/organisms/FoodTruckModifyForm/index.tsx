@@ -5,22 +5,17 @@ import Button from 'components/atoms/Button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-interface FoodTruckModifyFormProps {
-  categoryId: number; // 카테고리 ID
-  foodTruckName: string;
-  foodTruckPicture: File | null;
-  phoneNumber: string;
-  content: string;
-  originInfo: string;
-  prepareTime: number;
-  waitLimits: number;
-}
-
-function FoodTruckModifyForm(props: FoodTruckModifyFormProps) {
-  const { categoryId, foodTruckName, foodTruckPicture, phoneNumber, content, originInfo, prepareTime, waitLimits } =
-    props;
+function FoodTruckModifyForm() {
   const navigate = useNavigate();
   const [isDone, setIsDone] = useState(false);
+  const [categoryId, setCategoryId] = useState(0); // 카테고리 ID를 문자열로 저장
+  const [foodTruckName, setfoodTruckName] = useState('');
+  const [foodTruckPicture, setFoodTruckPicture] = useState<File | null>(null);
+  const [phoneNumber, setphoneNumber] = useState('');
+  const [content, setContent] = useState('');
+  const [originInfo, setOriginInfo] = useState('');
+  const [prepareTime, setPrepareTime] = useState(0);
+  const [waitLimits, setWaitLimits] = useState(0);
   const accessToken = localStorage.getItem('accessToken');
   const grantType = localStorage.getItem('grantType');
   const APPLICATION_SPRING_SERVER_URL =

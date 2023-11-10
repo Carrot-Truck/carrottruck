@@ -87,8 +87,6 @@ public class ReviewController {
     public ApiResponse<FoodTruckReviewResponse> getFoodTruckReview(@Valid @PathVariable Long foodTruckId){
         log.debug("ReviewController#getFoodTruckReview called! Food truck id = {}", foodTruckId);
         FoodTruckReviewResponse response = reviewService.getFoodTruckReview(foodTruckId);
-        System.out.println(response.getFoodTruckReviewDtoList());
-        System.out.println(response.getAverageGrade());
         return ApiResponse.ok(response);
     }
 

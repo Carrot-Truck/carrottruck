@@ -1,6 +1,5 @@
 package com.boyworld.carrot.api.service.cart.dto;
 
-import com.boyworld.carrot.domain.cart.Cart;
 import com.boyworld.carrot.domain.cart.CartMenu;
 import com.boyworld.carrot.domain.menu.Menu;
 import lombok.Builder;

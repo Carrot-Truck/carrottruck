@@ -11,22 +11,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderMenuItem {
 
+    Long id;
     Long menuId;
     Integer quantity;
-    List<Long> menuOptionIdList;
+    List<Long> menuOptionList;
 
     @Builder
-    public OrderMenuItem(Long menuId, Integer quantity, List<Long> menuOptionIdList) {
+    public OrderMenuItem(Long id, Long menuId, Integer quantity, List<Long> menuOptionList) {
+        this.id = id;
         this.menuId = menuId;
         this.quantity = quantity;
-        this.menuOptionIdList = menuOptionIdList;
+        this.menuOptionList = menuOptionList;
     }
 
     public static OrderMenuItem of(CartMenu cartMenu, List<Long> menuOptionIdList) {
         return OrderMenuItem.builder()
                 .menuId(cartMenu.getMenuId())
                 .quantity(cartMenu.getQuantity())
-                .menuOptionIdList(menuOptionIdList)
+                .menuOptionList(menuOptionIdList)
                 .build();
     }
 }

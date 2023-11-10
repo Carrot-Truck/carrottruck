@@ -20,4 +20,24 @@ public class OrderItem {
     private LocalDateTime createdTime;
     private LocalDateTime expectTime;
     private List<OrderMenuItem> orderMenuItems;
+
+    @Builder
+    public OrderItem() {}
+
+    @Builder
+    public OrderItem(Long orderId, Long memberId, String nickname, String phoneNumber,
+        Status status, Integer orderCnt, Integer totalPrice, LocalDateTime createdTime,
+        LocalDateTime expectTime, List<OrderMenuItem> orderMenuItems) {
+        this.orderId = orderId;
+        this.memberId = memberId;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.status = status;
+        this.orderCnt = orderCnt;
+        this.totalPrice = totalPrice;
+        this.createdTime = createdTime;
+        this.expectTime = expectTime;
+        this.orderMenuItems = orderMenuItems;
+    }
+
 }

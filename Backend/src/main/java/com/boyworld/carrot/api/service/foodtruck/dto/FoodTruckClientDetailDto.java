@@ -6,7 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class FoodTruckDetailDto {
+public class FoodTruckClientDetailDto {
 
     private Long foodTruckId;
     private String foodTruckName;
@@ -24,17 +24,16 @@ public class FoodTruckDetailDto {
     private String foodTruckImageUrl;
     private Boolean selected;
     private Boolean isNew;
-    private Boolean isOwner;
     private String vendorName;
     private String tradeName;
     private String businessNumber;
 
     @Builder
-    public FoodTruckDetailDto(Long foodTruckId, String foodTruckName, String phoneNumber, String content,
-                              String originInfo, Boolean isOpen, Boolean isLiked, Integer prepareTime, Double avgGrade,
-                              Integer likeCount, Integer reviewCount, BigDecimal distance, String address,
-                              String foodTruckImageUrl, Boolean selected, Boolean isNew, Boolean isOwner,
-                              String vendorName, String tradeName, String businessNumber) {
+    public FoodTruckClientDetailDto(Long foodTruckId, String foodTruckName, String phoneNumber, String content,
+                                    String originInfo, Boolean isOpen, Boolean isLiked, Integer prepareTime, Double avgGrade,
+                                    Integer likeCount, Integer reviewCount, BigDecimal distance, String address,
+                                    String foodTruckImageUrl, Boolean selected, Boolean isNew,
+                                    String vendorName, String tradeName, String businessNumber) {
         this.foodTruckId = foodTruckId;
         this.foodTruckName = foodTruckName;
         this.phoneNumber = phoneNumber;
@@ -51,7 +50,6 @@ public class FoodTruckDetailDto {
         this.foodTruckImageUrl = foodTruckImageUrl;
         this.selected = selected;
         this.isNew = isNew;
-        this.isOwner = isOwner;
         this.vendorName = vendorName;
         this.tradeName = tradeName;
         this.businessNumber = businessNumber;

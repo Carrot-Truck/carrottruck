@@ -1,14 +1,12 @@
 package com.boyworld.carrot.api.controller.order;
 
 import com.boyworld.carrot.api.ApiResponse;
-import com.boyworld.carrot.api.controller.order.request.CreateOrderRequest;
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.security.SecurityUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -115,7 +112,6 @@ public class OrderController {
     /**
      * 주문 생성 API
      *
-     * @param request 생성할 주문 정보
      * @return 생성된 주문 식별키
      */
     @PostMapping("create")

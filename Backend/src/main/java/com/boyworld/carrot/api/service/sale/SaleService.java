@@ -4,22 +4,30 @@ import com.boyworld.carrot.api.controller.sale.response.CloseSaleResponse;
 import com.boyworld.carrot.api.controller.sale.response.OpenSaleResponse;
 import com.boyworld.carrot.api.service.fcm.FCMNotificationService;
 import com.boyworld.carrot.api.service.fcm.dto.FCMNotificationRequestDto;
+import com.boyworld.carrot.api.service.member.error.InValidAccessException;
+import com.boyworld.carrot.api.service.order.dto.CompleteOrderDto;
 import com.boyworld.carrot.api.service.sale.dto.AcceptOrderDto;
 import com.boyworld.carrot.api.service.sale.dto.DeclineOrderDto;
 import com.boyworld.carrot.api.service.sale.dto.OpenSaleDto;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
-import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
+import com.boyworld.carrot.domain.member.Member;
+import com.boyworld.carrot.domain.member.repository.command.MemberRepository;
+import com.boyworld.carrot.domain.menu.Menu;
 import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
 import com.boyworld.carrot.domain.menu.repository.query.MenuQueryRepository;
+import com.boyworld.carrot.domain.order.Order;
 import com.boyworld.carrot.domain.order.Status;
 import com.boyworld.carrot.domain.order.repository.command.OrderRepository;
+import com.boyworld.carrot.domain.order.repository.query.OrderQueryRepository;
 import com.boyworld.carrot.domain.sale.Sale;
 import com.boyworld.carrot.domain.sale.repository.command.SaleRepository;
 import com.boyworld.carrot.domain.sale.repository.query.SaleQueryRepository;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,11 +44,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SaleService {
 
+    private final MemberRepository memberRepository;
     private final SaleRepository saleRepository;
     private final SaleQueryRepository saleQueryRepository;
     private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepository;
     private final FoodTruckRepository foodTruckRepository;
-    private final FoodTruckQueryRepository foodTruckQueryRepository;
     private final FCMNotificationService fcmNotificationService;
     private final MenuRepository menuRepository;
     private final MenuQueryRepository menuQueryRepository;
@@ -51,12 +60,18 @@ public class SaleService {
      * @param dto 개시한 영업 정보
      * @return response 개시된 영업 정보
      */
-    public OpenSaleResponse openSale(OpenSaleDto dto) {
+    public OpenSaleResponse openSale(OpenSaleDto dto, String email) {
+
+        Member member = getMemberByEmail(email);
+        FoodTruck foodTruck = getFoodTruckById(dto.getFoodTruckId());
+        checkOwnerAccess(member, foodTruck);
 
         // foodTruckId에 해당하는 푸드트럭에 현재 종료하지 않은 영업이 있는지 확인
-        if (saleQueryRepository.hasActiveSale(dto.getFoodTruckId())) {
+        if (hasActiveSale(dto.getFoodTruckId())) {
+            log.debug("has processing sale of foodTruck {}", dto.getFoodTruckId());
             return null;
         }
+
 
         // 판매하지 않을 메뉴는 비활성화
         menuQueryRepository.setSaleMenuActive(dto.getFoodTruckId(), dto.getSaleMenuItems());
@@ -75,6 +90,7 @@ public class SaleService {
             .build();
 
         Sale result = saleRepository.save(sale);
+        result.editOrderable(true);
 
         // 내 푸드트럭 찜한 사용자에게 알림 발송
         Map<String, String> data = new HashMap<>();
@@ -103,15 +119,18 @@ public class SaleService {
      */
     public Long acceptOrder(AcceptOrderDto dto, String email) {
         // 1. 푸드트럭 소유주인지 확인
-        if (!saleQueryRepository.isOrderOwner(dto.getOrderId(), email)) {
-            return null;
-        }
+        Member member = getMemberByEmail(email);
+        Order order = getOrderById(dto.getOrderId());
+        checkOwnerAccess(member, order);
 
         // 2. 주문번호로 주문 조회, 상태 STATUS.PROCESSING 으로 변경
-        orderRepository.findById(dto.getOrderId())
-            .ifPresent(order -> order.updateOrderStatusAndExpectTime(Status.PROCESSING,
-                LocalDateTime.now().plusHours(9).plusMinutes(dto.getPrepareTime())));
-        return dto.getOrderId();
+        order = order.editOrderStatusAndExpectTime(Status.PROCESSING,
+                LocalDateTime.now().plusHours(9).plusMinutes(dto.getPrepareTime()));
+
+        FoodTruck foodTruck = order.getSale().getFoodTruck();
+        pauseByWaitLimit(foodTruck.getId(), foodTruck.getWaitLimits());
+
+        return order.getId();
     }
 
     /**
@@ -121,15 +140,43 @@ public class SaleService {
      * @return 거절한 주문 식별키
      */
     public Long declineOrder(DeclineOrderDto dto, String email) {
-        // 1. 푸드트럭 활성화 상태인지 먼저 확인
-        if (!saleQueryRepository.isOrderOwner(dto.getOrderId(), email)) {
-            return null;
-        }
+        // 1. 푸드트럭 소유주인지 확인
+        Member member = getMemberByEmail(email);
+        Order order = getOrderById(dto.getOrderId());
+        checkOwnerAccess(member, order);
 
         // 2. 주문 번호로 주문 조회, 상태 STATUS.DECLINED 로 변경
         log.debug("{}", dto.getOrderId());
-        orderRepository.findById(dto.getOrderId()).ifPresent(order -> order.updateOrderStatus(Status.DECLINED));
-        return dto.getOrderId();
+        order.editOrderStatus(Status.DECLINED);
+
+        FoodTruck foodTruck = order.getSale().getFoodTruck();
+        pauseByWaitLimit(foodTruck.getId(), foodTruck.getWaitLimits());
+
+        return order.getId();
+    }
+
+    /**
+     * 주문 완료 API
+     *
+     * @param dto 완료할 주문 정보
+     * @return 완료한 주문 식별키
+     */
+    public Long completeOrder(CompleteOrderDto dto, String email) {
+        // 1. 푸드트럭 소유주인지 확인
+        Member member = getMemberByEmail(email);
+        Order order = getOrderById(dto.getOrderId());
+        checkOwnerAccess(member, order);
+
+        // 2. 주문 번호로 주문 조회, 상태 STATUS.DECLINED 로 변경
+        log.debug("{}", dto.getOrderId());
+        order.editOrderStatus(Status.COMPLETE);
+
+        getSaleById(order.getSale().getId()).editTotalAmount(order.getTotalPrice());
+
+        FoodTruck foodTruck = order.getSale().getFoodTruck();
+        pauseByWaitLimit(foodTruck.getId(), foodTruck.getWaitLimits());
+
+        return order.getId();
     }
 
     /**
@@ -140,14 +187,14 @@ public class SaleService {
      * @return 주문 일시 정지한 푸드트럭 식별키
      */
     public Long pauseOrder(Long foodTruckId, String email) {
-        // 1. 로그인한 사용자가 해당 푸드트럭을 보유한 사업자인지 확인
-        if (!foodTruckQueryRepository.isFoodTruckOwner(foodTruckId, email)) {
-            return null;
-        }
+         // 1. 로그인한 사용자가 해당 푸드트럭을 보유한 사업자인지 확인
+         Member member = getMemberByEmail(email);
+         FoodTruck foodTruck = getFoodTruckById(foodTruckId);
+         checkOwnerAccess(member, foodTruck);
 
-        // 2. 푸드트럭 비활성화
-        foodTruckRepository.findById(foodTruckId).ifPresent(FoodTruck::deActivate);
-        return foodTruckId;
+        // 2. 영업 비활성화
+        return saleQueryRepository.getLatestSale(foodTruckId).map(
+            sale -> sale.editOrderable(false).getId()).orElse(null);
     }
 
     /**
@@ -160,13 +207,14 @@ public class SaleService {
 
     public Long restartOrder(Long foodTruckId, String email) {
         // 1. 로그인한 사용자가 해당 푸드트럭을 보유한 사업자인지 확인
-        if (!foodTruckQueryRepository.isFoodTruckOwner(foodTruckId, email)) {
-            return null;
-        }
+        Member member = getMemberByEmail(email);
+        FoodTruck foodTruck = getFoodTruckById(foodTruckId);
+        checkOwnerAccess(member, foodTruck);
 
-        // 2. 푸드트럭 활성화
-        foodTruckRepository.findById(foodTruckId).ifPresent(FoodTruck::activate);
-        return foodTruckId;
+        // 2. 영업 활성화
+        return saleQueryRepository.getLatestSale(foodTruckId).map(
+            sale -> sale.editOrderable(true).getId()).orElse(null);
+
     }
 
     /**
@@ -179,13 +227,12 @@ public class SaleService {
     public Long soldOutMenu(Long menuId, String email) {
         // 1. 로그인한 사용자가 menuId에 해당하는 메뉴를 가진
         // 푸드트럭 보유한 사업자인지 확인
-        if (!menuQueryRepository.isMenuOwner(menuId, email)) {
-            return null;
-        }
+        Member member = getMemberByEmail(email);
+        Menu menu = getMenuById(menuId);
+        checkOwnerAccess(member, menu);
 
         // 2. 맞으면 해당 menuId 비활성화
-        menuRepository.findById(menuId).ifPresent(menu -> menu.editMenuActive(false));
-        return menuId;
+        return menu.deActivate().getId();
     }
 
     /**
@@ -197,24 +244,117 @@ public class SaleService {
      */
     public CloseSaleResponse closeSale(Long foodTruckId, String email) {
 
-        Sale sale = saleQueryRepository.getLatestSale(foodTruckId).orElse(null);
         // 1. 로그인한 사용자가 해당 영업의 푸드트럭을 보유한 사업자인지 확인
-        if (sale == null || !saleQueryRepository.isSaleOwner(sale.getId(), email)) {
-            log.debug("test");
-            return null;
-        }
-        Long saleId = sale.getId();
+        Member member = getMemberByEmail(email);
+        FoodTruck foodTruck = getFoodTruckById(foodTruckId);
+        checkOwnerAccess(member, foodTruck);
 
         // 2. saleId로 영업 찾아서 endTime 저장
+        Sale sale = saleQueryRepository.getLatestSale(foodTruckId).orElseThrow(
+            () -> new NoSuchElementException("존재하지 않은 영업입니다.")
+        );
         LocalDateTime now = LocalDateTime.now().plusHours(9);
-        saleQueryRepository.closeSale(saleId, now);
+        sale.editEndTime(now);
+        sale.editOrderable(false);
 
         return CloseSaleResponse.builder()
-                .saleId(saleId)
+                .saleId(sale.getId())
                 .orderNumber(sale.getOrderNumber())
                 .totalAmount(sale.getTotalAmount())
                 .createdTime(sale.getCreatedDate())
                 .endTime(now)
                 .build();
+    }
+
+    private Boolean hasActiveSale(Long foodTruckId) {
+        Optional<Sale> saleOptional = saleQueryRepository.getLatestSale(foodTruckId);
+        if (saleOptional.isPresent() && saleOptional.get().getEndTime() == null) {
+            return true;
+        } else
+            return false;
+    }
+
+    private void checkOwnerAccess(Member member, FoodTruck foodTruck) {
+        if (!foodTruck.getVendor().getId().equals(member.getId())) {
+            throw new InValidAccessException("잘못된 접근입니다.");
+        }
+    }
+
+    private void checkOwnerAccess(Member member, Order order) {
+        if (!order.getSale().getFoodTruck().getVendor().getId().equals(member.getId())) {
+            throw new InValidAccessException("잘못된 접근입니다.");
+        }
+    }
+
+    private void checkOwnerAccess(Member member, Menu menu) {
+        if (!menu.getFoodTruck().getVendor().getId().equals(member.getId())) {
+            throw new InValidAccessException("잘못된 접근입니다.");
+        }
+    }
+
+    /**
+     * 이메일로 회원 엔티티 조회
+     *
+     * @param email 현재 로그인한 사용자 이메일
+     * @return 이메일에 해당하는 회원 엔티티
+     * @throws NoSuchElementException 식별키에 해당하는 회원이 없는 경우
+     */
+    private Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
+    }
+
+    /**
+     * 푸드트럭 식별키로 푸드트럭 조회
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @return 푸드트럭 엔티티
+     * @throws NoSuchElementException 식별키에 해당하는 푸드트럭이 없는 경우
+     */
+    private FoodTruck getFoodTruckById(Long foodTruckId) {
+        return foodTruckRepository.findById(foodTruckId)
+            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 푸드트럭입니다."));
+    }
+    
+    /**
+     * 주문 식별키로 주문 조회
+     *
+     * @param orderId 주문 식별키
+     * @return 주문 엔티티
+     * @throws NoSuchElementException 식별키에 해당하는 주문이 없는 경우
+     */
+    private Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId)
+            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 주문입니다."));
+    }
+
+    /**
+     * 영업 식별키로 영업 엔티티 조회
+     *
+     * @param saleId 영업 식별 키
+     * @return 영업 식별 키에 해당하는 영업 엔티티
+     */
+    private Sale getSaleById(Long saleId) {
+        return saleRepository.findById(saleId)
+            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 영업입니다."));
+    }
+
+    /**
+     * 메뉴 식별키로 메뉴 조회
+     *
+     * @param menuId 메뉴 식별키
+     * @return 메뉴 엔티티
+     * @throws NoSuchElementException 식별키에 해당하는 메뉴가 없는 경우
+     */
+    private Menu getMenuById(Long menuId) {
+        return menuRepository.findById(menuId)
+            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 메뉴입니다."));
+    }
+
+    private void pauseByWaitLimit(Long foodTruckId, Integer waitLimit) {
+        if (orderQueryRepository.isOrdersExploded(foodTruckId, waitLimit)) {
+            saleQueryRepository.getLatestSale(foodTruckId).ifPresent(
+                sale -> sale.editOrderable(false));
+        }
     }
 }

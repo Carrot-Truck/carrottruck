@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.controller.sale;
 
 import com.boyworld.carrot.api.ApiResponse;
+import com.boyworld.carrot.api.controller.order.request.CompleteOrderRequest;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.controller.sale.request.AcceptOrderRequest;
 import com.boyworld.carrot.api.controller.sale.request.DeclineOrderRequest;
@@ -50,8 +51,11 @@ public class SaleController {
         log.debug("SaleController#open called");
         log.debug("OpenSaleRequest={}", request);
 
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
         // 생성한 영업 정보 반환
-        OpenSaleResponse response = saleService.openSale(request.toOpenSaleDto());
+        OpenSaleResponse response = saleService.openSale(request.toOpenSaleDto(), email);
         log.debug("OpenSaleResponse={}", response);
         return ApiResponse.created(response);
     }
@@ -73,8 +77,8 @@ public class SaleController {
         // 입력받은 푸드트럭 id로 해당 푸드트럭의 현재 영업 id 조회
         OrdersResponse response = orderService.getProcessingOrders(foodTruckId, email);
         log.debug("OrderResponse={}", response);
-        // 해당 영업 id의 (pending & processing) 상태인 order 정보 반환
 
+        // 해당 영업 id의 (pending & processing) 상태인 order 정보 반환
         return ApiResponse.ok(response);
     }
 
@@ -138,6 +142,26 @@ public class SaleController {
         log.debug("declineId={}", declineId);
 
         return ApiResponse.ok(declineId);
+    }
+
+    /**
+     * 주문 완료 API
+     *
+     * @param request 완료할 주문 id
+     * @return 완료한 주문 id
+     */
+    @PostMapping("complete")
+    public ApiResponse<Long> complete(@Valid @RequestBody CompleteOrderRequest request) {
+        log.debug("SaleController#complete called");
+        log.debug("CompleteOrderRequest={}", request);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long completeId = saleService.completeOrder(request.toCompleteOrderDto(), email);
+        log.debug("declineId={}", completeId);
+
+        return ApiResponse.ok(completeId);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.boyworld.carrot.domain.menu.repository.query;
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
 import com.boyworld.carrot.api.service.sale.dto.SaleMenuItem;
 import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
+import com.boyworld.carrot.domain.menu.Menu;
 import com.boyworld.carrot.domain.menu.MenuOption;
 import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
@@ -107,7 +108,7 @@ public class MenuQueryRepository {
             .fetch();
 
         for (Long menuId: menuIds) {
-            menuRepository.findById(menuId).ifPresent(menu -> menu.editMenuActive(false));
+            menuRepository.findById(menuId).ifPresent(Menu::deActivate);
             List<Long> menuOptionIds = queryFactory
                 .select(menuOption.id)
                 .from(menuOption)
@@ -121,7 +122,7 @@ public class MenuQueryRepository {
         for (SaleMenuItem item: saleMenuItems) {
             Long menuId = item.getMenuId();
             if (menuIds.contains(menuId)) {
-                menuRepository.findById(menuId).ifPresent(menu -> menu.editMenuActive(true));
+                menuRepository.findById(menuId).ifPresent(Menu::activate);
                 for (Long optionId: item.getMenuOptionId()) {
                     MenuOption option = menuOptionRepository.findById(optionId).orElse(null);
                     if (option != null && option.getMenu().getId().equals(menuId)) {

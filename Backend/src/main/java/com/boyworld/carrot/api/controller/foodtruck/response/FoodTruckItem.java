@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+import static com.boyworld.carrot.domain.StringConstants.NO_IMG;
+
 @Data
 public class FoodTruckItem {
 
@@ -40,7 +42,7 @@ public class FoodTruckItem {
         this.reviewCount = reviewCount;
         this.distance = distance;
         this.address = address;
-        this.foodTruckImageUrl = foodTruckImageUrl;
+        this.foodTruckImageUrl = foodTruckImageUrl != null ? foodTruckImageUrl : NO_IMG;
         this.isNew = isNew;
     }
 }

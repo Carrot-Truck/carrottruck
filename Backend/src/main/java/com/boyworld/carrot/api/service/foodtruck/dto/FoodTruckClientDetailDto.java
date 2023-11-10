@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+import static com.boyworld.carrot.domain.StringConstants.NO_IMG;
+
 @Data
 public class FoodTruckClientDetailDto {
 
@@ -47,7 +49,7 @@ public class FoodTruckClientDetailDto {
         this.reviewCount = reviewCount;
         this.distance = new BigDecimal(distance);
         this.address = address;
-        this.foodTruckImageUrl = foodTruckImageUrl;
+        this.foodTruckImageUrl = foodTruckImageUrl != null ? foodTruckImageUrl : NO_IMG;
         this.selected = selected;
         this.isNew = isNew;
         this.vendorName = vendorName;

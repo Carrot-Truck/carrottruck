@@ -4,6 +4,8 @@ import com.boyworld.carrot.domain.review.Review;
 import lombok.Builder;
 import lombok.Data;
 
+import static com.boyworld.carrot.domain.StringConstants.NO_IMG;
+
 /**
  * To show Review entity
  *
@@ -29,7 +31,7 @@ public class FoodTruckReviewDto {
         this.grade = grade;
         this.content = content;
         this.nickname = nickname;
-        this.imageUrl = imageUrl;
+        this.imageUrl = imageUrl != null ? imageUrl : NO_IMG;
     }
 
     public static FoodTruckReviewDto of(Review review){

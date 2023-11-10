@@ -354,7 +354,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(response.getMarkerCount()).isNotZero();
-        assertThat(response.getMarkerItems()).isEmpty();
+        assertThat(response.getMarkerItems()).isNotEmpty();
     }
 
     @DisplayName("사용자는 검색 조건 없이 가까운 순으로 현재 위치 기준 반경 1Km 이내의 푸드트럭 목록을 조회할 수 있다.")

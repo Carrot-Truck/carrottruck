@@ -3,6 +3,8 @@ package com.boyworld.carrot.api.service.foodtruck.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import static com.boyworld.carrot.domain.StringConstants.NO_IMG;
+
 @Data
 public class FoodTruckVendorDetailDto {
 
@@ -32,7 +34,7 @@ public class FoodTruckVendorDetailDto {
         this.prepareTime = prepareTime;
         this.avgGrade = avgGrade;
         this.reviewCount = reviewCount;
-        this.foodTruckImageUrl = foodTruckImageUrl;
+        this.foodTruckImageUrl = foodTruckImageUrl != null ? foodTruckImageUrl : NO_IMG;
         this.selected = selected;
         this.vendorName = vendorName;
         this.tradeName = tradeName;

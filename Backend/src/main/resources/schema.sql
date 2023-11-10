@@ -1,5 +1,5 @@
-# drop database if exists carrottruck;
-# create database carrottruck;
+drop database if exists carrottruck;
+create database carrottruck;
 use carrottruck;
 
 

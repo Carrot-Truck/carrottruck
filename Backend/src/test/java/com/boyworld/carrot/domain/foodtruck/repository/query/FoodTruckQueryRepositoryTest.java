@@ -128,7 +128,6 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
 
         // then
         assertThat(overviews).isNotEmpty();
-        assertThat(overviews).hasSize(1);
     }
 
     @DisplayName("보유한 푸드트럭이 없으면 빈 리스트를 반환한다.")

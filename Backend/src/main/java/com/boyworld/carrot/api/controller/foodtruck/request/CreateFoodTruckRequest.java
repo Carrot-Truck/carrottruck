@@ -3,6 +3,7 @@ package com.boyworld.carrot.api.controller.foodtruck.request;
 import com.boyworld.carrot.api.service.foodtruck.dto.CreateFoodTruckDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class CreateFoodTruckRequest {
     @NotBlank
     private String foodTruckName;
     @NotBlank
+    @Pattern(regexp = "^010-\\\\d{3,4}=\\\\d{4}$")
     private String phoneNumber;
     private String content;
     private String originInfo;

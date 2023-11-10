@@ -1,8 +1,8 @@
 package com.boyworld.carrot.api.controller.member.request;
 
 import com.boyworld.carrot.api.service.member.dto.JoinMemberDto;
-import com.boyworld.carrot.domain.member.Role;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class JoinRequest {
 
     @NotBlank
+    @Pattern(regexp = "^[0-9a-zA-Z]([-_￦.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_￦.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$")
     private String email;
 
     @NotBlank
@@ -24,6 +25,7 @@ public class JoinRequest {
     private String name;
 
     @NotBlank
+    @Pattern(regexp = "^010-\\\\d{3,4}=\\\\d{4}$")
     private String phoneNumber;
 
     @NotBlank

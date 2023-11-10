@@ -1,8 +1,9 @@
 package com.boyworld.carrot.api.service.foodtruck;
 
 import com.boyworld.carrot.api.controller.foodtruck.response.*;
-import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckDetailDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckClientDetailDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
+import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckVendorDetailDto;
 import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
 import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
@@ -150,7 +151,7 @@ public class FoodTruckQueryService {
     }
 
     /**
-     * 푸드트럭 상세 조회 API
+     * 푸드트럭 상세 조회 (사용자용)
      *
      * @param foodTruckId 푸드트럭 식별키
      * @param email       현재 로그인 중인 사용자 이메일
@@ -158,9 +159,23 @@ public class FoodTruckQueryService {
      * @param longitude   경도
      * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
      */
-    public FoodTruckDetailResponse getFoodTruck(Long foodTruckId, String email,
-                                                BigDecimal latitude, BigDecimal longitude) {
-        FoodTruckDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckById(foodTruckId, email, latitude, longitude);
+    public FoodTruckDetailResponse<FoodTruckClientDetailDto> getClientFoodTruck(Long foodTruckId, String email,
+                                                                                BigDecimal latitude, BigDecimal longitude) {
+        FoodTruckClientDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsClient(foodTruckId, email, latitude, longitude);
+        List<MenuDto> menus = menuQueryRepository.getMenusByFoodTruckId(foodTruckId);
+        List<ScheduleDto> schedules = scheduleQueryRepository.getSchedulesByFoodTruckId(foodTruckId);
+        return FoodTruckDetailResponse.of(foodTruck, menus, schedules);
+    }
+
+    /**
+     * 푸드트럭 상세 조회 (사업자용)
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @param email       현재 로그인 중인 사용자 이메일
+     * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
+     */
+    public FoodTruckDetailResponse<FoodTruckVendorDetailDto> getVendorFoodTruckById(Long foodTruckId, String email) {
+        FoodTruckVendorDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruckId);
         List<MenuDto> menus = menuQueryRepository.getMenusByFoodTruckId(foodTruckId);
         List<ScheduleDto> schedules = scheduleQueryRepository.getSchedulesByFoodTruckId(foodTruckId);
         return FoodTruckDetailResponse.of(foodTruck, menus, schedules);

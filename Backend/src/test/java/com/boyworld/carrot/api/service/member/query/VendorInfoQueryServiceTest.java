@@ -46,7 +46,7 @@ class VendorInfoQueryServiceTest extends IntegrationTestSupport {
         VendorInfo vendorInfo = createVendorInfo(member);
 
         // when
-        VendorInfoResponse response = vendorInfoQueryService.getVendorInfo("ssafy@ssafy.com");
+        VendorInfoResponse response = vendorInfoQueryService.getVendorInfo("ssafy@gmail.com");
 
         // then
         assertThat(response).extracting("tradeName", "vendorName", "businessNumber", "phoneNumber")
@@ -68,7 +68,7 @@ class VendorInfoQueryServiceTest extends IntegrationTestSupport {
 
     private Member createMember(Role role) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")

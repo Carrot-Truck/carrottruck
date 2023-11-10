@@ -38,10 +38,10 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void isExistingClientEmailWithTrue() {
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@gmail.com");
 
         // when
-        Boolean result = memberQueryRepository.isExistEmail("ssafy@ssafy.com");
+        Boolean result = memberQueryRepository.isExistEmail("ssafy@gmail.com");
 
         // then
         assertThat(result).isTrue();
@@ -51,10 +51,10 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void isExistingVendorEmailWithTrue() {
         // given
-        Member member = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         // when
-        Boolean result = memberQueryRepository.isExistEmail("ssafy@ssafy.com");
+        Boolean result = memberQueryRepository.isExistEmail("ssafy@gmail.com");
 
         // then
         assertThat(result).isTrue();
@@ -64,7 +64,7 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void isExistingClientEmailWithFalse() {
         // given
-        Member client = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member client = createMember(Role.CLIENT, "ssafy@gmail.com");
         String email = "ssafy@naver.com";
 
         // when
@@ -78,7 +78,7 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void isExistingVendorEmailWithFalse() {
         // given
-        Member vendor = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor = createMember(Role.VENDOR, "ssafy@gmail.com");
         String email = "ssafy@naver.com";
 
         // when
@@ -92,8 +92,8 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getExistClientInfoByClient() {
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
-        String email = "ssafy@ssafy.com";
+        Member member = createMember(Role.CLIENT, "ssafy@gmail.com");
+        String email = "ssafy@gmail.com";
 
         // when
         Optional<ClientResponse> response = memberQueryRepository.getClientInfoByEmail(email);
@@ -101,15 +101,15 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         // then
         assertThat(response.isPresent()).isTrue();
         assertThat(response.get()).extracting("name", "nickname", "email", "phoneNumber", "role")
-                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "CLIENT");
+                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@gmail.com", "010-1234-5678", "CLIENT");
     }
 
     @DisplayName("사업자도 일반 사용자로서의 정보를 조회할 수 있다.")
     @Test
     void getExistClientInfoByVendor() {
         // given
-        Member member = createMember(Role.VENDOR, "ssafy@ssafy.com");
-        String email = "ssafy@ssafy.com";
+        Member member = createMember(Role.VENDOR, "ssafy@gmail.com");
+        String email = "ssafy@gmail.com";
 
         // when
         Optional<ClientResponse> response = memberQueryRepository.getClientInfoByEmail(email);
@@ -117,14 +117,14 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         // then
         assertThat(response.isPresent()).isTrue();
         assertThat(response.get()).extracting("name", "nickname", "email", "phoneNumber", "role")
-                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "VENDOR");
+                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@gmail.com", "010-1234-5678", "VENDOR");
     }
 
     @DisplayName("해당 이메일을 가진 일반 사용자가 존재하지 않으면 빈 객체가 반환된다.")
     @Test
     void getNotExistClientInfo() {
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@gmail.com");
         String email = "ssafy@naver.com";
 
         // when
@@ -138,9 +138,9 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getExistVendorInfo() {
         // given
-        Member member = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member member = createMember(Role.VENDOR, "ssafy@gmail.com");
         VendorInfo vendorInfo = createVendorInfo(member);
-        String email = "ssafy@ssafy.com";
+        String email = "ssafy@gmail.com";
 
         // when
         Optional<VendorResponse> response = memberQueryRepository.getVendorInfoByEmail(email);
@@ -148,16 +148,16 @@ class MemberQueryRepositoryTest extends IntegrationTestSupport {
         // then
         assertThat(response).isPresent();
         assertThat(response.get()).extracting("name", "nickname", "email", "phoneNumber", "role", "businessNumber")
-                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "VENDOR", "123456789");
+                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@gmail.com", "010-1234-5678", "VENDOR", "123456789");
     }
 
     @DisplayName("해당 이메일을 가진 사업자가 존재하지 않으면 빈 객체가 반환된다.")
     @Test
     void getVendorInfoByClientEmail() {
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@gmail.com");
         VendorInfo vendorInfo = createVendorInfo(member);
-        String email = "ssafy@ssafy.com";
+        String email = "ssafy@gmail.com";
 
         // when
         Optional<VendorResponse> response = memberQueryRepository.getVendorInfoByEmail(email);

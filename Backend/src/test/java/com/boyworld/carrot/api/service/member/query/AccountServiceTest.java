@@ -49,7 +49,7 @@ class AccountServiceTest extends IntegrationTestSupport {
     void getExistClientInfo() {
         // given
         Member member = createMember(Role.CLIENT);
-        String email = "ssafy@ssafy.com";
+        String email = "ssafy@gmail.com";
 
         // when
         ClientResponse response = accountService.getMemberInfo(email);
@@ -57,7 +57,7 @@ class AccountServiceTest extends IntegrationTestSupport {
         // then
         assertThat(response).isNotNull();
         assertThat(response).extracting("name", "nickname", "email", "phoneNumber", "role")
-                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "CLIENT");
+                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@gmail.com", "010-1234-5678", "CLIENT");
     }
 
     @DisplayName("사업자도 일반 사용자로서 조회를 이용할 수 있다.")
@@ -65,7 +65,7 @@ class AccountServiceTest extends IntegrationTestSupport {
     void getExistClientInfoByVendor() {
         // given
         Member member = createMember(Role.VENDOR);
-        String email = "ssafy@ssafy.com";
+        String email = "ssafy@gmail.com";
 
         // when
         ClientResponse response = accountService.getMemberInfo(email);
@@ -73,7 +73,7 @@ class AccountServiceTest extends IntegrationTestSupport {
         // then
         assertThat(response).isNotNull();
         assertThat(response).extracting("name", "nickname", "email", "phoneNumber", "role")
-                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "VENDOR");
+                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@gmail.com", "010-1234-5678", "VENDOR");
     }
 
     @DisplayName("이메일에 해당하는 회원이 존재하지 않을 경우 예외가 발생한다.")
@@ -95,7 +95,7 @@ class AccountServiceTest extends IntegrationTestSupport {
         // given
         Member member = createMember(Role.VENDOR);
         VendorInfo vendorInfo = createVendorInfo(member);
-        String email = "ssafy@ssafy.com";
+        String email = "ssafy@gmail.com";
 
         // when
         VendorResponse response = accountService.getVendorInfo(email);
@@ -103,7 +103,7 @@ class AccountServiceTest extends IntegrationTestSupport {
         // then
         assertThat(response).isNotNull();
         assertThat(response).extracting("name", "nickname", "email", "phoneNumber", "role", "businessNumber")
-                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@ssafy.com", "010-1234-5678", "VENDOR", "123456789");
+                .containsExactlyInAnyOrder("김동현", "매미킴", "ssafy@gmail.com", "010-1234-5678", "VENDOR", "123456789");
     }
 
     @DisplayName("해당 이메일의 사업자가 존재하지 않으면 예외가 발생한다.")
@@ -125,7 +125,7 @@ class AccountServiceTest extends IntegrationTestSupport {
     void getVendorInfoByClient() {
         // given
         Member member = createMember(Role.CLIENT);
-        String email = "ssafy@ssafy.com";
+        String email = "ssafy@gmail.com";
 
         // when // then
         assertThatThrownBy(() -> accountService.getVendorInfo(email))
@@ -135,7 +135,7 @@ class AccountServiceTest extends IntegrationTestSupport {
 
     private Member createMember(Role role) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")

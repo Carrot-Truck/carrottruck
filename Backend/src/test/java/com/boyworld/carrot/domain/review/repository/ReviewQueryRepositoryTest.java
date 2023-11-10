@@ -73,7 +73,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void createCommentWithoutImage() {
         //given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@gmail.com");
         Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
@@ -101,7 +101,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void createCommentWithImage() throws Exception {
         //given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@gmail.com");
         Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
@@ -146,7 +146,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
     @WithMockUser(roles = "VENDOR")
     void createComment() {
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@gmail.com");
         Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹2", "010-1231-5678",
@@ -181,7 +181,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getMyReview(){
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@gmail.com");
         Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
@@ -206,7 +206,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
     @Test
     void getFoodTruckReview(){
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@gmail.com");
         Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",
@@ -232,7 +232,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
     @Transactional
     void withdrawal(){
         // given
-        Member member = createMember(Role.CLIENT, "ssafy@ssafy.com");
+        Member member = createMember(Role.CLIENT, "ssafy@gmail.com");
         Member vendor = createMember(Role.VENDOR, "vendor@ssafy.com");
         Category category = createCategory();
         FoodTruck foodTruck = createFoodTruck(vendor, category, "동현 된장삼겹", "010-1234-5678",

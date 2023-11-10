@@ -60,7 +60,7 @@ class ScheduleQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getSchedules() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -87,7 +87,7 @@ class ScheduleQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getScheduleAsOwner() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -128,7 +128,7 @@ class ScheduleQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getScheduleIsNull() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
 
         Category category = createCategory("고기/구이");
 
@@ -160,7 +160,7 @@ class ScheduleQueryServiceTest extends IntegrationTestSupport {
     @Test
     void getScheduleAsInValidMember() {
         // given
-        Member vendor1 = createMember(Role.VENDOR, "ssafy@ssafy.com");
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
         Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
         Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
 

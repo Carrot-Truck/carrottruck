@@ -181,7 +181,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
         Boolean result = reviewService.createComment(CommentRequest.builder()
             .comment("리뷰 감사합니다.")
             .reviewId(review.getId())
-            .build(), "ssafy@ssafy.com");
+            .build(), "ssafy@gmail.com");
 
         // then
         assertThat(result).isFalse();
@@ -356,7 +356,7 @@ public class ReviewServiceTest extends IntegrationTestSupport {
 
     private Member createMember(Role role, boolean active) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")

@@ -94,7 +94,7 @@ public class SurveyQueryServiceTest extends IntegrationTestSupport {
 
     private Member createMember(Role role, boolean active) {
         Member member = Member.builder()
-                .email("ssafy@ssafy.com")
+                .email("ssafy@gmail.com")
                 .nickname("매미킴")
                 .encryptedPwd(passwordEncoder.encode("ssafy1234"))
                 .name("김동현")

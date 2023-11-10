@@ -21,7 +21,7 @@ function FoodTruckPage() {
   // ( 현재 선택된 푸드트럭 id 가져와야해 ) -> 우선순위 보류
 
   const navigateToModifyPage = () => {
-    navigate('/foodtruck/modify');
+    navigate('/foodtruck/modify', { state: { foodTruck: foodTruck} });
   };
 
   const buttonClick = (buttonNumber: number) => {
@@ -33,6 +33,7 @@ function FoodTruckPage() {
     content: '',
     originInfo: '',
     prepareTime: 0,
+    phoneNumber: '',
     grade: 0,
     reviewCount: 0,
     foodTruckImageUrl: 'https://carrottruck.s3.ap-northeast-2.amazonaws.com/%EB%8B%B9%EA%B7%BC%ED%8A%B8%EB%9F%AD%EB%A1%9C%EA%B3%A0.png',
@@ -71,20 +72,23 @@ function FoodTruckPage() {
     const menusData = response.data.data.menus;
     const menuCount = response.data.data.menuCount;
     const foodTruckData = response.data.data.foodTruck;
-  
+    const newPrepareTime = response.data.data.foodTruck.prepareTime;
+    const newOriginInfo = response.data.data.foodTruck.originInfo;
+    const newPhoneNumber = response.data.data.foodTruck.phoneNumber;
+    
     setFoodTruck(prevState => {
       // 메뉴 갯수가 0이면 메뉴를 비워주고, 아니면 새로운 메뉴 데이터로 업데이트
       if (menuCount === 0 ) {
         if(foodTruckData === null){
           return { ...prevState, menus: [] };
         }else{
-          return { ...prevState, menus: [], content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl}
+          return { ...prevState, menus: [], content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl, prepareTime: newPrepareTime, originInfo: newOriginInfo, phoneNumber: newPhoneNumber}
         }
       } else {
         if(foodTruckData === null){
           return { ...prevState, menus: menusData };
         }else{
-          return { ...prevState, menus: menusData, content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl}
+          return { ...prevState, menus: menusData, content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl, prepareTime: newPrepareTime, originInfo: newOriginInfo, phoneNumber: newPhoneNumber}
         }
       }
     });

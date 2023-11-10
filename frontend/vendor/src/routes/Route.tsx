@@ -9,6 +9,7 @@ import StatisticsListPage from 'pages/StatisticsListPage';
 import StatisticsPage from 'pages/StatisticsPage';
 import SurveyPage from 'pages/SurveyPage';
 import SchedulePage from 'pages/SchedulePage';
+import FoodTruckModifyPage from 'pages/FoodMenuDetailPage'
 // import FoodMenuDetailPage from 'pages/FoodMenuDetailPage'
 
 function RouteLink() {

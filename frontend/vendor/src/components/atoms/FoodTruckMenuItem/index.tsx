@@ -1,28 +1,34 @@
 // import React, { ReactNode, useEffect, useState } from 'react';
 // import { useLocation } from 'react-router-dom';
 import { FoodTruckMenuItemWrapper, MenuTextWrapper } from './style';
-import logo from '../../../assets/imgs/playstore.png';
+// import { useNavigate } from 'react-router-dom';
+// import logo from '../../../assets/imgs/playstore.png';
 
-// interface IFoodTruckMenuItemProps {
-//   img?: object;
-//   menuName: string;
-//   menuDiscription: string;
-//   menuPrice: number;
-// }
+// 메뉴 아이템 인터페이스를 정의.
+interface IFoodTruckMenuItemProps {
+  menuId: number;
+  menuName: string;
+  menuPrice: number;
+  menuDescription: string;
+  menuSoldOut: boolean;
+  menuImageUrl: string;
+}
 
-// function FoodTruckMenuItem(props: IFoodTruckMenuItemProps) {
-function FoodTruckMenuItem() {
-  // const { img, menuName, menuDiscription, menuPrice } = props;
-  const menuName = '달콤짭짤한 밥도둑 된장 삼겹 구이';
-  const menuDiscription = '동현 된장삼겹의 시그니쳐. 오직 된장 삽겹살 구이만!';
-  const menuPrice = 8900;
+function FoodTruckMenuItem(props: IFoodTruckMenuItemProps) {
+  const { menuName, menuDescription, menuPrice, menuImageUrl } = props;
+  // const navigate = useNavigate();
+
+  // const handleClick = () => {
+  //   // URL 템플릿에 맞게 동적으로 menuId 값을 삽입하여 이동
+  //   navigate(`/foodtruck/menu/${menuId}`);
+  // };
 
   return (
-    <FoodTruckMenuItemWrapper>
-      <img placeholder="이미지입니다." alt="~" src={logo}></img>
+    <FoodTruckMenuItemWrapper >
+      <img placeholder="이미지입니다." alt={`${menuName} 이미지`} src={menuImageUrl}></img>
       <MenuTextWrapper>
         <p>{menuName}</p>
-        <p>{menuDiscription}</p>
+        <p>{menuDescription}</p>
         <p>{menuPrice}원</p>
       </MenuTextWrapper>
     </FoodTruckMenuItemWrapper>

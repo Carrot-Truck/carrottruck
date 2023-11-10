@@ -1,8 +1,8 @@
 package com.boyworld.carrot.docs.sale;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -31,6 +31,9 @@ import com.boyworld.carrot.api.service.order.OrderService;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.api.service.sale.SaleService;
+import com.boyworld.carrot.api.service.sale.dto.AcceptOrderDto;
+import com.boyworld.carrot.api.service.sale.dto.DeclineOrderDto;
+import com.boyworld.carrot.api.service.sale.dto.OpenSaleDto;
 import com.boyworld.carrot.api.service.sale.dto.SaleMenuItem;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import com.boyworld.carrot.domain.order.Status;
@@ -61,6 +64,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
     void openSale() throws Exception {
 
         List<SaleMenuItem> saleMenuItems = new ArrayList<>();
+
         List<Long> menuOptionId = new ArrayList<>(Arrays.asList(1L, 2L, 3L));
         saleMenuItems.add(SaleMenuItem.builder()
             .menuId(1L)
@@ -80,7 +84,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .saleMenuItems(saleMenuItems)
             .build();
 
-        given(saleService.openSale(request.toOpenSaleDto()))
+        given(saleService.openSale(any(OpenSaleDto.class), anyString()))
             .willReturn(response);
 
         mockMvc.perform(
@@ -143,19 +147,22 @@ public class SaleControllerDocsTest extends RestDocsSupport {
         List<Long> menuOptionIdList2 = new ArrayList<>(Arrays.asList(1L, 3L));
         List<Long> menuOptionIdList3 = new ArrayList<>(Arrays.asList(1L, 2L));
         orderMenuItems1.add(OrderMenuItem.builder()
+            .id(1L)
             .menuId(1L)
             .quantity(1)
-            .menuOptionIdList(menuOptionIdList1)
+            .menuOptionList(menuOptionIdList1)
             .build());
         orderMenuItems1.add(OrderMenuItem.builder()
+            .id(2L)
             .menuId(2L)
             .quantity(2)
-            .menuOptionIdList(menuOptionIdList2)
+            .menuOptionList(menuOptionIdList2)
             .build());
         orderMenuItems2.add(OrderMenuItem.builder()
+            .id(3L)
             .menuId(2L)
             .quantity(1)
-            .menuOptionIdList(menuOptionIdList3)
+            .menuOptionList(menuOptionIdList3)
             .build());
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -237,11 +244,13 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                             .description("주문 완료 (예상) 시각"),
                         fieldWithPath("data.orderItems[].orderMenuItems").type(JsonFieldType.ARRAY)
                             .description("주문 메뉴 리스트"),
+                        fieldWithPath("data.orderItems[].orderMenuItems[].id").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 식별키"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
-                            .description("주문 메뉴 ID"),
+                            .description("주문한 메뉴 ID"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
                             .description("주문 수량"),
-                        fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                        fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionList").type(JsonFieldType.ARRAY)
                             .description("메뉴 옵션 ID 리스트")
                     )
                 )
@@ -258,20 +267,24 @@ public class SaleControllerDocsTest extends RestDocsSupport {
         List<Long> menuOptionIdList1 = new ArrayList<>(Arrays.asList(2L, 4L));
         List<Long> menuOptionIdList2 = new ArrayList<>(Arrays.asList(1L, 3L));
         List<Long> menuOptionIdList3 = new ArrayList<>(Arrays.asList(1L, 2L));
+
         orderMenuItems1.add(OrderMenuItem.builder()
+            .id(1L)
             .menuId(1L)
             .quantity(1)
-            .menuOptionIdList(menuOptionIdList1)
+            .menuOptionList(menuOptionIdList1)
             .build());
         orderMenuItems1.add(OrderMenuItem.builder()
+            .id(2L)
             .menuId(2L)
             .quantity(2)
-            .menuOptionIdList(menuOptionIdList2)
+            .menuOptionList(menuOptionIdList2)
             .build());
         orderMenuItems2.add(OrderMenuItem.builder()
+            .id(3L)
             .menuId(2L)
             .quantity(1)
-            .menuOptionIdList(menuOptionIdList3)
+            .menuOptionList(menuOptionIdList3)
             .build());
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -365,11 +378,13 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                             .description("주문 완료 시각"),
                         fieldWithPath("data.orderItems[].orderMenuItems").type(JsonFieldType.ARRAY)
                             .description("주문 메뉴 리스트"),
+                        fieldWithPath("data.orderItems[].orderMenuItems[].id").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 식별키"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
-                            .description("주문 메뉴 ID"),
+                            .description("주문한 메뉴 ID"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
                             .description("주문 수량"),
-                        fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                        fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionList").type(JsonFieldType.ARRAY)
                             .description("메뉴 옵션 ID 리스트")
                     )
                 )
@@ -386,7 +401,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .prepareTime(30)
             .build();
 
-        given(saleService.acceptOrder(eq(request.toAcceptOrderDto()), anyString()))
+        given(saleService.acceptOrder(any(AcceptOrderDto.class), anyString()))
             .willReturn(1L);
 
         mockMvc.perform(
@@ -429,7 +444,7 @@ public class SaleControllerDocsTest extends RestDocsSupport {
             .reason("개인 사정")
             .build();
 
-        given(saleService.declineOrder(eq(request.toDeclineOrderDto()), anyString()))
+        given(saleService.declineOrder(any(DeclineOrderDto.class), anyString()))
             .willReturn(2L);
 
         mockMvc.perform(

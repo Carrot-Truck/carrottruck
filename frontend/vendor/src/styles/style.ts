@@ -1,4 +1,4 @@
-import { css } from 'styled-components';
+import { css } from "styled-components";
 
 // SearchBar
 export const SearchBarSizeStyles = {
@@ -10,7 +10,7 @@ export const SearchBarSizeStyles = {
   `,
   full: css`
     width: 100%;
-  `
+  `,
 };
 
 // SearchBar
@@ -57,7 +57,7 @@ export const SearchBarColorStyles = {
       border: 1px solid var(--sub-color-2);
       background-color: var(--sub-color-2);
     }
-  `
+  `,
 };
 
 // Button
@@ -81,7 +81,7 @@ export const ButtonSizeStyles = {
   big: css`
     width: 70%;
     height: 210px;
-  `
+  `,
 };
 
 export const ButtonColorStyles = {
@@ -108,7 +108,7 @@ export const ButtonColorStyles = {
   Success: css`
     background-color: var(--success-color);
     color: var(--white-color);
-  `
+  `,
 };
 
 export const ButtonRadiusStyles = {
@@ -120,7 +120,7 @@ export const ButtonRadiusStyles = {
   `,
   l: css`
     border-radius: var(--radius-l);
-  `
+  `,
 };
 
 // CheckTextButton
@@ -148,5 +148,33 @@ export const CheckTextButtonStyles = {
       width: 32px;
       height: 32px;
     }
-  `
+  `,
+};
+
+// ButtonOutline
+export const ButtonOutlineColorStyles = {
+  Normal: css`
+    border: 1px solid var(--gray-100);
+    color: var(--gray-500);
+  `,
+  Primary: css`
+    border: 1px solid var(--main-color);
+    color: var(--black-color);
+  `,
+  SubFirst: css`
+    border: 1px solid var(--sub-color-1);
+    color: var(--black-color);
+  `,
+  SubSecond: css`
+    border: 1px solid var(--sub-color-2);
+    color: var(--black-color);
+  `,
+  Danger: css`
+    border: 1px solid var(--danger-color);
+    color: var(--black-color);
+  `,
+  Success: css`
+    border: 1px solid var(--success-color);
+    color: var(--black-color);
+  `,
 };

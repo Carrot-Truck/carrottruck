@@ -1,7 +1,6 @@
 package com.boyworld.carrot.domain.cart;
 
 
-import com.boyworld.carrot.domain.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,9 +38,20 @@ public class Cart {
 
 
 
-    public void updateCartTotalPrice(Integer menuPrice) {
+    public void incrementCartTotalPrice(Integer menuPrice) {
         this.totalPrice += menuPrice;
     }
+
+    public void decrementCartTotalPrice(Integer menuPrice) {
+        this.totalPrice -= menuPrice;
+    }
+    public void addCartMenuIds(String cartMenuId) {
+        this.cartMenuIds.add(cartMenuId);
+    }
+    public void removeCartMenuIds(String cartMenuId) {
+        this.cartMenuIds.remove(cartMenuId);
+    }
+
 }
 
 

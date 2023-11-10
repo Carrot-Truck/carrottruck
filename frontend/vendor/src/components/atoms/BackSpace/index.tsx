@@ -1,12 +1,14 @@
 // import React from 'react';
 import { BackSpaceWrapper } from './style';
 import back from '../../../assets/icons/keyboard-backspace.svg';
-import useMovePage from 'hooks/useMovePage';
+// import useMovePage from 'hooks/useMovePage';
+import { useNavigate } from 'react-router-dom';
 
 function BackSpace() {
-  const [movePage] = useMovePage();
+  // const [movePage] = useMovePage();
+  const navigate = useNavigate();
   const handleBackClick = () => {
-    movePage('/');
+    navigate(-1);
   };
 
   return (

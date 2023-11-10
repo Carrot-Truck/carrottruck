@@ -1,15 +1,28 @@
-// import React, { ReactNode, useEffect, useState } from 'react';
+// import React from 'react';
 // import { useLocation } from 'react-router-dom';
 import { FoodTruckMenuContainer } from './style';
 import FoodTruckMenuItem from '../../atoms/FoodTruckMenuItem';
 
-// interface IFoodTruckMenuProps {}
+// 메뉴 아이템 인터페이스를 정의합니다.
+interface Menu {
+  menuId: number;
+  menuName: string;
+  menuPrice: number;
+  menuDescription: string;
+  menuSoldOut: boolean;
+  menuImageUrl: string;
+}
 
-// function FoodTruckMenu(props: IFoodTruckMenuProps) {
-function FoodTruckMenu() {
+interface IFoodTruckMenuProps {
+  menus: Menu[]; // menus 프로퍼티의 타입을 Menu[]로 정의
+}
+
+function FoodTruckMenu({ menus }: IFoodTruckMenuProps) {
   return (
     <FoodTruckMenuContainer>
-      <FoodTruckMenuItem></FoodTruckMenuItem>
+      {menus.map((menu) => (
+        <FoodTruckMenuItem key={menu.menuId} {...menu} />
+      ))}
     </FoodTruckMenuContainer>
   );
 }

@@ -1,8 +1,8 @@
 package com.boyworld.carrot.docs.order;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -26,6 +26,7 @@ import com.boyworld.carrot.api.controller.order.request.CreateOrderRequest;
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
+import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.docs.RestDocsSupport;
@@ -58,22 +59,26 @@ public class OrderControllerDocsTest extends RestDocsSupport {
         List<OrderMenuItem> orderMenuItems1 = new ArrayList<>();
         List<OrderMenuItem> orderMenuItems2 = new ArrayList<>();
         List<Long> menuOptionIdList1 = new ArrayList<>(Arrays.asList(2L, 4L));
-        List<Long> menuOptionIdList2 = new ArrayList<>(Arrays.asList(1L, 3L));
-        List<Long> menuOptionIdList3 = new ArrayList<>(Arrays.asList(1L, 2L));
+        List<Long> menuOptionIdList2 = new ArrayList<>(Arrays.asList(1L, 2L));
+        List<Long> menuOptionIdList3 = new ArrayList<>(Arrays.asList(2L, 3L));
+
         orderMenuItems1.add(OrderMenuItem.builder()
+            .id(1L)
             .menuId(1L)
             .quantity(1)
-            .menuOptionIdList(menuOptionIdList1)
+            .menuOptionList(menuOptionIdList1)
             .build());
         orderMenuItems1.add(OrderMenuItem.builder()
-            .menuId(2L)
-            .quantity(2)
-            .menuOptionIdList(menuOptionIdList2)
-            .build());
-        orderMenuItems2.add(OrderMenuItem.builder()
+            .id(2L)
             .menuId(2L)
             .quantity(1)
-            .menuOptionIdList(menuOptionIdList3)
+            .menuOptionList(menuOptionIdList2)
+            .build());
+        orderMenuItems2.add(OrderMenuItem.builder()
+            .id(3L)
+            .menuId(2L)
+            .quantity(1)
+            .menuOptionList(menuOptionIdList3)
             .build());
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -94,7 +99,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
             .totalPrice(15000)
             .createdTime(LocalDateTime.of(2023, 11, 1, 17, 35))
             .expectTime(LocalDateTime.of(2023, 11, 1, 18, 5))
-                .orderMenuItems(orderMenuItems2)
+            .orderMenuItems(orderMenuItems2)
             .build()
         );
         OrdersResponse response = OrdersResponse.builder()
@@ -143,13 +148,16 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                             .description("주문 완료 예상 시각"),
                         fieldWithPath("data.orderItems[].orderMenuItems").type(JsonFieldType.ARRAY)
                             .description("주문 메뉴 리스트"),
+                        fieldWithPath("data.orderItems[].orderMenuItems[].id").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 식별키"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
-                            .description("주문 메뉴 ID"),
+                            .description("주문한 메뉴 ID"),
                         fieldWithPath("data.orderItems[].orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
                             .description("주문 수량"),
-                        fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                        fieldWithPath("data.orderItems[].orderMenuItems[].menuOptionList").type(JsonFieldType.ARRAY)
                             .description("메뉴 옵션 ID 리스트")
                     )
+
                 )
             );
     }
@@ -160,17 +168,23 @@ public class OrderControllerDocsTest extends RestDocsSupport {
     void getOrderByClient() throws Exception {
 
         List<OrderMenuItem> orderMenuItems = new ArrayList<>();
+        List<Long> orderMenuOptionList1 = new ArrayList<>(Arrays.asList(1L, 2L, 3L));
+        List<Long> orderMenuOptionList2 = new ArrayList<>(Arrays.asList(2L, 4L));
+
+
 
         orderMenuItems.add(OrderMenuItem.builder()
+            .id(1L)
             .menuId(1L)
             .quantity(1)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+            .menuOptionList(orderMenuOptionList1)
             .build());
 
         orderMenuItems.add(OrderMenuItem.builder()
+            .id(2L)
             .menuId(2L)
             .quantity(2)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 4L)))
+            .menuOptionList(orderMenuOptionList2)
             .build());
 
         OrderResponse response = OrderResponse.builder()
@@ -184,7 +198,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                 .orderMenuItems(orderMenuItems)
                 .build()).build();
 
-        given(orderService.getOrder(anyLong(), anyString(), eq(Role.CLIENT)))
+        given(orderService.getOrder(anyLong(), anyString(), any(Role.class)))
             .willReturn(response);
 
         Long orderId = 1L;
@@ -232,11 +246,13 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                             .description("주문 완료 예상 시각"),
                         fieldWithPath("data.orderItem.orderMenuItems").type(JsonFieldType.ARRAY)
                             .description("주문 메뉴 리스트"),
+                        fieldWithPath("data.orderItem.orderMenuItems[].id").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 식별키"),
                         fieldWithPath("data.orderItem.orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
-                            .description("주문 메뉴 ID"),
+                            .description("주문한 메뉴 ID"),
                         fieldWithPath("data.orderItem.orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
                             .description("주문 수량"),
-                        fieldWithPath("data.orderItem.orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                        fieldWithPath("data.orderItem.orderMenuItems[].menuOptionList").type(JsonFieldType.ARRAY)
                             .description("메뉴 옵션 ID 리스트")
                     )
                 )
@@ -249,17 +265,21 @@ public class OrderControllerDocsTest extends RestDocsSupport {
     void getOrderByVendor() throws Exception {
 
         List<OrderMenuItem> orderMenuItems = new ArrayList<>();
+        List<Long> orderMenuOptionList1 = new ArrayList<>(Arrays.asList(1L, 2L, 3L));
+        List<Long> orderMenuOptionList2 = new ArrayList<>(Arrays.asList(2L, 4L));
 
         orderMenuItems.add(OrderMenuItem.builder()
+            .id(1L)
             .menuId(1L)
             .quantity(1)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+            .menuOptionList(orderMenuOptionList1)
             .build());
 
         orderMenuItems.add(OrderMenuItem.builder()
+            .id(2L)
             .menuId(2L)
             .quantity(2)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 4L)))
+            .menuOptionList(orderMenuOptionList2)
             .build());
 
         OrderResponse response = OrderResponse.builder()
@@ -276,7 +296,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                 .orderMenuItems(orderMenuItems)
                 .build()).build();
 
-        given(orderService.getOrder(anyLong(), anyString(), eq(Role.VENDOR)))
+        given(orderService.getOrder(anyLong(), anyString(), any(Role.class)))
             .willReturn(response);
 
         Long orderId = 1L;
@@ -324,11 +344,13 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                             .description("주문 완료 예상 시각"),
                         fieldWithPath("data.orderItem.orderMenuItems").type(JsonFieldType.ARRAY)
                             .description("주문 메뉴 리스트"),
+                        fieldWithPath("data.orderItem.orderMenuItems[].id").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 식별키"),
                         fieldWithPath("data.orderItem.orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
-                            .description("주문 메뉴 ID"),
+                            .description("주문한 메뉴 ID"),
                         fieldWithPath("data.orderItem.orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
                             .description("주문 수량"),
-                        fieldWithPath("data.orderItem.orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                        fieldWithPath("data.orderItem.orderMenuItems[].menuOptionList").type(JsonFieldType.ARRAY)
                             .description("메뉴 옵션 ID 리스트")
                     )
                 )
@@ -341,17 +363,21 @@ public class OrderControllerDocsTest extends RestDocsSupport {
     void createOrder() throws Exception {
 
         List<OrderMenuItem> orderMenuItems = new ArrayList<>();
+        List<Long> orderMenuOptionList1 = new ArrayList<>(Arrays.asList(1L, 2L, 3L));
+        List<Long> orderMenuOptionList2 = new ArrayList<>(Arrays.asList(2L, 4L));
 
         orderMenuItems.add(OrderMenuItem.builder()
+            .id(1L)
             .menuId(1L)
             .quantity(1)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(1L, 2L, 3L)))
+            .menuOptionList(orderMenuOptionList1)
             .build());
 
         orderMenuItems.add(OrderMenuItem.builder()
+            .id(2L)
             .menuId(2L)
             .quantity(2)
-            .menuOptionIdList(new ArrayList<>(Arrays.asList(2L, 4L)))
+            .menuOptionList(orderMenuOptionList2)
             .build());
 
         CreateOrderRequest request = CreateOrderRequest.builder()
@@ -360,7 +386,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
             .orderMenuItems(orderMenuItems)
             .build();
 
-        given(orderService.createOrder(eq(request.toCreateOrderDto()), anyString()))
+        given(orderService.createOrder(anyString()))
             .willReturn(1L);
 
         mockMvc.perform(
@@ -381,11 +407,13 @@ public class OrderControllerDocsTest extends RestDocsSupport {
                             .description("주문 총액"),
                         fieldWithPath("orderMenuItems").type(JsonFieldType.ARRAY)
                             .description("주문할 메뉴 리스트"),
+                        fieldWithPath("orderMenuItems[].id").type(JsonFieldType.NUMBER)
+                            .description("주문 메뉴 식별키"),
                         fieldWithPath("orderMenuItems[].menuId").type(JsonFieldType.NUMBER)
-                            .description("주문 메뉴 ID"),
+                            .description("주문한 메뉴 ID"),
                         fieldWithPath("orderMenuItems[].quantity").type(JsonFieldType.NUMBER)
                             .description("주문 수량"),
-                        fieldWithPath("orderMenuItems[].menuOptionIdList").type(JsonFieldType.ARRAY)
+                        fieldWithPath("orderMenuItems[].menuOptionList").type(JsonFieldType.ARRAY)
                             .description("메뉴 옵션 ID 리스트")
                     ),
                     responseFields(
@@ -407,7 +435,7 @@ public class OrderControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = "CLIENT")
     void cancelOrder() throws Exception {
 
-        given(orderService.cancelOrder(eq(1L), anyString()))
+        given(orderService.cancelOrder(anyLong(), anyString()))
             .willReturn(1L);
 
         Long orderId = 1L;

@@ -14,6 +14,12 @@ export const FoodTruckLayout = styled.div`
       font-size: 2rem;
       justify-content: center;
     }
+
+    span {
+      font-family: BMJUA;
+      font-size: 2rem;
+      text-align: center;
+    }
   }
 
   .headerImage {

@@ -9,10 +9,11 @@ interface IInputProps<T> {
   setValue: Dispatch<SetStateAction<T>>;
   Icon?: ReactNode;
   disabled?: boolean;
+  onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 function Input<T>(props: IInputProps<T>) {
-  const { type, placeholder, value, setValue, Icon, disabled } = props;
+  const { type, placeholder, value, setValue, Icon, disabled, onKeyPress } = props;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value as SetStateAction<T>);
@@ -27,6 +28,7 @@ function Input<T>(props: IInputProps<T>) {
         value={value as string}
         onChange={handleChange}
         disabled={disabled}
+        onKeyPress={onKeyPress}
       />
     </InputWrapper>
   );

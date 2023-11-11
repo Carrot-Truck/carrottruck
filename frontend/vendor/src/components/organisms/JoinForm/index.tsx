@@ -134,7 +134,9 @@ function JoinForm() {
           }
           return;
         } catch (error) {
+          alert('회원가입 중 문제가 발생하였습니다. \n관리자에게 문의하세요.');
           console.error('Error during registration', error);
+          navigate('/');
         }
       } else{
         alert('비밀번호는 8~16자이고, 특수문자 1개를 포함해야 합니다.');

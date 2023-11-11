@@ -4,11 +4,22 @@ import Loading from "components/atoms/Loading";
 import { getSurveyCount, getSurveyDetails } from "api/survey";
 import { AxiosResponse } from "axios";
 import SurveyListItem from "components/atoms/SurveyListItem";
+import NothingHere from "components/atoms/NothingHere";
+import SurveyDetailsItem from "components/atoms/SurveyDetailsItem";
+
+interface ISurveyDetailsItem {
+  surveyId: number;
+  nickname: string;
+  content: string;
+  createdTime: string;
+}
 
 interface ISurveyListProps {
   sido: string;
   sigungu: string;
   dong: string;
+  categoryId: number | null;
+  setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 interface ISurveyItem {
@@ -21,9 +32,10 @@ const getData = (response: AxiosResponse) => {
   return response.data.data;
 };
 
-function SurveyList({ sido, sigungu, dong }: ISurveyListProps) {
+function SurveyList({ sido, sigungu, dong, categoryId, setCategoryId }: ISurveyListProps) {
   const [loading, setLoading] = useState<Boolean>(true);
   const [surveyItemList, setSurveyItemList] = useState<ISurveyItem[]>([]);
+  const [surveyDetails, setSurveyDetails] = useState<ISurveyDetailsItem[]>([]);
 
   const fetchData = async () => {
     getSurveyCount(
@@ -34,14 +46,13 @@ function SurveyList({ sido, sigungu, dong }: ISurveyListProps) {
       },
       (response: AxiosResponse) => {
         const data = getData(response);
-        setSurveyItemList(data);
-        console.log("SurveyList", data);
+        setSurveyItemList(data["surveyCounts"]);
+        setLoading(false);
       },
       (error: any) => {
         console.log(error);
       }
     );
-    setLoading(false);
   };
 
   const handleSurveyItemClick = (categoryId: number) => {
@@ -53,12 +64,15 @@ function SurveyList({ sido, sigungu, dong }: ISurveyListProps) {
         dong: dong,
       },
       (response: AxiosResponse) => {
-        console.log(response);
+        const data = getData(response);
+        setCategoryId(categoryId);
+        setSurveyDetails(data["surveyDetails"]);
       },
       (error: any) => {
         console.log(error);
       }
     );
+  };
 
   useEffect(() => {
     fetchData();
@@ -74,11 +88,25 @@ function SurveyList({ sido, sigungu, dong }: ISurveyListProps) {
     <SurveyListContainer>
       {loading ? (
         <Loading />
+      ) : surveyItemList === undefined || surveyItemList.length == 0 ? (
+        <NothingHere />
+      ) : surveyDetails.length !== 0 && categoryId !== null ? (
+        surveyDetails.map((data: ISurveyDetailsItem, index: number) => (
+          <SurveyDetailsItem
+            key={index}
+            nickname={data.nickname}
+            content={data.content}
+            createdDate={data.createdTime}
+          />
+        ))
       ) : (
-        surveyItemList.map((data: ISurveyItem) => (
+        surveyItemList.map((data: ISurveyItem, index: number) => (
           <SurveyListItem
+            key={index}
             categoryName={data.categoryName}
-            surveyCount={data.surveyCount} handleSurveyItemClick={handleSurveyItemClick}          />
+            surveyCount={data.surveyCount}
+            handleSurveyItemClick={() => handleSurveyItemClick(data.categoryId)}
+          />
         ))
       )}
     </SurveyListContainer>

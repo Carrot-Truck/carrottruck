@@ -8,6 +8,8 @@ export const UnselectWrapperWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
 
   :hover {
     cursor: pointer;

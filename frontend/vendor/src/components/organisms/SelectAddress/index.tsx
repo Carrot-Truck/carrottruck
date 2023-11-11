@@ -4,13 +4,15 @@ import { getDong, getSigungu, getSido } from "api/address";
 import Loading from "components/atoms/Loading";
 import { AxiosResponse } from "axios";
 import ButtonOutline from "components/atoms/ButtonOutline";
-import UnselectAddress from "components/atoms/UnselectAddress";
+import TitleText from "components/atoms/TitleText";
 
 interface ISelectAddressProps {
   sidoId: number | null;
   setSidoId: React.Dispatch<React.SetStateAction<number | null>>;
   sigunguId: number | null;
   setSigunguId: React.Dispatch<React.SetStateAction<number | null>>;
+  dongId: number | null;
+  setDongId: React.Dispatch<React.SetStateAction<number | null>>;
   setSidoName: React.Dispatch<React.SetStateAction<string>>;
   setSigunguName: React.Dispatch<React.SetStateAction<string>>;
   setDongName: React.Dispatch<React.SetStateAction<string>>;
@@ -30,6 +32,8 @@ function SelectAddress({
   setSidoId,
   sigunguId,
   setSigunguId,
+  dongId,
+  setDongId,
   setSidoName,
   setSigunguName,
   setDongName,
@@ -82,43 +86,37 @@ function SelectAddress({
     setAddressNames([]);
     setLoading(true);
     fetchData();
-  }, [sidoId, sigunguId]);
+  }, [sidoId, sigunguId, dongId]);
 
   return (
     <SelectAddressContainer>
-      {sidoId && (
-        <UnselectAddress
-          sidoId={sidoId}
-          setSidoId={setSidoId}
-          sigunguId={sigunguId}
-          setSigunguId={setSigunguId}
-          setSidoName={setSidoName}
-          setSigunguName={setSigunguName}
-        />
-      )}
       {loading ? (
         <Loading />
       ) : (
-        addressNames.map((data: AddressItem) => (
-          <ButtonOutline
-            key={data.id}
-            size="s"
-            radius="s"
-            color="Primary"
-            text={data.name}
-            handleClick={() => {
-              if (!sidoId) {
-                setSidoId(data.id);
-                setSidoName(data.name);
-              } else if (!sigunguId) {
-                setSigunguId(data.id);
-                setSigunguName(data.name);
-              } else {
-                setDongName(data.name);
-              }
-            }}
-          />
-        ))
+        <>
+          <TitleText text="지역선택" size="m" />
+          {addressNames.map((data: AddressItem) => (
+            <ButtonOutline
+              key={data.id}
+              size="s"
+              radius="s"
+              color="Primary"
+              text={data.name}
+              handleClick={() => {
+                if (!sidoId) {
+                  setSidoId(data.id);
+                  setSidoName(data.name);
+                } else if (!sigunguId) {
+                  setSigunguId(data.id);
+                  setSigunguName(data.name);
+                } else {
+                  setDongId(data.id);
+                  setDongName(data.name);
+                }
+              }}
+            />
+          ))}
+        </>
       )}
     </SelectAddressContainer>
   );

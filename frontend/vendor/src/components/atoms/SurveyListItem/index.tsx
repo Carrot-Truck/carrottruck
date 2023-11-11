@@ -1,4 +1,4 @@
-import { SurveyItemItemWrapper } from "./style";
+import { SurveyListItemWrapper } from "./style";
 
 interface ISurveyListItemProps {
   categoryName: string;
@@ -12,10 +12,12 @@ function SurveyListItem({
   handleSurveyItemClick,
 }: ISurveyListItemProps) {
   return (
-    <SurveyItemItemWrapper onClick={handleSurveyItemClick}>
-      <div>{categoryName}</div>
-      <div>{surveyCount}</div>
-    </SurveyItemItemWrapper>
+    <SurveyListItemWrapper onClick={handleSurveyItemClick}>
+      <div>
+        <div>{categoryName}</div>
+        <div>{surveyCount}</div>
+      </div>
+    </SurveyListItemWrapper>
   );
 }
 

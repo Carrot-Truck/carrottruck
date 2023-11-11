@@ -6,8 +6,10 @@ interface IUnselectAddressProps {
   setSidoId: React.Dispatch<React.SetStateAction<number | null>>;
   sigunguId: number | null;
   setSigunguId: React.Dispatch<React.SetStateAction<number | null>>;
-  setSidoName: React.Dispatch<React.SetStateAction<string>>;
-  setSigunguName: React.Dispatch<React.SetStateAction<string>>;
+  dongId: number | null;
+  setDongId: React.Dispatch<React.SetStateAction<number | null>>;
+  categoryId: number | null;
+  setCategoryId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 function UnselectAddress({
@@ -15,22 +17,26 @@ function UnselectAddress({
   setSidoId,
   sigunguId,
   setSigunguId,
-  setSidoName,
-  setSigunguName,
+  dongId,
+  setDongId,
+  categoryId,
+  setCategoryId,
 }: IUnselectAddressProps) {
   const handleUnselectClick = () => {
-    if (sigunguId != null) {
+    if (categoryId != null) {
+      setCategoryId(null);
+    } else if (dongId != null) {
+      setDongId(null);
+    } else if (sigunguId != null) {
       setSigunguId(null);
-      setSidoName("");
     } else if (sidoId != null) {
       setSidoId(null);
-      setSigunguName("");
     }
   };
 
   return (
     <UnselectWrapperWrapper onClick={handleUnselectClick}>
-      <img src={back} alt="" />
+      {sidoId && <img src={back} alt="" />}
     </UnselectWrapperWrapper>
   );
 }

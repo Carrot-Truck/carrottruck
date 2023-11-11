@@ -1,3 +1,10 @@
 import styled from "styled-components";
 
-export const SurveyItemItemWrapper = styled.div``;
+export const SurveyListItemWrapper = styled.div`
+  width: 100%;
+
+  :hover {
+    cursor: pointer;
+    background-color: var(--gray-200);
+  }
+`;

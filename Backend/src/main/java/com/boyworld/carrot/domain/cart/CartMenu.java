@@ -46,8 +46,8 @@ public class CartMenu {
         this.cartMenuOptionIds = cartMenuOptionIds;
     }
 
-    public void incrementCartMenuQuantity() {
-        this.quantity += 1;
+    public void incrementCartMenuQuantity(Integer quantity) {
+        this.quantity += quantity;
     }
 
     public void decrementCartMenuQuantity() {

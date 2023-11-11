@@ -57,6 +57,8 @@ public class CartService {
 
         Menu menu = getMenuById(createCartMenuDto.getMenuId());
 
+        Integer cartMenuTotalPrice = getCartMenuTotalPrice(createCartMenuDto);
+
         if (checkFieldKey(CART.getText(), email)) {
             // 회원 카트가 존재하는 경우
             log.debug("사용자의 회원 카트가 존재합니다: {}", email);
@@ -74,16 +76,16 @@ public class CartService {
                     CartMenu cartMenu = getCartMenu((sameMenuId));
 
                     log.debug("before cartTotalPrice: {}, before cartMenuQuantity: {}", cart.getTotalPrice(), cartMenu.getQuantity());
-                    cart.incrementCartTotalPrice(createCartMenuDto.getCartMenuTotalPrice());
-                    cartMenu.incrementCartMenuQuantity();
+                    cart.incrementCartTotalPrice(cartMenuTotalPrice);
+                    cartMenu.incrementCartMenuQuantity(createCartMenuDto.getCartMenuQuantity());
                     log.debug("after cartTotalPrice: {}, after cartMenuQuantity: {}", cart.getTotalPrice(), cartMenu.getQuantity());
 
                     saveCart(email, cart);
                     saveCartMenu(sameMenuId, cartMenu);
                 }
                 else {
-                    String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email, menu);
-                    saveUpdateCart(createCartMenuDto, cartMenuId, cart, email);
+                    String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email, menu, cartMenuTotalPrice);
+                    saveUpdateCart(createCartMenuDto, cartMenuId, cart, email, cartMenuTotalPrice);
                 }
 
                 log.debug("장바구니에 메뉴가 추가되었습니다: {}", email);
@@ -105,15 +107,15 @@ public class CartService {
                     deleteCartMenu(cartMenuPk);
                     log.debug("카트메뉴를 삭제했습니다: {}", cartMenuPk);
                 }
-                String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email, menu);
-                saveNewCart(createCartMenuDto, cartMenuId, email, foodTruck);
+                String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email, menu, cartMenuTotalPrice);
+                saveNewCart(createCartMenuDto, cartMenuId, email, foodTruck, cartMenuTotalPrice);
                 log.debug("장바구니에 메뉴가 추가되었습니다: {}", email);
             }
         } else {
             // 회원 카트가 존재하지 않으면 카트 추가, 메뉴 추가, 메뉴 옵션 추가
             log.debug("사용자의 장바구니는 비어있습니다: {}", email);
-            String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email, menu);
-            saveNewCart(createCartMenuDto, cartMenuId, email, foodTruck);
+            String cartMenuId = saveCartMenuAndMenuOption(createCartMenuDto, email, menu, cartMenuTotalPrice);
+            saveNewCart(createCartMenuDto, cartMenuId, email, foodTruck, cartMenuTotalPrice);
             log.debug("장바구니에 메뉴가 추가되었습니다: {}", email);
         }
 
@@ -144,7 +146,7 @@ public class CartService {
         CartMenu cartMenu = getCartMenu(cartMenuId);
         log.debug("increment before cartTotalPrice: {}, before cartMenuQuantity: {}", cart.getTotalPrice(), cartMenu.getQuantity());
         cart.incrementCartTotalPrice(cartMenu.getCartMenuTotalPrice());
-        cartMenu.incrementCartMenuQuantity();
+        cartMenu.incrementCartMenuQuantity(1);
         log.debug("increment after cartTotalPrice: {}, after cartMenuQuantity: {}", cart.getTotalPrice(), cartMenu.getQuantity());
         saveCart(email, cart);
         saveCartMenu(cartMenuId, cartMenu);
@@ -256,15 +258,36 @@ public class CartService {
                 CartMenuOption cartMenuOption = getCartMenuOption(cartMenuOptionId);
                 menuOptionIdList.add(cartMenuOption.getMenuOptionId());
             }
+
+            List<Long> menuOptionIds = new ArrayList<>();
+            if (createCartMenuDto.getMenuOptionIds() != null) {
+                menuOptionIds = createCartMenuDto.getMenuOptionIds();
+            }
+
             if(createCartMenuDto.getMenuId().equals(cartMenu.getMenuId()) &&
-                    Arrays.equals(createCartMenuDto.getMenuOptionIds().toArray(), menuOptionIdList.toArray())) {
+                    Arrays.equals(menuOptionIds.toArray(), menuOptionIdList.toArray())) {
                 log.debug("장바구니에 같은 메뉴가 담겨있습니다: {}", cartMenu.getMenuId());
                 return cartMenuId;
             }
         }
         return null;
     }
-    public String saveCartMenuAndMenuOption(CreateCartMenuDto createCartMenuDto, String email, Menu menu) {
+
+    public Integer getCartMenuTotalPrice(CreateCartMenuDto createCartMenuDto) {
+        Integer cartMenuTotalPrice = 0;
+
+        List<Long> menuOptionIds = new ArrayList<>();
+        if (createCartMenuDto.getMenuOptionIds() != null) {
+            menuOptionIds = createCartMenuDto.getMenuOptionIds();
+        }
+
+        for (Long menuOptionId : menuOptionIds) {
+            cartMenuTotalPrice += getMenuOptionById(menuOptionId).getMenuInfo().getPrice();
+        }
+        cartMenuTotalPrice += getMenuById(createCartMenuDto.getMenuId()).getMenuInfo().getPrice();
+        return cartMenuTotalPrice;
+    }
+    public String saveCartMenuAndMenuOption(CreateCartMenuDto createCartMenuDto, String email, Menu menu, Integer cartMenuTotalPrice) {
 
         RedisAtomicLong cartMenuIndex = new RedisAtomicLong("cartMenuId", redisTemplate.getConnectionFactory());
         String cartMenuId = String.valueOf(cartMenuIndex.incrementAndGet());
@@ -307,7 +330,7 @@ public class CartService {
                 .menuId(createCartMenuDto.getMenuId())
                 .name(menu.getMenuInfo().getName())
                 .price(menu.getMenuInfo().getPrice())
-                .cartMenuTotalPrice(createCartMenuDto.getCartMenuTotalPrice())
+                .cartMenuTotalPrice(cartMenuTotalPrice)
                 .quantity(createCartMenuDto.getCartMenuQuantity())
                 .menuImageUrl(image)
                 .cartMenuOptionIds(cartMenuOptionIds)
@@ -318,22 +341,22 @@ public class CartService {
         return cartMenuId;
     }
 
-    public void saveNewCart(CreateCartMenuDto createCartMenuDto, String cartMenuId, String email, FoodTruck foodTruck) {
+    public void saveNewCart(CreateCartMenuDto createCartMenuDto, String cartMenuId, String email, FoodTruck foodTruck, Integer cartMenuTotalPrice) {
         Cart cart = Cart.builder()
                 .id(email)
                 .foodTruckId(createCartMenuDto.getFoodTruckId())
                 .foodTruckName(foodTruck.getName())
-                .totalPrice(createCartMenuDto.getCartMenuTotalPrice()*createCartMenuDto.getCartMenuQuantity())
+                .totalPrice(cartMenuTotalPrice*createCartMenuDto.getCartMenuQuantity())
                 .cartMenuIds(Arrays.asList(cartMenuId))
                 .build();
         saveCart(email, cart);
         log.debug("새 장바구니에 메뉴를 추가합니다: {}", cartMenuId);
     }
 
-    public void saveUpdateCart(CreateCartMenuDto createCartMenuDto, String CartMemberId, Cart cart, String email) {
+    public void saveUpdateCart(CreateCartMenuDto createCartMenuDto, String CartMemberId, Cart cart, String email, Integer cartMenuTotalPrice) {
 
         log.debug("before cartTotalPrice: {}, before cartMenuIds: {}", cart.getTotalPrice(), cart.getCartMenuIds().toString());
-        cart.incrementCartTotalPrice(createCartMenuDto.getCartMenuTotalPrice());
+        cart.incrementCartTotalPrice(cartMenuTotalPrice);
         cart.addCartMenuIds(CartMemberId);
         log.debug("after cartTotalPrice: {}, after cartMenuIds: {}", cart.getTotalPrice(), cart.getCartMenuIds().toString());
         saveCart(email, cart);

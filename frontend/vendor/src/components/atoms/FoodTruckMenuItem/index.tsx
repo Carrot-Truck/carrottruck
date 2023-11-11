@@ -1,12 +1,8 @@
-// import React, { ReactNode, useEffect, useState } from 'react';
-// import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FoodTruckMenuItemWrapper, MenuTextWrapper } from './style';
-import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/icons/delete.svg';
 import { deleteMenu } from 'api/menu';
-// import { AxiosError } from 'axios';
 
-// 메뉴 아이템 인터페이스를 정의.
 interface IFoodTruckMenuItemProps {
   menuId: number;
   menuName: string;
@@ -19,11 +15,7 @@ interface IFoodTruckMenuItemProps {
 function FoodTruckMenuItem(props: IFoodTruckMenuItemProps) {
   const { menuId, menuName, menuDescription, menuPrice, menuImageUrl } = props;
   const navigate = useNavigate();
-
-  // const handleClick = () => {
-  //   // URL 템플릿에 맞게 동적으로 menuId 값을 삽입하여 이동
-  //   navigate(`/foodtruck/menu/${menuId}`);
-  // };
+  const location = useLocation(); // 현재 위치 정보를 가져옵니다.
 
   const handleFail = () => {
     alert("삭제되었습니다.");
@@ -36,15 +28,18 @@ function FoodTruckMenuItem(props: IFoodTruckMenuItemProps) {
     }
   }
 
+  // 현재 URL이 '/foodtruck/menu/modify' 일 때만 deleteIcon을 표시합니다.
+  const showDeleteIcon = location.pathname === '/foodtruck/menu/modify';
+
   return (
-    <FoodTruckMenuItemWrapper >
+    <FoodTruckMenuItemWrapper>
       <img placeholder="이미지입니다." alt={`${menuName} 이미지`} src={menuImageUrl}></img>
       <MenuTextWrapper>
         <p>{menuName}</p>
         <p>{menuDescription}</p>
         <p>{menuPrice}원</p>
       </MenuTextWrapper>
-      <img className="deleteIcon" src={logo} alt="" onClick={clickDeleteMenu}/>
+      {showDeleteIcon && <img className="deleteIcon" src={logo} alt="삭제 아이콘" onClick={clickDeleteMenu}/>}
     </FoodTruckMenuItemWrapper>
   );
 }

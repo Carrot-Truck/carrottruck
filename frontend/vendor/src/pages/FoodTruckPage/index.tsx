@@ -20,6 +20,10 @@ function FoodTruckPage() {
   const [selectedButton, setSelectedButton] = useState(1);
   // ( 현재 선택된 푸드트럭 id 가져와야해 ) -> 우선순위 보류
 
+  const navigateToModifyPage = () => {
+    navigate('/foodtruck/modify', { state: { foodTruck: foodTruck} });
+  };
+
   const buttonClick = (buttonNumber: number) => {
     setSelectedButton(buttonNumber);
   };
@@ -29,6 +33,7 @@ function FoodTruckPage() {
     content: '',
     originInfo: '',
     prepareTime: 0,
+    phoneNumber: '',
     grade: 0,
     reviewCount: 0,
     foodTruckImageUrl: 'https://carrottruck.s3.ap-northeast-2.amazonaws.com/%EB%8B%B9%EA%B7%BC%ED%8A%B8%EB%9F%AD%EB%A1%9C%EA%B3%A0.png',
@@ -67,20 +72,23 @@ function FoodTruckPage() {
     const menusData = response.data.data.menus;
     const menuCount = response.data.data.menuCount;
     const foodTruckData = response.data.data.foodTruck;
-  
+    const newPrepareTime = response.data.data.foodTruck.prepareTime;
+    const newOriginInfo = response.data.data.foodTruck.originInfo;
+    const newPhoneNumber = response.data.data.foodTruck.phoneNumber;
+    
     setFoodTruck(prevState => {
       // 메뉴 갯수가 0이면 메뉴를 비워주고, 아니면 새로운 메뉴 데이터로 업데이트
       if (menuCount === 0 ) {
         if(foodTruckData === null){
           return { ...prevState, menus: [] };
         }else{
-          return { ...prevState, menus: [], content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl}
+          return { ...prevState, menus: [], content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl, prepareTime: newPrepareTime, originInfo: newOriginInfo, phoneNumber: newPhoneNumber}
         }
       } else {
         if(foodTruckData === null){
           return { ...prevState, menus: menusData };
         }else{
-          return { ...prevState, menus: menusData, content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl}
+          return { ...prevState, menus: menusData, content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl, prepareTime: newPrepareTime, originInfo: newOriginInfo, phoneNumber: newPhoneNumber}
         }
       }
     });
@@ -145,61 +153,69 @@ function FoodTruckPage() {
 
   return (
     <FoodTruckLayout>
-      <div className="header">
-        <BackSpace></BackSpace>
-        <img src={ModifyButton} alt="" />
-      </div>
-      <img className="headerImage" src={foodTruck.foodTruckImageUrl} alt="" />
-      <div className="storeInfo">
-        <div className="foodTruckName">
-          <span>{foodTruck.foodTruckName}</span>
-          {/* <img src={EmptyHeart} alt="" /> */}
+      <div style={{ flexGrow: 1 }}>
+        <div className="header">
+          <BackSpace></BackSpace>
+          <img src={ModifyButton} alt=""  onClick={navigateToModifyPage}/>
         </div>
-        {/* <div className="location">
-          <span>{foodTruck.foodTruckDetail.address} </span>
-
-          <span> {foodTruck.foodTruckDetail.distance}m </span>
-          <img src={Pin} alt="" />
-        </div> */}
-        <div className="review">
-          <div>
-            <img src={Star} alt="" />
-            <span>({foodTruck.grade})</span>
-            <span>{foodTruck.reviewCount}</span>
+        <img className="headerImage" src={foodTruck.foodTruckImageUrl} alt="" />
+        <div className="storeInfo">
+          <div className="foodTruckName">
+            <span>{foodTruck.foodTruckName}</span>
+            {/* <img src={EmptyHeart} alt="" /> */}
           </div>
-          {/* {foodTruck.foodTruckDetail.isOpen ? <span id="open">open</span> : <span id="close">close</span>} */}
+          {/* <div className="location">
+            <span>{foodTruck.foodTruckDetail.address} </span>
+
+            <span> {foodTruck.foodTruckDetail.distance}m </span>
+            <img src={Pin} alt="" />
+          </div> */}
+          <div className="review">
+            <div>
+            {foodTruck.grade === 0 && foodTruck.reviewCount === 0 ? (
+                <span>등록된 리뷰가 없습니다.</span>
+                ) : (
+                  <>
+                    <img src={Star} alt="" />
+                    <span>({foodTruck.grade})</span>
+                    <span>{foodTruck.reviewCount}</span>
+                  </>
+                )}
+            </div>
+            {/* {foodTruck.foodTruckDetail.isOpen ? <span id="open">open</span> : <span id="close">close</span>} */}
+          </div>
+          <span style={{ textAlign: 'left' }}>{foodTruck.content}</span>
         </div>
-        <span style={{ textAlign: 'left' }}>{foodTruck.content}</span>
+        <div className="switchButton">
+          <Button
+            size="m"
+            radius="l"
+            color={selectedButton === 1 ? 'Primary' : 'SubFirst'}
+            text="메뉴"
+            handleClick={() => buttonClick(1)}
+          />
+          <Button
+            size="m"
+            radius="l"
+            color={selectedButton === 2 ? 'Primary' : 'SubFirst'}
+            text="가게정보"
+            handleClick={() => buttonClick(2)}
+          />
+          <Button
+            size="m"
+            radius="l"
+            color={selectedButton === 3 ? 'Primary' : 'SubFirst'}
+            text="리뷰"
+            handleClick={() => buttonClick(3)}
+          />
+        </div>
+        {selectedButton === 1 && foodTruck.menus.length > 0 && (
+          <FoodTruckMenu menus={foodTruck.menus} />
+        )}
+        {/* {selectedButton === 2 && } */}
+        {/* {selectedButton === 3 && } */}
+        <Navbar/>
       </div>
-      <div className="switchButton">
-        <Button
-          size="m"
-          radius="l"
-          color={selectedButton === 1 ? 'Primary' : 'SubFirst'}
-          text="메뉴"
-          handleClick={() => buttonClick(1)}
-        />
-        <Button
-          size="m"
-          radius="l"
-          color={selectedButton === 2 ? 'Primary' : 'SubFirst'}
-          text="가게정보"
-          handleClick={() => buttonClick(2)}
-        />
-        <Button
-          size="m"
-          radius="l"
-          color={selectedButton === 3 ? 'Primary' : 'SubFirst'}
-          text="리뷰"
-          handleClick={() => buttonClick(3)}
-        />
-      </div>
-      {selectedButton === 1 && foodTruck.menus.length > 0 && (
-        <FoodTruckMenu menus={foodTruck.menus} />
-      )}
-      {/* {selectedButton === 2 && } */}
-      {/* {selectedButton === 3 && } */}
-      <Navbar/>
     </FoodTruckLayout>
   );
 }

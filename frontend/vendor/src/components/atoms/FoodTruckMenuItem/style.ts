@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const FoodTruckMenuItemWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
   width: 100%;
   margin: 0.5rem;
   text-align: center;
@@ -12,7 +13,13 @@ export const FoodTruckMenuItemWrapper = styled.div`
     width: 30%;
     height: 3rem;
   }
+
+  .deleteIcon {
+    width: 8%;
+    height: 3rem;
+  }
 `;
+
 
 export const MenuTextWrapper = styled.div`
   display: flex:

@@ -11,6 +11,7 @@ import SurveyPage from 'pages/SurveyPage';
 import SchedulePage from 'pages/SchedulePage';
 import FoodTruckModifyPage from 'pages/FoodTruckModifyPage';
 import FoodMenuModifyPage from 'pages/FoodMenuModifyPage';
+import FoodMenuDetailModifyPage from 'pages/FoodMenuDetailModifyPage';
 // import FoodMenuDetailPage from 'pages/FoodMenuDetailPage'
 
 function RouteLink() {
@@ -29,6 +30,7 @@ function RouteLink() {
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/foodtruck/modify" element={<FoodTruckModifyPage />} />
         <Route path="/foodtruck/menu/modify" element={<FoodMenuModifyPage />} />
+        <Route path="/foodtruck/menu/create" element={<FoodMenuDetailModifyPage />} />
       </Routes>
     </BrowserRouter>
   );

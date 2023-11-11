@@ -172,9 +172,15 @@ function FoodTruckPage() {
           </div> */}
           <div className="review">
             <div>
-              <img src={Star} alt="" />
-              <span>({foodTruck.grade})</span>
-              <span>{foodTruck.reviewCount}</span>
+            {foodTruck.grade === 0 && foodTruck.reviewCount === 0 ? (
+                <span>등록된 리뷰가 없습니다.</span>
+                ) : (
+                  <>
+                    <img src={Star} alt="" />
+                    <span>({foodTruck.grade})</span>
+                    <span>{foodTruck.reviewCount}</span>
+                  </>
+                )}
             </div>
             {/* {foodTruck.foodTruckDetail.isOpen ? <span id="open">open</span> : <span id="close">close</span>} */}
           </div>

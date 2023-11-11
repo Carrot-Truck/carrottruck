@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const FoodTruckModifyContainer = styled.div`
   position: relative;
-  height: calc(100vh - 76px);
+  height: calc(100vh);
   padding-top: 1rem;
   text-align: left;
 

@@ -35,7 +35,7 @@ function FoodMenuModifyPage() {
   const navigate = useNavigate();
 
   const createNewMenu = () => {
-
+    navigate('/foodtrcuk/menu/create');
   };
 
   // const modifySuccess = (response: AxiosResponse) =>{

@@ -29,11 +29,11 @@ function FoodTruckModifyForm({ foodTruck } : any) {
 
   const handleSuccess = (response: AxiosResponse) => {
     if(response.data.code === 200){
-      alert('푸드트럭 수정이 완료되었습니다.');
+      navigate('/foodtruck/menu/modify', { state: { foodTruck: foodTruck} })
     }else{
       alert('푸드트럭 등록 실패!\n다시 시도해주세요.');
+      navigate('/');
     }
-    navigate('/');
   }
 
   const handleFail = (response: AxiosError) => {
@@ -191,7 +191,7 @@ function FoodTruckModifyForm({ foodTruck } : any) {
         color={isDone ? 'Primary' : 'SubFirst'}
         size="full"
         radius="m"
-        text={isDone ? '푸드트럭수정' : '작성 중 이세요'}
+        text={isDone ? '다음(1/2)' : '필수 정보 입력'}
       />
     </FoodTruckModifyContainer>
   );

@@ -44,17 +44,27 @@ function CartPage() {
     fetchData();
   }, []);
 
-  if (!cart) {
-    return (
-      <CartPageLayout>
-        <div className="header">
-          <BackSpace />
-          <p>장바구니</p>
-        </div>
-        <p>텅</p>
-      </CartPageLayout>
+  const handleMenuRemoved = (removedMenuId: string) => {
+    setCart(
+      (prevCart) =>
+        prevCart && {
+          ...prevCart,
+          cartMenus: prevCart.cartMenus.filter(
+            (menu) => menu.cartMenuId !== removedMenuId
+          ),
+        }
     );
-  }
+  };
+
+
+  const renderCartContent = () => {
+    if (!cart || cart.cartMenus.length === 0) {
+      return <p>텅</p>;
+    }
+    return <CartMenu menus={cart.cartMenus} onMenuRemoved={handleMenuRemoved} />;
+  };
+
+
 
   return (
     <CartPageLayout>
@@ -62,9 +72,7 @@ function CartPage() {
         <BackSpace></BackSpace>
         <p>장바구니</p>
       </div>
-      {
-        cart ? <CartMenu menus={cart.cartMenus} /> : <p>텅</p>
-      }
+      {renderCartContent()}
     </CartPageLayout>
   );
 }

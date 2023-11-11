@@ -18,18 +18,16 @@ interface ICartMenu {
   cartMenuOptionDtos: ICartMenuOption[];
 }
 
-
-
 interface ICartMenuProps {
-  menus: ICartMenu[]; // menus 프로퍼 티의 타입을 Menu[]로 정의
+  menus: ICartMenu[];
+  onMenuRemoved: (cartMenuId: string) => void;  // menus 프로퍼 티의 타입을 Menu[]로 정의
 }
 
-function CartMenu({ menus }: ICartMenuProps) {
-  
+function CartMenu({ menus, onMenuRemoved }: ICartMenuProps) {
   return (
     <CartMenuContainer>
       {menus.map((menu) => (
-        <CartMenuItem key={menu.cartMenuId} menu={menu}/>
+        <CartMenuItem key={menu.cartMenuId} menu={menu} onItemRemoved={(cartMenuId) => onMenuRemoved(cartMenuId)} />
       ))}
     </CartMenuContainer>
   );

@@ -1,6 +1,7 @@
 import { CartMenuItemWrapper, MenuTextWrapper } from "./style";
 import { AxiosResponse } from "axios";
 import { removeCartMenu } from "api/cart";
+import { useNavigate } from "react-router-dom";
 
 
 interface ICartMenuOption {
@@ -21,9 +22,23 @@ interface ICartMenu {
 
 interface ICartMenuItemProp {
   menu: ICartMenu; // menus 프로퍼 티의 타입을 Menu[]로 정의
+  onItemRemoved: (cartMenuId: string) => void;
 }
 
-function CartMenuItem({ menu }: ICartMenuItemProp) {
+function CartMenuItem({ menu, onItemRemoved }: ICartMenuItemProp) {
+  const navigate = useNavigate();
+  const handleDelete = async () => {
+    removeCartMenu(
+      menu.cartMenuId,
+      () => {
+      },
+      (error: any) => {
+        onItemRemoved(menu.cartMenuId);
+        console.log("삭제 성공");
+        // navigate(0);
+      }
+    );
+  };
 
   return (
     <CartMenuItemWrapper>
@@ -41,7 +56,7 @@ function CartMenuItem({ menu }: ICartMenuItemProp) {
         </div>
         <p>{menu.cartMenuTotalPrice * menu.cartMenuQuantity}원</p>
       </MenuTextWrapper>
-      <button>X</button>
+      <button onClick={handleDelete}>X</button>
     </CartMenuItemWrapper>
   );
 }

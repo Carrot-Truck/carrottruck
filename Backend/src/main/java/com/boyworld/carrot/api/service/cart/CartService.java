@@ -1,5 +1,6 @@
 package com.boyworld.carrot.api.service.cart;
 
+import static com.boyworld.carrot.domain.StringConstants.NO_IMG;
 import static com.boyworld.carrot.domain.cart.CartType.CART;
 import static com.boyworld.carrot.domain.cart.CartType.CARTMENU;
 import static com.boyworld.carrot.domain.cart.CartType.CARTMENUOPTION;
@@ -320,7 +321,7 @@ public class CartService {
             log.debug("cartMenuOption을 저장합니다: {}", cartMenuOptionId);
         }
         MenuImage menuImage = menuImageQueryRepository.getMenuImageByMenuId(menu.getId());
-        String image = " "; // TODO: 2023-11-10 이미지가 없으면 없는 이미지의 S3주소 넣기
+        String image = NO_IMG; // TODO: 2023-11-10 이미지가 없으면 없는 이미지의 S3주소 넣기
         if(menuImage != null) {
             image = menuImage.getUploadFile().getStoreFileName();
         }

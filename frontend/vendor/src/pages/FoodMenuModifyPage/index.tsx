@@ -1,13 +1,19 @@
-// import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { FoodMenuModifyLayout } from './style';
 import BackSpace from 'components/atoms/BackSpace';
 import Button from 'components/atoms/Button';
 import FoodTruckMenu from 'components/organisms/FoodTruckMenu';
 import PlusButton from 'assets/icons/plus_button.svg';
+import { getMenus } from 'api/menu';
+import { useLocation } from 'react-router-dom';
+import { AxiosResponse, AxiosError } from 'axios';
 
 function FoodMenuModifyPage() {
-  const menus = [
+  const location = useLocation();
+  const { foodTruck } = location.state || {}; // state에서 foodTruck 데이터 추출
+
+  const [menus, setMenu] = useState( [
     {
       menuId: 1,
       menuName: '달콤짭짤한 밥도둑 된장 삼겹살 구이',
@@ -24,13 +30,29 @@ function FoodMenuModifyPage() {
       menuSoldOut: false,
       menuImageUrl: 'imageUrl'
     }
-  ];
+  ]);
 
   const navigate = useNavigate();
   const menuModify = () => {
     navigate(-1);
   };
-  const createMenu = () => {};
+  const createMenu = () => {
+  };
+
+  const loadMenu = (response: AxiosResponse) => {
+    console.log(response);
+    setMenu(response.data.data.menus);
+  };
+
+  const handleFail = (response: AxiosError) => {
+    console.log("Error ", response);
+    alert('메뉴 조회 중 에러 발생!\n다시 시도해주세요.');
+    navigate('/');
+  }
+
+  useEffect(()=>{
+    getMenus(foodTruck.foodTruckId, loadMenu, handleFail);
+  }, []);
 
   return (
     <FoodMenuModifyLayout>

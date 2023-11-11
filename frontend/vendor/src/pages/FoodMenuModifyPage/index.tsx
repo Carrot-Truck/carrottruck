@@ -5,7 +5,7 @@ import BackSpace from 'components/atoms/BackSpace';
 import Button from 'components/atoms/Button';
 import FoodTruckMenu from 'components/organisms/FoodTruckMenu';
 import PlusButton from 'assets/icons/plus_button.svg';
-import { getMenus } from 'api/menu';
+import { getMenus, createMenu } from 'api/menu';
 import { useLocation } from 'react-router-dom';
 import { AxiosResponse, AxiosError } from 'axios';
 
@@ -33,16 +33,42 @@ function FoodMenuModifyPage() {
   ]);
 
   const navigate = useNavigate();
+
+  const createNewMenu = () => {
+
+  };
+
+  // const modifySuccess = (response: AxiosResponse) =>{
+
+  // }
+
   const menuModify = () => {
-    navigate(-1);
+    menus.forEach(menu => {
+      const formData = new FormData();
+      formData.append('menuId', menu.menuId.toString());
+      formData.append('menuName', menu.menuName);
+      formData.append('menuPrice', menu.menuPrice.toString());
+      formData.append('menuDescription', menu.menuDescription);
+      formData.append('menuSoldOut', menu.menuSoldOut.toString());
+      formData.append('menuImageUrl', menu.menuImageUrl);
+  
+      createMenu(formData, null, modifyFail);  
+    });
+  
+    navigate('/');
   };
-  const createMenu = () => {
-  };
+  
 
   const loadMenu = (response: AxiosResponse) => {
     console.log(response);
     setMenu(response.data.data.menus);
   };
+
+  const modifyFail = (response: AxiosError) => {
+    console.log("Error ", response);
+    alert('메뉴 수정 중 에러 발생!\n다시 시도해주세요.');
+    navigate('/');
+  }
 
   const handleFail = (response: AxiosError) => {
     console.log("Error ", response);
@@ -61,7 +87,7 @@ function FoodMenuModifyPage() {
         <p>메뉴 수정</p>
       </div>
       <FoodTruckMenu menus={menus} />
-      <img className="plusButton" src={PlusButton} onClick={createMenu} alt="" />
+      <img className="plusButton" src={PlusButton} onClick={createNewMenu} alt="" />
       <Button text="수정 완료" color="Primary" size="full" radius="s" handleClick={menuModify} />
     </FoodMenuModifyLayout>
   );

@@ -5,6 +5,7 @@ import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +29,12 @@ public class PaymentController {
     @Value("${iamport.secret}")
     private String restApiSecret;
 
-    private final IamportClient iamportClient;
+    private IamportClient iamportClient;
 
-    public PaymentController() {
+    @PostConstruct
+    public void init() {
         this.iamportClient = new IamportClient(restApiKey, restApiSecret);
     }
-
     /**
      * 결제 요청 API
      *

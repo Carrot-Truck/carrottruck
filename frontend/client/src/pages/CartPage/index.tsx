@@ -99,7 +99,7 @@ function CartPage() {
     );
   };
 
-  const handleCheckout = () => {
+  const handleCartOrder = () => {
     navigate('/cartorder'); // 결제 페이지로 이동
   };
 
@@ -117,11 +117,11 @@ function CartPage() {
         {cart?.totalPrice}
       </div>
       <Button
-        handleClick={handleCheckout}
+        handleClick={handleCartOrder}
         color="Primary"
         size="full"
         radius="m"
-        text= "결제하기"
+        text= "포장 주문하기"
       />
       <Navbar/>
     </CartPageLayout>

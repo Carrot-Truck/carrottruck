@@ -7,6 +7,7 @@ import NothingHere from "components/atoms/NothingHere";
 import StatisticsSalesItem from "components/atoms/StatisticsSalesItem";
 import StatisticsWeekItem from "components/atoms/StatisticsWeekItem";
 import StatisticsMonthItem from "components/atoms/StatisticsMonthItem";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface IStatisticsListProps {
   selectedCriteria: string;
@@ -56,6 +57,18 @@ const getData = (response: AxiosResponse) => {
   return response.data.data;
 };
 
+const getQueryString = (obj: Record<string, any>): string => {
+  const queryStringArray: string[] = [];
+
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      queryStringArray.push(`${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`);
+    }
+  }
+
+  return queryStringArray.join("&");
+};
+
 function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [bySalesItemList, setBySalesItemList] = useState<IBySalesItem[]>([]);
@@ -68,6 +81,8 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
   const [infScrollDone, setInfScrollDone] = useState<boolean>(false);
 
   const infScrollTargetRef: React.MutableRefObject<any> = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const observerOptions = {
     root: null,
@@ -158,21 +173,38 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
     );
   };
 
+  const moveToDetailPage = (params: Record<string, any>) => {
+    const queryString = getQueryString(params);
+    navigate(`${location.pathname}/detail?${queryString}`);
+  };
+
   const handleSalesItemClick = (foodTruckId: number, salesId: number) => {
-    // navigate with params
-    console.log(`To Sales Detail Page, fid: ${foodTruckId}, salesId: ${salesId}`);
+    const params: Record<string, any> = {
+      criteria: "sales",
+      foodTruckId: foodTruckId,
+      salesId: salesId,
+    };
+    moveToDetailPage(params);
   };
 
   const handleWeekItemClick = (foodTruckId: number, startDate: string, endDate: string) => {
-    // navigate with params
-    console.log(
-      `To Weekly Detail Page, fid: ${foodTruckId}, startDate: ${startDate}, endDate: ${endDate}`
-    );
+    const params: Record<string, any> = {
+      criteria: "week",
+      foodTruckId: foodTruckId,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    moveToDetailPage(params);
   };
 
   const handleMonthItemClick = (foodTruckId: number, year: number, month: number) => {
-    // navigate with params
-    console.log(`To Montly Detail Page, fid: ${foodTruckId}, year: ${year}, month: ${month}`);
+    const params: Record<string, any> = {
+      criteria: "month",
+      foodTruckId: foodTruckId,
+      year: year,
+      month: month,
+    };
+    moveToDetailPage(params);
   };
 
   useEffect(() => {

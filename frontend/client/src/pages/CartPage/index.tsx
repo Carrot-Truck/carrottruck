@@ -56,15 +56,32 @@ function CartPage() {
     );
   };
 
+  const handleMenuUpdated = (updatedMenuId: string, newQuantity: number) => {
+    setCart(
+      (prevCart) =>
+        prevCart && {
+          ...prevCart,
+          cartMenus: prevCart.cartMenus.map((menu: any) =>
+            menu.cartMenuId === updatedMenuId
+              ? { ...menu, cartMenuQuantity: newQuantity }
+              : menu
+          ),
+        }
+    );
+  };
 
   const renderCartContent = () => {
     if (!cart || cart.cartMenus.length === 0) {
       return <p>텅</p>;
     }
-    return <CartMenu menus={cart.cartMenus} onMenuRemoved={handleMenuRemoved} />;
+    return (
+      <CartMenu
+        menus={cart.cartMenus}
+        onMenuRemoved={handleMenuRemoved}
+        onMenuUpdated={handleMenuUpdated}
+      />
+    );
   };
-
-
 
   return (
     <CartPageLayout>

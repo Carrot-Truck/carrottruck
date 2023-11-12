@@ -111,14 +111,16 @@ public class StatisticsQueryService {
                     .totalHours(weeklyDto.getTotalMinutes() / 60)
                     .totalMinutes(weeklyDto.getTotalMinutes() % 60)
                     .totalSales(weeklyDto.getTotalAmount())
+                    .week(week)
                     .build();
 
             statisticsByWeekDtos.add(statisticsByWeekDto);
         }
 
         Boolean hasNext = checkWeeklyHasNext(statisticsByWeekDtos);
+        Integer newLastWeek = statisticsByWeekDtos.get(statisticsByWeekDtos.size() - 1).getWeek();
 
-        return StatisticsByWeekResponse.of(year, statisticsByWeekDtos, hasNext);
+        return StatisticsByWeekResponse.of(year, statisticsByWeekDtos, newLastWeek, hasNext);
     }
 
     /**

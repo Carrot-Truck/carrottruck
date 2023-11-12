@@ -278,6 +278,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                 .totalHours(28)
                 .totalMinutes(36)
                 .totalSales(527700)
+                .week(40)
                 .build();
 
         StatisticsByWeekDto item2 = StatisticsByWeekDto.builder()
@@ -286,6 +287,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                 .totalHours(58)
                 .totalMinutes(36)
                 .totalSales(992200)
+                .week(39)
                 .build();
 
         List<StatisticsByWeekDto> items = List.of(item1, item2);
@@ -293,6 +295,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
         StatisticsByWeekResponse response = StatisticsByWeekResponse.builder()
                 .year(LocalDate.now().getYear())
                 .statisticsByWeek(items)
+                .lastWeek(39)
                 .hasNext(false)
                 .build();
 
@@ -331,6 +334,8 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data.year").type(JsonFieldType.NUMBER)
                                         .description("영업년도"),
+                                fieldWithPath("data.lastWeek").type(JsonFieldType.NUMBER)
+                                        .description("마지막으로 조회된 주"),
                                 fieldWithPath("data.statisticsByWeek[].startDate").type(JsonFieldType.STRING)
                                         .description("주 시작일"),
                                 fieldWithPath("data.statisticsByWeek[].endDate").type(JsonFieldType.STRING)
@@ -341,6 +346,8 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("판매한 분"),
                                 fieldWithPath("data.statisticsByWeek[].totalSales").type(JsonFieldType.NUMBER)
                                         .description("총 매출액"),
+                                fieldWithPath("data.statisticsByWeek[].week").type(JsonFieldType.NUMBER)
+                                        .description("해당 주"),
                                 fieldWithPath("data.hasNext").type(JsonFieldType.BOOLEAN)
                                         .description("다음 페이지 존재 여부")
                         )

@@ -95,13 +95,13 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
     setInfScrollLoading(true);
 
     if (selectedCriteria === "영업") {
-      getBySales();
+      getBySales(true);
     } else if (selectedCriteria === "주") {
-      getByWeek();
+      getByWeek(true);
     }
   };
 
-  const getBySales = async () => {
+  const getBySales = async (isInf?: boolean) => {
     const requestParams: SalesListRequest = {
       year: year,
       month: month,
@@ -117,8 +117,16 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
           setHasNext(data["hasNext"]);
           setInfScrollDone(true);
         }
-        setLastSalesId(data["lastSalesId"]);
-        setBySalesItemList(bySalesItemList.concat(data["statisticsBySales"]));
+        if (isInf) {
+          setBySalesItemList(bySalesItemList.concat(data["statisticsBySales"]));
+        } else {
+          setBySalesItemList(data["statisticsBySales"]);
+        }
+        if (data["lastSalesId"] === -1) {
+          setLastSalesId(null);
+        } else {
+          setLastSalesId(data["lastSalesId"]);
+        }
         setLoading(false);
       },
       (error: any) => {
@@ -128,7 +136,7 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
     );
   };
 
-  const getByWeek = async () => {
+  const getByWeek = async (isInf?: boolean) => {
     const requestParams: WeekListRequest = {
       year: year,
       lastWeek: lastWeek,
@@ -143,8 +151,16 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
           setHasNext(data["hasNext"]);
           setInfScrollDone(true);
         }
-        setLastWeek(data["lastWeek"]);
-        setByWeekItemList(byWeekItemList.concat(data["statisticsByWeek"]));
+        if (isInf) {
+          setByWeekItemList(byWeekItemList.concat(data["statisticsByWeek"]));
+        } else {
+          setByWeekItemList(data["statisticsByWeek"]);
+        }
+        if (data["lastWeek"] === -1) {
+          setLastSalesId(null);
+        } else {
+          setLastSalesId(data["lastWeek"]);
+        }
         setLoading(false);
       },
       (error: any) => {
@@ -228,8 +244,6 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
   }, [loading, infScrollLoading, lastSalesId, lastWeek]);
 
   useEffect(() => {
-    setBySalesItemList([]);
-    setByWeekItemList([]);
     setLoading(true);
     setInfScrollDone(false);
     setInfScrollLoading(false);

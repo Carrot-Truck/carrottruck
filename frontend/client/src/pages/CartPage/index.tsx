@@ -22,7 +22,7 @@ function CartPage() {
       menuName: "";
       menuPrice: 0;
       cartMenuTotalPrice: 0;
-      cartMenuQuantity: 0;
+      cartMenuQuantity: number;
       menuImageUrl: "";
       cartMenuOptionDtos: {
         menuOptionName: "";
@@ -64,17 +64,25 @@ function CartPage() {
   };
 
   const handleMenuUpdated = (updatedMenuId: string, newQuantity: number) => {
-    setCart(
-      (prevCart) =>
-        prevCart && {
+    setCart(prevCart => {
+      if (prevCart) {
+        const newCartMenus = prevCart.cartMenus.map(menu =>
+          menu.cartMenuId === updatedMenuId
+            ? { ...menu, cartMenuQuantity: newQuantity }
+            : menu
+        );
+  
+        // 새로운 총 금액 계산
+        const newTotalPrice = newCartMenus.reduce((sum, item) => sum + (item.menuPrice * item.cartMenuQuantity), 0);
+  
+        return {
           ...prevCart,
-          cartMenus: prevCart.cartMenus.map((menu: any) =>
-            menu.cartMenuId === updatedMenuId
-              ? { ...menu, cartMenuQuantity: newQuantity }
-              : menu
-          ),
-        }
-    );
+          cartMenus: newCartMenus,
+          totalPrice: newTotalPrice
+        };
+      }
+      return prevCart;
+    });
   };
 
   const renderCartContent = () => {

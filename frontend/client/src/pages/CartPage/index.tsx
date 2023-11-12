@@ -16,7 +16,7 @@ function CartPage() {
   const navigate = useNavigate();
   const [cart, setCart] = useState<null | {
     foodTruckName: "";
-    totalPrice: 0;
+    totalPrice: number;
     cartMenus: {
       cartMenuId: "";
       menuName: "";
@@ -47,16 +47,20 @@ function CartPage() {
     fetchData();
   }, []);
 
-  const handleMenuRemoved = (removedMenuId: string) => {
-    setCart(
-      (prevCart) =>
-        prevCart && {
+  const handleMenuRemoved = (removedMenuId: string, removedPrice: number) => {
+    setCart(prevCart => {
+      if (prevCart) {
+        const newCartMenus = prevCart.cartMenus.filter(menu => menu.cartMenuId !== removedMenuId);
+        const newTotalPrice = prevCart.totalPrice - removedPrice;
+  
+        return {
           ...prevCart,
-          cartMenus: prevCart.cartMenus.filter(
-            (menu) => menu.cartMenuId !== removedMenuId
-          ),
-        }
-    );
+          cartMenus: newCartMenus,
+          totalPrice: newTotalPrice
+        };
+      }
+      return prevCart;
+    });
   };
 
   const handleMenuUpdated = (updatedMenuId: string, newQuantity: number) => {

@@ -21,18 +21,23 @@ interface ICartMenu {
 
 interface ICartMenuItemProp {
   menu: ICartMenu; // menus 프로퍼 티의 타입을 Menu[]로 정의
-  onItemRemoved: (cartMenuId: string) => void;
-  onItemUpdated: (cartMenuId: string, newQuantity: number) => void
+  onItemRemoved: (cartMenuId: string, removedPrice: number) => void;
+  onItemUpdated: (cartMenuId: string, newQuantity: number) => void;
 }
 
-function CartMenuItem({ menu, onItemRemoved, onItemUpdated }: ICartMenuItemProp) {
+function CartMenuItem({
+  menu,
+  onItemRemoved,
+  onItemUpdated,
+}: ICartMenuItemProp) {
   const navigate = useNavigate();
   const handleDelete = async () => {
     removeCartMenu(
       menu.cartMenuId,
       () => {},
       (error: any) => {
-        onItemRemoved(menu.cartMenuId);
+        const removedPrice = menu.cartMenuTotalPrice * menu.cartMenuQuantity;
+        onItemRemoved(menu.cartMenuId, removedPrice);
         console.log("삭제 성공");
       }
     );

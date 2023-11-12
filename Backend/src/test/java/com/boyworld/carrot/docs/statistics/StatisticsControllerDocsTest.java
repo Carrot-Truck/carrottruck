@@ -82,6 +82,7 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
 
         StatisticsBySalesResponse response = StatisticsBySalesResponse.builder()
                 .year(LocalDate.now().getYear())
+                .lastSalesId(1L)
                 .statisticsBySales(items)
                 .hasNext(false)
                 .build();
@@ -124,6 +125,8 @@ public class StatisticsControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data.year").type(JsonFieldType.NUMBER)
                                         .description("영업년도"),
+                                fieldWithPath("data.lastSalesId").type(JsonFieldType.NUMBER)
+                                        .description("마지막으로 조회된 영업 ID"),
                                 fieldWithPath("data.statisticsBySales[].salesId").type(JsonFieldType.NUMBER)
                                         .description("영업 ID"),
                                 fieldWithPath("data.statisticsBySales[].date").type(JsonFieldType.STRING)

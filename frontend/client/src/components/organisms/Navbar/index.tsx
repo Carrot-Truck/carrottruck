@@ -1,19 +1,17 @@
 import { NavbarContainer } from './style';
 import NavbarItem from 'components/atoms/NavbarItem';
-import { ReactComponent as Salesstatistics } from 'assets/icons/salesstatistics.svg';
 import { ReactComponent as Schedule } from 'assets/icons/schedule.svg';
+import { ReactComponent as Jjim } from 'assets/icons/jjim.svg';
 import { ReactComponent as MainPage } from 'assets/icons/mainpage.svg';
-import { ReactComponent as Commercialanalysis } from 'assets/icons/commercialanalysis.svg';
-import { ReactComponent as Foodtruck } from 'assets/icons/foodtruck.svg';
+import { ReactComponent as User } from 'assets/icons/user.svg';
 
 function Navbar() {
   return (
     <NavbarContainer>
-      <NavbarItem svg={Salesstatistics} text="매출통계" to="" />
-      <NavbarItem svg={Schedule} text="스케줄" to="" />
-      <NavbarItem svg={MainPage} text="메인" to="/" />
-      <NavbarItem svg={Commercialanalysis} text="상권분석" to="" />
-      <NavbarItem svg={Foodtruck} text="푸드트럭" to="/foodtruck" />
+      <NavbarItem svg={MainPage} text="홈" to="/" />
+      <NavbarItem svg={Jjim} text="즐겨찾기" to="" />
+      <NavbarItem svg={Schedule} text="주문내역" to="" />
+      <NavbarItem svg={User} text="My당트" to="" />
     </NavbarContainer>
   );
 }

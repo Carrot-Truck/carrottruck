@@ -8,3 +8,13 @@ include::{snippets}/create-cart/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/create-cart/response-body.adoc[]
 include::{snippets}/create-cart/response-fields.adoc[]
+
+[[get-shoppingcart]]
+=== 장바구니 조회
+
+==== HTTP Request
+include::{snippets}/get-shoppingcart/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-shoppingcart/response-body.adoc[]
+include::{snippets}/get-shoppingcart/response-fields.adoc[]

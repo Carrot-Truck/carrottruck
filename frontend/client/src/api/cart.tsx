@@ -10,11 +10,11 @@ export async function getCart(success: any, fail: any) {
     await api.get(``).then(success).catch(fail);
 }
 
-export async function editCartMenu(cartMenuId: number, success: any, fail: any) {
+export async function editCartMenu(cartMenuId: string, success: any, fail: any) {
     await api.patch(`/${cartMenuId}`).then(success).catch(fail);
 }
 
-export async function removeCartMenu(cartMenuId: number, success: any, fail: any) {
+export async function removeCartMenu(cartMenuId: string, success: any, fail: any) {
     await api.delete(`/${cartMenuId}`).then(success).catch(fail);
 }
 

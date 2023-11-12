@@ -217,10 +217,12 @@ public class CartService {
             for (String cartMenuOptionId : cartMenuOptionIds) {
                 CartMenuOption cartMenuOption = getCartMenuOption(cartMenuOptionId);
                 menuOptionIdList.add(cartMenuOption.getMenuOptionId());
+                deleteCartMenuOption(cartMenuOptionId);
             }
             orderMenuItems.add(OrderMenuItem.of(cartMenu, menuOptionIdList));
+            deleteCartMenu(cartMenuId);
         }
-
+        deleteCart(email);
         return CreateOrderDto.of(cart, orderMenuItems);
     }
 
@@ -321,7 +323,7 @@ public class CartService {
             log.debug("cartMenuOption을 저장합니다: {}", cartMenuOptionId);
         }
         MenuImage menuImage = menuImageQueryRepository.getMenuImageByMenuId(menu.getId());
-        String image = NO_IMG; // TODO: 2023-11-10 이미지가 없으면 없는 이미지의 S3주소 넣기
+        String image = NO_IMG;
         if(menuImage != null) {
             image = menuImage.getUploadFile().getStoreFileName();
         }
@@ -401,7 +403,6 @@ public class CartService {
         redisTemplate.opsForHash().delete(CART.getText(), fieldkey);
     }
 
-
     public <T> boolean saveData(String key, String field, T data) {
         try {
             String value = objectMapper.writeValueAsString(data);
@@ -438,7 +439,6 @@ public class CartService {
 
     public Cart getCart(String field) throws JsonProcessingException {
         return getData(CART.getText(), field, Cart.class);
-
     }
 
     public CartMenu getCartMenu(String field) throws JsonProcessingException {
@@ -448,26 +448,5 @@ public class CartService {
     public CartMenuOption getCartMenuOption(String field) throws JsonProcessingException {
         return getData(CARTMENUOPTION.getText(), field, CartMenuOption.class);
     }
-
-    public Set getField(String key) throws JsonProcessingException {
-
-        Set jsonResult = redisTemplate.opsForHash().keys(key);
-        if (jsonResult.isEmpty()) {
-            return null;
-        } else {
-            return jsonResult;
-        }
-    }
-
-    public Map getEntries(String key) throws JsonProcessingException {
-
-        Map jsonResult = redisTemplate.opsForHash().entries(key);
-        if (jsonResult.isEmpty()) {
-            return null;
-        } else {
-            return jsonResult;
-        }
-    }
-
 
 }

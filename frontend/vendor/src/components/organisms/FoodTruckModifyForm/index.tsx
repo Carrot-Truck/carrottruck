@@ -3,18 +3,20 @@ import { FoodTruckModifyContainer } from './style';
 import Input from 'components/atoms/Input';
 import Button from 'components/atoms/Button';
 import { useNavigate } from 'react-router-dom';
-import {editFoodTruck} from 'api/foodtruck/foodTruck'
+import { editFoodTruck } from 'api/foodtruck/foodTruck';
 import { AxiosResponse, AxiosError } from 'axios';
-// import { setPhoneNumber } from 'slices/userSlice/userSlice';
 
-
-function FoodTruckModifyForm({ foodTruck } : any) {
+function FoodTruckModifyForm({ foodTruck }: any) {
   const navigate = useNavigate();
+
+
+  console.log(foodTruck);
+  // 이미 선언된 useState를 활용
   const [isDone, setIsDone] = useState(false);
-  const [categoryId, setCategoryId] = useState(0); // 카테고리 ID를 문자열로 저장
-  const [foodTruckName, setfoodTruckName] = useState('');
+  const [categoryId, setCategoryId] = useState(0);
+  const [foodTruckName, setFoodTruckName] = useState('');
   const [foodTruckPicture, setFoodTruckPicture] = useState<File | null>(null);
-  const [phoneNumber, setphoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [content, setContent] = useState('');
   const [originInfo, setOriginInfo] = useState('');
   const [prepareTime, setPrepareTime] = useState(0);
@@ -23,55 +25,56 @@ function FoodTruckModifyForm({ foodTruck } : any) {
   const categories = [
     { id: '1', name: '한식' },
     { id: '2', name: '중식' },
-    { id: '3', name: '일식' }
+    { id: '3', name: '일식' },
     // 다른 카테고리들...
   ];
 
   const handleSuccess = (response: AxiosResponse) => {
-    if(response.data.code === 200){
-      navigate('/foodtruck/menu/modify', { state: { foodTruck: foodTruck} })
-    }else{
+    if (response.data.code === 200) {
+      navigate('/foodtruck/menu/modify', { state: { foodTruck } });
+    } else {
       alert('푸드트럭 등록 실패!\n다시 시도해주세요.');
       navigate('/');
     }
-  }
+  };
 
   const handleFail = (response: AxiosError) => {
-    console.log("Error ", response);
+    console.log('Error ', response);
     alert('푸드트럭 등록 실패!\n다시 시도해주세요.');
     navigate('/');
-  }
+  };
 
   const regist = async () => {
     if (isDone) {
       try {
         const formData = new FormData();
-        if(foodTruckPicture !== null){
-          // 파일 업로드 부분
+        if (foodTruckPicture !== null) {
           formData.append('file', foodTruckPicture);
         }
-        
-        // JSON 데이터 부분
+
         const requestData = {
-          categoryId: categoryId,
-          foodTruckName: foodTruckName,
-          phoneNumber: phoneNumber,
-          content: content,
-          originInfo: originInfo,
-          prepareTime: prepareTime,
-          waitLimits: waitLimits
+          categoryId,
+          foodTruckName,
+          phoneNumber,
+          content,
+          originInfo,
+          prepareTime,
+          waitLimits,
         };
 
-        // JSON 데이터를 Blob로 변환 후 FormData에 추가
-        // JSON 데이터를 Blob으로 변환 후 FormData에 추가
-        formData.append('request', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+        formData.append(
+          'request',
+          new Blob([JSON.stringify(requestData)], { type: 'application/json' })
+        );
 
-        // JSON.stringify를 사용하지 않고 formData 객체를 그대로 전달
+        console.log(requestData);
+
         editFoodTruck(foodTruck.foodTruckId, formData, handleSuccess, handleFail);
       } catch (error) {
         console.error('에러야...', error);
       }
     }
+
     if (!foodTruckName) {
       alert('푸드트럭 이름을 입력해주세요');
     } else if (!categoryId) {
@@ -90,15 +93,19 @@ function FoodTruckModifyForm({ foodTruck } : any) {
   };
 
   useEffect(() => {
-    setfoodTruckName(prevFoodTruckName => foodTruck.foodTruckName || prevFoodTruckName);
-    setContent(prevContent => foodTruck.content || prevContent);
-    setphoneNumber(prevPhoneNumber => foodTruck.phoneNumber || prevPhoneNumber);
-    setOriginInfo(prevOriginInfo => foodTruck.originInfo || prevOriginInfo);
-    setPrepareTime(prevPrepareTime => foodTruck.prepareTime || prevPrepareTime);
-        
+    setCategoryId((prevCategoryId) => categoryId || prevCategoryId)
+    setFoodTruckName((prevFoodTruckName) => foodTruck.foodTruckName || prevFoodTruckName);
+    setFoodTruckPicture((prevFoodTruckPicture) => foodTruck.foodTruckImageUrl || prevFoodTruckPicture);
+    setPhoneNumber((prevPhoneNumber) => foodTruck.phoneNumber || prevPhoneNumber);
+    setContent((prevContent) => foodTruck.content || prevContent);
+    setOriginInfo((prevOriginInfo) => foodTruck.originInfo || prevOriginInfo);
+    setPrepareTime((prevPrepareTime) => foodTruck.prepareTime || prevPrepareTime);
+    setWaitLimits((prevWaitLimits) => waitLimits || prevWaitLimits);
+
     if (
       foodTruck.foodTruckName &&
       categoryId &&
+      foodTruck.foodTruckImageUrl &&
       foodTruck.content &&
       foodTruck.phoneNumber &&
       foodTruck.prepareTime &&
@@ -109,19 +116,24 @@ function FoodTruckModifyForm({ foodTruck } : any) {
     } else {
       setIsDone(false);
     }
-  }, [foodTruck.foodTruckName, categoryId, foodTruck.content, foodTruck.phoneNumber, foodTruck.prepareTime, waitLimits, foodTruck.originInfo]);
+  }, [
+    foodTruck.foodTruckName,
+    foodTruck.foodTruckImageUrl,
+    categoryId,
+    foodTruck.content,
+    foodTruck.phoneNumber,
+    foodTruck.prepareTime,
+    waitLimits,
+    foodTruck.originInfo,
+  ]);
 
-  // 파일이 선택되었을 때 호출될 핸들러입니다.
-  // ChangeEvent<HTMLInputElement>는 TypeScript에서 input 변경 이벤트의 타입입니다.
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    // 파일 리스트에서 첫 번째 파일을 가져오기 위한 타입 가드
     const file = event.target.files && event.target.files[0];
     if (file) {
       setFoodTruckPicture(file);
     }
   };
 
-  // 드롭다운 변경 이벤트 핸들러
   const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setCategoryId(Number(event.target.value));
   };
@@ -134,7 +146,7 @@ function FoodTruckModifyForm({ foodTruck } : any) {
           <Input
             placeholder="푸드트럭이름을 입력해주세요"
             value={foodTruckName}
-            setValue={setfoodTruckName}
+            setValue={setFoodTruckName}
             type="text"
           />
         </div>
@@ -160,12 +172,17 @@ function FoodTruckModifyForm({ foodTruck } : any) {
         </div>
         <div className="input">
           <span>전화번호</span>
-          <Input placeholder="전화번호를 입력해주세요" value={phoneNumber} setValue={setphoneNumber} type="text" />
+          <Input placeholder="전화번호를 입력해주세요" value={phoneNumber} setValue={setPhoneNumber} type="text" />
         </div>
         <div className="input">
           <span>예상 준비 시간</span>
           <span> ex.15(분)</span>
-          <Input placeholder="예: 15(분)" value={prepareTime} setValue={setPrepareTime} type="number" />
+          <Input
+            placeholder="예: 15(분)"
+            value={prepareTime}
+            setValue={setPrepareTime}
+            type="number"
+          />
         </div>
         <div className="input">
           <span>대기 주문 최대 갯수</span>

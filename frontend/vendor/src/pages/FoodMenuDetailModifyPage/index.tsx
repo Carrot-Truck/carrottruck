@@ -3,8 +3,12 @@ import { FoodMenuDetailModifyLayout } from './style';
 import BackSpace from 'components/atoms/BackSpace';
 import Input from 'components/atoms/Input';
 import Button from 'components/atoms/Button';
+import { createMenu } from 'api/menu';
+import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function FoodMenuDetailModifyPage() {
+  const navigate = useNavigate();
   const [menuName, setMenuName] = useState<string>('');
   const [menuImage, setMenuImage] = useState<File>();
   const [menuPrice, setMenuPrice] = useState<number>(0);
@@ -17,7 +21,37 @@ function FoodMenuDetailModifyPage() {
       setMenuImage(file);
     }
   };
-  const createMenu = () => {};
+
+  const handleSuccess = () => {
+    navigate(-1);
+  }
+
+  const handleFail = (response: AxiosError) =>{
+    console.log(response);
+    alert("메뉴 등록 중 에러 발생!");
+    navigate('/');
+  }
+
+  const createMenuRequest = async () => {
+    if (!menuImage || !menuName || menuPrice <= 0 || !menuDescription) {
+      alert('모든 필드를 채워주세요');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', menuImage);
+    const requestData = {
+      // 예시 데이터, 실제 데이터 구조에 맞게 조정하세요
+      foodTruckId: 1, // 실제 foodTruckId를 적절히 설정해야 합니다
+      menuName: menuName,
+      price: menuPrice,
+      description: menuDescription,
+      menuOptions: [/* 메뉴 옵션 데이터 */]
+    };
+    formData.append('request', new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+
+    createMenu(formData, handleSuccess, handleFail);
+  };
 
   return (
     <FoodMenuDetailModifyLayout>
@@ -49,7 +83,7 @@ function FoodMenuDetailModifyPage() {
           placeholder="메뉴에 대한 설명을 입력해 주세요."
         />
       </div>
-      <Button size="full" radius="m" text="등록하기" color="Primary" handleClick={createMenu}></Button>
+      <Button size="full" radius="m" text="등록하기" color="Primary" handleClick={createMenuRequest}></Button>
     </FoodMenuDetailModifyLayout>
   );
 }

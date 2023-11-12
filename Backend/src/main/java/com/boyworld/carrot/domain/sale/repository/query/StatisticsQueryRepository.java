@@ -49,6 +49,7 @@ public class StatisticsQueryRepository {
                                 .and(sale.startTime.year().eq(year))
                                 .and(sale.startTime.month().eq(month)),
                         isLessThanLastSalesId(lastSalesId),
+                        isClosedSale(),
                         isActiveSale()
                 )
                 .limit(PAGE_SIZE + 1)
@@ -135,6 +136,7 @@ public class StatisticsQueryRepository {
                 .where(sale.foodTruck.id.eq(foodTruckId)
                                 .and(sale.startTime.goe(startOfYearDateTime)),
                         isLessThanLastStartDate(lastOfYearDateTime),
+                        isClosedSale(),
                         isActiveSale()
                 )
                 .orderBy(getWeek(startOfYearDateTime).floor().desc())
@@ -184,6 +186,7 @@ public class StatisticsQueryRepository {
                 .from(sale)
                 .where(sale.foodTruck.id.eq(foodTruckId)
                         .and(sale.startTime.year().eq(year)),
+                        isClosedSale(),
                         isActiveSale()
                 )
                 .fetch();
@@ -251,6 +254,8 @@ public class StatisticsQueryRepository {
     private BooleanExpression isCompleteOrder() {
         return order.status.eq(Status.COMPLETE);
     }
+
+    private BooleanExpression isClosedSale() { return sale.endTime.isNotNull(); }
 
     private List<Long> getOrderIds(List<Long> salesIds) {
         return queryFactory

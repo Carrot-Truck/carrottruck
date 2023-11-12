@@ -52,6 +52,7 @@ public class StatisticsQueryRepository {
                         isClosedSale(),
                         isActiveSale()
                 )
+                .orderBy(sale.id.desc())
                 .limit(PAGE_SIZE + 1)
                 .fetch();
 

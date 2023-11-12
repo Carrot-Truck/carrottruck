@@ -8,14 +8,14 @@ import StatisticsList from "components/organisms/StatisticsList";
 function StatisticsPage() {
   const [selectedCriteria, setSelectedCriteria] = useState<string>("영업");
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState<number | null>(new Date().getMonth());
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
 
   useEffect(() => {
     const curYear = new Date().getFullYear();
     const curMonth = new Date().getMonth() + 1;
 
     setSelectedYear(curYear);
-    if (selectedCriteria === "영업") {
+    if (selectedCriteria === "영업" && selectedMonth === null) {
       setSelectedMonth(curMonth);
     } else {
       setSelectedMonth(null);

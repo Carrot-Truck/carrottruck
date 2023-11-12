@@ -1,6 +1,6 @@
 import Loading from "components/atoms/Loading";
 import { StatisticsListContainer } from "./style";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getStatisticsByMonth, getStatisticsBySales, getStatisticsByWeek } from "api/statistics";
 import { AxiosResponse } from "axios";
 import NothingHere from "components/atoms/NothingHere";
@@ -63,8 +63,28 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
   const [byMonthItemList, setByMonthItemList] = useState<IByMonthItem[]>([]);
   const [lastSalesId, setLastSalesId] = useState<number | null>(null);
   const [lastWeek, setLastWeek] = useState<number | null>(null);
-  const [salesHasNext, setSalesHasNext] = useState<boolean>(true);
-  const [weekHasNext, setWeekHasNext] = useState<boolean>(true);
+  const [hasNext, setHasNext] = useState<boolean>(true);
+  const [infScrollLoading, setInfScrollLoading] = useState<boolean>(false);
+  const [infScrollDone, setInfScrollDone] = useState<boolean>(false);
+
+  const infScrollTargetRef: React.MutableRefObject<any> = useRef(null);
+
+  const observerOptions = {
+    root: null,
+    rootMargin: "5px",
+    threshold: 0.8,
+  };
+
+  const infScrollLoadMore = async () => {
+    if (infScrollLoading || !hasNext) return;
+    setInfScrollLoading(true);
+
+    if (selectedCriteria === "영업") {
+      getBySales();
+    } else if (selectedCriteria === "주") {
+      getByWeek();
+    }
+  };
 
   const getBySales = async () => {
     const requestParams: SalesListRequest = {
@@ -78,13 +98,17 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
       requestParams,
       (response: AxiosResponse) => {
         const data = getData(response);
-        setSalesHasNext(data["hasNext"]);
-        setBySalesItemList(data["statisticsBySales"]);
-        console.log(data);
+        if (!data["hasNext"]) {
+          setHasNext(data["hasNext"]);
+          setInfScrollDone(true);
+        }
+        setLastSalesId(data["lastSalesId"]);
+        setBySalesItemList(bySalesItemList.concat(data["statisticsBySales"]));
         setLoading(false);
       },
       (error: any) => {
         console.log(error);
+        setLoading(false);
       }
     );
   };
@@ -100,13 +124,17 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
       requestParams,
       (response: AxiosResponse) => {
         const data = getData(response);
-        setWeekHasNext(data["hasNext"]);
-        setByWeekItemList(data["statisticsByWeek"]);
-        console.log(data);
+        if (!data["hasNext"]) {
+          setHasNext(data["hasNext"]);
+          setInfScrollDone(true);
+        }
+        setLastWeek(data["lastWeek"]);
+        setByWeekItemList(byWeekItemList.concat(data["statisticsByWeek"]));
         setLoading(false);
       },
       (error: any) => {
         console.log(error);
+        setLoading(false);
       }
     );
   };
@@ -122,7 +150,6 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
       (response: AxiosResponse) => {
         const data = getData(response);
         setByMonthItemList(data["statisticsByMonth"]);
-        console.log(data);
         setLoading(false);
       },
       (error: any) => {
@@ -148,25 +175,40 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
     console.log(`To Montly Detail Page, fid: ${foodTruckId}, year: ${year}, month: ${month}`);
   };
 
-  const initSales = () => {
-    setLastSalesId(null);
-    setSalesHasNext(true);
-  };
+  useEffect(() => {
+    if (loading || infScrollDone) return;
 
-  const initWeek = () => {
-    setLastWeek(null);
-    setWeekHasNext(true);
-  };
+    const infScrollReloadCallback = async (entries: any) => {
+      if (!infScrollLoading && entries[0].isIntersecting) {
+        await infScrollLoadMore().finally(() => {
+          setInfScrollLoading(false);
+        });
+      }
+    };
+
+    const infScrollObserver = new IntersectionObserver(infScrollReloadCallback, observerOptions);
+
+    infScrollObserver.observe(infScrollTargetRef.current);
+
+    return () => {
+      infScrollObserver.disconnect();
+    };
+  }, [loading, infScrollLoading, lastSalesId, lastWeek]);
 
   useEffect(() => {
+    setBySalesItemList([]);
+    setByWeekItemList([]);
     setLoading(true);
+    setInfScrollDone(false);
+    setInfScrollLoading(false);
+    setLastSalesId(null);
+    setLastWeek(null);
+    setHasNext(true);
     if (selectedCriteria === "영업" && month !== null) {
-      initSales();
       getBySales();
-    } else if (selectedCriteria === "주") {
-      initWeek();
+    } else if (selectedCriteria === "주" && month === null) {
       getByWeek();
-    } else if (selectedCriteria === "월") {
+    } else if (selectedCriteria === "월" && month === null) {
       getByMonth();
     }
   }, [selectedCriteria, month, year]);
@@ -227,6 +269,13 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
         )
       ) : (
         <NothingHere />
+      )}
+      {infScrollLoading ? (
+        <Loading />
+      ) : (
+        !infScrollDone && (
+          <div style={{ height: "50px", backgroundColor: "white" }} ref={infScrollTargetRef}></div>
+        )
       )}
     </StatisticsListContainer>
   );

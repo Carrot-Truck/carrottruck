@@ -76,9 +76,9 @@ function CartMenuItem({ menu, onItemRemoved, onItemUpdated }: ICartMenuItemProp)
       <MenuTextWrapper>
         <p>{menu.menuName}</p>
         <div>
-          <button onClick={handleIncrement}>-</button>
+          <button onClick={handleIncrement}>+</button>
           <p>{menu.cartMenuQuantity}</p>
-          <button onClick={handleDecrement}>+</button>
+          <button onClick={handleDecrement}>-</button>
         </div>
         <p>{menu.cartMenuTotalPrice * menu.cartMenuQuantity}원</p>
       </MenuTextWrapper>

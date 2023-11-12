@@ -43,7 +43,7 @@ function FoodMenuModifyPage() {
   // }
 
   const menuModify = () => {
-    alert('수정 완료')
+    alert('수정 완료');
   
     navigate('/foodtruck');
   };

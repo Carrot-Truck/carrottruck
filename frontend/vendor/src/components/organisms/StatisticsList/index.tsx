@@ -83,6 +83,7 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
   const infScrollTargetRef: React.MutableRefObject<any> = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const selectedFoodTruckId = Number.parseInt(localStorage.getItem("selectedFoodTruckId") || "-1");
 
   const observerOptions = {
     root: null,
@@ -109,7 +110,7 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
     };
 
     getStatisticsBySales(
-      1,
+      selectedFoodTruckId,
       requestParams,
       (response: AxiosResponse) => {
         const data = getData(response);
@@ -143,7 +144,7 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
     };
 
     getStatisticsByWeek(
-      1,
+      selectedFoodTruckId,
       requestParams,
       (response: AxiosResponse) => {
         const data = getData(response);
@@ -176,7 +177,7 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
     };
 
     getStatisticsByMonth(
-      1,
+      selectedFoodTruckId,
       requestParams,
       (response: AxiosResponse) => {
         const data = getData(response);
@@ -277,7 +278,7 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
               totalHours={data.totalHours}
               totalMinutes={data.totalMinutes}
               totalSales={data.totalSales}
-              handleSalesItemClick={() => handleSalesItemClick(1, data.salesId)}
+              handleSalesItemClick={() => handleSalesItemClick(selectedFoodTruckId, data.salesId)}
             />
           ))
         )
@@ -293,7 +294,9 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
               totalHours={data.totalHours}
               totalMinutes={data.totalMinutes}
               totalSales={data.totalSales}
-              handleWeekItemClick={() => handleWeekItemClick(1, data.startDate, data.endDate)}
+              handleWeekItemClick={() =>
+                handleWeekItemClick(selectedFoodTruckId, data.startDate, data.endDate)
+              }
             />
           ))
         )
@@ -309,7 +312,9 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
               totalHours={data.totalHours}
               totalMinutes={data.totalMinutes}
               totalSales={data.totalSales}
-              handleMonthItemClick={() => handleMonthItemClick(1, year, data.month)}
+              handleMonthItemClick={() =>
+                handleMonthItemClick(selectedFoodTruckId, year, data.month)
+              }
             />
           ))
         )

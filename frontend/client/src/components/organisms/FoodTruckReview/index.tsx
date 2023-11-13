@@ -27,7 +27,7 @@ function FoodTruckReview({ reviews }: FoodTruck) {
   return (
     <FoodTruckInfoContainer>
       {reviews.map((reviews, index) => (
-        <FoodTruckReviewItem reviewId={reviews.reviewId} nickname={reviews.nickname} content={reviews.content} grade={reviews.grade} imageUrl={reviews.imageUrl} />
+        <FoodTruckReviewItem key={reviews.reviewId} reviewId={reviews.reviewId} nickname={reviews.nickname} content={reviews.content} grade={reviews.grade} imageUrl={reviews.imageUrl} />
       ))}
     </FoodTruckInfoContainer>
   );

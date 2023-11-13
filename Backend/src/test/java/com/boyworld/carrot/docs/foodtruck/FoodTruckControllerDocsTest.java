@@ -564,10 +564,12 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
         FoodTruckVendorDetailDto foodTruck = FoodTruckVendorDetailDto.builder()
                 .foodTruckId(1L)
                 .foodTruckName("동현 된장삼겹")
+                .categoryId(1L)
                 .phoneNumber("010-1234-5678")
                 .content("된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭")
                 .originInfo("돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)")
                 .prepareTime(30)
+                .waitLimits(10)
                 .avgGrade(4.5)
                 .reviewCount(1324)
                 .foodTruckImageUrl("imageUrl")
@@ -657,6 +659,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("푸드트럭 식별키"),
                                 fieldWithPath("data.foodTruck.foodTruckName").type(JsonFieldType.STRING)
                                         .description("푸드트럭 이름"),
+                                fieldWithPath("data.foodTruck.categoryId").type(JsonFieldType.NUMBER)
+                                    .description("카테고리 식별키"),
                                 fieldWithPath("data.foodTruck.phoneNumber").type(JsonFieldType.STRING)
                                         .description("연락처"),
                                 fieldWithPath("data.foodTruck.content").type(JsonFieldType.STRING)
@@ -665,6 +669,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("원산지 정보"),
                                 fieldWithPath("data.foodTruck.prepareTime").type(JsonFieldType.NUMBER)
                                         .description("예상 준비 시간"),
+                                fieldWithPath("data.foodTruck.waitLimits").type(JsonFieldType.NUMBER)
+                                    .description("최대 대기 주문 수"),
                                 fieldWithPath("data.foodTruck.avgGrade").type(JsonFieldType.NUMBER)
                                         .description("평점"),
                                 fieldWithPath("data.foodTruck.reviewCount").type(JsonFieldType.NUMBER)

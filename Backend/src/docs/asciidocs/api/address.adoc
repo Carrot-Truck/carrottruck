@@ -29,3 +29,14 @@ include::{snippets}/get-address-dong/path-parameters.adoc[]
 ==== HTTP Response
 include::{snippets}/get-address-dong/http-response.adoc[]
 include::{snippets}/get-address-dong/response-fields.adoc[]
+
+[[get-address-geocode]]
+=== 좌표 주소 변환
+
+==== HTTP Request
+include::{snippets}/get-address-geocode/http-request.adoc[]
+include::{snippets}/get-address-geocode/query-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-address-geocode/http-response.adoc[]
+include::{snippets}/get-address-geocode/response-fields.adoc[]

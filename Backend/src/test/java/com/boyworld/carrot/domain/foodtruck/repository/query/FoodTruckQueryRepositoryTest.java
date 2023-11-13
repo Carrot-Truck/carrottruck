@@ -320,6 +320,61 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(foodTruck).isNotNull();
     }
 
+    @DisplayName("사업자는 이메일로 선택된 푸드트럭을 조회할 수 있다.")
+    @Test
+    void getSelectedFoodTruckByEmail() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+
+        // when
+        FoodTruck result = foodTruckQueryRepository.getSelectedFoodTruckByEmail(vendor1.getEmail());
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result).extracting("selected").isEqualTo(true);
+    }
+
+    @DisplayName("이메일에 해당하는 선택된 푸드트럭이 없는 경우 null 이 반환된다.")
+    @Test
+    void getSelectedFoodTruckByEmailWithNull() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                false);
+
+        // when
+        FoodTruck result = foodTruckQueryRepository.getSelectedFoodTruckByEmail(vendor1.getEmail());
+
+        // then
+        assertThat(result).isNull();
+    }
+
     private Member createMember(Role role, String email) {
         Member member = Member.builder()
                 .email(email)

@@ -37,33 +37,25 @@ function CartOrderPage() {
     };
     fetchData();
 
-    const loadScript = (src: any, callback: any) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = callback;
-      document.head.appendChild(script);
-    };
+    const loadScript = (src: string, callback: () => void) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = callback;
+        script.onerror = () => {
+          console.error(`스크립트 로드 실패: ${src}`);
+        };
+        document.head.appendChild(script);
+      };
 
-    loadScript("http://code.jquery.com/jquery-1.12.4.min.js", () => {
-      loadScript("http://cdn.iamport.kr/js/iamport.payment-1.1.7.js", () => {});
-    });
-    
-    // const jquery = document.createElement("script");
-    // jquery.src = "http://code.jquery.com/jquery-1.12.4.min.js";
-    // const iamport = document.createElement("script");
-    // iamport.src = "http://cdn.iamport.kr/js/iamport.payment-1.1.7.js";
-    // document.head.appendChild(jquery);
-    // document.head.appendChild(iamport);
+      loadScript("https://code.jquery.com/jquery-1.12.4.min.js", () => {
+        loadScript("https://cdn.iamport.kr/js/iamport.payment-1.1.7.js", () => {
+        });
+      });
 
-    return () => {
+      return () => {
     };
 
   }, []);
-
-  const handlePayment = () => {
-    navigate("/"); // 결제 페이지로 이동
-  };
-
   
   const loadIamportScript = () => {
     return new Promise<void>((resolve, reject) => {
@@ -74,24 +66,6 @@ function CartOrderPage() {
         document.head.appendChild(script);
     });
 };
-
-// const requestPay = async () => {
-//     try {
-//         await loadIamportScript();
-
-//         const IMP = (window as any).IMP; // IMP 객체 가져오기
-//         IMP.init(`${process.env.REACT_APP_PAYMENT_CODE}`); // IMP 초기화
-
-//         // 결제 요청 로직
-//         IMP.request_pay({
-//             // ...결제 요청 정보
-//         }, async (rsp: { imp_uid: string; paid_amount: any }) => {
-//             // ...결제 처리 로직
-//         });
-//     } catch (error) {
-//         console.error('IMP 로드 실패:', error);
-//     }
-// };
 
 const requestPay = async () => {
   await loadIamportScript();
@@ -126,7 +100,6 @@ const requestPay = async () => {
               navigate("/cart");
             }
           );
-          navigate("/");
         } else {
           alert("결제 실패");
           navigate("/cart");

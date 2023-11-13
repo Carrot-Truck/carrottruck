@@ -77,6 +77,13 @@ public class AddressController {
         return ApiResponse.ok(response);
     }
 
+    /**
+     * reverse geocoding api
+     * 
+     * @param latitude 위도
+     * @param longitude 경도
+     * @return 도로명 주소
+     */
     @GetMapping("/rgc")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<ReverseGeocodingResponse> reverseGeocoding(@RequestParam BigDecimal latitude,

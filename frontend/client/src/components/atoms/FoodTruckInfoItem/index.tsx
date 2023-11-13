@@ -7,27 +7,35 @@ interface FoodTruckInfoProps {
   }
 
   const FoodTruckInfoItem = ({ title, value }: FoodTruckInfoProps) => {
+
+    const renderValue = (value: any) => {
+        if (value === null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0)) {
+          return "정보가 없습니다";
+        }
+        return value;
+      };
+      
     return (
       <InfoItemContainer>
         <h3>{title}</h3>
         {title === "영업정보" && (
           <>
             <div className="label">운영시간</div>
-            <div className="value">{JSON.stringify(value)}</div>
+            <div className="value">{renderValue(value)}</div>
           </>
         )}
         {title === "사업자정보" && (
           <>
             <div className="label">대표자명</div>
-            <div className="value">{value.vendorName}</div>
+            <div className="value">{renderValue(value.vendorName)}</div>
             <div className="label">상호명</div>
-            <div className="value">{value.tradeName}</div>
+            <div className="value">{renderValue(value.tradeName)}</div>
             <div className="label">사업자번호</div>
-            <div className="value">{value.businessNumber}</div>
+            <div className="value">{renderValue(value.businessNumber)}</div>
           </>
         )}
         {title === "원산지 표기" && (
-          <div className="full">{value}</div>
+          <div className="full">{renderValue(value)}</div>
         )}
       </InfoItemContainer>
     );

@@ -32,4 +32,9 @@ h3 {
     grid-column: 1 / -1;
     text-align: left;
 }
+
+.nickname{
+  font-weight: bold;
+}
+
 `;

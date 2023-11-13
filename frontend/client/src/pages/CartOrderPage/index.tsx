@@ -53,16 +53,16 @@ function CartOrderPage() {
 
   const requestPay = () => {
     const IMP = (window as any).IMP;
-    IMP.init("가맹점식별코드");
+    IMP.init("imp18617674");
 
     IMP.request_pay(
       {
-        pg: "kakaopay",
+        pg: "kakaopay.TC0ONETIME",
         pay_method: "card",
         merchant_uid: new Date().getTime(),
         name: "테스트 상품",
-        amount: 1004,
-        buyer_email: "test@naver.com",
+        amount: 10,
+        buyer_email: "ssafy@ssafy.com",
         buyer_name: "코드쿡",
         buyer_tel: "010-1234-5678",
         buyer_addr: "서울특별시",
@@ -75,8 +75,10 @@ function CartOrderPage() {
           );
           if (rsp.paid_amount === data.response.amount) {
             alert("결제 성공");
+            navigate("/");
           } else {
             alert("결제 실패");
+            navigate("/cart");
           }
         } catch (error) {
           console.error("Error while verifying payment:", error);

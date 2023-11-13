@@ -5,12 +5,11 @@ import Button from 'components/atoms/Button';
 import { useNavigate } from 'react-router-dom';
 import { editFoodTruck } from 'api/foodtruck/foodTruck';
 import { AxiosResponse, AxiosError } from 'axios';
+import { getCategories } from 'api/foodtruck/category';
 
 function FoodTruckModifyForm({ foodTruck }: any) {
   const navigate = useNavigate();
 
-
-  console.log(foodTruck);
   // 이미 선언된 useState를 활용
   const [isDone, setIsDone] = useState(false);
   const [categoryId, setCategoryId] = useState(0);
@@ -21,15 +20,13 @@ function FoodTruckModifyForm({ foodTruck }: any) {
   const [originInfo, setOriginInfo] = useState('');
   const [prepareTime, setPrepareTime] = useState(0);
   const [waitLimits, setWaitLimits] = useState(0);
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  const categories = [
-    { id: '1', name: '한식' },
-    { id: '2', name: '중식' },
-    { id: '3', name: '일식' },
-    // 다른 카테고리들...
-  ];
+  type Category = {
+    categoryId: number;
+    categoryName: string;
+  } 
 
-    console.log(foodTruck);
   const handleSuccess = (response: AxiosResponse) => {
     if (response.data.code === 200) {
       navigate('/foodtruck/menu/modify', { state: { foodTruck } });
@@ -91,9 +88,22 @@ function FoodTruckModifyForm({ foodTruck }: any) {
     } else if (!originInfo) {
       alert('원산지 정보를 입력해주세요');
     }
-  };
+    };
+    
+    const fetchCategories = async () => {
+        getCategories(
+            (response: any) => {
+                console.log(response.data);
+                setCategories(response.data.data.categories);
+            },
+            (error: any) => {
+                console.error('API Error: ', error);
+            }
+        );
+    }
 
-  useEffect(() => {
+    useEffect(() => {
+        fetchCategories();
     setCategoryId((prevCategoryId) => foodTruck.categoryId || prevCategoryId)
     setFoodTruckName((prevFoodTruckName) => foodTruck.foodTruckName || prevFoodTruckName);
     setFoodTruckPicture((prevFoodTruckPicture) => foodTruck.foodTruckImageUrl || prevFoodTruckPicture);
@@ -102,6 +112,7 @@ function FoodTruckModifyForm({ foodTruck }: any) {
     setOriginInfo((prevOriginInfo) => foodTruck.originInfo || prevOriginInfo);
     setPrepareTime((prevPrepareTime) => foodTruck.prepareTime || prevPrepareTime);
     setWaitLimits((prevWaitLimits) => foodTruck.waitLimits || prevWaitLimits);
+      
 
     if (
       foodTruck.foodTruckName &&
@@ -161,8 +172,8 @@ function FoodTruckModifyForm({ foodTruck }: any) {
           <select value={categoryId} onChange={handleCategoryChange}>
             <option value="">메뉴카테고리를 선택해주세요</option>
             {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
+              <option key={category.categoryId} value={category.categoryId}>
+                {category.categoryName}
               </option>
             ))}
           </select>

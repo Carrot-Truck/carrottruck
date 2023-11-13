@@ -37,16 +37,21 @@ function CartOrderPage() {
     };
     fetchData();
 
-    const loadScript = (src: any, callback: any) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = callback;
-      document.head.appendChild(script);
-    };
+    const loadScript = (src: string, callback: () => void) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = callback;
+        script.onerror = () => {
+          console.error(`스크립트 로드 실패: ${src}`);
+        };
+        document.head.appendChild(script);
+      };
 
-    loadScript("http://code.jquery.com/jquery-1.12.4.min.js", () => {
-      loadScript("http://cdn.iamport.kr/js/iamport.payment-1.1.7.js", () => {});
-    });
+      loadScript("https://code.jquery.com/jquery-1.12.4.min.js", () => {
+        loadScript("https://cdn.iamport.kr/js/iamport.payment-1.1.7.js", () => {
+          console.log("아임포트 스크립트 로드 완료");
+        });
+      });
     
     // const jquery = document.createElement("script");
     // jquery.src = "http://code.jquery.com/jquery-1.12.4.min.js";

@@ -117,3 +117,16 @@ include::{snippets}/food-truck-like/request-fields.adoc[]
 
 include::{snippets}/food-truck-like/http-response.adoc[]
 include::{snippets}/food-truck-like/response-fields.adoc[]
+
+[[edit-selected-food-truck]]
+=== 선택된 푸드트럭 변경
+
+==== HTTP Request
+
+include::{snippets}/edit-selected-food-truck/http-request.adoc[]
+include::{snippets}/edit-selected-food-truck/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/edit-selected-food-truck/http-response.adoc[]
+include::{snippets}/edit-selected-food-truck/response-fields.adoc[]

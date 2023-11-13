@@ -1,61 +1,18 @@
 package com.boyworld.carrot.docs.foodtruck;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.nullable;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestPartFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.boyworld.carrot.api.controller.foodtruck.FoodTruckController;
 import com.boyworld.carrot.api.controller.foodtruck.request.CreateFoodTruckRequest;
 import com.boyworld.carrot.api.controller.foodtruck.request.FoodTruckLikeRequest;
 import com.boyworld.carrot.api.controller.foodtruck.request.UpdateFoodTruckRequest;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckDetailResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckLikeResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckMarkerResponse;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckOverview;
-import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckResponse;
+import com.boyworld.carrot.api.controller.foodtruck.response.*;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckQueryService;
 import com.boyworld.carrot.api.service.foodtruck.FoodTruckService;
-import com.boyworld.carrot.api.service.foodtruck.dto.CreateFoodTruckDto;
-import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckClientDetailDto;
-import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckLikeDto;
-import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckMarkerItem;
-import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckVendorDetailDto;
-import com.boyworld.carrot.api.service.foodtruck.dto.UpdateFoodTruckDto;
+import com.boyworld.carrot.api.service.foodtruck.dto.*;
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
 import com.boyworld.carrot.api.service.schedule.dto.ScheduleDto;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import jakarta.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -68,6 +25,25 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.List;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(FoodTruckControllerDocsTest.class)
 public class FoodTruckControllerDocsTest extends RestDocsSupport {
@@ -906,6 +882,41 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("푸드트럭 식별키"),
                                 fieldWithPath("data.isLiked").type(JsonFieldType.BOOLEAN)
                                         .description("찜 여부")
+                        )
+                ));
+    }
+
+    @DisplayName("푸드트럭 수정 API")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void editSelected() throws Exception {
+        Long foodTruckId = 1L;
+
+        given(foodTruckService.editSelected(anyLong(), anyString()))
+                .willReturn(foodTruckId);
+
+        mockMvc.perform(
+                        patch("/food-truck/selected/{foodTruckId}", foodTruckId)
+                                .header("Authentication", "authentication")
+                                .contentType(APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("edit-selected-food-truck",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("foodTruckId").description("푸드트럭 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("선택된 푸드트럭 식별키")
                         )
                 ));
     }

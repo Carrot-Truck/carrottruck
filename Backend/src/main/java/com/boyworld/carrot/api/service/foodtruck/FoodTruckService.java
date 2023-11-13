@@ -156,6 +156,30 @@ public class FoodTruckService {
     }
 
     /**
+     * 사업자별 선택된 푸드트럭 변경
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @param email       현재 로그인한 사용자 이메일
+     * @return 선택된 푸드트럭 식별키
+     */
+    public Long editSelected(Long foodTruckId, String email) {
+        Member member = getMemberByEmail(email);
+        checkValidMemberAccess(member);
+
+        FoodTruck selectedFoodTruck = foodTruckQueryRepository.getSelectedFoodTruckByEmail(email);
+        if (selectedFoodTruck != null) {
+            selectedFoodTruck.unSelect();
+        }
+
+        FoodTruck foodTruck = getFoodTruckById(foodTruckId);
+
+        checkOwnerAccess(member, foodTruck);
+        foodTruck.select();
+
+        return foodTruck.getId();
+    }
+
+    /**
      * 이메일로 회원 엔티티 조회
      *
      * @param email 현재 로그인한 사용자 이메일

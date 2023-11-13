@@ -18,7 +18,7 @@ function LoginForm() {
   useEffect(() => {
     const isValidUser = async () => {
       try {
-        await axios.get(`${APPLICATION_SPRING_SERVER_URL}/member/vendor/info`, {
+        await axios.get(`${APPLICATION_SPRING_SERVER_URL}/member/cilent/info`, {
           headers: {
             Authorization: `${grantType} ${accessToken}`
           }
@@ -41,7 +41,7 @@ function LoginForm() {
         email,
         password
       };
-      const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/auth/login/vendor`, body);
+      const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/auth/login/client`, body);
       // 로컬스토리지에 토큰 저장
       localStorage.setItem('accessToken', response.data.data.accessToken);
       localStorage.setItem('refreshToken', response.data.data.refreshToken);

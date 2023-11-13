@@ -42,10 +42,28 @@ function CartOrderPage() {
     iamport.src = "http://cdn.iamport.kr/js/iamport.payment-1.1.7.js";
     document.head.appendChild(jquery);
     document.head.appendChild(iamport);
+
+
+  // 스크립트 로드 확인
+  const checkScriptLoad = () => {
+    if ((window as any).IMP) {
+      const IMP = (window as any).IMP;
+      IMP.init(process.env.REACT_APP_PAYMENT_CODE);
+    } else {
+      // 아임포트 스크립트 로드 실패 시 처리
+      console.error("아임포트 스크립트 로드 실패");
+    }
+  };
+
+  // 스크립트 로드 완료 확인
+  iamport.onload = checkScriptLoad;
+
+
     return () => {
       document.head.removeChild(jquery);
       document.head.removeChild(iamport);
     };
+
   }, []);
 
   const handlePayment = () => {

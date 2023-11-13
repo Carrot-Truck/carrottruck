@@ -13,7 +13,7 @@ import {getFoodTruckOverviews} from 'api/foodtruck/foodTruck';
 import {getFoodTruckReview} from 'api/review'
 import {getFoodTruckDetails} from 'api/foodtruck/foodTruck'
 import { AxiosResponse, AxiosError } from 'axios';
-import BackSpaceHome from 'components/atoms/BackSpaceHome';
+import BackSpaceHome from 'components/atoms/BackHome';
 
 function FoodTruckPage() {
   const navigate = useNavigate();

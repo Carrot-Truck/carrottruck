@@ -13,6 +13,8 @@ import {getFoodTruck} from 'api/foodtruck/foodTruck';
 import {getFoodTruckReview} from 'api/review'
 import { AxiosResponse, AxiosError } from 'axios';
 import { getSchedules } from 'api/schedule';
+import FoodTruckInfo from 'components/organisms/FoodTruckInfo';
+import FoodTruckReview from 'components/organisms/FoodTruckReview'
 
 function FoodTruckPage() {
   const params = useParams();
@@ -48,6 +50,7 @@ function FoodTruckPage() {
         isNew : true,
         vendorName : "",
         tradeName : "",
+        businessNumber: "",
       }
     ,
     menus: [
@@ -157,7 +160,7 @@ function FoodTruckPage() {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude
             };
-            getFoodTruck(foodTruckId, currentLocation, updateFoodTruckId, ()=>{alert("잘못된 접근입니다."); navigate('/');});
+            getFoodTruck(foodTruckId, currentLocation, updateFoodTruckId, ()=>{alert("잘못된 접근입니다."); navigate('/login');});
           },
           (error) => {
             console.error('Geolocation Error:', error);
@@ -233,8 +236,12 @@ function FoodTruckPage() {
         {selectedButton === 1 && foodTruck.menus.length > 0 && (
           <FoodTruckMenu menus={foodTruck.menus} />
         )}
-        {/* {selectedButton === 2 && } */}
-        {/* {selectedButton === 3 && } */}
+        {selectedButton === 2 && (
+          <FoodTruckInfo foodTruckDetail={foodTruck.foodTruck} schedules={foodTruck.schedules}></FoodTruckInfo>
+        )}
+        {selectedButton === 3 && (
+          <FoodTruckReview reviews={foodTruck.reviews}></FoodTruckReview>
+        )}
         <Navbar/>
       </div>
     </FoodTruckLayout>

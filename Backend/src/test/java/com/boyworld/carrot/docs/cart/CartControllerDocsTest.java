@@ -2,7 +2,9 @@ package com.boyworld.carrot.docs.cart;
 
 import com.boyworld.carrot.api.controller.cart.CartController;
 import com.boyworld.carrot.api.controller.cart.request.CreateCartMenuRequest;
+import com.boyworld.carrot.api.controller.cart.response.CartOrderResponse;
 import com.boyworld.carrot.api.controller.cart.response.CartResponse;
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.api.service.cart.dto.CartMenuDto;
 import com.boyworld.carrot.api.service.cart.dto.CartMenuOptionDto;
@@ -18,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -176,6 +179,53 @@ public class CartControllerDocsTest extends RestDocsSupport {
                                                 .description("메뉴 옵션 이름"),
                                         fieldWithPath("data.cartMenus[].cartMenuOptionDtos[].menuOptionPrice").type(JsonFieldType.NUMBER)
                                                 .description("메뉴 옵션 가격")
+                                )
+                        )
+                );
+    }
+
+    @DisplayName("장바구니 주문 정보 API")
+    @Test
+    @WithMockUser(roles = {"CLIENT", "VENDOR"})
+    void getCartOrder() throws Exception {
+
+        CartOrderResponse response = CartOrderResponse.builder()
+                .foodTruckName("푸드트럭이름")
+                .prepareTime(10)
+                .phoneNumber("010-1234-1234")
+                .totalPrice(10000)
+                .build();
+
+        given(cartService.getCartOrder(anyString()))
+                .willReturn(response);
+
+        mockMvc.perform(
+                        get("/cart/order")
+                                .header("Authentication", "authentication")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(
+                        document("get-cartorder",
+                                preprocessResponse(prettyPrint()),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT)
+                                                .description("장바구니 주문 정보 결과"),
+                                        fieldWithPath("data.foodTruckName").type(JsonFieldType.STRING)
+                                                .description("푸드트럭의 이름"),
+                                        fieldWithPath("data.prepareTime").type(JsonFieldType.NUMBER)
+                                                .description("푸드트럭의 준비 시간"),
+                                        fieldWithPath("data.phoneNumber").type(JsonFieldType.STRING)
+                                                .description("사용자의 전화번호"),
+                                        fieldWithPath("data.totalPrice").type(JsonFieldType.NUMBER)
+                                                .description("장바구니에 담은 메뉴들의 총 가격")
                                 )
                         )
                 );

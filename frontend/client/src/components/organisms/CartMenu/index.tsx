@@ -20,14 +20,20 @@ interface ICartMenu {
 
 interface ICartMenuProps {
   menus: ICartMenu[];
-  onMenuRemoved: (cartMenuId: string) => void;  // menus 프로퍼 티의 타입을 Menu[]로 정의
+  onMenuRemoved: (cartMenuId: string, removedPrice: number) => void;  // menus 프로퍼 티의 타입을 Menu[]로 정의
+  onMenuUpdated: (cartMenuId: string, newQuantity: number) => void
 }
 
-function CartMenu({ menus, onMenuRemoved }: ICartMenuProps) {
+function CartMenu({ menus, onMenuRemoved, onMenuUpdated }: ICartMenuProps) {
   return (
     <CartMenuContainer>
       {menus.map((menu) => (
-        <CartMenuItem key={menu.cartMenuId} menu={menu} onItemRemoved={(cartMenuId) => onMenuRemoved(cartMenuId)} />
+        <CartMenuItem
+        key={menu.cartMenuId}
+        menu={menu}
+        onItemRemoved={(cartMenuId, removedPrice) => onMenuRemoved(cartMenuId, removedPrice)}
+        onItemUpdated={(cartMenuId, newQuantity) => onMenuUpdated(cartMenuId, newQuantity)}
+        />
       ))}
     </CartMenuContainer>
   );

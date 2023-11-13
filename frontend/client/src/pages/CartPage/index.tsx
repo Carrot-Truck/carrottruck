@@ -4,22 +4,25 @@ import BackSpace from "components/atoms/BackSpace";
 import CartMenu from "components/organisms/CartMenu";
 import { useEffect, useState } from "react";
 import { CartPageLayout } from "./style";
-import NavbarItem from "components/atoms/NavbarItem";
+import Navbar from "components/organisms/Navbar";
+import Button from "components/atoms/Button";
+import { useNavigate } from "react-router-dom";
 
 const getData = (response: AxiosResponse) => {
   return response.data.data;
 };
 
 function CartPage() {
+  const navigate = useNavigate();
   const [cart, setCart] = useState<null | {
     foodTruckName: "";
-    totalPrice: 0;
+    totalPrice: number;
     cartMenus: {
       cartMenuId: "";
       menuName: "";
       menuPrice: 0;
       cartMenuTotalPrice: 0;
-      cartMenuQuantity: 0;
+      cartMenuQuantity: number;
       menuImageUrl: "";
       cartMenuOptionDtos: {
         menuOptionName: "";
@@ -27,6 +30,8 @@ function CartPage() {
       }[];
     }[];
   }>(null);
+
+  const isDisabled = !cart;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,27 +49,61 @@ function CartPage() {
     fetchData();
   }, []);
 
-  const handleMenuRemoved = (removedMenuId: string) => {
-    setCart(
-      (prevCart) =>
-        prevCart && {
+  const handleMenuRemoved = (removedMenuId: string, removedPrice: number) => {
+    setCart(prevCart => {
+      if (prevCart) {
+        const newCartMenus = prevCart.cartMenus.filter(menu => menu.cartMenuId !== removedMenuId);
+        const newTotalPrice = prevCart.totalPrice - removedPrice;
+  
+        return {
           ...prevCart,
-          cartMenus: prevCart.cartMenus.filter(
-            (menu) => menu.cartMenuId !== removedMenuId
-          ),
-        }
-    );
+          cartMenus: newCartMenus,
+          totalPrice: newTotalPrice
+        };
+      }
+      return prevCart;
+    });
   };
 
+  const handleMenuUpdated = (updatedMenuId: string, newQuantity: number) => {
+    setCart(prevCart => {
+      if (prevCart) {
+        const newCartMenus = prevCart.cartMenus.map(menu =>
+          menu.cartMenuId === updatedMenuId
+            ? { ...menu, cartMenuQuantity: newQuantity }
+            : menu
+        );
+  
+        // 새로운 총 금액 계산
+        const newTotalPrice = newCartMenus.reduce((sum, item) => sum + (item.menuPrice * item.cartMenuQuantity), 0);
+  
+        return {
+          ...prevCart,
+          cartMenus: newCartMenus,
+          totalPrice: newTotalPrice
+        };
+      }
+      return prevCart;
+    });
+  };
 
   const renderCartContent = () => {
     if (!cart || cart.cartMenus.length === 0) {
       return <p>텅</p>;
+      // 텅 화면 만들기
     }
-    return <CartMenu menus={cart.cartMenus} onMenuRemoved={handleMenuRemoved} />;
+    return (
+      <CartMenu
+        menus={cart.cartMenus}
+        onMenuRemoved={handleMenuRemoved}
+        onMenuUpdated={handleMenuUpdated}
+      />
+    );
   };
 
-
+  const handleCartOrder = () => {
+    navigate('/cartorder'); // 결제 페이지로 이동
+  };
 
   return (
     <CartPageLayout>
@@ -72,7 +111,22 @@ function CartPage() {
         <BackSpace></BackSpace>
         <p>장바구니</p>
       </div>
+      <div>
+        {cart?.foodTruckName}
+      </div>
       {renderCartContent()}
+      <div>
+        {cart?.totalPrice}
+      </div>
+      <Button
+        handleClick={handleCartOrder}
+        color={isDisabled ? "SubFirst" : "Primary"}
+        size="full"
+        radius="m"
+        text= "포장 주문하기"
+        disabled={isDisabled}
+      />
+      <Navbar/>
     </CartPageLayout>
   );
 }

@@ -18,8 +18,8 @@ export async function getOrderByVendor(orderId: number, success: any, fail: any)
     await api.get(`/vendor/${orderId}`).then(success).catch(fail);
 }
 
-export async function createOrder(data: Object, success: any, fail: any) {
-    await api.post(`/create`, data).then(success).catch(fail);
+export async function createOrder(success: any, fail: any) {
+    await api.post(`/create`).then(success).catch(fail);
 }
 
 export async function cancelOrder(orderId: number, success: any, fail: any) {

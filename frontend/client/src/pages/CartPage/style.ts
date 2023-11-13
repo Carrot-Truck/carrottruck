@@ -6,8 +6,6 @@ export const CartPageLayout = styled.div`
   color: black;
 
   .header {
-    display: flex;
-    flex-direction: rows;
 
     p {
       font-family: BMJUA;

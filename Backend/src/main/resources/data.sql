@@ -9711,9 +9711,12 @@ values  (46, 1, '가회동'),
         (5031, 249, '현북면');
 
 -- members
+-- members
 INSERT INTO `members` (active, role, phone_number, name, email, nickname, encrypted_pwd)
 VALUES (true, 'VENDOR', '010-1234-5678', '김싸피', 'ssafy@ssafy.com', '김싸피',
         '$2a$10$Yie4X4XlVeXFhh6/SXqAYudC1fgPadxVDX1DoWTAA435Y2z5UR4Hm'),
+       (true, 'CLIENT', '010-5678-4321', '이싸피', 'test@ssafy.com', '이싸피',
+        '$2a$10$2OiOykdxMdvbDi43rEAgdOADZjuDwNV5HbBHDbJ8syAT4YltiD9xi'),
        (true, 'CLIENT', '010-5370-9638', '최영환', 'longbright0804@gmail.com', '건조기',
         '$2a$10$qA3WtSYU0EHbBrgb8xPtHeZhT4reLlaIUca2FtYRRKQTi6f9ivuwS'),
        (true, 'CLIENT', '010-9130-9942', '김동현', 'qhfh12@gmail.com', '매미킴',

@@ -73,8 +73,10 @@ public class StatisticsQueryService {
         }
 
         Boolean hasNext = checkSalesHasNext(statisticsBySalesDtos);
+        Long newLastSalesId = statisticsBySalesDtos.isEmpty() ? -1L :
+                statisticsBySalesDtos.get(statisticsBySalesDtos.size() - 1).getSalesId();
 
-        return StatisticsBySalesResponse.of(year, statisticsBySalesDtos, hasNext);
+        return StatisticsBySalesResponse.of(year, newLastSalesId, statisticsBySalesDtos, hasNext);
     }
 
     /**
@@ -111,14 +113,17 @@ public class StatisticsQueryService {
                     .totalHours(weeklyDto.getTotalMinutes() / 60)
                     .totalMinutes(weeklyDto.getTotalMinutes() % 60)
                     .totalSales(weeklyDto.getTotalAmount())
+                    .week(week)
                     .build();
 
             statisticsByWeekDtos.add(statisticsByWeekDto);
         }
 
         Boolean hasNext = checkWeeklyHasNext(statisticsByWeekDtos);
+        Integer newLastWeek = statisticsByWeekDtos.isEmpty() ? -1 :
+                statisticsByWeekDtos.get(statisticsByWeekDtos.size() - 1).getWeek();
 
-        return StatisticsByWeekResponse.of(year, statisticsByWeekDtos, hasNext);
+        return StatisticsByWeekResponse.of(year, statisticsByWeekDtos, newLastWeek, hasNext);
     }
 
     /**

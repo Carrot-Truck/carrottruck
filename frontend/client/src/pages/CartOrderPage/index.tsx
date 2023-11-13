@@ -36,16 +36,28 @@ function CartOrderPage() {
       );
     };
     fetchData();
-    const jquery = document.createElement("script");
-    jquery.src = "http://code.jquery.com/jquery-1.12.4.min.js";
-    const iamport = document.createElement("script");
-    iamport.src = "http://cdn.iamport.kr/js/iamport.payment-1.1.7.js";
-    document.head.appendChild(jquery);
-    document.head.appendChild(iamport);
+
+    const loadScript = (src: any, callback: any) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = callback;
+      document.head.appendChild(script);
+    };
+
+    loadScript("http://code.jquery.com/jquery-1.12.4.min.js", () => {
+      loadScript("http://cdn.iamport.kr/js/iamport.payment-1.1.7.js", () => {});
+    });
+    
+    // const jquery = document.createElement("script");
+    // jquery.src = "http://code.jquery.com/jquery-1.12.4.min.js";
+    // const iamport = document.createElement("script");
+    // iamport.src = "http://cdn.iamport.kr/js/iamport.payment-1.1.7.js";
+    // document.head.appendChild(jquery);
+    // document.head.appendChild(iamport);
 
     return () => {
-      document.head.removeChild(jquery);
-      document.head.removeChild(iamport);
+      // document.head.removeChild(jquery);
+      // document.head.removeChild(iamport);
     };
 
   }, []);

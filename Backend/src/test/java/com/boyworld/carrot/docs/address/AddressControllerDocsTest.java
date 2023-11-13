@@ -2,16 +2,21 @@ package com.boyworld.carrot.docs.address;
 
 import com.boyworld.carrot.api.controller.address.AddressController;
 import com.boyworld.carrot.api.controller.address.response.AddressResponse;
+import com.boyworld.carrot.api.controller.address.response.ReverseGeocodingResponse;
 import com.boyworld.carrot.api.service.address.AddressQueryService;
 import com.boyworld.carrot.api.service.address.dto.AddressInfoDto;
+import com.boyworld.carrot.api.service.geocoding.GeocodingService;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.restdocs.payload.JsonFieldType;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -29,8 +34,10 @@ public class AddressControllerDocsTest extends RestDocsSupport {
 
     private final AddressQueryService addressQueryService = mock(AddressQueryService.class);
 
+    private final GeocodingService geocodingService = mock(GeocodingService.class);
+
     @Override
-    protected Object initController() { return new AddressController(addressQueryService); }
+    protected Object initController() { return new AddressController(addressQueryService, geocodingService); }
 
     @DisplayName("시도 리스트 조회 API")
     @Test
@@ -169,6 +176,52 @@ public class AddressControllerDocsTest extends RestDocsSupport {
                                         .description("읍면동 ID"),
                                 fieldWithPath("data.address[].name").type(JsonFieldType.STRING)
                                         .description("읍면동 이름")
+                        )
+                ));
+    }
+
+    @DisplayName("좌표 변환 API")
+    @Test
+    void reverseGeocoding() throws Exception {
+
+        BigDecimal latitude = new BigDecimal("36.12341234");
+        BigDecimal longitude = new BigDecimal("128.3456789");
+
+        String addr = "서울 마포구 동교로 104";
+
+        ReverseGeocodingResponse response = ReverseGeocodingResponse.builder()
+                .address(addr)
+                .build();
+
+        Map<String, String> responseMap = new HashMap<>();
+        responseMap.put("roadaddr", addr);
+
+        given(geocodingService.reverseGeocoding(any(BigDecimal.class), any(BigDecimal.class), anyString()))
+                .willReturn(responseMap);
+
+        mockMvc.perform(get("/address/rgc")
+                        .param("latitude", String.valueOf(latitude))
+                        .param("longitude", String.valueOf(longitude)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("get-address-geocode",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        queryParameters(
+                                parameterWithName("latitude")
+                                        .description("위도"),
+                                parameterWithName("longitude")
+                                        .description("경도")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data.address").type(JsonFieldType.STRING)
+                                        .description("도로명 주소")
                         )
                 ));
     }

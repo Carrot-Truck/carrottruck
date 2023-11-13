@@ -2,11 +2,15 @@ package com.boyworld.carrot.api.controller.address;
 
 import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.address.response.AddressResponse;
+import com.boyworld.carrot.api.controller.address.response.ReverseGeocodingResponse;
 import com.boyworld.carrot.api.service.address.AddressQueryService;
+import com.boyworld.carrot.api.service.geocoding.GeocodingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 /**
  * 주소 조회 컨트롤러
@@ -20,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 public class AddressController {
     
     private final AddressQueryService addressQueryService;
+
+    private final GeocodingService geocodingService;
 
     /**
      * 시도 조회 API
@@ -66,6 +72,26 @@ public class AddressController {
         log.debug("AddressController#getDong called !!!");
 
         AddressResponse response = addressQueryService.getDong(sigunguId);
+        log.debug("AddressResponse={}", response);
+
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * reverse geocoding api
+     * 
+     * @param latitude 위도
+     * @param longitude 경도
+     * @return 도로명 주소
+     */
+    @GetMapping("/rgc")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<ReverseGeocodingResponse> reverseGeocoding(@RequestParam BigDecimal latitude,
+                                                                  @RequestParam BigDecimal longitude) {
+        log.debug("AddressController#getDong called !!!");
+
+        String addr = geocodingService.reverseGeocoding(latitude, longitude, "roadaddr").get("roadaddr");
+        ReverseGeocodingResponse response = ReverseGeocodingResponse.builder().address(addr).build();
         log.debug("AddressResponse={}", response);
 
         return ApiResponse.ok(response);

@@ -18,3 +18,13 @@ include::{snippets}/get-shoppingcart/http-request.adoc[]
 ==== HTTP Response
 include::{snippets}/get-shoppingcart/response-body.adoc[]
 include::{snippets}/get-shoppingcart/response-fields.adoc[]
+
+[[get-cartorder]]
+=== 장바구니 주문 정보 조회
+
+==== HTTP Request
+include::{snippets}/get-cartorder/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-cartorder/response-body.adoc[]
+include::{snippets}/get-cartorder/response-fields.adoc[]

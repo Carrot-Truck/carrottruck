@@ -43,22 +43,6 @@ function CartOrderPage() {
     document.head.appendChild(jquery);
     document.head.appendChild(iamport);
 
-
-  // 스크립트 로드 확인
-  const checkScriptLoad = () => {
-    if ((window as any).IMP) {
-      const IMP = (window as any).IMP;
-      IMP.init(process.env.REACT_APP_PAYMENT_CODE);
-    } else {
-      // 아임포트 스크립트 로드 실패 시 처리
-      console.error("아임포트 스크립트 로드 실패");
-    }
-  };
-
-  // 스크립트 로드 완료 확인
-  iamport.onload = checkScriptLoad;
-
-
     return () => {
       document.head.removeChild(jquery);
       document.head.removeChild(iamport);
@@ -70,7 +54,39 @@ function CartOrderPage() {
     navigate("/"); // 결제 페이지로 이동
   };
 
-  const requestPay = () => {
+  
+  const loadIamportScript = () => {
+    return new Promise<void>((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = "https://service.iamport.kr/js/iamport.payment-1.1.5.js"; // 아임포트 스크립트 URL
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('아임포트 스크립트 로드 실패'));
+        document.head.appendChild(script);
+    });
+};
+
+// const requestPay = async () => {
+//     try {
+//         await loadIamportScript();
+
+//         const IMP = (window as any).IMP; // IMP 객체 가져오기
+//         IMP.init(`${process.env.REACT_APP_PAYMENT_CODE}`); // IMP 초기화
+
+//         // 결제 요청 로직
+//         IMP.request_pay({
+//             // ...결제 요청 정보
+//         }, async (rsp: { imp_uid: string; paid_amount: any }) => {
+//             // ...결제 처리 로직
+//         });
+//     } catch (error) {
+//         console.error('IMP 로드 실패:', error);
+//     }
+// };
+
+  const requestPay = async () => {
+    
+    await loadIamportScript();
+
     const IMP = (window as any).IMP;
     IMP.init(`${process.env.REACT_APP_PAYMENT_CODE}`);
 

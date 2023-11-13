@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const SurveyDetailsItemWrapper = styled.div`
   width: 100%;
-  border: solid 2px black;
+  border-bottom: solid 1px black;
+  margin-bottom: 10px;
 
   .detail-item {
     position: relative;

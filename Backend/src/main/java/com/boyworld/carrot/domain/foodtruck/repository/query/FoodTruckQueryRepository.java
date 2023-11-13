@@ -108,16 +108,6 @@ public class FoodTruckQueryRepository {
      * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
      */
     public FoodTruckClientDetailDto getFoodTruckByIdAsClient(Long foodTruckId, String email, BigDecimal currentLat, BigDecimal currentLng) {
-//        NumberExpression<BigDecimal> distance = new CaseBuilder()
-//                .when(sale.endTime.isNull())
-//                .then(calculateDistance(currentLat, sale.latitude, currentLng, sale.longitude))
-//                .otherwise(calculateDistance(currentLat, schedule.latitude, currentLng, schedule.longitude));
-
-//        StringExpression address = new CaseBuilder()
-//                .when(sale.endTime.isNull())
-//                .then(sale.address)
-//                .otherwise(schedule.address);
-
         Boolean isOpen = queryFactory
                 .select(sale.endTime.isNull())
                 .from(sale)

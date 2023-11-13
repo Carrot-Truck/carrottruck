@@ -31,6 +31,8 @@ function CartPage() {
     }[];
   }>(null);
 
+  const isDisabled = !cart;
+
   useEffect(() => {
     const fetchData = async () => {
       getCart(
@@ -118,10 +120,11 @@ function CartPage() {
       </div>
       <Button
         handleClick={handleCartOrder}
-        color="Primary"
+        color={isDisabled ? "SubFirst" : "Primary"}
         size="full"
         radius="m"
         text= "포장 주문하기"
+        disabled={isDisabled}
       />
       <Navbar/>
     </CartPageLayout>

@@ -35,6 +35,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -875,6 +876,41 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("푸드트럭 식별키"),
                                 fieldWithPath("data.isLiked").type(JsonFieldType.BOOLEAN)
                                         .description("찜 여부")
+                        )
+                ));
+    }
+
+    @DisplayName("푸드트럭 수정 API")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void editSelected() throws Exception {
+        Long foodTruckId = 1L;
+
+        given(foodTruckService.editSelected(anyLong(), anyString()))
+                .willReturn(foodTruckId);
+
+        mockMvc.perform(
+                        patch("/food-truck/selected/{foodTruckId}", foodTruckId)
+                                .header("Authentication", "authentication")
+                                .contentType(APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("edit-selected-food-truck",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("foodTruckId").description("푸드트럭 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                        .description("선택된 푸드트럭 식별키")
                         )
                 ));
     }

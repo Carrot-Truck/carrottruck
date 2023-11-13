@@ -8,4 +8,6 @@ export const NavbarContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   background: var(--gray-100);
+  position: fixed;
+  bottom: 0;
 `;

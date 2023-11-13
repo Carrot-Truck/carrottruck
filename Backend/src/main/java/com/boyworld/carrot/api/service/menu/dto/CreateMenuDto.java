@@ -35,7 +35,7 @@ public class CreateMenuDto {
                         .name(this.menuName)
                         .description(this.description)
                         .price(this.price)
-                        .soldOut(true)
+                        .soldOut(false)
                         .build())
                 .active(true)
                 .build();

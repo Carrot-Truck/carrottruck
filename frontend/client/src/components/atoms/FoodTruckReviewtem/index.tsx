@@ -3,10 +3,8 @@ import styled from 'styled-components';
 import StarIcon from '../../../assets/icons/star.svg'; // 채워진 별 아이콘
 import EmptyStarIcon from '../../../assets/icons/star_empty.svg'; // 빈 별 아이콘
 
-
 const StarRating = styled.div<{ grade: number }>`
   display: inline-block;
-
   .star {
     display: inline;
     width: 16px; // 별 아이콘의 크기를 조정하려면 이 값을 변경하세요.
@@ -36,7 +34,7 @@ const FoodTruckReviewItem = ({reviewId, nickname, grade, content, imageUrl,}: Fo
 
   return (
     <InfoItemContainer>
-      <div>{nickname}</div>
+      <div className='lable'>{nickname}</div>
       <StarRating grade={grade}>
         {fullStars.map((_, index) => (
           <img key={`full-${index}`} src={StarIcon} alt="Full Star" className="star" />
@@ -45,8 +43,9 @@ const FoodTruckReviewItem = ({reviewId, nickname, grade, content, imageUrl,}: Fo
           <img key={`empty-${index}`} src={EmptyStarIcon} alt="Empty Star" className="star" />
         ))}
       </StarRating>
-      <div>{content}</div>
-      {imageUrl && <ReviewImage src={imageUrl} alt="리뷰사진" />}
+
+      <div className='full'>{content}</div>
+      {imageUrl && imageUrl !== '' && (<ReviewImage className='full' src={imageUrl} alt="리뷰사진" />)}
     </InfoItemContainer>
   );
 };

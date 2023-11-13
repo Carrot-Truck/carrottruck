@@ -20,7 +20,7 @@ h3 {
   text-align: right;
   padding-right: 8px;
   border-right: 1px solid #ccc;
-  margin-bottom: 10px; // 제목과 내용 사이의 여백
+  margin-bottom: 100px; // 제목과 내용 사이의 여백
 }
 
 .value {
@@ -29,6 +29,7 @@ h3 {
 }
 
 .full {
+    margin-top: 10px;
     grid-column: 1 / -1;
     text-align: left;
 }

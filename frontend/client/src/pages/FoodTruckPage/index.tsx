@@ -85,13 +85,11 @@ function FoodTruckPage() {
 
   const afterUpdateReview = (response: AxiosResponse) => {
     console.log('Review data fetched successfully', response.data);
-    const foodTruckReviewDtoList = response.data.data.foodTruckDtoList;
-    
     
     setFoodTruck(prevState =>{
       // 현재 상태와 비교하여 값이 다를 때만 업데이트
-      if(foodTruckReviewDtoList === null ) return prevState;
-      
+      if(response.data.data === null ) return prevState;
+      const foodTruckReviewDtoList = response.data.data.foodTruckReviewDtoList;
       if (prevState.reviews !== foodTruckReviewDtoList) {
         return {
           ...prevState,
@@ -101,7 +99,6 @@ function FoodTruckPage() {
         return prevState; // 상태가 변하지 않으면 이전 상태를 반환하여 업데이트 방지
       }
     });
-
   }
 
   const afterUpdateSchedule = (response: AxiosResponse) => {
@@ -206,7 +203,7 @@ function FoodTruckPage() {
                   <>
                     <img src={Star} alt="" />
                     <span>{(Math.ceil(foodTruck.foodTruck.avgGrade*10))/10}</span>
-                    <span>{foodTruck.foodTruck.reviewCount}</span>
+                    <span>({foodTruck.foodTruck.reviewCount})</span>
                   </>
                 )}
             </div>

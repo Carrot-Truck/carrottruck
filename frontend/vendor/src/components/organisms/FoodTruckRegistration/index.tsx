@@ -4,6 +4,7 @@ import Input from 'components/atoms/Input';
 import Button from 'components/atoms/Button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { getCategories } from 'api/foodtruck/category';
 
 function FoodTruckRegistrationForm() {
   const navigate = useNavigate();
@@ -16,17 +17,16 @@ function FoodTruckRegistrationForm() {
   const [originInfo, setOriginInfo] = useState('');
   const [prepareTime, setPrepareTime] = useState(0);
   const [waitLimits, setWaitLimits] = useState(0);
+  const [categories, setCategories] = useState<Category[]>([]);
   const accessToken = localStorage.getItem('accessToken');
   const grantType = localStorage.getItem('grantType');
   const APPLICATION_SPRING_SERVER_URL =
   process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001/api';
 
-  const categories = [
-    { id: '1', name: '한식' },
-    { id: '2', name: '중식' },
-    { id: '3', name: '일식' }
-    // 다른 카테고리들...
-  ];
+  type Category = {
+    categoryId: number;
+    categoryName: string;
+  }    
 
   const regist = async () => {
     if (isDone) {
@@ -85,7 +85,23 @@ function FoodTruckRegistrationForm() {
     } else if (!originInfo) {
       alert('원산지 정보를 입력해주세요');
     }
-  };
+    };
+
+    const fetchCategories = async () => {
+        getCategories(
+            (response: any) => {
+                console.log(response.data);
+                setCategories(response.data.data.categories);
+            },
+            (error: any) => {
+                console.error('API Error: ', error);
+            }
+        );
+    }
+
+    useEffect(() => {
+        fetchCategories();
+    }, [])
 
   useEffect(() => {
     if (
@@ -141,9 +157,9 @@ function FoodTruckRegistrationForm() {
           <select value={categoryId} onChange={handleCategoryChange}>
             <option value="">메뉴카테고리를 선택해주세요</option>
             {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
+                <option key={category.categoryId} value={category.categoryId}>
+                {category.categoryName}
+                </option>
             ))}
           </select>
         </div>

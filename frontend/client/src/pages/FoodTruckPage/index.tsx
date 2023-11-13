@@ -84,11 +84,14 @@ function FoodTruckPage() {
   });
 
   const afterUpdateReview = (response: AxiosResponse) => {
-    console.log('Review data fetched successfully', response);
+    console.log('Review data fetched successfully', response.data);
     const foodTruckReviewDtoList = response.data.data.foodTruckDtoList;
+    
     
     setFoodTruck(prevState =>{
       // 현재 상태와 비교하여 값이 다를 때만 업데이트
+      if(foodTruckReviewDtoList === null ) return prevState;
+      
       if (prevState.reviews !== foodTruckReviewDtoList) {
         return {
           ...prevState,
@@ -134,9 +137,9 @@ function FoodTruckPage() {
     const foodTruckId = {
       foodTruckId: response.data.data.foodTruck.foodTruckId
     };
-
-    getFoodTruckReview(response.data.data.foodTruck.foodTruckId, afterUpdateReview, handleFail);
     getSchedules(foodTruckId, afterUpdateSchedule, handleFail);
+    getFoodTruckReview(response.data.data.foodTruck.foodTruckId, afterUpdateReview, handleFail);
+    
   };
 
   // handleFail 함수 수정
@@ -146,32 +149,33 @@ function FoodTruckPage() {
   };
 
   useEffect(() => {
-    if (foodTruckId === null || isNaN(foodTruckId)) {
-      alert('올바른 접근이 아닙니다.');
-      navigate('/');
-      return;
-    }
-  
     const fetchLocationAndData = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const currentLocation = {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude
-            };
-            getFoodTruck(foodTruckId, currentLocation, updateFoodTruckId, ()=>{alert("잘못된 접근입니다."); navigate('/login');});
-          },
-          (error) => {
-            console.error('Geolocation Error:', error);
-            alert('위치 정보를 가져오는데 실패했습니다.');
-            navigate(-1);
-          }
-        );
-      } else {
+      if (!navigator.geolocation) {
         alert('이 브라우저에서는 위치 정보를 사용할 수 없습니다.');
         navigate('/');
+        return;
       }
+
+      if (foodTruckId === null || isNaN(foodTruckId)) {
+        alert('올바른 접근이 아닙니다.');
+        navigate('/');
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const currentLocation = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+          getFoodTruck(foodTruckId, currentLocation, updateFoodTruckId, ()=>{alert("잘못된 접근입니다."); navigate('/login');});
+        },
+        (error) => {
+          console.error('Geolocation Error:', error);
+          alert('위치 정보를 가져오는데 실패했습니다.');
+          navigate(-1);
+        }
+      );
     };
   
     fetchLocationAndData();
@@ -201,7 +205,7 @@ function FoodTruckPage() {
                 ) : (
                   <>
                     <img src={Star} alt="" />
-                    <span>({foodTruck.foodTruck.avgGrade})</span>
+                    <span>{(Math.ceil(foodTruck.foodTruck.avgGrade*10))/10}</span>
                     <span>{foodTruck.foodTruck.reviewCount}</span>
                   </>
                 )}

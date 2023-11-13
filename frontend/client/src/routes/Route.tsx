@@ -7,6 +7,7 @@ import LoginPage from 'pages/LoginPage';
 import CartPage from 'pages/CartPage';
 import MyPage from 'pages/MyPage';
 import CartOrderPage from 'pages/CartOrderPage';
+import FoodTruckPage from 'pages/FoodTruckPage';
 
 function RouteLink() {
   return (
@@ -17,6 +18,7 @@ function RouteLink() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/mypage/detail" element={<MyPage />} />
         <Route path="/cartorder" element={<CartOrderPage />} />
+        <Route path="/foodtruck/detail/:foodTruckId" element={<FoodTruckPage/>} />
         {/* <Route path="/foodtruck" element={<FoodTruckPage />} /> */}
         {/* <Route path="/foodtruck/menu/:menuId" element={<FoodMenuDetailPage />} /> */}
       </Routes>

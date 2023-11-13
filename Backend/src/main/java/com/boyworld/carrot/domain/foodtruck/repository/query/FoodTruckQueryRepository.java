@@ -181,7 +181,7 @@ public class FoodTruckQueryRepository {
                         sale.isNotNull().and(sale.endTime.isNull()),
                         isLiked(email),
                         foodTruck.prepareTime,
-                        foodTruck.category.id,
+                        foodTruck.waitLimits,
                         getAvgGrade(foodTruckId),
                         getLikeCount(foodTruckId),
                         getReviewCount(foodTruckId),

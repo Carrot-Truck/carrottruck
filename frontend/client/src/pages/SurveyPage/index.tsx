@@ -1,4 +1,4 @@
-import BackSpace from "components/atoms/BackSpace";
+import BackSpace from "components/atoms/BackHome";
 import { SurveyLayout } from "./style";
 import { AxiosResponse, AxiosError } from "axios";
 import CategoryList from "components/organisms/CategoryList";

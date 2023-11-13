@@ -80,5 +80,10 @@ export const FoodTruckListItemWrapper = styled.div`
     height: 125px;
     padding: 5px 10px;
     background-color: var(--gray-100);
+
+    img {
+      width: 340px;
+      height: 125px;
+    }
   }
 `;

@@ -56,7 +56,7 @@ function MainPage() {
         reviewCount: 1324,
         distance: 123,
         address: '광주 광산구 장덕로 5번길 16',
-        foodTruckImageUrl: 'imageUrl',
+        foodTruckImageUrl: 'logo.png',
         isNew: true
       },
       {

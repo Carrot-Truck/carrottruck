@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FoodTruckLayout } from './style';
-import Navbar from "components/organisms/Navbar";
+import Navbar from 'components/organisms/Navbar';
 import BackSpace from 'components/atoms/BackSpace';
 import Button from 'components/atoms/Button';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,8 +9,10 @@ import EmptyHeart from 'assets/icons/empty_heart.svg';
 import Pin from 'assets/icons/pin.svg';
 import Star from 'assets/icons/star.svg';
 import FoodTruckMenu from 'components/organisms/FoodTruckMenu';
-import {getFoodTruck} from 'api/foodtruck/foodTruck';
-import {getFoodTruckReview} from 'api/review'
+import StoreInfoForm from 'components/organisms/StoreInfoForm';
+import ReviewList from 'components/organisms/ReviewList';
+import { getFoodTruck } from 'api/foodtruck/foodTruck';
+import { getFoodTruckReview } from 'api/review';
 import { AxiosResponse, AxiosError } from 'axios';
 import { getSchedules } from 'api/schedule';
 
@@ -28,28 +30,27 @@ function FoodTruckPage() {
   };
 
   const [foodTruck, setFoodTruck] = useState({
-    foodTruck: 
-      {
-        foodTruckId : 0,
-        foodTruckName : "",
-        phoneNumber : "",
-        content : "",
-        originInfo : "",
-        isOpen : false,
-        isLiked : false,
-        prepareTime : 30,
-        avgGrade : 4.5,
-        likeCount : 132,
-        reviewCount : 1324,
-        distance : 123.123,
-        address : "",
-        foodTruckImageUrl : "https://carrottruck.s3.ap-northeast-2.amazonaws.com/%EB%8B%B9%EA%B7%BC%ED%8A%B8%EB%9F%AD%EB%A1%9C%EA%B3%A0.png",
-        selected : true,
-        isNew : true,
-        vendorName : "",
-        tradeName : "",
-      }
-    ,
+    foodTruck: {
+      foodTruckId: 0,
+      foodTruckName: '',
+      phoneNumber: '',
+      content: '',
+      originInfo: '',
+      isOpen: false,
+      isLiked: false,
+      prepareTime: 30,
+      avgGrade: 4.5,
+      likeCount: 132,
+      reviewCount: 1324,
+      distance: 123.123,
+      address: '',
+      foodTruckImageUrl:
+        'https://carrottruck.s3.ap-northeast-2.amazonaws.com/%EB%8B%B9%EA%B7%BC%ED%8A%B8%EB%9F%AD%EB%A1%9C%EA%B3%A0.png',
+      selected: true,
+      isNew: true,
+      vendorName: '',
+      tradeName: ''
+    },
     menus: [
       {
         menuId: 0,
@@ -83,46 +84,45 @@ function FoodTruckPage() {
   const afterUpdateReview = (response: AxiosResponse) => {
     console.log('Review data fetched successfully', response);
     const foodTruckReviewDtoList = response.data.data.foodTruckDtoList;
-    
-    setFoodTruck(prevState =>{
+
+    setFoodTruck((prevState) => {
       // 현재 상태와 비교하여 값이 다를 때만 업데이트
       if (prevState.reviews !== foodTruckReviewDtoList) {
         return {
           ...prevState,
-          reviews: foodTruckReviewDtoList,
+          reviews: foodTruckReviewDtoList
         };
       } else {
         return prevState; // 상태가 변하지 않으면 이전 상태를 반환하여 업데이트 방지
       }
     });
-
-  }
+  };
 
   const afterUpdateSchedule = (response: AxiosResponse) => {
     console.log(response);
-     
-    setFoodTruck(prevState=> {
+
+    setFoodTruck((prevState) => {
       if (prevState.schedules !== response.data.data.schedules) {
-        return{
+        return {
           ...prevState,
           schedules: response.data.data.schedules
-        }
+        };
       } else {
         return prevState;
       }
     });
-  }
-  
+  };
+
   const updateFoodTruckId = (response: AxiosResponse) => {
     console.log(response);
-     
-    setFoodTruck(prevState=> {
+
+    setFoodTruck((prevState) => {
       if (prevState.foodTruck !== response.data.data.foodTruck || prevState.menus !== response.data.data.menus) {
-        return{
+        return {
           ...prevState,
           foodTruck: response.data.data.foodTruck,
-          menus: response.data.data.menus,
-        }
+          menus: response.data.data.menus
+        };
       } else {
         return prevState;
       }
@@ -148,7 +148,7 @@ function FoodTruckPage() {
       navigate('/');
       return;
     }
-  
+
     const fetchLocationAndData = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -157,7 +157,10 @@ function FoodTruckPage() {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude
             };
-            getFoodTruck(foodTruckId, currentLocation, updateFoodTruckId, ()=>{alert("잘못된 접근입니다."); navigate('/');});
+            getFoodTruck(foodTruckId, currentLocation, updateFoodTruckId, () => {
+              alert('잘못된 접근입니다.');
+              navigate('/');
+            });
           },
           (error) => {
             console.error('Geolocation Error:', error);
@@ -170,9 +173,9 @@ function FoodTruckPage() {
         navigate('/');
       }
     };
-  
+
     fetchLocationAndData();
-  }, []);  
+  }, []);
 
   return (
     <FoodTruckLayout>
@@ -189,19 +192,21 @@ function FoodTruckPage() {
           <div className="location">
             {/* <span> {foodTruck.distance}m </span> */}
             <img src={Pin} alt="" />
-            <span>{foodTruck.foodTruck.address === null ? ("등록된 주소가 없습니다.") : (foodTruck.foodTruck.address)} </span>
+            <span>
+              {foodTruck.foodTruck.address === null ? '등록된 주소가 없습니다.' : foodTruck.foodTruck.address}{' '}
+            </span>
           </div>
           <div className="review">
             <div>
-            {foodTruck.foodTruck.reviewCount === 0 ? (
+              {foodTruck.foodTruck.reviewCount === 0 ? (
                 <span>등록된 리뷰가 없습니다.</span>
-                ) : (
-                  <>
-                    <img src={Star} alt="" />
-                    <span>({foodTruck.foodTruck.avgGrade})</span>
-                    <span>{foodTruck.foodTruck.reviewCount}</span>
-                  </>
-                )}
+              ) : (
+                <>
+                  <img src={Star} alt="" />
+                  <span>({foodTruck.foodTruck.avgGrade})</span>
+                  <span>{foodTruck.foodTruck.reviewCount}</span>
+                </>
+              )}
             </div>
             {foodTruck.foodTruck.isOpen ? <span id="open">open</span> : <span id="close">close</span>}
           </div>
@@ -230,12 +235,10 @@ function FoodTruckPage() {
             handleClick={() => buttonClick(3)}
           />
         </div>
-        {selectedButton === 1 && foodTruck.menus.length > 0 && (
-          <FoodTruckMenu menus={foodTruck.menus} />
-        )}
-        {/* {selectedButton === 2 && } */}
-        {/* {selectedButton === 3 && } */}
-        <Navbar/>
+        {selectedButton === 1 && foodTruck.menus.length > 0 && <FoodTruckMenu menus={foodTruck.menus} />}
+        {selectedButton === 2 && <StoreInfoForm></StoreInfoForm>}
+        {selectedButton === 3 && <ReviewList></ReviewList>}
+        <Navbar />
       </div>
     </FoodTruckLayout>
   );

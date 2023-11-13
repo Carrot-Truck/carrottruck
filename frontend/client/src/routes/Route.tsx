@@ -2,7 +2,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MainPage from 'pages/MainPage';
 import LoginPage from 'pages/LoginPage';
-// import FoodTruckPage from 'pages/FoodTruckPage';
 // import FoodMenuDetailPage from 'pages/FoodMenuDetailPage';
 import CartPage from 'pages/CartPage';
 import MyPage from 'pages/MyPage';
@@ -18,8 +17,7 @@ function RouteLink() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/mypage/detail" element={<MyPage />} />
         <Route path="/cartorder" element={<CartOrderPage />} />
-        <Route path="/foodtruck/detail/:foodTruckId" element={<FoodTruckPage/>} />
-        {/* <Route path="/foodtruck" element={<FoodTruckPage />} /> */}
+        <Route path="/foodtruck/detail/:foodTruckId" element={<FoodTruckPage />} />
         {/* <Route path="/foodtruck/menu/:menuId" element={<FoodMenuDetailPage />} /> */}
       </Routes>
     </BrowserRouter>

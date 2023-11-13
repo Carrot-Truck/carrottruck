@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { getCartOrder } from "api/cart";
 import Button from "components/atoms/Button";
 import { useNavigate } from "react-router-dom";
+import { createOrder } from "api/order";
 
 const getData = (response: AxiosResponse) => {
   return response.data.data;
@@ -53,28 +54,35 @@ function CartOrderPage() {
 
   const requestPay = () => {
     const IMP = (window as any).IMP;
-    IMP.init("imp18617674");
+    IMP.init(`${process.env.REACT_APP_PAYMENT_CODE}`);
 
     IMP.request_pay(
       {
         pg: "kakaopay.TC0ONETIME",
         pay_method: "card",
         merchant_uid: new Date().getTime(),
-        name: "테스트 상품",
-        amount: 10,
-        buyer_email: "ssafy@ssafy.com",
-        buyer_name: "코드쿡",
-        buyer_tel: "010-1234-5678",
-        buyer_addr: "서울특별시",
-        buyer_postcode: "123-456",
+        name: "당근트럭_포장주문",
+        amount: cartOrder?.totalPrice
       },
       async (rsp: { imp_uid: string; paid_amount: any }) => {
         try {
           const { data } = await axios.post(
-            "http://localhost:8001/api/verifyIamport/imp18617674"
+            "http://localhost:8001/api/verifyIamport/" + rsp.imp_uid
           );
-          if (rsp.paid_amount === data.response.amount) {
+          if (rsp.paid_amount === data.data.response.amount) {
             alert("결제 성공");
+            createOrder(
+              (response: AxiosResponse) => {
+                const data = getData(response);
+                console.log("결제 완료 데이터: ",data);
+                navigate("/cart");
+                // 주문내역으로 이동하기
+              },
+              (error: any) => {
+                console.log("결제시도 오류: ",error);
+                navigate("/cart");
+              }
+            )
             navigate("/");
           } else {
             alert("결제 실패");
@@ -100,16 +108,13 @@ function CartOrderPage() {
         <p>{cartOrder?.phoneNumber}</p>
         <p>{cartOrder?.totalPrice}</p>
       </div>
-      <div>
-        <button onClick={requestPay}>결제하기</button>
-      </div>
-      {/* <Button
-        handleClick={handlePayment}
+      <Button
+        handleClick={requestPay}
         color="Primary"
         size="full"
         radius="m"
         text= "결제하기"
-      /> */}
+      />
       <Navbar />
     </CartOrderPageLayout>
   );

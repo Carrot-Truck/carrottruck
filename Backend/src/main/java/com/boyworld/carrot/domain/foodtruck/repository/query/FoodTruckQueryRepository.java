@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
+import static com.boyworld.carrot.domain.foodtruck.QCategory.category;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruck.foodTruck;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruckImage.foodTruckImage;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruckLike.foodTruckLike;
@@ -174,11 +175,13 @@ public class FoodTruckQueryRepository {
                         foodTruck.id,
                         foodTruck.name,
                         foodTruck.phoneNumber,
+                        foodTruck.category.id,
                         foodTruck.content,
                         foodTruck.originInfo,
                         sale.isNotNull().and(sale.endTime.isNull()),
                         isLiked(email),
                         foodTruck.prepareTime,
+                        foodTruck.category.id,
                         getAvgGrade(foodTruckId),
                         getLikeCount(foodTruckId),
                         getReviewCount(foodTruckId),
@@ -193,6 +196,7 @@ public class FoodTruckQueryRepository {
                 ))
                 .from(foodTruck)
                 .join(foodTruck.vendor, member)
+                .join(foodTruck.category, category)
                 .leftJoin(vendorInfo).on(vendorInfo.member.eq(member), vendorInfo.active)
                 .leftJoin(foodTruckLike).on(foodTruckLike.foodTruck.eq(foodTruck), foodTruckLike.active)
                 .leftJoin(schedule).on(schedule.foodTruck.eq(foodTruck), schedule.active)
@@ -218,9 +222,11 @@ public class FoodTruckQueryRepository {
                         foodTruck.id,
                         foodTruck.name,
                         foodTruck.phoneNumber,
+                        foodTruck.category.id,
                         foodTruck.content,
                         foodTruck.originInfo,
                         foodTruck.prepareTime,
+                        foodTruck.waitLimits,
                         getAvgGrade(foodTruckId),
                         getReviewCount(foodTruckId),
                         foodTruckImage.uploadFile.storeFileName,
@@ -231,6 +237,7 @@ public class FoodTruckQueryRepository {
                 ))
                 .from(foodTruck)
                 .join(foodTruck.vendor, member)
+                .join(foodTruck.category, category)
                 .leftJoin(vendorInfo).on(vendorInfo.member.eq(member), vendorInfo.active)
                 .leftJoin(review).on(review.foodTruck.eq(foodTruck), review.active)
                 .leftJoin(foodTruckImage).on(foodTruckImage.foodTruck.eq(foodTruck), foodTruckImage.active)

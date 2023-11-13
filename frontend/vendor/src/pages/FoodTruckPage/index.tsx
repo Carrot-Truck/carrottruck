@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FoodTruckLayout } from './style';
 import Navbar from "components/organisms/Navbar";
-import BackSpace from 'components/atoms/BackSpace';
 import Button from 'components/atoms/Button';
 import { useNavigate } from 'react-router-dom';
 // import Pocha from 'assets/imgs/image 21.png';
@@ -14,6 +13,7 @@ import {getFoodTruckOverviews} from 'api/foodtruck/foodTruck';
 import {getFoodTruckReview} from 'api/review'
 import {getFoodTruckDetails} from 'api/foodtruck/foodTruck'
 import { AxiosResponse, AxiosError } from 'axios';
+import BackSpaceHome from 'components/atoms/BackSpaceHome';
 
 function FoodTruckPage() {
   const navigate = useNavigate();
@@ -160,7 +160,7 @@ function FoodTruckPage() {
     <FoodTruckLayout>
       <div style={{ flexGrow: 1 }}>
         <div className="header">
-          <BackSpace></BackSpace>
+          <BackSpaceHome></BackSpaceHome>
           <img src={ModifyButton} alt=""  onClick={navigateToModifyPage}/>
         </div>
         <img className="headerImage" src={foodTruck.foodTruckImageUrl} alt="" />

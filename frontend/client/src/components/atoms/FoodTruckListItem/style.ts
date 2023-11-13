@@ -4,16 +4,16 @@ export const FoodTruckListItemWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
   gap: 2px;
   align-self: stretch;
   padding: 10px 0px 5px 0px;
 
   .restaurant {
-    width: 100%;
+    width: 360px;
     display: flex;
     flex-direction: row;
-    justify-content: spacebetween;
+    justify-content: space-around;
     align-items: center;
     gap: 73px;
     align-self: stretch;
@@ -21,6 +21,7 @@ export const FoodTruckListItemWrapper = styled.div`
     img {
       width: 45px;
       height: 45px;
+      margin: 0px 10px;
     }
 
     .category {
@@ -46,7 +47,7 @@ export const FoodTruckListItemWrapper = styled.div`
           color: var(--gray-200);
 
           p {
-            font-size: 1rem;
+            font-size: 0.75rem;
           }
 
           img {
@@ -60,8 +61,9 @@ export const FoodTruckListItemWrapper = styled.div`
 
   .reviews {
     display: flex;
+    width: 350px;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
     text-align: left;
     gap: 16px;
 
@@ -71,8 +73,12 @@ export const FoodTruckListItemWrapper = styled.div`
   }
 
   .foodTruckImage {
-    width: 386px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 340px;
     height: 125px;
+    padding: 5px 10px;
     background-color: var(--gray-100);
   }
 `;

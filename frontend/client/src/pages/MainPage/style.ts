@@ -10,12 +10,13 @@ export const MainPageLayout = styled.div`
 export const FoodTruckListLayout = styled.div`
   display: flex;
   flex-direction: column;
-
+  width: 360px;
+  align-items: center;
   position: fixed;
   z-index: 1000;
   top: calc(100% - 220px); /*시트가 얼마나 높이 위치할지*/
-  left: 0;
-  right: 0;
+  left: 30;
+  right: 30;
 
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;

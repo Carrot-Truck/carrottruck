@@ -15,27 +15,27 @@ export const FoodTruckMenuItemWrapper = styled.div`
 `;
 
 export const MenuTextWrapper = styled.div`
-  display: flex:
-  flex-direction:column:
+  display: flex;
+  flex-direction: column;
   width: 100%;
   justify-content: flex-start;
   text-align: left;
 
-  p: nth-child(1) {
+  p:nth-child(1) {
     font-size: 1.25rem;
-    font-color: var(--black-300);
+    color: var(--black-300);  // 'font-color' 대신 'color' 사용
     font-weight: 900;
     width: 100%;
   }
-  p: nth-child(2) {
+  p:nth-child(2) {
     font-size: 1rem;
-    font-color: var(--black-300);
+    color: var(--black-300);  // 여기도 동일하게 수정
     font-weight: 700;
     width: 100%;
   }
-  p: nth-child(3) {
+  p:nth-child(3) {
     font-size: 0.75rem;
-    font-color: var(--black-300);
+    color: var(--black-300);  // 여기도 동일하게 수정
     font-weight: 400;
     width: 100%;
   }

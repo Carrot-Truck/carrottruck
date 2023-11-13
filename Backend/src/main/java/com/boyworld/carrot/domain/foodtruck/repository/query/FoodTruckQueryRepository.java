@@ -3,6 +3,7 @@ package com.boyworld.carrot.domain.foodtruck.repository.query;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckOverview;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckClientDetailDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckVendorDetailDto;
+import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPQLQuery;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.boyworld.carrot.domain.SizeConstants.PAGE_SIZE;
+import static com.boyworld.carrot.domain.foodtruck.QCategory.category;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruck.foodTruck;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruckImage.foodTruckImage;
 import static com.boyworld.carrot.domain.foodtruck.QFoodTruckLike.foodTruckLike;
@@ -193,6 +195,7 @@ public class FoodTruckQueryRepository {
                 ))
                 .from(foodTruck)
                 .join(foodTruck.vendor, member)
+                .join(foodTruck.category, category)
                 .leftJoin(vendorInfo).on(vendorInfo.member.eq(member), vendorInfo.active)
                 .leftJoin(foodTruckLike).on(foodTruckLike.foodTruck.eq(foodTruck), foodTruckLike.active)
                 .leftJoin(schedule).on(schedule.foodTruck.eq(foodTruck), schedule.active)
@@ -218,9 +221,11 @@ public class FoodTruckQueryRepository {
                         foodTruck.id,
                         foodTruck.name,
                         foodTruck.phoneNumber,
+                        foodTruck.category.id,
                         foodTruck.content,
                         foodTruck.originInfo,
                         foodTruck.prepareTime,
+                        foodTruck.waitLimits,
                         getAvgGrade(foodTruckId),
                         getReviewCount(foodTruckId),
                         foodTruckImage.uploadFile.storeFileName,
@@ -231,6 +236,7 @@ public class FoodTruckQueryRepository {
                 ))
                 .from(foodTruck)
                 .join(foodTruck.vendor, member)
+                .join(foodTruck.category, category)
                 .leftJoin(vendorInfo).on(vendorInfo.member.eq(member), vendorInfo.active)
                 .leftJoin(review).on(review.foodTruck.eq(foodTruck), review.active)
                 .leftJoin(foodTruckImage).on(foodTruckImage.foodTruck.eq(foodTruck), foodTruckImage.active)
@@ -253,6 +259,24 @@ public class FoodTruckQueryRepository {
                 .fetchFirst();
     }
 
+    /**
+     * 사업자별 선택된 푸드트럭 조회 쿼리
+     *
+     * @param email 현재 로그인한 사용자 이메일
+     * @return selected 가 true 인 푸드트럭 엔티티
+     */
+    public FoodTruck getSelectedFoodTruckByEmail(String email) {
+        return queryFactory
+                .selectFrom(foodTruck)
+                .join(foodTruck.vendor, member)
+                .where(
+                        isEqualEmail(email),
+                        foodTruck.selected,
+                        foodTruck.active
+                )
+                .fetchOne();
+    }
+
     private BooleanExpression isEqualEmail(String email) {
         return hasText(email) ? foodTruck.vendor.email.eq(email) : null;
     }
@@ -262,7 +286,7 @@ public class FoodTruckQueryRepository {
     }
 
     private NumberTemplate<Double> calculateDistance(BigDecimal currentLat, NumberPath<BigDecimal> targetLat,
-                                                         BigDecimal currentLng, NumberPath<BigDecimal> targetLng) {
+                                                     BigDecimal currentLng, NumberPath<BigDecimal> targetLng) {
         return Expressions.numberTemplate(Double.class,
                 "ST_DISTANCE_SPHERE(POINT({0}, {1}), POINT({2}, {3}))",
                 currentLng, currentLat, targetLng, targetLat);

@@ -100,4 +100,11 @@ public class FoodTruck extends TimeBaseEntity {
         return this;
     }
 
+    public void select() {
+        this.selected = true;
+    }
+
+    public void unSelect() {
+        this.selected = false;
+    }
 }

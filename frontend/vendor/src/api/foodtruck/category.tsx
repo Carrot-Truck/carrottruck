@@ -1,7 +1,8 @@
-import { categoryApi } from "../index";
+import { categoryApi, getAuthorization } from "../index";
 
-const api = categoryApi
+const api = categoryApi;
 
 export async function getCategories(success: any, fail: any) {
-    await api.get(``).then(success).catch(fail);
+  api.defaults.headers["Authorization"] = getAuthorization();
+  await api.get(``).then(success).catch(fail);
 }

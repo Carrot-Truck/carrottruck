@@ -162,8 +162,8 @@ public class FoodTruckController {
      * 푸드트럭 상세조회 API (일반 사용자용)
      *
      * @param foodTruckId 푸드트럭 식별키
-     * @param latitude        위도
-     * @param longitude       경도
+     * @param latitude    위도
+     * @param longitude   경도
      * @return 푸드트럭 상세 정보
      */
     @GetMapping("/client/{foodTruckId}")
@@ -205,7 +205,7 @@ public class FoodTruckController {
 
         return ApiResponse.ok(response);
     }
-    
+
     /**
      * 푸드트럭 수정 API
      *
@@ -270,5 +270,25 @@ public class FoodTruckController {
         log.debug("FoodTruckLikeResponse={}", response);
 
         return ApiResponse.ok(response);
+    }
+
+    /**
+     * 사업자별 선택된 푸드트럭 변경
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @return 선택된 푸드트럭 식별키
+     */
+    @PatchMapping("/selected/{foodTruckId}")
+    public ApiResponse<Long> editSelected(@PathVariable Long foodTruckId) {
+        log.debug("FoodTruckController#editSelected called");
+        log.debug("foodTruckId={}", foodTruckId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long selectedId = foodTruckService.editSelected(foodTruckId, email);
+        log.debug("selectedId={}", selectedId);
+
+        return ApiResponse.ok(selectedId);
     }
 }

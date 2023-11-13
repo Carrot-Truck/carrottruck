@@ -9,5 +9,10 @@ export const NavbarContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   background: var(--gray-100);
+<<<<<<< HEAD
   z-index: 1001;
+=======
+  position: fixed;
+  bottom: 0;
+>>>>>>> dfe76e3eff127a9ceb9e1e35b12595d57c49371c
 `;

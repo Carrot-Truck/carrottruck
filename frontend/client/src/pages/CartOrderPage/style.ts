@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-export const StatisticsListLayout = styled.div`
+export const CartOrderPageLayout = styled.div`
   width: 360px;
   padding-bottom: 200px;
-  min-height: 100vh;
+  color: black;
 `;

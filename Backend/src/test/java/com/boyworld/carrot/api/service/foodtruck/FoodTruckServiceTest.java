@@ -28,6 +28,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -123,7 +124,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
-        FoodTruck foodTruck = createFoodTruck(member, category1);
+        FoodTruck foodTruck = createFoodTruck(member, category1, true);
 
         UpdateFoodTruckDto dto = UpdateFoodTruckDto.builder()
                 .foodTruckId(foodTruck.getId())
@@ -161,7 +162,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
-        FoodTruck foodTruck = createFoodTruck(vendor1, category1);
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, true);
 
         UpdateFoodTruckDto dto = UpdateFoodTruckDto.builder()
                 .foodTruckId(foodTruck.getId())
@@ -192,7 +193,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
-        FoodTruck foodTruck = createFoodTruck(member, category1);
+        FoodTruck foodTruck = createFoodTruck(member, category1, true);
 
         FoodTruckImage foodTruckImage = FoodTruckImage.builder()
                 .foodTruck(foodTruck)
@@ -243,7 +244,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
-        FoodTruck foodTruck = createFoodTruck(member, category1);
+        FoodTruck foodTruck = createFoodTruck(member, category1, true);
 
         UpdateFoodTruckDto dto = UpdateFoodTruckDto.builder()
                 .foodTruckId(foodTruck.getId())
@@ -287,7 +288,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
-        FoodTruck foodTruck = createFoodTruck(member, category1);
+        FoodTruck foodTruck = createFoodTruck(member, category1, true);
 
         // when
         Long deletedId = foodTruckService.deleteFoodTruck(foodTruck.getId(), member.getEmail());
@@ -309,7 +310,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
-        FoodTruck foodTruck = createFoodTruck(vendor1, category1);
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, true);
 
         // when // then
         assertThatThrownBy(() -> foodTruckService.deleteFoodTruck(foodTruck.getId(), vendor2.getEmail()))
@@ -331,7 +332,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
-        FoodTruck foodTruck = createFoodTruck(vendor1, category1);
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, true);
 
         FoodTruckLikeDto dto = FoodTruckLikeDto.builder()
                 .foodTruckId(foodTruck.getId())
@@ -356,7 +357,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         Category category1 = createCategory("고기/구이");
         Category category2 = createCategory("분식");
 
-        FoodTruck foodTruck = createFoodTruck(vendor1, category1);
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, true);
         createFoodTruckLike(vendor1, foodTruck);
         createFoodTruckLike(vendor2, foodTruck);
         createFoodTruckLike(client1, foodTruck);
@@ -372,6 +373,52 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
         // then
         assertThat(response).extracting("foodTruckId", "isLiked")
                 .containsExactly(foodTruck.getId(), false);
+    }
+
+    @DisplayName("사업자는 선택된 푸드트럭을 수정할 수 있다.")
+    @Test
+    void editSelected() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@gmail.com");
+        Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        FoodTruck selectedFoodTruck = createFoodTruck(vendor1, category1, true);
+        FoodTruck foodTruck = createFoodTruck(vendor1, category2, false);
+
+        // when
+        Long result = foodTruckService.editSelected(foodTruck.getId(), vendor1.getEmail());
+        Optional<FoodTruck> editedFoodTruck = foodTruckRepository.findById(result);
+
+        // then
+        assertThat(selectedFoodTruck.getSelected()).isFalse();
+        assertThat(editedFoodTruck.isPresent()).isTrue();
+        assertThat(editedFoodTruck.get().getSelected()).isTrue();
+    }
+
+    @DisplayName("일반 사용자거나 소유주가 아닌 경우 예외가 발생한다.")
+    @Test
+    void editSelectedWithInValiAccess() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, true, "ssafy@gmail.com");
+        Member vendor2 = createMember(Role.VENDOR, true, "ssafy123@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, true, "client@ssafy.com");
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        FoodTruck selectedFoodTruck = createFoodTruck(vendor1, category1, true);
+        FoodTruck foodTruck = createFoodTruck(vendor1, category2, false);
+
+        // when // then
+        assertThatThrownBy(() -> foodTruckService.editSelected(foodTruck.getId(), vendor2.getEmail()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
+
+        assertThatThrownBy(() -> foodTruckService.editSelected(foodTruck.getId(), client1.getEmail()))
+                .isInstanceOf(InValidAccessException.class)
+                .hasMessage("잘못된 접근입니다.");
     }
 
     private Member createMember(Role role, boolean active, String email) {
@@ -407,7 +454,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private FoodTruck createFoodTruck(Member member, Category category) {
+    private FoodTruck createFoodTruck(Member member, Category category, boolean selected) {
         FoodTruck foodTruck = FoodTruck.builder()
                 .vendor(member)
                 .category(category)
@@ -417,7 +464,7 @@ class FoodTruckServiceTest extends IntegrationTestSupport {
                 .originInfo("돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)")
                 .prepareTime(40)
                 .waitLimits(10)
-                .selected(true)
+                .selected(selected)
                 .active(true)
                 .build();
         return foodTruckRepository.save(foodTruck);

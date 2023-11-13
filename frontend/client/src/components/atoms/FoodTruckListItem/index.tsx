@@ -47,9 +47,9 @@ function FoodTruckListItem(props: IFoodTruckMenuItemProps) {
         <span>({grade})</span>
         <span>{reviewCount}</span>
       </div>
-      <div className="foodTruckImage">
+      {/* <div className="foodTruckImage">
         <img src={foodTruckImageUrl} alt="" />
-      </div>
+      </div> */}
     </FoodTruckListItemWrapper>
   );
 }

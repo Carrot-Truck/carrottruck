@@ -14,6 +14,7 @@ import {getFoodTruckReview} from 'api/review'
 import { AxiosResponse, AxiosError } from 'axios';
 import { getSchedules } from 'api/schedule';
 import FoodTruckInfo from 'components/organisms/FoodTruckInfo';
+import FoodTruckReview from 'components/organisms/FoodTruckReview'
 
 function FoodTruckPage() {
   const params = useParams();
@@ -238,7 +239,9 @@ function FoodTruckPage() {
         {selectedButton === 2 && (
           <FoodTruckInfo foodTruckDetail={foodTruck.foodTruck} schedules={foodTruck.schedules}></FoodTruckInfo>
         )}
-        {/* {selectedButton === 3 && } */}
+        {selectedButton === 3 && (
+          <FoodTruckReview reviews={foodTruck.reviews}></FoodTruckReview>
+        )}
         <Navbar/>
       </div>
     </FoodTruckLayout>

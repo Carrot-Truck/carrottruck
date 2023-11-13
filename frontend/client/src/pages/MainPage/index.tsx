@@ -53,10 +53,6 @@ function MainPage() {
 
     }, []);
 
-    useEffect(() => {
-        console.log(truckData); // 상태가 변경될 때마다 로그 출력
-      }, [truckData]);
-
 
     const fetchFoodTruckMarkers = (latitude: number, longitude: number) => {
         getFoodTruckMarkers({
@@ -80,8 +76,6 @@ function MainPage() {
             latitude, longitude, showAll: true
         },
             (response: any) => {
-                console.log(latitude, longitude);
-                console.log(response.data.data);
                 setFoodTruckList(response.data.data);
                 if (response.data.data.items.length > 0) {
                     setFoodTruckList(response.data.data);
@@ -92,46 +86,6 @@ function MainPage() {
             }
         )
     }
-
-/*
-  const foodTruckList = {
-    hasNext: false,
-    items: [
-      {
-        foodTruckScheduleId: 1,
-        categoryId: 1,
-        foodTruckId: 1,
-        foodTruckName: '동현 된장삼겹',
-        isOpen: false,
-        isLiked: true,
-        prepareTime: 30,
-        likeCount: 143,
-        grade: 4.5,
-        reviewCount: 1324,
-        distance: 123,
-        address: '광주 광산구 장덕로 5번길 16',
-        foodTruckImageUrl: 'imageUrl',
-        isNew: true
-      },
-      {
-        foodTruckScheduleId: 2,
-        categoryId: 2,
-        foodTruckId: 2,
-        foodTruckName: '팔천순대',
-        isOpen: true,
-        isLiked: false,
-        prepareTime: 20,
-        likeCount: 132,
-        grade: 4.0,
-        reviewCount: 1324,
-        distance: 100,
-        address: '수완자이아파트정문',
-        foodTruckImageUrl: 'imageUrl',
-        isNew: false
-      }
-    ]
-  };
-  */
 
 //   truckData에서 위도 경도를 추출하여 string에서 number로 변환
   const extractMarkers = (data: { markerItems: Array<{ latitude: string; longitude: string }> }): Array<Marker> =>

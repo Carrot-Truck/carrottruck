@@ -1,6 +1,6 @@
 import { PageContainer, UserInfoSection, ContactInfoSection, SettingsButton, EditableField } from './style';
 import { useState, useEffect, useRef } from 'react'
-import BackSpace from 'components/atoms/BackSpace';
+import BackSpace from 'components/atoms/BackHome';
 import { info, edit } from 'api/member/client';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';

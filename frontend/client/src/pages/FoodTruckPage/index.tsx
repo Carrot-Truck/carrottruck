@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FoodTruckLayout } from './style';
 import Navbar from "components/organisms/Navbar";
-import BackSpace from 'components/atoms/BackSpace';
+import BackSpace from 'components/atoms/BackHome';
 import Button from 'components/atoms/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 // import Pocha from 'assets/imgs/image 21.png';

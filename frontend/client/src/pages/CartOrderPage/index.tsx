@@ -56,8 +56,6 @@ function CartOrderPage() {
     // document.head.appendChild(iamport);
 
     return () => {
-      // document.head.removeChild(jquery);
-      // document.head.removeChild(iamport);
     };
 
   }, []);
@@ -95,52 +93,51 @@ function CartOrderPage() {
 //     }
 // };
 
-  const requestPay = async () => {
-    
-    await loadIamportScript();
+const requestPay = async () => {
+  await loadIamportScript();
 
-    const IMP = (window as any).IMP;
-    IMP.init(`${process.env.REACT_APP_PAYMENT_CODE}`);
+  const IMP = (window as any).IMP;
+  IMP.init(`${process.env.REACT_APP_PAYMENT_CODE}`);
 
-    IMP.request_pay(
-      {
-        pg: "kakaopay.TC0ONETIME",
-        pay_method: "card",
-        merchant_uid: new Date().getTime(),
-        name: "당근트럭_포장주문",
-        amount: cartOrder?.totalPrice
-      },
-      async (rsp: { imp_uid: string; paid_amount: any }) => {
-        try {
-          const { data } = await axios.post(
-            "http://localhost:8001/api/verifyIamport/" + rsp.imp_uid
+  IMP.request_pay(
+    {
+      pg: "kakaopay.TC0ONETIME",
+      pay_method: "card",
+      merchant_uid: new Date().getTime(),
+      name: "당근트럭_포장주문",
+      amount: cartOrder?.totalPrice
+    },
+    async (rsp: { imp_uid: string; paid_amount: any }) => {
+      try {
+        const { data } = await axios.post(
+          "http://localhost:8001/api/verifyIamport/" + rsp.imp_uid
+        );
+        if (rsp.paid_amount === data.data.response.amount) {
+          alert("결제 성공");
+          createOrder(
+            (response: AxiosResponse) => {
+              const data = getData(response);
+              console.log("결제 완료 데이터: ", data);
+              navigate("/cart");
+              // 주문내역으로 이동하기
+            },
+            (error: any) => {
+              console.log("결제시도 오류: ", error);
+              navigate("/cart");
+            }
           );
-          if (rsp.paid_amount === data.data.response.amount) {
-            alert("결제 성공");
-            createOrder(
-              (response: AxiosResponse) => {
-                const data = getData(response);
-                console.log("결제 완료 데이터: ",data);
-                navigate("/cart");
-                // 주문내역으로 이동하기
-              },
-              (error: any) => {
-                console.log("결제시도 오류: ",error);
-                navigate("/cart");
-              }
-            )
-            navigate("/");
-          } else {
-            alert("결제 실패");
-            navigate("/cart");
-          }
-        } catch (error) {
-          console.error("Error while verifying payment:", error);
+          navigate("/");
+        } else {
           alert("결제 실패");
+          navigate("/cart");
         }
+      } catch (error) {
+        console.error("Error while verifying payment:", error);
+        alert("결제 실패");
       }
-    );
-  };
+    }
+  );
+};
 
   return (
     <CartOrderPageLayout>

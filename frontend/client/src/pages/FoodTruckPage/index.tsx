@@ -165,7 +165,7 @@ function FoodTruckPage() {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           };
-          getFoodTruck(foodTruckId, currentLocation, updateFoodTruckId, ()=>{alert("잘못된 접근입니다."); navigate('/login');});
+          getFoodTruck(foodTruckId, currentLocation, updateFoodTruckId, ()=>{alert("잘못된 접근입니다."); navigate('/');});
         },
         (error) => {
           console.error('Geolocation Error:', error);

@@ -4,6 +4,7 @@ import NaverMap from 'components/atoms/Map';
 import FoodTruckList from 'components/organisms/FoodTruckList';
 import Navbar from 'components/organisms/Navbar';
 import useBottomSheet from 'hooks/useBottomSheet';
+import ShoppingCartItem from 'components/atoms/ShoppingCartItem';
 
 function MainPage() {
   interface Marker {
@@ -88,6 +89,7 @@ function MainPage() {
 
   return (
     <MainPageLayout>
+      <ShoppingCartItem></ShoppingCartItem>
       <NaverMap clientId={CLIENT_KEY} markers={markers}></NaverMap>
       <FoodTruckListLayout ref={sheet}>
         <div className="header">

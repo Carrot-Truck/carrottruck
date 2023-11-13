@@ -9,6 +9,7 @@ import MyPage from 'pages/MyPage';
 import CartOrderPage from 'pages/CartOrderPage';
 import FoodTruckPage from 'pages/FoodTruckPage';
 import SurveyPage from 'pages/SurveyPage';
+import AddMenuForm from 'components/organisms/AddMenuFrom';
 
 function RouteLink() {
   return (
@@ -21,6 +22,7 @@ function RouteLink() {
         <Route path="/cartorder" element={<CartOrderPage />} />
         <Route path="/foodtruck/detail/:foodTruckId" element={<FoodTruckPage/>} />
         <Route path="/survey" element={<SurveyPage/>} />
+        <Route path="/add/menu" element={<AddMenuForm/>} />
         {/* <Route path="/foodtruck" element={<FoodTruckPage />} /> */}
         {/* <Route path="/foodtruck/menu/:menuId" element={<FoodMenuDetailPage />} /> */}
       </Routes>

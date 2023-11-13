@@ -1,7 +1,9 @@
-import { MainPageLayout } from './style';
+import { useState, useRef } from 'react';
+import { MainPageLayout, FoodTruckListLayout } from './style';
 import NaverMap from 'components/atoms/Map';
 import FoodTruckList from 'components/organisms/FoodTruckList';
 import Navbar from 'components/organisms/Navbar';
+import useBottomSheet from 'hooks/useBottomSheet';
 
 function MainPage() {
   interface Marker {
@@ -10,6 +12,9 @@ function MainPage() {
   }
 
   const CLIENT_KEY: string = process.env.REACT_APP_CLIENT_ID || 'your-default-key-or-handle-error';
+
+  // 초기 높이를 25vh로 설정, 컴포넌트의 참조를 저장하기 위한 ref
+  const { sheet, content } = useBottomSheet();
 
   // 푸드트럭 지도 위치(마커)조회
   const truckData = {
@@ -84,7 +89,14 @@ function MainPage() {
   return (
     <MainPageLayout>
       <NaverMap clientId={CLIENT_KEY} markers={markers}></NaverMap>
-      <FoodTruckList foodTrucks={foodTruckList.items}></FoodTruckList>
+      <FoodTruckListLayout ref={sheet}>
+        <div className="header">
+          <div className="handle"></div>
+        </div>
+        <div className="bottomsheetcontent" ref={content}>
+          <FoodTruckList foodTrucks={foodTruckList.items}></FoodTruckList>
+        </div>
+      </FoodTruckListLayout>
       <Navbar></Navbar>
     </MainPageLayout>
   );

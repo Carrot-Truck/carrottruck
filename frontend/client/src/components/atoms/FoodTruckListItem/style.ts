@@ -24,6 +24,7 @@ export const FoodTruckListItemWrapper = styled.div`
     }
 
     .category {
+      width: 100%;
       display: flex;
       flex-direction: row;
 

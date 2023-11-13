@@ -18,21 +18,24 @@ import { AxiosResponse, AxiosError } from 'axios';
 function FoodTruckPage() {
   const navigate = useNavigate();
   const [selectedButton, setSelectedButton] = useState(1);
-  // ( 현재 선택된 푸드트럭 id 가져와야해 ) -> 우선순위 보류
-
+    // ( 현재 선택된 푸드트럭 id 가져와야해 ) -> 우선순위 보류
+    
   const navigateToModifyPage = () => {
-    navigate('/foodtruck/modify', { state: { foodTruck: foodTruck} });
-  };
-
+      navigate('/foodtruck/modify', { state: { foodTruck: foodTruck } });
+      console.log(foodTruck);
+    };
+    
   const buttonClick = (buttonNumber: number) => {
     setSelectedButton(buttonNumber);
   };
   const [foodTruck, setFoodTruck] = useState({
     foodTruckId: 0,
     foodTruckName: '',
+    categoryId: 0,
     content: '',
     originInfo: '',
     prepareTime: 0,
+    waitLimits: 0,
     phoneNumber: '',
     grade: 0,
     reviewCount: 0,
@@ -72,9 +75,11 @@ function FoodTruckPage() {
     const menusData = response.data.data.menus;
     const menuCount = response.data.data.menuCount;
     const foodTruckData = response.data.data.foodTruck;
-    const newPrepareTime = response.data.data.foodTruck.prepareTime;
+      const newPrepareTime = response.data.data.foodTruck.prepareTime;
+      const newWaitLimits = response.data.data.foodTruck.waitLimits;
     const newOriginInfo = response.data.data.foodTruck.originInfo;
     const newPhoneNumber = response.data.data.foodTruck.phoneNumber;
+    const newCategoryId = response.data.data.foodTruck.categoryId;
     
     setFoodTruck(prevState => {
       // 메뉴 갯수가 0이면 메뉴를 비워주고, 아니면 새로운 메뉴 데이터로 업데이트
@@ -82,13 +87,13 @@ function FoodTruckPage() {
         if(foodTruckData === null){
           return { ...prevState, menus: [] };
         }else{
-          return { ...prevState, menus: [], content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl, prepareTime: newPrepareTime, originInfo: newOriginInfo, phoneNumber: newPhoneNumber}
+            return { ...prevState, menus: [], content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl, prepareTime: newPrepareTime, waitLimits: newWaitLimits, originInfo: newOriginInfo, phoneNumber: newPhoneNumber, categoryId: newCategoryId}
         }
       } else {
         if(foodTruckData === null){
           return { ...prevState, menus: menusData };
         }else{
-          return { ...prevState, menus: menusData, content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl, prepareTime: newPrepareTime, originInfo: newOriginInfo, phoneNumber: newPhoneNumber}
+          return { ...prevState, menus: menusData, content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl, prepareTime: newPrepareTime, waitLimits: newWaitLimits, originInfo: newOriginInfo, phoneNumber: newPhoneNumber, categoryId: newCategoryId}
         }
       }
     });

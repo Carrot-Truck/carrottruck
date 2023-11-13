@@ -29,6 +29,7 @@ function FoodTruckModifyForm({ foodTruck }: any) {
     // 다른 카테고리들...
   ];
 
+    console.log(foodTruck);
   const handleSuccess = (response: AxiosResponse) => {
     if (response.data.code === 200) {
       navigate('/foodtruck/menu/modify', { state: { foodTruck } });
@@ -93,23 +94,23 @@ function FoodTruckModifyForm({ foodTruck }: any) {
   };
 
   useEffect(() => {
-    setCategoryId((prevCategoryId) => categoryId || prevCategoryId)
+    setCategoryId((prevCategoryId) => foodTruck.categoryId || prevCategoryId)
     setFoodTruckName((prevFoodTruckName) => foodTruck.foodTruckName || prevFoodTruckName);
     setFoodTruckPicture((prevFoodTruckPicture) => foodTruck.foodTruckImageUrl || prevFoodTruckPicture);
     setPhoneNumber((prevPhoneNumber) => foodTruck.phoneNumber || prevPhoneNumber);
     setContent((prevContent) => foodTruck.content || prevContent);
     setOriginInfo((prevOriginInfo) => foodTruck.originInfo || prevOriginInfo);
     setPrepareTime((prevPrepareTime) => foodTruck.prepareTime || prevPrepareTime);
-    setWaitLimits((prevWaitLimits) => waitLimits || prevWaitLimits);
+    setWaitLimits((prevWaitLimits) => foodTruck.waitLimits || prevWaitLimits);
 
     if (
       foodTruck.foodTruckName &&
-      categoryId &&
+      foodTruck.categoryId &&
       foodTruck.foodTruckImageUrl &&
       foodTruck.content &&
       foodTruck.phoneNumber &&
       foodTruck.prepareTime &&
-      waitLimits &&
+      foodTruck.waitLimits &&
       foodTruck.originInfo
     ) {
       setIsDone(true);
@@ -119,11 +120,11 @@ function FoodTruckModifyForm({ foodTruck }: any) {
   }, [
     foodTruck.foodTruckName,
     foodTruck.foodTruckImageUrl,
-    categoryId,
+    foodTruck.categoryId,
     foodTruck.content,
     foodTruck.phoneNumber,
     foodTruck.prepareTime,
-    waitLimits,
+    foodTruck.waitLimits,
     foodTruck.originInfo,
   ]);
 

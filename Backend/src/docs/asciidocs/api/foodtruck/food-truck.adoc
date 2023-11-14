@@ -130,3 +130,16 @@ include::{snippets}/edit-selected-food-truck/path-parameters.adoc[]
 
 include::{snippets}/edit-selected-food-truck/http-response.adoc[]
 include::{snippets}/edit-selected-food-truck/response-fields.adoc[]
+
+[[is-open-food-truck]]
+=== 푸드트럭 영업 여부 조회
+
+==== HTTP Request
+
+include::{snippets}/is-open-food-truck/http-request.adoc[]
+include::{snippets}/is-open-food-truck/path-parameters.adoc[]
+
+==== HTTP Response
+
+include::{snippets}/is-open-food-truck/http-response.adoc[]
+include::{snippets}/is-open-food-truck/response-fields.adoc[]

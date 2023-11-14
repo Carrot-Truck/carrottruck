@@ -267,6 +267,28 @@ public class FoodTruckQueryRepository {
                 .fetchOne();
     }
 
+    /**
+     * 푸드트럭 식별키에 해당하는 푸드트럭의 영업 여부 조회 쿼리
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @return 해당 푸드트럭의 영업 여부
+     */
+    public Boolean isOpenFoodTruckById(Long foodTruckId) {
+        Long id = queryFactory
+                .select(foodTruck.id)
+                .from(foodTruck)
+                .leftJoin(sale).on(sale.foodTruck.id.eq(foodTruckId), sale.active)
+                .where(
+                        isEqualFoodTruckId(foodTruckId),
+                        sale.isNotNull(),
+                        sale.endTime.isNull(),
+                        foodTruck.active
+                )
+                .fetchFirst();
+
+        return id != null;
+    }
+
     private BooleanExpression isEqualEmail(String email) {
         return hasText(email) ? foodTruck.vendor.email.eq(email) : null;
     }

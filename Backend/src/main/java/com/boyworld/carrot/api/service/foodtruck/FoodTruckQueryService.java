@@ -180,4 +180,14 @@ public class FoodTruckQueryService {
         List<ScheduleDto> schedules = scheduleQueryRepository.getSchedulesByFoodTruckId(foodTruckId);
         return FoodTruckDetailResponse.of(foodTruck, menus, schedules);
     }
+
+    /**
+     * 푸드트럭 식별키에 해당하는 푸드트럭의 영업 여부 조회
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @return 해당 푸드트럭의 영업 여부
+     */
+    public Boolean isOpenFoodTruck(Long foodTruckId) {
+        return foodTruckQueryRepository.isOpenFoodTruckById(foodTruckId);
+    }
 }

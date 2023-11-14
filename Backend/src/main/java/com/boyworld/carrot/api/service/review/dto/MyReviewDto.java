@@ -36,7 +36,7 @@ public class MyReviewDto {
         this.grade = grade;
         this.content = content;
         this.createdDate = createdDate;
-        this.imageUrl = imageUrl != null ? imageUrl : NO_IMG;
+        this.imageUrl = imageUrl;
     }
 
     public static MyReviewDto of(Review review){

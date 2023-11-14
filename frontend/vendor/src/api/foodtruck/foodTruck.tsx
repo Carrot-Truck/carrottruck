@@ -60,3 +60,8 @@ export async function editSelectedFoodTruck(foodTruckId: number, success: any, f
   api.defaults.headers["Authorization"] = getAuthorization();
   await api.patch(`/selected/${foodTruckId}`).then(success).catch(fail);
 }
+
+export async function isOpenFoodTruck(foodTruckId: number, success: any, fail: any) {
+  api.defaults.headers["Authorization"] = getAuthorization();
+  await api.get(`/open/${foodTruckId}`).then(success).catch(fail);
+}

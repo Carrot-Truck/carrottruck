@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface TitleTextWrapperProps {
   $size: "s" | "m" | "l";
+  $textAlign: "left" | "center" | "right";
 }
 
 export const TitleTextWrapper = styled.div<TitleTextWrapperProps>`
@@ -9,23 +10,32 @@ export const TitleTextWrapper = styled.div<TitleTextWrapperProps>`
   font-family: BMJUA;
   font-weight: 700;
   ${({ $size }) => TextSizeStyles[$size]}
-  text-align: left;
+  ${({ $textAlign }) => TextAlign[$textAlign]};
 `;
 
 const TextSizeStyles = {
   s: `
   font-size: 1.2rem;
-  margin-bottom: 5px;
-  margin-left: 5px;
+  margin: 5px 0;
   `,
   m: `
   font-size: 1.5rem;
-  margin-bottom: 10px;
-  margin-left: 10px;
+  margin: 10px 0;
   `,
   l: `
   font-size: 2rem;
-  margin-bottom: 20px;
-  margin-left: 20px;
+  margin: 20px 0;
+  `,
+};
+
+const TextAlign = {
+  left: `
+  text-align: left;
+  `,
+  center: `
+  text-align: center;
+  `,
+  right: `
+  text-align: right;
   `,
 };

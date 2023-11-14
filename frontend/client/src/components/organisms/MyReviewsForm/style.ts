@@ -2,6 +2,9 @@ import styled from 'styled-components';
 
 export const MyReviewsFormContainer = styled.div`
   .title {
+    border-top: 1px solid var(--gray-400);
+    border-bottom: 1px solid var(--gray-400);
+    padding: 10px 0px;
     p {
       font-family: BMJUA;
       font-weight: 700;

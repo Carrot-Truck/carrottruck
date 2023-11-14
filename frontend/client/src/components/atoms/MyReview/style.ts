@@ -3,6 +3,8 @@ import styled from 'styled-components';
 export const MyReviewItemWrapper = styled.div`
   padding: 15px 10px 5px 0px;
   text-align: left;
+  border-bottom: 1px solid var(--gray-400);
+
   p {
     font-size: 1rem;
     font-weight: 400;

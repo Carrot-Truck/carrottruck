@@ -127,6 +127,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = {"VENDOR", "CLIENT"})
     void getFoodTruckMarkers() throws Exception {
         FoodTruckMarkerItem info1 = FoodTruckMarkerItem.builder()
+                .id(1L)
                 .categoryId(1L)
                 .foodTruckId(1L)
                 .latitude(BigDecimal.valueOf(37.5665))
@@ -136,6 +137,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .build();
 
         FoodTruckMarkerItem info2 = FoodTruckMarkerItem.builder()
+                .id(2L)
                 .categoryId(2L)
                 .foodTruckId(2L)
                 .latitude(BigDecimal.valueOf(35.1595))
@@ -189,6 +191,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("마커 개수"),
                                 fieldWithPath("data.markerItems").type(JsonFieldType.ARRAY)
                                         .description("푸드트럭 검색 결과 목록"),
+                                fieldWithPath("data.markerItems[].id").type(JsonFieldType.NUMBER)
+                                        .description("푸드트럭 스케줄 / 영업 식별키"),
                                 fieldWithPath("data.markerItems[].categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 식별키"),
                                 fieldWithPath("data.markerItems[].foodTruckId").type(JsonFieldType.NUMBER)

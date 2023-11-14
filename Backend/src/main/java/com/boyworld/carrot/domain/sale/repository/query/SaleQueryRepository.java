@@ -96,6 +96,7 @@ public class SaleQueryRepository {
 
         return queryFactory
                 .select(Projections.constructor(FoodTruckMarkerItem.class,
+                        sale.id,
                         sale.foodTruck.category.id,
                         sale.foodTruck.id,
                         distance,

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const MyPageLayout = styled.div`
   width: 360px;
   padding-bottom: 200px;
-  font-family: BMJUA;
+  font-family: BM JUA_TTF;
 
   .userInfo {
     display: flex;

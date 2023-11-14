@@ -11,7 +11,7 @@ interface IButtonWrapperProps {
 export const ButtonWrapper = styled.button<IButtonWrapperProps>`
   border-radius: var(--radius-m);
   height: 48px;
-  font-family: BMJUA;
+  font-family: BM JUA_TTF;
   font-size: 1.25rem;
   font-weight: 900;
 

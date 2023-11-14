@@ -3,27 +3,27 @@ import styled from 'styled-components';
 export const AddMenuLayout = styled.div`
   width: 360px;
   padding-bottom: 200px;
-  min-height: 100vh;      // 최소 높이를 뷰포트 높이로 설정
+  min-height: 100vh; // 최소 높이를 뷰포트 높이로 설정
   justify-content: space-between; // 내용과 NavBar 사이의 공간을 균등하게 분배
 
   .content {
-    flex-grow: 1;  // 내용이 차지할 수 있는 만큼의 공간을 차지하도록 설정
+    flex-grow: 1; // 내용이 차지할 수 있는 만큼의 공간을 차지하도록 설정
     // 필요한 경우 여기에 추가 스타일을 적용합니다.
   }
-  
+
   .header {
     display: flex;
     flex-direction: rows;
     justify-content: space-between;
 
     p {
-      font-family: BMJUA;
+      font-family: BM JUA_TTF;
       font-size: 2rem;
       justify-content: center;
     }
 
     span {
-      font-family: BMJUA;
+      font-family: BM JUA_TTF;
       font-size: 2rem;
       text-align: center;
     }
@@ -34,12 +34,12 @@ export const AddMenuLayout = styled.div`
     height: 20vh;
   }
 
-   .storeInfo {
+  .storeInfo {
     padding: 20px;
     background: white; // 이 부분은 예시이며, 디자인에 맞게 조정해야 합니다.
     font-family: 'BM JUA_TTF'; // 폰트는 디자인에 맞게 조정
     font: black;
-    
+
     .foodTruckName {
       display: flex;
       flex-direction: row;
@@ -67,7 +67,7 @@ export const AddMenuLayout = styled.div`
       justify-content: space-between;
       margin-bottom: 20px;
       color: black;
-      
+
       button {
         font-size: 1.5rem; // 버튼의 크기를 조정
         width: 30px; // 버튼의 너비를 조정
@@ -77,7 +77,7 @@ export const AddMenuLayout = styled.div`
         background: #fff; // 버튼의 배경색을 조정
         color: #333; // 버튼의 텍스트 색상을 조정
       }
-      
+
       span {
         font-size: 1.5rem; // 수량 숫자의 크기를 조정
       }
@@ -89,7 +89,7 @@ export const AddMenuLayout = styled.div`
       margin-bottom: 30px;
     }
   }
-  
+
   .header {
     display: flex;
     align-items: center;

@@ -32,7 +32,7 @@ export const GlobalFonts = createGlobalStyle`
             src: url("assets/fonts/NanumSquareNeoHeavy.otf") format("opentype");
         }
         @font-face {
-            font-family: "BMJUA";
+            font-family: "BM JUA_TTF";
             font-style: normal;
             font-weight: 900;
             src: url("assets/fonts/BMJUA_otf.otf") format("opentype");

@@ -51,7 +51,6 @@ public class CartControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = {"CLIENT", "VENDOR"})
     void createCart() throws Exception {
         CreateCartMenuRequest request = CreateCartMenuRequest.builder()
-                .foodTruckId(1L)
                 .menuId(1L)
                 .cartMenuQuantity(2)
                 .menuOptionIds(new ArrayList<>(Arrays.asList(1L, 2L)))
@@ -73,8 +72,6 @@ public class CartControllerDocsTest extends RestDocsSupport {
                         document("create-cart",
                                 preprocessRequest(prettyPrint()),
                                 requestFields(
-                                        fieldWithPath("foodTruckId").type(JsonFieldType.NUMBER)
-                                                .description("장바구니에 담은 메뉴의 푸드트럭 ID"),
                                         fieldWithPath("menuId").type(JsonFieldType.NUMBER)
                                                 .description("장바구니에 담은 메뉴 ID"),
                                         fieldWithPath("cartMenuQuantity").type(JsonFieldType.NUMBER)

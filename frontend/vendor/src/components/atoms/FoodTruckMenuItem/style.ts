@@ -8,10 +8,12 @@ export const FoodTruckMenuItemWrapper = styled.div`
   margin: 0.5rem;
   text-align: center;
   border-top: 1px solid var(--gray-400);
+  border: 1px solid #ccc;
 
   img {
     width: 30%;
     height: 3rem;
+    margin-right: 5px;
   }
 
   .deleteIcon {

@@ -12,7 +12,7 @@ export const BigButtonWrapper = styled.button<IButtonWrapperProps>`
   border-radius: var(--radius-m);
   height: 48px;
   margin-bottom: 2rem;
-  font-family: BMJUA;
+  font-family: BM JUA_TTF;
   font-size: 2rem;
   font-weight: 900;
 

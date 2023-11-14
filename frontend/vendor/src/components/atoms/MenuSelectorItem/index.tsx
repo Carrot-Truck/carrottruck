@@ -18,7 +18,7 @@ function MenuSelectorItem({
   handleItemClick,
 }: IMenuSelectorItemProps) {
   return (
-    <MenuSelectorItemWrapper onClick={handleItemClick} soldout={soldout}>
+    <MenuSelectorItemWrapper onClick={handleItemClick} $soldout={soldout}>
       <div className="menu-item-image">
         <img src={image} />
       </div>

@@ -7,24 +7,37 @@ interface TitleTextWrapperProps {
 
 export const TitleTextWrapper = styled.div<TitleTextWrapperProps>`
   width: 100%;
-  font-family: BMJUA;
-  font-weight: 700;
-  ${({ $size }) => TextSizeStyles[$size]}
+  ${({ $size }) => TextSizeStyles[$size]};
   ${({ $textAlign }) => TextAlign[$textAlign]};
+  display: relative;
+
+  div {
+    display: absolute;
+    font-family: BM JUA_TTF;
+    font-weight: 700;
+    top: 50%;
+    transform: translateY(50%);
+  }
 `;
 
 const TextSizeStyles = {
   s: `
-  font-size: 1.2rem;
   margin: 5px 0;
+  div {
+    font-size: 1.2rem
+  };
   `,
   m: `
-  font-size: 1.5rem;
   margin: 10px 0;
-  `,
+  div {
+    font-size: 1.5rem;
+  }
+    `,
   l: `
-  font-size: 2rem;
   margin: 20px 0;
+  div {
+    font-size: 2rem;
+  };
   `,
 };
 

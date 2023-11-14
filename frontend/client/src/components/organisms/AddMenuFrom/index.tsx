@@ -4,17 +4,19 @@ import BackSpace from 'components/atoms/BackSpace';
 import { AddMenuLayout }  from './style';
 import Button from 'components/atoms/Button';
 import Navbar from '../Navbar';
+import { createCart } from 'api/cart';
+import { AxiosResponse } from 'axios';
 
 function AddMenuForm() {
   const location = useLocation();
   const navigate = useNavigate();
   const { menuId, menuName, menuDescription, menuPrice, menuImageUrl } = location.state;
-  const [quantity, setQuantity] = useState(1);
+  const [cartMenuQuantity, setCartMenuQuantity] = useState(1);
   
-  const increaseQuantity = () => setQuantity(quantity + 1);
+  const increaseQuantity = () => setCartMenuQuantity(cartMenuQuantity + 1);
   const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
+    if (cartMenuQuantity > 1) {
+      setCartMenuQuantity(cartMenuQuantity - 1);
     }
   };
 
@@ -22,8 +24,38 @@ function AddMenuForm() {
     navigate(-1);
   };
 
-  const handleAddToCart = () => {
-    // 로직을 추가하여 장바구니에 추가
+  const getData = (response: AxiosResponse) => {
+    return response.data.data;
+  };
+
+  const handleAddToCart = async () => {
+    if (menuId) {
+      try {
+        const requestData = {
+          menuId,
+          cartMenuQuantity
+        };
+        // submitSurvey 함수를 호출하여 서버에 데이터 제출
+        await createCart(
+          requestData,
+          (response: AxiosResponse) => {
+            const data = getData(response);
+            console.log(data);
+            alert("메뉴를 담았습니다");
+          },
+          (error: any) => {
+            console.log(requestData);
+            console.log(error);
+          }
+        );
+      } catch (error) {
+        console.error("메뉴 추가 중 오류 발생:", error);
+        alert("메뉴 추가에 실패했습니다.");
+      }
+    } else {
+      // 필요한 데이터가 없는 경우 알림
+      alert("메뉴를 확인해 주세요");
+    }
   };
 
   return (
@@ -47,11 +79,11 @@ function AddMenuForm() {
 
           <div className="quantity">
             <button onClick={decreaseQuantity}>-</button>
-            <span>{quantity}</span>
+            <span>{cartMenuQuantity}</span>
             <button onClick={increaseQuantity}>+</button>
           </div>
 
-          <p  className="quantity">총 금액: {menuPrice * quantity}원</p>
+          <p  className="quantity">총 금액: {menuPrice * cartMenuQuantity}원</p>
           <Button size='full' radius='m' color='Primary' text='담기' handleClick={handleAddToCart}></Button>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
 interface IMenuSelectorItemWrapperProps {
-  soldout: boolean;
+  $soldout: boolean;
 }
 
 export const MenuSelectorItemWrapper = styled.div<IMenuSelectorItemWrapperProps>`
@@ -10,8 +10,8 @@ export const MenuSelectorItemWrapper = styled.div<IMenuSelectorItemWrapperProps>
   position: relative;
   border-bottom: 1px solid black;
 
-  ${({ soldout }) =>
-    soldout
+  ${({ $soldout }) =>
+    $soldout
       ? css`
           background-color: var(--gray-300);
         `

@@ -111,7 +111,7 @@ public class ScheduleQueryRepository {
                 condition.getLongitude(), schedule.longitude);
 
         List<Long> ids = queryFactory
-                .selectDistinct(schedule.id)
+                .selectDistinct(schedule.foodTruck.id)
                 .from(schedule)
                 .join(schedule.foodTruck, foodTruck)
                 .leftJoin(sale).on(schedule.foodTruck.eq(sale.foodTruck), sale.active)
@@ -123,7 +123,7 @@ public class ScheduleQueryRepository {
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
                         distance.loe(SEARCH_RANGE_METER),
-                        isGreaterThanLastId(lastScheduleId),
+                        isLastId(lastScheduleId, condition.getOrderCondition()),
                         isActiveFoodTruck(),
                         schedule.active
                 )
@@ -140,19 +140,15 @@ public class ScheduleQueryRepository {
         LocalDateTime lastMonth = now.minusMonths(1);
 
         return queryFactory
-                .select(Projections.constructor(FoodTruckItem.class,
-                        schedule.id,
+                .selectDistinct(Projections.constructor(FoodTruckItem.class,
                         schedule.foodTruck.category.id,
                         schedule.foodTruck.id,
                         schedule.foodTruck.name,
                         isOpen(today, now),
                         isLiked(email),
-                        schedule.foodTruck.prepareTime,
                         getLikeCount(),
                         getAvgGrade(),
                         getReviewCount(),
-                        distance,
-                        schedule.address,
                         foodTruckImage.uploadFile.storeFileName,
                         isNew(lastMonth)
                 ))
@@ -164,10 +160,10 @@ public class ScheduleQueryRepository {
                 .leftJoin(review).on(schedule.foodTruck.eq(review.foodTruck), review.active)
                 .leftJoin(foodTruckImage).on(schedule.foodTruck.eq(foodTruckImage.foodTruck), foodTruckImage.active)
                 .where(
-                        schedule.id.in(ids)
+                        schedule.foodTruck.id.in(ids)
                 )
                 .groupBy(
-                        schedule.id
+                        schedule.foodTruck.id
                 )
                 .orderBy(
                         createOrderSpecifier(condition.getOrderCondition(), distance)
@@ -242,7 +238,10 @@ public class ScheduleQueryRepository {
                 currentLng, currentLat, targetLng, targetLat);
     }
 
-    private BooleanExpression isGreaterThanLastId(Long lastScheduleId) {
+    private BooleanExpression isLastId(Long lastScheduleId, OrderCondition orderCondition) {
+        if (orderCondition == null) {
+            return lastScheduleId != null ? schedule.id.lt(lastScheduleId) : null;
+        }
         return lastScheduleId != null ? schedule.id.gt(lastScheduleId) : null;
     }
 

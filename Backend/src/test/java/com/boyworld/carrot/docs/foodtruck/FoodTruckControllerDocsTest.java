@@ -214,35 +214,27 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
     @WithMockUser(roles = {"CLIENT", "VENDOR"})
     void getSearchedFoodTrucks() throws Exception {
         FoodTruckItem item1 = FoodTruckItem.builder()
-                .foodTruckScheduleId(1L)
                 .categoryId(1L)
                 .foodTruckId(1L)
                 .foodTruckName("동현 된장삼겹")
                 .isOpen(false)
                 .isLiked(true)
-                .prepareTime(30)
                 .grade(4.5)
                 .likeCount(143)
                 .reviewCount(1324)
-                .distance(BigDecimal.valueOf(123))
-                .address("광주 광산구 장덕로 5번길 16")
                 .foodTruckImageUrl("imageUrl")
                 .isNew(true)
                 .build();
 
         FoodTruckItem item2 = FoodTruckItem.builder()
-                .foodTruckScheduleId(2L)
                 .categoryId(2L)
                 .foodTruckId(2L)
                 .foodTruckName("팔천순대")
                 .isOpen(true)
                 .isLiked(false)
-                .prepareTime(20)
                 .grade(4.0)
                 .likeCount(132)
                 .reviewCount(1324)
-                .distance(BigDecimal.valueOf(100))
-                .address("수완자이아파트정문")
                 .foodTruckImageUrl("imageUrl")
                 .isNew(false)
                 .build();
@@ -296,8 +288,6 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("다음 페이지 존재 여부"),
                                 fieldWithPath("data.items").type(JsonFieldType.ARRAY)
                                         .description("푸드트럭 검색 결과 목록"),
-                                fieldWithPath("data.items[].foodTruckScheduleId").type(JsonFieldType.NUMBER)
-                                        .description("푸드트럭 스케줄 식별키"),
                                 fieldWithPath("data.items[].categoryId").type(JsonFieldType.NUMBER)
                                         .description("카테고리 식별키"),
                                 fieldWithPath("data.items[].foodTruckId").type(JsonFieldType.NUMBER)
@@ -308,18 +298,12 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("영업 상태"),
                                 fieldWithPath("data.items[].isLiked").type(JsonFieldType.BOOLEAN)
                                         .description("찜 여부"),
-                                fieldWithPath("data.items[].prepareTime").type(JsonFieldType.NUMBER)
-                                        .description("예상 준비 시간"),
                                 fieldWithPath("data.items[].grade").type(JsonFieldType.NUMBER)
                                         .description("평점"),
                                 fieldWithPath("data.items[].likeCount").type(JsonFieldType.NUMBER)
                                         .description("찜 개수"),
                                 fieldWithPath("data.items[].reviewCount").type(JsonFieldType.NUMBER)
                                         .description("리뷰 개수"),
-                                fieldWithPath("data.items[].distance").type(JsonFieldType.NUMBER)
-                                        .description("현재 사용자와의 거리"),
-                                fieldWithPath("data.items[].address").type(JsonFieldType.STRING)
-                                        .description("푸드트럭 주소"),
                                 fieldWithPath("data.items[].foodTruckImageUrl").type(JsonFieldType.STRING)
                                         .description("푸드트럭 이미지 저장 경로"),
                                 fieldWithPath("data.items[].isNew").type(JsonFieldType.BOOLEAN)

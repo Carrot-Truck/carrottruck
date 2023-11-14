@@ -33,7 +33,8 @@ function MenuSelector({ menuItemList, onSale }: IMenuSelectorProps) {
           menuItemList[index].menuId,
           (response: AxiosResponse) => {
             const data = getData(response);
-            if (data === index) {
+            console.log(data);
+            if (data == index) {
               menuItemList[index].menuSoldOut = !soldout;
             }
           },
@@ -46,7 +47,7 @@ function MenuSelector({ menuItemList, onSale }: IMenuSelectorProps) {
   };
 
   return (
-    <MenuSelectorContainer>
+    <MenuSelectorContainer $onSale={onSale}>
       {menuItemList === undefined || menuItemList.length == 0 ? (
         <NothingHere />
       ) : (

@@ -8,5 +8,5 @@ export const ToOrderDetailWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  margin-left: auto;
+  margin: auto;
 `;

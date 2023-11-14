@@ -3,6 +3,7 @@
 import { FoodTruckInfoContainer } from './style';
 import FoodTruckInfoItem from "../../atoms/FoodTruckInfoItem"
 import Button from 'components/atoms/Button';
+import { useNavigate } from 'react-router-dom';
 
 // 메뉴 아이템 인터페이스를 정의합니다.
 interface FoodTruck {
@@ -51,11 +52,15 @@ interface FoodTruck {
   //   imageUrl: ''
   // }>;
 };
-const modifyInfo = ()=>{
-  
-}
+
 
 function FoodTruckInfo({ foodTruckDetail, schedules }: FoodTruck) {
+  const navigate = useNavigate();
+
+  const modifyInfo = ()=>{
+    navigate('/schedule');
+  }
+  
   return (
     <FoodTruckInfoContainer>
       <FoodTruckInfoItem title="영업정보" value={schedules}></FoodTruckInfoItem>

@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 @Data
 public class FoodTruckMarkerItem {
 
+    private Long id;
+
     private Long categoryId;
 
     private Long foodTruckId;
@@ -23,8 +25,9 @@ public class FoodTruckMarkerItem {
     private Boolean isOpen;
 
     @Builder
-    public FoodTruckMarkerItem(Long categoryId, Long foodTruckId, BigDecimal distance,
+    public FoodTruckMarkerItem(Long id, Long categoryId, Long foodTruckId, BigDecimal distance,
                                BigDecimal latitude, BigDecimal longitude, Boolean isOpen) {
+        this.id = id;
         this.categoryId = categoryId;
         this.foodTruckId = foodTruckId;
         this.distance = distance.toEngineeringString();

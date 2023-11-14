@@ -81,6 +81,7 @@ public class ScheduleQueryRepository {
 
         return queryFactory
                 .select(Projections.constructor(FoodTruckMarkerItem.class,
+                        schedule.id,
                         schedule.foodTruck.category.id,
                         schedule.foodTruck.id,
                         distance,

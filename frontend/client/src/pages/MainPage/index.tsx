@@ -13,81 +13,84 @@ function MainPage() {
     longitude: number;
   }
 
-    const [truckData, setTruckData] = useState({
-        markerCount: 0,
-        markerItems: []
-    });
-    const [markers, setMarkers] = useState<Array<Marker>>([]);
-    const [foodTruckList, setFoodTruckList] = useState({
-        hasNext: Boolean,
-        items: []
-    });
+  const [truckData, setTruckData] = useState({
+    markerCount: 0,
+    markerItems: []
+  });
+  const [markers, setMarkers] = useState<Array<Marker>>([]);
+  const [foodTruckList, setFoodTruckList] = useState({
+    hasNext: Boolean,
+    items: []
+  });
 
-    const CLIENT_KEY: string = process.env.REACT_APP_CLIENT_ID || 'your-default-key-or-handle-error';
+  const CLIENT_KEY: string = process.env.REACT_APP_CLIENT_ID || 'your-default-key-or-handle-error';
 
   // 초기 높이를 25vh로 설정, 컴포넌트의 참조를 저장하기 위한 ref
-    const { sheet, content } = useBottomSheet();
-    
+  const { sheet, content } = useBottomSheet();
 
-    // 푸드트럭 지도 위치(마커)조회
-    useEffect(() => {
-        // 현재 위치를 가져오는 함수
-        const getCurrentLocation = () => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const { latitude, longitude } = position.coords;
-                        fetchFoodTruckMarkers(latitude, longitude);
-                        fetchFoodTruckList(latitude, longitude);
-                    },
-                    (error) => {
-                        console.error('Geolocation Error:', error);
-                    }
-                );
-            } else {
-                alert('Geolocation is not supported by this browser.');
-            }
-        }
-
-        getCurrentLocation();
-
-    }, []);
-
-
-    const fetchFoodTruckMarkers = (latitude: number, longitude: number) => {
-        getFoodTruckMarkers({
-                latitude, longitude, showAll: true
-            },
-            (response: any) => {
-                setTruckData(response.data.data); // 응답 데이터를 상태에 설정
-                if (response.data.data.markerItems.length > 0) {
-                    const newMarkers = extractMarkers(response.data.data);
-                    setMarkers(newMarkers);
-                }
-            },
-            (error: any) => {
-                console.error('API Error: ', error);
-            }
+  // 푸드트럭 지도 위치(마커)조회
+  useEffect(() => {
+    // 현재 위치를 가져오는 함수
+    const getCurrentLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            fetchFoodTruckMarkers(latitude, longitude);
+            fetchFoodTruckList(latitude, longitude);
+          },
+          (error) => {
+            console.error('Geolocation Error:', error);
+          }
         );
+      } else {
+        alert('Geolocation is not supported by this browser.');
+      }
     };
 
-    const fetchFoodTruckList = (latitude: number, longitude: number) => {
-        getSearchedFoodTrucks({
-            latitude, longitude, showAll: true
-        },
-            (response: any) => {
-                setFoodTruckList(response.data.data);
-                if (response.data.data.items.length > 0) {
-                    setFoodTruckList(response.data.data);
-                }
-            },
-            (error: any) => {
-                console.error('API Error: ', error);
-            }
-        )
-    }
+    getCurrentLocation();
+  }, []);
 
-//   truckData에서 위도 경도를 추출하여 string에서 number로 변환
+  const fetchFoodTruckMarkers = (latitude: number, longitude: number) => {
+    getFoodTruckMarkers(
+      {
+        latitude,
+        longitude,
+        showAll: true
+      },
+      (response: any) => {
+        setTruckData(response.data.data); // 응답 데이터를 상태에 설정
+        if (response.data.data.markerItems.length > 0) {
+          const newMarkers = extractMarkers(response.data.data);
+          setMarkers(newMarkers);
+        }
+      },
+      (error: any) => {
+        console.error('API Error: ', error);
+      }
+    );
+  };
+
+  const fetchFoodTruckList = (latitude: number, longitude: number) => {
+    getSearchedFoodTrucks(
+      {
+        latitude,
+        longitude,
+        showAll: true
+      },
+      (response: any) => {
+        setFoodTruckList(response.data.data);
+        if (response.data.data.items.length > 0) {
+          setFoodTruckList(response.data.data);
+        }
+      },
+      (error: any) => {
+        console.error('API Error: ', error);
+      }
+    );
+  };
+
+  //   truckData에서 위도 경도를 추출하여 string에서 number로 변환
   const extractMarkers = (data: { markerItems: Array<{ latitude: string; longitude: string }> }): Array<Marker> =>
     data.markerItems.map((item) => ({
       latitude: parseFloat(item.latitude),

@@ -83,7 +83,7 @@ public class SaleQueryRepository {
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
                         distance.loe(SEARCH_RANGE_METER),
-                        isActive(),
+                        isActiveFoodTruck(),
                         isActiveSale()
                 )
                 .fetch();
@@ -117,25 +117,27 @@ public class SaleQueryRepository {
      *
      * @param condition      검색 조건
      * @param email          현재 로그인 중인 사용자 이메일
-     * @param lastScheduleId 마지막으로 조회된 푸드트럭 식별키
+     * @param lastSaleId 마지막으로 조회된 푸드트럭 식별키
      * @return 현재 위치 기반 반경 1Km 이내의 푸드트럭 목록
      */
-    public List<FoodTruckItem> getFoodTrucksByCondition(SearchCondition condition, String email, Long lastScheduleId) {
+    public List<FoodTruckItem> getFoodTrucksByCondition(SearchCondition condition, String email, Long lastSaleId) {
         NumberTemplate<BigDecimal> distance = calculateDistance(condition.getLatitude(), sale.latitude,
                 condition.getLongitude(), sale.longitude);
 
         List<Long> ids = queryFactory
-                .selectDistinct(sale.id)
+                .selectDistinct(sale.foodTruck.id)
                 .from(sale)
                 .join(sale.foodTruck, foodTruck)
-                .leftJoin(foodTruckLike).on(sale.foodTruck.eq(foodTruckLike.foodTruck)).fetchJoin()
-                .leftJoin(review).on(sale.foodTruck.eq(review.foodTruck)).fetchJoin()
-                .leftJoin(foodTruckImage).on(sale.foodTruck.eq(foodTruckImage.foodTruck)).fetchJoin()
+                .leftJoin(foodTruckLike).on(sale.foodTruck.eq(foodTruckLike.foodTruck), foodTruckLike.active)
+                .leftJoin(member).on(foodTruckLike.member.eq(member), member.active)
+                .leftJoin(review).on(sale.foodTruck.eq(review.foodTruck), review.active)
+                .leftJoin(foodTruckImage).on(sale.foodTruck.eq(foodTruckImage.foodTruck), foodTruckImage.active)
                 .where(
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
                         distance.loe(SEARCH_RANGE_METER),
-                        isActive(),
+                        isLastId(lastSaleId, condition.getOrderCondition()),
+                        isActiveFoodTruck(),
                         isActiveSale()
                 )
                 .limit(PAGE_SIZE + 1)
@@ -150,32 +152,28 @@ public class SaleQueryRepository {
 
         return queryFactory
                 .select(Projections.constructor(FoodTruckItem.class,
-                        sale.id,
                         sale.foodTruck.category.id,
                         sale.foodTruck.id,
                         sale.foodTruck.name,
                         sale.isNull(),
                         isLiked(email),
-                        sale.foodTruck.prepareTime,
                         getLikeCount(),
                         getAvgGrade(),
                         getReviewCount(),
-                        distance,
-                        sale.address,
                         foodTruckImage.uploadFile.storeFileName,
                         isNew(lastMonth)
                 ))
                 .from(sale)
                 .join(sale.foodTruck, foodTruck)
-                .leftJoin(foodTruckLike).on(sale.foodTruck.eq(foodTruckLike.foodTruck)).fetchJoin()
-                .join(foodTruckLike.member, member)
-                .leftJoin(review).on(sale.foodTruck.eq(review.foodTruck)).fetchJoin()
-                .leftJoin(foodTruckImage).on(sale.foodTruck.eq(foodTruckImage.foodTruck)).fetchJoin()
+                .leftJoin(foodTruckLike).on(sale.foodTruck.eq(foodTruckLike.foodTruck), foodTruckLike.active)
+                .leftJoin(member).on(foodTruckLike.member.eq(member), member.active)
+                .leftJoin(review).on(sale.foodTruck.eq(review.foodTruck), review.active)
+                .leftJoin(foodTruckImage).on(sale.foodTruck.eq(foodTruckImage.foodTruck), foodTruckImage.active)
                 .where(
-                        sale.id.in(ids)
+                        sale.foodTruck.id.in(ids)
                 )
                 .groupBy(
-                        sale.id
+                        sale.foodTruck.id
                 )
                 .orderBy(
                         createOrderSpecifier(condition.getOrderCondition(), distance)
@@ -198,7 +196,14 @@ public class SaleQueryRepository {
                 currentLng, currentLat, targetLng, targetLat);
     }
 
-    private BooleanExpression isActive() {
+    private BooleanExpression isLastId(Long lastSaleId, OrderCondition orderCondition) {
+        if (orderCondition == null) {
+            return lastSaleId != null ? sale.id.lt(lastSaleId) : null;
+        }
+        return lastSaleId != null ? sale.id.gt(lastSaleId) : null;
+    }
+
+    private BooleanExpression isActiveFoodTruck() {
         return foodTruck.active;
     }
 

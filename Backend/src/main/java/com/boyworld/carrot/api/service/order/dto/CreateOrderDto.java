@@ -13,16 +13,16 @@ public class CreateOrderDto {
 
     Long foodTruckId;
     Integer totalPrice;
-    List<OrderMenuItem> orderMenuItems;
+    List<CreateOrderMenuDto> orderMenuItems;
 
     @Builder
-    public CreateOrderDto(Long foodTruckId, Integer totalPrice, List<OrderMenuItem> orderMenuItems) {
+    public CreateOrderDto(Long foodTruckId, Integer totalPrice, List<CreateOrderMenuDto> orderMenuItems) {
         this.foodTruckId = foodTruckId;
         this.totalPrice = totalPrice;
         this.orderMenuItems = orderMenuItems;
     }
 
-    public static CreateOrderDto of(Cart cart, List<OrderMenuItem> orderMenuItems) {
+    public static CreateOrderDto of(Cart cart, List<CreateOrderMenuDto> orderMenuItems) {
         return CreateOrderDto.builder()
                 .foodTruckId(cart.getFoodTruckId())
                 .totalPrice(cart.getTotalPrice())

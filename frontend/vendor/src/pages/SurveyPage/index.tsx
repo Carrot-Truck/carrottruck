@@ -27,7 +27,7 @@ export function SurveyPage() {
         categoryId={categoryId}
         setCategoryId={setCategoryId}
       />
-      <TitleText text="수요조사" size="l" />
+      <TitleText text="수요조사" size="l" textAlign="left" />
       {dongId ? (
         <SurveyList
           sido={sidoName}

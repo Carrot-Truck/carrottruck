@@ -1082,6 +1082,83 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         assertThat(vendorResponse.getSchedules()).isNotEmpty();
     }
 
+    @DisplayName("푸드트럭 식별키에 해당하는 푸드트럭이 영업 중이면 true 를 반환한다.")
+    @Test
+    void isOpenFoodTruckIsTrue() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                false);
+        Sale sale1 = createSale(foodTruck, LocalDateTime.now().minusHours(1),
+                BigDecimal.valueOf(35.204008), BigDecimal.valueOf(126.807271), null);
+
+        // when
+        Boolean result = foodTruckQueryService.isOpenFoodTruck(foodTruck.getId());
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("푸드트럭 식별키에 해당하는 푸드트럭이 영업 중이 아니면 false 를 반환한다.")
+    @Test
+    void isOpenFoodTruckIsFalse() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                false);
+
+        Sale sale1 = createSale(foodTruck, LocalDateTime.now().minusHours(1),
+                BigDecimal.valueOf(35.204008), BigDecimal.valueOf(126.807271), LocalDateTime.now());
+
+        // when
+        Boolean result = foodTruckQueryService.isOpenFoodTruck(foodTruck.getId());
+
+        // then
+        assertThat(result).isFalse();
+    }
+
+    @DisplayName("푸드트럭 식별키에 해당하는 푸드트럭의 영업이 없으면 false 를 반환한다.")
+    @Test
+    void isOpenFoodTruckWithoutSaleIsFalse() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                false);
+
+        // when
+        Boolean result = foodTruckQueryService.isOpenFoodTruck(foodTruck.getId());
+
+        // then
+        assertThat(result).isFalse();
+    }
+
     private Member createMember(Role role, String email) {
         Member member = Member.builder()
                 .email(email)
@@ -1133,10 +1210,10 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
         createSchedules(foodTruck2);
 
         Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1),
-                BigDecimal.valueOf(35.204008), BigDecimal.valueOf(126.807271));
+                BigDecimal.valueOf(35.204008), BigDecimal.valueOf(126.807271), null);
 
         Sale sale2 = createSale(foodTruck2, LocalDateTime.now().minusHours(2),
-                BigDecimal.valueOf(35.204349), BigDecimal.valueOf(126.807805));
+                BigDecimal.valueOf(35.204349), BigDecimal.valueOf(126.807805), null);
 
         createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);
 
@@ -1204,7 +1281,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private Sale createSale(FoodTruck foodTruck, LocalDateTime startTime, BigDecimal latitude, BigDecimal longitude) {
+    private Sale createSale(FoodTruck foodTruck, LocalDateTime startTime, BigDecimal latitude, BigDecimal longitude, LocalDateTime endTime) {
         Sale sale = Sale.builder()
                 .address("sale address")
                 .orderable(true)
@@ -1214,7 +1291,7 @@ class FoodTruckQueryServiceTest extends IntegrationTestSupport {
                 .orderNumber(0)
                 .totalAmount(0)
                 .startTime(startTime)
-                .endTime(null)
+                .endTime(endTime)
                 .active(true)
                 .build();
         return saleRepository.save(sale);

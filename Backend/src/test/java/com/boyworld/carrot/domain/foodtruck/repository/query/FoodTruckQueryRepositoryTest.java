@@ -375,6 +375,80 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(result).isNull();
     }
 
+    @DisplayName("푸드트럭 식별키에 해당하는 푸드트럭이 영업 중이면 true 를 반환한다.")
+    @Test
+    void isOpenFoodTruckByIdIsTrue() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                false);
+        Sale sale = createSale(foodTruck, null, "광주 광역시 광산구");
+
+        // when
+        Boolean result = foodTruckQueryRepository.isOpenFoodTruckById(foodTruck.getId());
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("푸드트럭 식별키에 해당하는 푸드트럭이 영업 중이 아니면 false 를 반환한다.")
+    @Test
+    void isOpenFoodTruckByIdIsFalse() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                false);
+        createSale(foodTruck, LocalDateTime.now(), "광주 광역시 광산구");
+
+        // when
+        Boolean result = foodTruckQueryRepository.isOpenFoodTruckById(foodTruck.getId());
+
+        // then
+        assertThat(result).isFalse();
+    }
+
+    @DisplayName("푸드트럭 식별키에 해당하는 푸드트럭의 영업이 없으면 false 를 반환한다.")
+    @Test
+    void isOpenFoodTruckByIdWithoutSaleIsFalse() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
+
+        createVendorInfo(vendor1);
+
+        Category category1 = createCategory("고기/구이");
+
+        FoodTruck foodTruck = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                false);
+
+        // when
+        Boolean result = foodTruckQueryRepository.isOpenFoodTruckById(foodTruck.getId());
+
+        // then
+        assertThat(result).isFalse();
+    }
+
     private Member createMember(Role role, String email) {
         Member member = Member.builder()
                 .email(email)

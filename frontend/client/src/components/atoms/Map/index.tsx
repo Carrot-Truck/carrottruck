@@ -10,7 +10,7 @@ declare global {
 
 interface INaverMapProps {
   clientId: string; // 네이버 클라우드 플랫폼에서 발급받은 Client ID
-  markers: Array<{ latitude: number; longitude: number }>;
+    markers: Array<{ categoryId: number; latitude: number; longitude: number; }>;
 }
 
 const NaverMap: React.FC<INaverMapProps> = ({ clientId, markers }) => {
@@ -41,20 +41,30 @@ const NaverMap: React.FC<INaverMapProps> = ({ clientId, markers }) => {
         zoom: 16
       };
 
-      const map = new window.naver.maps.Map(mapRef.current, mapOptions);
+        const map = new window.naver.maps.Map(mapRef.current, mapOptions);
 
       // 사용자 현재 위치에 마커를 찍습니다.
       new window.naver.maps.Marker({
         position: new window.naver.maps.LatLng(latitude, longitude),
-        map
+        map: map
       });
 
+        console.log(markers);
       // 백엔드에서 받은 위치 정보로 마커를 찍습니다.
-      markers.forEach((marker) => {
+        markers.forEach((marker) => {
+            const imagePath = require(`assets/icons/category${marker.categoryId}.svg`);
         new window.naver.maps.Marker({
           position: new window.naver.maps.LatLng(marker.latitude, marker.longitude),
-          map
+            map: map,
+            // icon: imagePath
+            icon: {
+                url: imagePath,
+                scaledSize: new window.naver.maps.Size(50, 35),
+                origin: new window.naver.maps.Point(0, 0),
+                anchor: new window.naver.maps.Point(25, 35)
+            }
         });
+            
       });
     };
 

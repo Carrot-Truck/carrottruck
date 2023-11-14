@@ -37,7 +37,7 @@ export async function restart(foodTruckId: number, success: any, fail: any) {
   await api.put(`/restart/${foodTruckId}`).then(success).catch(fail);
 }
 
-export async function soldout(menuId: number, success: any, fail: any) {
+export async function setSoldout(menuId: number, success: any, fail: any) {
   api.defaults.headers["Authorization"] = getAuthorization();
   await api.put(`/soldout/${menuId}`).then(success).catch(fail);
 }

@@ -3,7 +3,6 @@ package com.boyworld.carrot.domain.menu.repository.query;
 import com.boyworld.carrot.api.service.menu.dto.MenuDto;
 import com.boyworld.carrot.api.service.sale.dto.SaleMenuItem;
 import com.boyworld.carrot.domain.foodtruck.repository.query.FoodTruckQueryRepository;
-import com.boyworld.carrot.domain.menu.Menu;
 import com.boyworld.carrot.domain.menu.MenuOption;
 import com.boyworld.carrot.domain.menu.repository.command.MenuOptionRepository;
 import com.boyworld.carrot.domain.menu.repository.command.MenuRepository;
@@ -100,7 +99,7 @@ public class MenuQueryRepository {
     }
 
     @Transactional
-    public void setSaleMenuActive(Long foodTruckId, List<SaleMenuItem> saleMenuItems) {
+    public void setSaleMenuSoldOut(Long foodTruckId, List<SaleMenuItem> saleMenuItems) {
         List<Long> menuIds = queryFactory
             .select(menu.id)
             .from(menu)
@@ -108,25 +107,25 @@ public class MenuQueryRepository {
             .fetch();
 
         for (Long menuId: menuIds) {
-            menuRepository.findById(menuId).ifPresent(Menu::deActivate);
+            menuRepository.findById(menuId).ifPresent(menu -> menu.getMenuInfo().soldOut());
             List<Long> menuOptionIds = queryFactory
                 .select(menuOption.id)
                 .from(menuOption)
                 .where(menuOption.menu.id.eq(menuId))
                 .fetch();
             for (Long menuOptionId: menuOptionIds) {
-                menuOptionRepository.findById(menuOptionId).ifPresent(menuOption -> menuOption.editMenuOptionActive(false));
+                menuOptionRepository.findById(menuOptionId).ifPresent(menuOption -> menuOption.getMenuInfo().soldOut());
             }
         }
 
         for (SaleMenuItem item: saleMenuItems) {
             Long menuId = item.getMenuId();
             if (menuIds.contains(menuId)) {
-                menuRepository.findById(menuId).ifPresent(Menu::activate);
+                menuRepository.findById(menuId).ifPresent(menu -> menu.getMenuInfo().onSale());
                 for (Long optionId: item.getMenuOptionId()) {
                     MenuOption option = menuOptionRepository.findById(optionId).orElse(null);
                     if (option != null && option.getMenu().getId().equals(menuId)) {
-                        option.editMenuOptionActive(true);
+                        option.getMenuInfo().onSale();
                     }
                 }
             }

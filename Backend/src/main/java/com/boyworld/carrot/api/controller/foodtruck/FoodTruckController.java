@@ -291,4 +291,21 @@ public class FoodTruckController {
 
         return ApiResponse.ok(selectedId);
     }
+
+    /**
+     * 푸드트럭 영업 여부 조회 API
+     *
+     * @param foodTruckId 푸드트럭 식별키
+     * @return 해당 푸드트럭의 영업 여부
+     */
+    @GetMapping("/open/{foodTruckId}")
+    public ApiResponse<Boolean> isOpenFoodTruck(@PathVariable Long foodTruckId) {
+        log.debug("FoodTruckController#isOpenFoodTruck called");
+        log.debug("foodTruckId={}", foodTruckId);
+
+        Boolean result = foodTruckQueryService.isOpenFoodTruck(foodTruckId);
+        log.debug("result={}", result);
+
+        return ApiResponse.ok(result);
+    }
 }

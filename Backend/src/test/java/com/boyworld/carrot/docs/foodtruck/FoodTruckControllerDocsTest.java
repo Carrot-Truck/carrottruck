@@ -886,7 +886,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    @DisplayName("푸드트럭 수정 API")
+    @DisplayName("선택된 푸드트럭 변경 API")
     @Test
     @WithMockUser(roles = "VENDOR")
     void editSelected() throws Exception {
@@ -917,6 +917,41 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NUMBER)
                                         .description("선택된 푸드트럭 식별키")
+                        )
+                ));
+    }
+
+    @DisplayName("푸드트럭 영엽 어부 조회 API")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void isOpenFoodTruck() throws Exception {
+        Long foodTruckId = 1L;
+
+        given(foodTruckQueryService.isOpenFoodTruck(anyLong()))
+                .willReturn(true);
+
+        mockMvc.perform(
+                        get("/food-truck/open/{foodTruckId}", foodTruckId)
+                                .header("Authentication", "authentication")
+                                .contentType(APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("is-open-food-truck",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("foodTruckId").description("푸드트럭 식별키")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                fieldWithPath("data").type(JsonFieldType.BOOLEAN)
+                                        .description("푸드트럭 영업 여부")
                         )
                 ));
     }

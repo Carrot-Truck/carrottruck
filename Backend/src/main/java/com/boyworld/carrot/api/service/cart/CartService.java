@@ -54,9 +54,9 @@ public class CartService {
 
     public Long createCart(CreateCartMenuDto createCartMenuDto, String email) throws JsonProcessingException {
 
-        FoodTruck foodTruck = getFoodTruckById(createCartMenuDto.getFoodTruckId());
-
         Menu menu = getMenuById(createCartMenuDto.getMenuId());
+
+        FoodTruck foodTruck = getFoodTruckById(menu.getFoodTruck().getId());
 
         Integer cartMenuTotalPrice = getCartMenuTotalPrice(createCartMenuDto);
 
@@ -65,7 +65,7 @@ public class CartService {
             log.debug("사용자의 회원 카트가 존재합니다: {}", email);
 
             Cart cart = getCart(email);
-            if (cart.getFoodTruckId().equals(createCartMenuDto.getFoodTruckId())) {
+            if (cart.getFoodTruckId().equals(foodTruck.getId())) {
                 // 푸드트럭이 같은 경우
                 // 장바구니의 총 금액 및 cartMenuIds 업데이트
                 log.debug("같은 푸드트럭의 메뉴 입니다!");
@@ -347,7 +347,7 @@ public class CartService {
     public void saveNewCart(CreateCartMenuDto createCartMenuDto, String cartMenuId, String email, FoodTruck foodTruck, Integer cartMenuTotalPrice) {
         Cart cart = Cart.builder()
                 .id(email)
-                .foodTruckId(createCartMenuDto.getFoodTruckId())
+                .foodTruckId(foodTruck.getId())
                 .foodTruckName(foodTruck.getName())
                 .totalPrice(cartMenuTotalPrice*createCartMenuDto.getCartMenuQuantity())
                 .cartMenuIds(Arrays.asList(cartMenuId))

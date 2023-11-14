@@ -31,7 +31,7 @@ public class FoodTruckReviewDto {
         this.grade = grade;
         this.content = content;
         this.nickname = nickname;
-        this.imageUrl = imageUrl != null ? imageUrl : NO_IMG;
+        this.imageUrl = imageUrl;
     }
 
     public static FoodTruckReviewDto of(Review review){

@@ -8,12 +8,9 @@ export async function createMenu(data: FormData, success: any, fail: any) {
   await formApi.post(``, data).then(success).catch(fail);
 }
 
-export async function getMenus(data: number, success: any, fail: any) {
+export async function getMenus(data: Object, success: any, fail: any) {
   api.defaults.headers["Authorization"] = getAuthorization();
-  await api
-    .get(``, { params: { foodTruckId: data } })
-    .then(success)
-    .catch(fail);
+  await api.get(``, { params: data }).then(success).catch(fail);
 }
 
 export async function getMenu(menuId: number, data: Object, success: any, fail: any) {

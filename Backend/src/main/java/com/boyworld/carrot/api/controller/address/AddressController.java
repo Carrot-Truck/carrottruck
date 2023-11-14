@@ -88,11 +88,11 @@ public class AddressController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<ReverseGeocodingResponse> reverseGeocoding(@RequestParam BigDecimal latitude,
                                                                   @RequestParam BigDecimal longitude) {
-        log.debug("AddressController#getDong called !!!");
+        log.debug("AddressController#reverseGeocoding called !!!");
 
         String addr = geocodingService.reverseGeocoding(latitude, longitude, "roadaddr").get("roadaddr");
         ReverseGeocodingResponse response = ReverseGeocodingResponse.builder().address(addr).build();
-        log.debug("AddressResponse={}", response);
+        log.debug("ReverseGeocodingResponse={}", response);
 
         return ApiResponse.ok(response);
     }

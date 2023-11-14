@@ -34,4 +34,14 @@ public class MenuInfo {
         this.description = description;
         this.soldOut = soldOut;
     }
+
+    public MenuInfo soldOut() {
+        this.soldOut = true;
+        return this;
+    }
+
+    public MenuInfo onSale() {
+        this.soldOut = false;
+        return this;
+    }
 }

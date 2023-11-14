@@ -11,7 +11,7 @@ function Navbar() {
       <NavbarItem svg={MainPage} text="홈" to="/" />
       <NavbarItem svg={Jjim} text="즐겨찾기" to="" />
       <NavbarItem svg={Schedule} text="주문내역" to="" />
-      <NavbarItem svg={User} text="My당트" to="" />
+      <NavbarItem svg={User} text="My당트" to="/mypage/detail" />
     </NavbarContainer>
   );
 }

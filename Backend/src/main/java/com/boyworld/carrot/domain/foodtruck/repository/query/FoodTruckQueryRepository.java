@@ -164,6 +164,7 @@ public class FoodTruckQueryRepository {
         return queryFactory
                 .selectDistinct(Projections.constructor(FoodTruckClientDetailDto.class,
                         foodTruck.id,
+                        foodTruck.category.id,
                         foodTruck.name,
                         foodTruck.phoneNumber,
                         foodTruck.content,

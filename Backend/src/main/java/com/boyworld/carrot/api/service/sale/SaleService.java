@@ -74,7 +74,7 @@ public class SaleService {
 
 
         // 판매하지 않을 메뉴는 비활성화
-        menuQueryRepository.setSaleMenuActive(dto.getFoodTruckId(), dto.getSaleMenuItems());
+        menuQueryRepository.setSaleMenuSoldOut(dto.getFoodTruckId(), dto.getSaleMenuItems());
 
         // 새로운 영업 등록
         Sale sale = Sale.builder()
@@ -268,10 +268,7 @@ public class SaleService {
 
     private Boolean hasActiveSale(Long foodTruckId) {
         Optional<Sale> saleOptional = saleQueryRepository.getLatestSale(foodTruckId);
-        if (saleOptional.isPresent() && saleOptional.get().getEndTime() == null) {
-            return true;
-        } else
-            return false;
+        return saleOptional.isPresent() && saleOptional.get().getEndTime() == null;
     }
 
     private void checkOwnerAccess(Member member, FoodTruck foodTruck) {

@@ -232,7 +232,8 @@ public class SaleService {
         checkOwnerAccess(member, menu);
 
         // 2. 맞으면 해당 menuId 비활성화
-        return menu.deActivate().getId();
+        menu.getMenuInfo().soldOut();
+        return menuId;
     }
 
     /**

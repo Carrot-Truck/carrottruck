@@ -9,7 +9,7 @@ export const LoginPageLayout = styled.div`
     flex-direction: rows;
 
     p {
-      font-family: BMJUA;
+      font-family: BM JUA_TTF;
       font-size: 2rem;
       justify-content: center;
     }

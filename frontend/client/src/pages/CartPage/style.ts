@@ -6,9 +6,8 @@ export const CartPageLayout = styled.div`
   color: black;
 
   .header {
-
     p {
-      font-family: BMJUA;
+      font-family: BM JUA_TTF;
       font-size: 2rem;
       justify-content: center;
     }

@@ -9,7 +9,7 @@ export const StoreInfoContainer = styled.div`
     margin-top: 10px;
 
     .title {
-      font-family: BMJUA;
+      font-family: BM JUA_TTF;
       font-weight: 700;
       p: nth-child(1) {
         font-size: 1.5rem;
@@ -51,7 +51,7 @@ export const StoreInfoContainer = styled.div`
 
     .title {
       width: 100%;
-      font-family: BMJUA;
+      font-family: BM JUA_TTF;
       font-weight: 700;
       p {
         font-size: 1.5rem;
@@ -63,7 +63,7 @@ export const StoreInfoContainer = styled.div`
     .content {
       display: flex;
       flex-direction: column;
-      font-family: BMJUA;
+      font-family: BM JUA_TTF;
       font-weight: 700;
       font-size: 1.25rem;
 
@@ -88,7 +88,7 @@ export const StoreInfoContainer = styled.div`
     margin-top: 10px;
 
     .title {
-      font-family: BMJUA;
+      font-family: BM JUA_TTF;
       font-weight: 700;
       p {
         font-size: 1.5rem;

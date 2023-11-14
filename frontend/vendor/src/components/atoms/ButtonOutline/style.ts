@@ -1,17 +1,17 @@
-import styled, { css } from "styled-components";
-import { ButtonOutlineColorStyles, ButtonRadiusStyles, ButtonSizeStyles } from "styles/style";
+import styled, { css } from 'styled-components';
+import { ButtonOutlineColorStyles, ButtonRadiusStyles, ButtonSizeStyles } from 'styles/style';
 
 interface IButtonOutlineWrapperProps {
-  $size: "s" | "m" | "l" | "full";
-  $radius: "s" | "m" | "l";
-  $color: "Normal" | "Primary" | "Danger" | "Success" | "SubFirst" | "SubSecond";
+  $size: 's' | 'm' | 'l' | 'full';
+  $radius: 's' | 'm' | 'l';
+  $color: 'Normal' | 'Primary' | 'Danger' | 'Success' | 'SubFirst' | 'SubSecond';
   disabled: boolean;
 }
 
 export const ButtonOutlineWrapper = styled.button<IButtonOutlineWrapperProps>`
   border-radius: var(--radius-m);
   height: 48px;
-  font-family: BMJUA;
+  font-family: BM JUA_TTF;
   font-size: 1rem;
   font-weight: 900;
 

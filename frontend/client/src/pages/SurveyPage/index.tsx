@@ -114,7 +114,8 @@ function SurveyPage() {
     <SurveyLayout>
       <div className="header">
         <BackSpace></BackSpace>
-        <p>우리 동네에 이런 메뉴가 있으면 좋겠어요!</p>
+        <p>우리 동네에 이런 메뉴가</p>
+        <p>있으면 좋겠어요</p>
       </div>
       <div>원하는 카테고리</div>
       <div>{selectedCategory}</div>

@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const SurveyLayout = styled.div`
 color: #000; // 글자 색상을 검정으로 설정합니다.
-  font-family: "Arial", sans-serif; // 글꼴 설정
+  font-family: BMJUA; // 글꼴 설정
+  font-weight: 700;
 
   .header {
     p {

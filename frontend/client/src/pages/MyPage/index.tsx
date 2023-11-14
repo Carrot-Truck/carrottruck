@@ -6,6 +6,7 @@ import NoteBook from 'assets/icons/notebook.svg';
 import Pencil from 'assets/icons/pencil.svg';
 import Heart from 'assets/icons/filled_heart.svg';
 import MyReviewForm from 'components/organisms/MyReviewsForm';
+import OrderListForm from 'components/organisms/OrderListForm';
 
 function MyPage() {
   const [selectedButton, setSelectedButton] = useState<number>(1);
@@ -45,7 +46,8 @@ function MyPage() {
           <p>찜</p>
         </div>
       </div>
-      {selectedButton && <MyReviewForm></MyReviewForm>}
+      {selectedButton === 1 && <OrderListForm></OrderListForm>}
+      {selectedButton === 2 && <MyReviewForm></MyReviewForm>}
       <Navbar></Navbar>
     </MyPageLayout>
   );

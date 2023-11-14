@@ -11,6 +11,7 @@ import static com.boyworld.carrot.domain.StringConstants.NO_IMG;
 public class FoodTruckClientDetailDto {
 
     private Long foodTruckId;
+    private Long categoryId;
     private String foodTruckName;
     private String phoneNumber;
     private String content;
@@ -31,12 +32,13 @@ public class FoodTruckClientDetailDto {
     private String businessNumber;
 
     @Builder
-    public FoodTruckClientDetailDto(Long foodTruckId, String foodTruckName, String phoneNumber, String content,
-                                    String originInfo, boolean isOpen, boolean isLiked, int prepareTime,
-                                    double avgGrade, int likeCount, int reviewCount, double distance,
-                                    String address, String foodTruckImageUrl, boolean selected, boolean isNew,
-                                    String vendorName, String tradeName, String businessNumber) {
+    public FoodTruckClientDetailDto(Long foodTruckId, Long categoryId, String foodTruckName, String phoneNumber,
+                                    String content, String originInfo, boolean isOpen, boolean isLiked, int prepareTime,
+                                    double avgGrade, int likeCount, int reviewCount, double distance, String address,
+                                    String foodTruckImageUrl, boolean selected, boolean isNew, String vendorName,
+                                    String tradeName, String businessNumber) {
         this.foodTruckId = foodTruckId;
+        this.categoryId = categoryId;
         this.foodTruckName = foodTruckName;
         this.phoneNumber = phoneNumber;
         this.content = content;

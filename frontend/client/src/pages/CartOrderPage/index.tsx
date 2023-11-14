@@ -1,4 +1,4 @@
-import BackSpace from "components/atoms/BackSpace";
+import BackSpace from "components/atoms/BackHome";
 import { CartOrderPageLayout } from "./style";
 import Navbar from "components/organisms/Navbar";
 import axios, { AxiosResponse } from "axios";

@@ -1,21 +1,21 @@
 // import React from 'react';
-import { BackSpaceWrapper } from './style';
+import { BackHomeWrapper } from './style';
 import back from '../../../assets/icons/keyboard-backspace.svg';
 // import useMovePage from 'hooks/useMovePage';
 import { useNavigate } from 'react-router-dom';
 
-function BackSpace() {
+function BackHome() {
   // const [movePage] = useMovePage();
   const navigate = useNavigate();
   const handleBackClick = () => {
-    navigate(-1);
+    navigate('/');
   };
 
   return (
-    <BackSpaceWrapper onClick={handleBackClick}>
+    <BackHomeWrapper onClick={handleBackClick}>
       <img src={back} alt="" />
-    </BackSpaceWrapper>
+    </BackHomeWrapper>
   );
 }
 
-export default BackSpace;
+export default BackHome;

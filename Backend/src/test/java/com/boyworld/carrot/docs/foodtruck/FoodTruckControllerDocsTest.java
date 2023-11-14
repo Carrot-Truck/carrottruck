@@ -375,6 +375,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
     void getClientFoodTruck() throws Exception {
         FoodTruckClientDetailDto foodTruck = FoodTruckClientDetailDto.builder()
                 .foodTruckId(1L)
+                .categoryId(1L)
                 .foodTruckName("동현 된장삼겹")
                 .phoneNumber("010-1234-5678")
                 .content("된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭")
@@ -479,6 +480,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("푸드트럭 상세 정보"),
                                 fieldWithPath("data.foodTruck.foodTruckId").type(JsonFieldType.NUMBER)
                                         .description("푸드트럭 식별키"),
+                                fieldWithPath("data.foodTruck.categoryId").type(JsonFieldType.NUMBER)
+                                        .description("카테고리 식별키"),
                                 fieldWithPath("data.foodTruck.foodTruckName").type(JsonFieldType.STRING)
                                         .description("푸드트럭 이름"),
                                 fieldWithPath("data.foodTruck.phoneNumber").type(JsonFieldType.STRING)

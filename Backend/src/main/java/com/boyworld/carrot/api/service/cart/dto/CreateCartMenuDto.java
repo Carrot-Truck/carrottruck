@@ -11,15 +11,13 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CreateCartMenuDto {
-    private Long foodTruckId;
     private Long menuId;
     private Integer cartMenuQuantity;
     private List<Long> menuOptionIds;
 
 
     @Builder
-    public CreateCartMenuDto(Long foodTruckId, Long menuId, Integer cartMenuQuantity, List<Long> menuOptionIds) {
-        this.foodTruckId = foodTruckId;
+    public CreateCartMenuDto(Long menuId, Integer cartMenuQuantity, List<Long> menuOptionIds) {
         this.menuId = menuId;
         this.cartMenuQuantity = cartMenuQuantity;
         this.menuOptionIds = menuOptionIds;

@@ -18,7 +18,7 @@ function VendorMainForm() {
   const start = async () => {
     try {
       // 이동하면 그 페이지에서는 /food-truck/vendor 로 post 매핑해서 값 넘겨야해
-      navigate("/registration");
+      navigate("/start-sale");
     } catch (error) {
       console.log(error);
       navigate("/");

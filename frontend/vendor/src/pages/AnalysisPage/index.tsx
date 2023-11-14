@@ -6,10 +6,13 @@ import NaverMap from "components/atoms/Map";
 
 function AnalysisPage() {
   const navigate = useNavigate();
+
+  const clientId: string = process.env.REACT_APP_CLIENT_ID || "";
+
   //REACT_APP_CLIENT_ID
   return (
     <AnalysisLayout>
-      <NaverMap clientId={""} markers={[]} />
+      <NaverMap clientId={clientId} markers={[]} />
       <Button
         size="m"
         radius="m"

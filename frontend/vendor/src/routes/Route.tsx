@@ -12,6 +12,8 @@ import SchedulePage from "pages/SchedulePage";
 import FoodTruckModifyPage from "pages/FoodTruckModifyPage";
 import FoodMenuModifyPage from "pages/FoodMenuModifyPage";
 import FoodMenuDetailModifyPage from "pages/FoodMenuDetailModifyPage";
+import SalePage from "pages/SalePage";
+import StartSalePage from "pages/StartSalePage";
 // import FoodMenuDetailPage from 'pages/FoodMenuDetailPage'
 
 function RouteLink() {
@@ -27,6 +29,8 @@ function RouteLink() {
         <Route path="/statistics/detail" element={<StatisticsDetailPage />} />
         <Route path="/statistics" element={<StatisticsPage />} />
         <Route path="/survey" element={<SurveyPage />} />
+        <Route path="/sale" element={<SalePage />} />
+        <Route path="/start-sale" element={<StartSalePage />} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/foodtruck/modify" element={<FoodTruckModifyPage />} />
         <Route path="/foodtruck/menu/modify" element={<FoodMenuModifyPage />} />

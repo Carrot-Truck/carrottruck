@@ -94,7 +94,7 @@ function SelectAddress({
         <Loading />
       ) : (
         <>
-          <TitleText text="지역선택" size="m" />
+          <TitleText text="지역선택" size="m" textAlign="left" />
           {addressNames.map((data: AddressItem) => (
             <ButtonOutline
               key={data.id}

@@ -2,6 +2,7 @@
 // import { useLocation } from 'react-router-dom';
 import { FoodTruckInfoContainer } from './style';
 import FoodTruckInfoItem from "../../atoms/FoodTruckInfoItem"
+import Button from 'components/atoms/Button';
 
 // 메뉴 아이템 인터페이스를 정의합니다.
 interface FoodTruck {
@@ -50,7 +51,9 @@ interface FoodTruck {
   //   imageUrl: ''
   // }>;
 };
-
+const modifyInfo = ()=>{
+  
+}
 
 function FoodTruckInfo({ foodTruckDetail, schedules }: FoodTruck) {
   return (
@@ -58,6 +61,7 @@ function FoodTruckInfo({ foodTruckDetail, schedules }: FoodTruck) {
       <FoodTruckInfoItem title="영업정보" value={schedules}></FoodTruckInfoItem>
       <FoodTruckInfoItem title="사업자정보"  value={foodTruckDetail}></FoodTruckInfoItem>
       <FoodTruckInfoItem title="원산지 표기" value={foodTruckDetail.originInfo}></FoodTruckInfoItem>
+      <Button size="l" radius='m' color='Primary' handleClick={modifyInfo} text="스케줄 수정"/>
     </FoodTruckInfoContainer>
   );
 }

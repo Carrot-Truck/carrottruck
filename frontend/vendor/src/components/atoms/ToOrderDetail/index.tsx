@@ -1,5 +1,5 @@
 import { ToOrderDetailWrapper } from "./style";
-import prev from "../../../assets/icons/prev_arrow.svg";
+import next from "../../../assets/icons/next_arrow.svg";
 
 interface IToOrderDetailWrapperProps {
   isSaleDetailComp: boolean;
@@ -15,7 +15,7 @@ function ToOrderDetail({ isSaleDetailComp, setSaleDetailComp }: IToOrderDetailWr
 
   return (
     <ToOrderDetailWrapper onClick={handleArrowClick}>
-      <img src={prev} alt="" />
+      <img src={next} alt="" />
     </ToOrderDetailWrapper>
   );
 }

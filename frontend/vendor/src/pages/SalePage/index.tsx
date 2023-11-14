@@ -1,11 +1,13 @@
 import Navbar from "components/organisms/Navbar";
 import { SalePageLayout } from "./style";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Loading from "components/atoms/Loading";
 import { getMenus } from "api/menu";
 import { AxiosResponse } from "axios";
 import MenuSelector from "components/organisms/MenuSelector";
+import { isOpenFoodTruck } from "api/foodtruck/foodTruck";
+import OrderDetailButton from "components/organisms/OrderDetailButton";
 
 interface IMenuItem {
   menuId: number;
@@ -23,16 +25,18 @@ const getData = (response: AxiosResponse) => {
 function SalePage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [menuItemList, setMenuItemList] = useState<IMenuItem[]>([]);
+  const [isSaleDetailComp, setSaleDetailComp] = useState<boolean>(false);
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const receivedData: IMenuItem[] = location.state && location.state.data;
-  const foodTruckId = Number.parseInt(localStorage.getItem("selectedFoodTruckId") || "0");
+  const selectedFoodTruck = Number.parseInt(localStorage.getItem("selectedFoodTruckId") || "0");
 
   const fetchData = () => {
     if (receivedData === null) {
       const requestParam: Object = {
-        foodTruckId: foodTruckId,
+        foodTruckId: selectedFoodTruck,
       };
 
       getMenus(
@@ -51,8 +55,31 @@ function SalePage() {
     setLoading(false);
   };
 
+  const checkOnSale = () => {
+    if (selectedFoodTruck === 0 || !selectedFoodTruck) {
+      return;
+    }
+
+    isOpenFoodTruck(
+      selectedFoodTruck,
+      (response: AxiosResponse) => {
+        const data = getData(response);
+        if (data) {
+          setLoading(false);
+        } else {
+          navigate("/");
+          return;
+        }
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  };
+
   useEffect(() => {
     fetchData();
+    checkOnSale();
   }, []);
 
   return (
@@ -61,6 +88,10 @@ function SalePage() {
         <Loading />
       ) : (
         <>
+          <OrderDetailButton
+            isSaleDetailComp={isSaleDetailComp}
+            setSaleDetailComp={setSaleDetailComp}
+          />
           <MenuSelector menuItemList={menuItemList} onSale={true} />
         </>
       )}

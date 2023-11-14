@@ -8,7 +8,8 @@ import useBottomSheet from 'hooks/useBottomSheet';
 import ShoppingCartItem from 'components/atoms/ShoppingCartItem';
 
 function MainPage() {
-  interface Marker {
+    interface Marker {
+    categoryId: number,
     latitude: number;
     longitude: number;
   }
@@ -88,8 +89,9 @@ function MainPage() {
     }
 
 //   truckData에서 위도 경도를 추출하여 string에서 number로 변환
-  const extractMarkers = (data: { markerItems: Array<{ latitude: string; longitude: string }> }): Array<Marker> =>
-    data.markerItems.map((item) => ({
+    const extractMarkers = (data: { markerItems: Array<{ categoryId: number; latitude: string; longitude: string }> }): Array<Marker> =>
+      data.markerItems.map((item) => ({
+        categoryId: item.categoryId,
       latitude: parseFloat(item.latitude),
       longitude: parseFloat(item.longitude)
     }));

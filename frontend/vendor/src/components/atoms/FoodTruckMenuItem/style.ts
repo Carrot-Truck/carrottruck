@@ -9,11 +9,12 @@ export const FoodTruckMenuItemWrapper = styled.div`
   text-align: center;
   border-top: 1px solid var(--gray-400);
   border: 1px solid #ccc;
-
+  margin-left: 5px;
   img {
     width: 30%;
     height: 3rem;
-    margin-right: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
   }
 
   .deleteIcon {
@@ -29,6 +30,7 @@ export const MenuTextWrapper = styled.div`
   width: 100%;
   justify-content: flex-start;
   text-align: left;
+  margin-left: 5px;
 
   p: nth-child(1) {
     font-size: 1.25rem;

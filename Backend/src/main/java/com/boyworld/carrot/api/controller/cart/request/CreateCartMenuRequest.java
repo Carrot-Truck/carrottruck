@@ -11,10 +11,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CreateCartMenuRequest {
-
-    @NotNull
-    private Long foodTruckId;
-
     @NotNull
     private Long menuId;
 
@@ -25,8 +21,7 @@ public class CreateCartMenuRequest {
 
 
     @Builder
-    public CreateCartMenuRequest(Long foodTruckId, Long menuId, Integer cartMenuQuantity, List<Long> menuOptionIds) {
-        this.foodTruckId = foodTruckId;
+    public CreateCartMenuRequest(Long menuId, Integer cartMenuQuantity, List<Long> menuOptionIds) {
         this.menuId = menuId;
         this.cartMenuQuantity = cartMenuQuantity;
         this.menuOptionIds = menuOptionIds;
@@ -35,7 +30,6 @@ public class CreateCartMenuRequest {
 
     public CreateCartMenuDto toCreateMenuDto() {
         return CreateCartMenuDto.builder()
-                .foodTruckId(this.foodTruckId)
                 .menuId(this.menuId)
                 .cartMenuQuantity(this.cartMenuQuantity)
                 .menuOptionIds(this.menuOptionIds)

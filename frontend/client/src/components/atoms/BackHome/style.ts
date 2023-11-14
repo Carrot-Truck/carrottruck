@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const BackSpaceWrapper = styled.div`
+export const BackHomeWrapper = styled.div`
   display: flex;
   width: 36px;
   height: 36px;

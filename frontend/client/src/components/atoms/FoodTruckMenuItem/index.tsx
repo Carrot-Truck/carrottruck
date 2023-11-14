@@ -1,5 +1,5 @@
 // import React, { ReactNode, useEffect, useState } from 'react';
-// import { useLocation } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { FoodTruckMenuItemWrapper, MenuTextWrapper } from './style';
 // import logo from '../../../assets/imgs/playstore.png';
 
@@ -14,10 +14,16 @@ interface IFoodTruckMenuItemProps {
 }
 
 function FoodTruckMenuItem(props: IFoodTruckMenuItemProps) {
-  const { menuName, menuDescription, menuPrice, menuImageUrl } = props;
+  const { menuId, menuName, menuDescription, menuPrice, menuImageUrl } = props;
+  const navigate = useNavigate();
+  const handleItemClick = () => {
+    navigate(`/add/menu`, {
+      state: { menuId, menuName, menuDescription, menuPrice, menuImageUrl }
+    });
+  }
 
   return (
-    <FoodTruckMenuItemWrapper>
+    <FoodTruckMenuItemWrapper onClick={handleItemClick}>
       <img placeholder="이미지입니다." alt="~" src={menuImageUrl}></img>
       <MenuTextWrapper>
         <p>{menuName}</p>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LoginPageLayout } from './style';
 import SwitchButton from 'components/organisms/SwitchButton';
-import BackSpace from 'components/atoms/BackSpace';
+import BackSpace from 'components/atoms/BackHome';
 import LoginForm from 'components/organisms/LoginForm';
 import JoinForm from 'components/organisms/JoinForm';
 

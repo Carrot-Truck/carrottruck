@@ -35,7 +35,7 @@ function FoodTruckListItem(props: IFoodTruckMenuItemProps) {
             <div className="location">
               <img src={Pin} alt="" />
               <p>
-                {address}({distance}m)
+                {address}({Math.round(distance)}m)
               </p>
             </div>
           </div>
@@ -47,9 +47,9 @@ function FoodTruckListItem(props: IFoodTruckMenuItemProps) {
         <span>({grade})</span>
         <span>{reviewCount}</span>
       </div>
-      <div className="foodTruckImage">
+      {/* <div className="foodTruckImage">
         <img src={foodTruckImageUrl} alt="" />
-      </div>
+      </div> */}
     </FoodTruckListItemWrapper>
   );
 }

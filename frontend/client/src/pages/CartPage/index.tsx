@@ -1,6 +1,6 @@
 import { getCart } from "api/cart";
 import { AxiosResponse } from "axios";
-import BackSpace from "components/atoms/BackSpace";
+import BackSpace from "components/atoms/BackHome";
 import CartMenu from "components/organisms/CartMenu";
 import { useEffect, useState } from "react";
 import { CartPageLayout } from "./style";

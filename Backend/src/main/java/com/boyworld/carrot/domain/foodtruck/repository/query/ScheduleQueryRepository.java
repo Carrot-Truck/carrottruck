@@ -60,7 +60,7 @@ public class ScheduleQueryRepository {
                 .select(schedule.id)
                 .from(schedule)
                 .join(schedule.foodTruck, foodTruck)
-                .leftJoin(sale).on(schedule.foodTruck.eq(sale.foodTruck)).fetchJoin()
+                .leftJoin(sale).on(schedule.foodTruck.eq(sale.foodTruck), sale.active)
                 .where(
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
@@ -69,6 +69,8 @@ public class ScheduleQueryRepository {
                         schedule.active
                 )
                 .fetch();
+
+        log.debug("ids={}", ids);
 
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
@@ -88,7 +90,7 @@ public class ScheduleQueryRepository {
                 ))
                 .from(schedule)
                 .join(schedule.foodTruck, foodTruck)
-                .leftJoin(sale).on(schedule.foodTruck.eq(sale.foodTruck)).fetchJoin()
+                .leftJoin(sale).on(schedule.foodTruck.eq(sale.foodTruck), sale.active)
                 .where(
                         schedule.id.in(ids)
                 )
@@ -111,10 +113,11 @@ public class ScheduleQueryRepository {
                 .selectDistinct(schedule.id)
                 .from(schedule)
                 .join(schedule.foodTruck, foodTruck)
-                .leftJoin(sale).on(schedule.foodTruck.eq(sale.foodTruck)).fetchJoin()
-                .leftJoin(foodTruckLike).on(schedule.foodTruck.eq(foodTruckLike.foodTruck)).fetchJoin()
-                .leftJoin(review).on(schedule.foodTruck.eq(review.foodTruck)).fetchJoin()
-                .leftJoin(foodTruckImage).on(schedule.foodTruck.eq(foodTruckImage.foodTruck)).fetchJoin()
+                .leftJoin(sale).on(schedule.foodTruck.eq(sale.foodTruck), sale.active)
+                .leftJoin(foodTruckLike).on(schedule.foodTruck.eq(foodTruckLike.foodTruck), foodTruckLike.active)
+                .leftJoin(foodTruckLike.member, member).on(foodTruckLike.member.eq(member), member.active)
+                .leftJoin(review).on(schedule.foodTruck.eq(review.foodTruck), review.active)
+                .leftJoin(foodTruckImage).on(schedule.foodTruck.eq(foodTruckImage.foodTruck), foodTruckImage.active)
                 .where(
                         isEqualCategoryId(condition.getCategoryId()),
                         nameLikeKeyword(condition.getKeyword()),
@@ -126,6 +129,7 @@ public class ScheduleQueryRepository {
                 .limit(PAGE_SIZE + 1)
                 .fetch();
 
+        log.debug("ids={}", ids);
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
@@ -153,11 +157,11 @@ public class ScheduleQueryRepository {
                 ))
                 .from(schedule)
                 .join(schedule.foodTruck, foodTruck)
-                .leftJoin(sale).on(schedule.foodTruck.eq(sale.foodTruck)).fetchJoin()
-                .leftJoin(foodTruckLike).on(schedule.foodTruck.eq(foodTruckLike.foodTruck)).fetchJoin()
-                .join(foodTruckLike.member, member)
-                .leftJoin(review).on(schedule.foodTruck.eq(review.foodTruck)).fetchJoin()
-                .leftJoin(foodTruckImage).on(schedule.foodTruck.eq(foodTruckImage.foodTruck)).fetchJoin()
+                .leftJoin(sale).on(schedule.foodTruck.eq(sale.foodTruck), sale.active)
+                .leftJoin(foodTruckLike).on(schedule.foodTruck.eq(foodTruckLike.foodTruck), foodTruckLike.active)
+                .leftJoin(foodTruckLike.member, member).on(foodTruckLike.member.eq(member), member.active)
+                .leftJoin(review).on(schedule.foodTruck.eq(review.foodTruck), review.active)
+                .leftJoin(foodTruckImage).on(schedule.foodTruck.eq(foodTruckImage.foodTruck), foodTruckImage.active)
                 .where(
                         schedule.id.in(ids)
                 )

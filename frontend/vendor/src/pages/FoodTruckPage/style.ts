@@ -10,6 +10,10 @@ export const FoodTruckLayout = styled.div`
     flex-grow: 1;  // 내용이 차지할 수 있는 만큼의 공간을 차지하도록 설정
     // 필요한 경우 여기에 추가 스타일을 적용합니다.
   }
+
+  .modifyButton{
+    justify-content: right;
+  }
   
   .header {
     display: flex;
@@ -107,5 +111,9 @@ export const FoodTruckLayout = styled.div`
     gap: 10px;
     border-radius: var(--radius-m);
     background: var(--sub-color-1);
+  }
+
+  .Button {
+    margin-top: 10px;
   }
 `;

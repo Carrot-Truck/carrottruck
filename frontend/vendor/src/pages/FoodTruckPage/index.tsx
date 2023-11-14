@@ -169,6 +169,9 @@ function FoodTruckPage() {
     navigate('/');
   };
 
+  const modifyMenu = () =>{
+    navigate('/foodtruck/menu/modify', { state: { foodTruck } });
+  }
   const lastFoodTruckId = {
     lastFoodTruckId: ''
   };
@@ -236,9 +239,16 @@ function FoodTruckPage() {
             handleClick={() => buttonClick(3)}
           />
         </div>
+        
         {selectedButton === 1 && foodTruck.menus.length > 0 && (
           <FoodTruckMenu menus={foodTruck.menus} />
         )}
+        <div className='Button'>
+          {selectedButton === 1 && (
+            <Button size="l" radius='m' color='Primary' handleClick={modifyMenu} text="메뉴 수정"/>
+          )}
+        </div>
+        
         {selectedButton === 2 && (
           <FoodTruckInfo foodTruckDetail={foodTruck.foodTruck} schedules={foodTruck.schedules}></FoodTruckInfo>
         )}

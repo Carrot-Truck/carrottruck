@@ -1,6 +1,7 @@
 package com.boyworld.carrot.api.controller.order.request;
 
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
+import com.boyworld.carrot.api.service.order.dto.CreateOrderMenuDto;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import java.util.List;
 import lombok.Builder;
@@ -13,10 +14,10 @@ public class CreateOrderRequest {
 
     Long foodTruckId;
     Integer totalPrice;
-    List<OrderMenuItem> orderMenuItems;
+    List<CreateOrderMenuDto> orderMenuItems;
 
     @Builder
-    public CreateOrderRequest(Long foodTruckId, Integer totalPrice, List<OrderMenuItem> orderMenuItems) {
+    public CreateOrderRequest(Long foodTruckId, Integer totalPrice, List<CreateOrderMenuDto> orderMenuItems) {
         this.foodTruckId = foodTruckId;
         this.totalPrice = totalPrice;
         this.orderMenuItems = orderMenuItems;

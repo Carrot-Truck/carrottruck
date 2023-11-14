@@ -11,6 +11,7 @@ import com.boyworld.carrot.api.service.cart.dto.CartMenuDto;
 import com.boyworld.carrot.api.service.cart.dto.CartMenuOptionDto;
 import com.boyworld.carrot.api.service.cart.dto.CreateCartMenuDto;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
+import com.boyworld.carrot.api.service.order.dto.CreateOrderMenuDto;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.domain.cart.Cart;
 import com.boyworld.carrot.domain.cart.CartMenu;
@@ -208,7 +209,7 @@ public class CartService {
     public CreateOrderDto createOrderByCart(String email) throws JsonProcessingException {
         Cart cart = getCart(email);
 
-        List<OrderMenuItem> orderMenuItems = new ArrayList<>();
+        List<CreateOrderMenuDto> orderMenuItems = new ArrayList<>();
         for (String cartMenuId : cart.getCartMenuIds()) {
             CartMenu cartMenu = getCartMenu(cartMenuId);
             List<String> cartMenuOptionIds = Optional.ofNullable(cartMenu.getCartMenuOptionIds())
@@ -219,7 +220,7 @@ public class CartService {
                 menuOptionIdList.add(cartMenuOption.getMenuOptionId());
                 deleteCartMenuOption(cartMenuOptionId);
             }
-            orderMenuItems.add(OrderMenuItem.of(cartMenu, menuOptionIdList));
+            orderMenuItems.add(CreateOrderMenuDto.of(cartMenu, menuOptionIdList));
             deleteCartMenu(cartMenuId);
         }
         deleteCart(email);

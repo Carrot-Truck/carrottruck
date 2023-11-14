@@ -1,31 +1,33 @@
 package com.boyworld.carrot.api.service.order.dto;
 
-import java.util.List;
-
 import com.boyworld.carrot.domain.cart.CartMenu;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
-public class OrderMenuItem {
-
+public class CreateOrderMenuDto {
     private Long id;
     private Long menuId;
     private Integer quantity;
-    private String menuName;
-    private Integer price;
     private List<Long> menuOptionList;
 
     @Builder
-    public OrderMenuItem(Long id, Long menuId, Integer quantity, String menuName,
-                         Integer price, List<Long> menuOptionList) {
+    public CreateOrderMenuDto(Long id, Long menuId, Integer quantity, List<Long> menuOptionList) {
         this.id = id;
         this.menuId = menuId;
         this.quantity = quantity;
-        this.menuName = menuName;
-        this.price = price;
         this.menuOptionList = menuOptionList;
+    }
+
+    public static CreateOrderMenuDto of(CartMenu cartMenu, List<Long> menuOptionIdList) {
+        return CreateOrderMenuDto.builder()
+                .menuId(cartMenu.getMenuId())
+                .quantity(cartMenu.getQuantity())
+                .menuOptionList(menuOptionIdList)
+                .build();
     }
 }

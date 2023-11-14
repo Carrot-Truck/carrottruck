@@ -5,6 +5,7 @@ import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.member.error.InValidAccessException;
 import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
+import com.boyworld.carrot.api.service.order.dto.CreateOrderMenuDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
@@ -87,7 +88,7 @@ public class OrderService {
         FoodTruck foodTruck = getFoodTruckById(foodTruckId);
         checkOwnerAccess(member, foodTruck);
 
-        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, member.getId(), Status.PROCESSING);
+        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, Status.PROCESSING);
 
         return OrdersResponse.builder()
             .orderItems(orderItems)
@@ -104,7 +105,7 @@ public class OrderService {
     public OrdersResponse getCompleteOrders(Long foodTruckId, String email) {
 
         Long memberId = memberRepository.findByEmail(email).map(Member::getId).orElse(null);
-        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, memberId, Status.COMPLETE);
+        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, Status.COMPLETE);
 
         return OrdersResponse.builder()
             .orderItems(orderItems)
@@ -130,7 +131,7 @@ public class OrderService {
             checkOwnerAccess(member, order.getSale().getFoodTruck());
         }
 
-        OrderItem orderItem = orderQueryRepository.getOrder(orderId, member.getId(), role);
+        OrderItem orderItem = orderQueryRepository.getOrder(orderId, role);
 
         return OrderResponse.builder()
             .orderItem(orderItem)
@@ -159,7 +160,7 @@ public class OrderService {
 
         Order createdOrder = orderRepository.save(order);
 
-        for (OrderMenuItem item: dto.getOrderMenuItems()) {
+        for (CreateOrderMenuDto item: dto.getOrderMenuItems()) {
             OrderMenu orderMenu = OrderMenu.builder()
                 .order(getOrderById(order.getId()))
                 .menu(getMenuById(item.getMenuId()))

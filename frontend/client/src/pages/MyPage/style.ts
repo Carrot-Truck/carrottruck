@@ -1,46 +1,53 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
-export const MyPagelayout = styled.div`
+export const MyPageLayout = styled.div`
   width: 360px;
   padding-bottom: 200px;
-`;
+  font-family: BMJUA;
 
-export const PageContainer = styled.div`
-  display: flex;
-  color: black;
-  flex-direction: column;
-  padding: 20px;
-`;
+  .userInfo {
+    display: flex;
+    flex-direction: row;
+    padding: 0px 3rem;
 
-export const UserInfoSection = styled.section`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  // Add more styles as needed
-`;
+    p {
+      font-size: 1.5rem;
+      font-weight: 700;
+      padding-bottom: 10px;
+      border-bottom: 3px solid var(--main-color);
+    }
 
-export const ContactInfoSection = styled(UserInfoSection)`
-  // Inherits styles from UserInfoSection and you can add or override styles
-`;
-
-export const SettingsButton = styled.button`
-  background-color: green;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  margin-top: 20px;
-  cursor: pointer;
-  // Add more styles as needed
-`;
-
-export const EditableField = styled.div`
-  cursor: pointer;
-  input {
-
+    p: nth-child(1) {
+      color: var(--main-color);
+    }
   }
-  span {
 
+  .history {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    padding: 10px 15px;
+
+    div {
+      width: 100px;
+      height: 100px;
+      background-color: var(--gray-100);
+      border-radius: var(--radius-m);
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 10px;
+    }
+
+    img {
+      height: 50px;
+    }
+
+    p {
+      padding-top: 10px;
+      font-size: 1rem;
+      font-weight: 1000;
+    }
   }
 `;

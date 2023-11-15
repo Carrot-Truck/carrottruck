@@ -7,7 +7,7 @@ import Navbar from '../Navbar';
 import ScheduleMap from "components/atoms/ScheduleMap"
 import { reverseGeocoding } from 'api/address'
 import { AxiosResponse } from 'axios';
-import { createSchedule } from 'api/schedule';
+import { createSchedule, editSchedule } from 'api/schedule';
 
 interface ScheduleFormInterface {
   foodTruckId: number,
@@ -27,6 +27,7 @@ function ModifyScheduleForm() {
   const [latitude, setLatitude] = useState('');
   const [startTime, setStartTime] = useState(location.state.startTime);
   const [endTime, setEndTime] = useState(location.state.endTime);
+  const scheduleId = location.state.scheduleId;
   const [day] = useState(location.state.day);
 
   const CLIENT_KEY: string = process.env.REACT_APP_CLIENT_ID || 'your-default-key-or-handle-error';
@@ -77,7 +78,13 @@ function ModifyScheduleForm() {
       alert("입력이 올바르지 않습니다.");
       return;
     }
-    createSchedule(inputRequest, ()=>{ navigate(-1); return;}, ()=>{alert('등록 중 오류 발생!\n관리자에게 문의하세요'); navigate('/');});
+
+    if (location.state.startTime !== null && location.state.startTime !== ''){
+      editSchedule(scheduleId, inputRequest, ()=>{ navigate(-1); return;}, ()=>{alert('등록 중 오류 발생!\n관리자에게 문의하세요'); navigate('/');});
+    }else{
+      createSchedule(inputRequest, ()=>{ navigate(-1); return;}, ()=>{alert('등록 중 오류 발생!\n관리자에게 문의하세요'); navigate('/');});
+    }
+    
   };
 
   return (

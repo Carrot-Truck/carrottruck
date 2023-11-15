@@ -51,7 +51,6 @@ const FoodTruckInfoItem = ({ title, value }: FoodTruckInfoProps) => {
               
             ))}
           </div>
-
         </>
       )}
       {title === "사업자정보" && (

@@ -84,7 +84,7 @@ function ScheduleForm() {
         if (newSchedules[day]) {
             newSchedules[day].startTime = element.startTime;
             newSchedules[day].endTime = element.endTime;
-            newSchedules[day].foodTruckId = foodTruckId;
+            newSchedules[day].foodTruckId = element.scheduleId;
         }
     });
 
@@ -106,8 +106,8 @@ function ScheduleForm() {
 
   type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
 
-  const modifySchedulDeetail = (day: DayOfWeek, startTime: string, endTime: string) =>{
-    navigate('/schedule/modify', { state: { day: day, startTime: startTime, endTime: endTime } });
+  const modifySchedulDeetail = (day: DayOfWeek, startTime: string, endTime: string, scheduleId: number) =>{
+    navigate('/schedule/modify', { state: { day: day, startTime: startTime, endTime: endTime, scheduleId: scheduleId } });
   }
 
     return (
@@ -133,7 +133,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("MONDAY", schedules.MONDAY.startTime, schedules.MONDAY.endTime)}
+                    handleClick={()=>modifySchedulDeetail("MONDAY", schedules.MONDAY.startTime, schedules.MONDAY.endTime, schedules.MONDAY.foodTruckId)}
                 />
             </FieldSet>
             <FieldSet>
@@ -158,7 +158,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("TUESDAY", schedules.TUESDAY.startTime, schedules.TUESDAY.endTime)}
+                    handleClick={()=>modifySchedulDeetail("TUESDAY", schedules.TUESDAY.startTime, schedules.TUESDAY.endTime, schedules.TUESDAY.foodTruckId)}
                 />
             </FieldSet>
             <FieldSet>
@@ -183,7 +183,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("WEDNESDAY", schedules.WEDNESDAY.startTime, schedules.WEDNESDAY.endTime)}
+                    handleClick={()=>modifySchedulDeetail("WEDNESDAY", schedules.WEDNESDAY.startTime, schedules.WEDNESDAY.endTime, schedules.WEDNESDAY.foodTruckId)}
                 />
             </FieldSet>
             <FieldSet>
@@ -208,7 +208,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("THURSDAY", schedules.THURSDAY.startTime, schedules.THURSDAY.endTime)}
+                    handleClick={()=>modifySchedulDeetail("THURSDAY", schedules.THURSDAY.startTime, schedules.THURSDAY.endTime, schedules.THURSDAY.foodTruckId)}
                 />
             </FieldSet>
             <FieldSet>
@@ -233,7 +233,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("FRIDAY", schedules.FRIDAY.startTime, schedules.FRIDAY.endTime)}
+                    handleClick={()=>modifySchedulDeetail("FRIDAY", schedules.FRIDAY.startTime, schedules.FRIDAY.endTime, schedules.FRIDAY.foodTruckId)}
                 />
             </FieldSet>
             <FieldSet>
@@ -258,7 +258,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("SATURDAY", schedules.SATURDAY.startTime, schedules.SATURDAY.endTime)}
+                    handleClick={()=>modifySchedulDeetail("SATURDAY", schedules.SATURDAY.startTime, schedules.SATURDAY.endTime, schedules.SATURDAY.foodTruckId)}
                 />
             </FieldSet>
             <FieldSet>
@@ -283,7 +283,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("SUNDAY", schedules.SUNDAY.startTime, schedules.SUNDAY.endTime)}
+                    handleClick={()=>modifySchedulDeetail("SUNDAY", schedules.SUNDAY.startTime, schedules.SUNDAY.endTime, schedules.SUNDAY.foodTruckId)}
                 />
             </FieldSet>
             {/* <Button text="저장" color="Primary" size="full" radius="s" handleClick={modifySchedule} /> */}

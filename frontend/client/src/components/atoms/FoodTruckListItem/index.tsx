@@ -22,10 +22,11 @@ interface IFoodTruckMenuItemProps {
   address: string;
   foodTruckImageUrl: string;
   isNew: boolean;
+  onToggleLike: (foodTruckId: number) => void;
 }
 
 function FoodTruckListItem(props: IFoodTruckMenuItemProps) {
-    const { categoryId, foodTruckId, foodTruckName, address, distance, isLiked: initialIsLiked, grade, reviewCount, foodTruckImageUrl } = props;
+    const { categoryId, foodTruckId, foodTruckName, isLiked: initialIsLiked, grade, reviewCount, onToggleLike } = props;
     const [liked, setLiked] = useState(initialIsLiked);
     const navigate = useNavigate();
 
@@ -46,8 +47,9 @@ function FoodTruckListItem(props: IFoodTruckMenuItemProps) {
         },
         (response: any) => {
             console.log(response.data.data);
+            onToggleLike(foodTruckId);
             // 여기에서 isLiked 상태 업데이트
-            setLiked(!liked); // 현재 isLiked 상태를 반대로 변경
+            // setLiked(!liked); // 현재 isLiked 상태를 반대로 변경
         },
         (error: any) => {
             console.error('API Error: ', error);

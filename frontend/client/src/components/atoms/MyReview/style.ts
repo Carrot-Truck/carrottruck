@@ -9,6 +9,7 @@ export const MyReviewItemWrapper = styled.div`
     font-size: 1rem;
     font-weight: 400;
     color: var(--black-400);
+    margin-bottom: 5px;
   }
 
   p: nth-of-type(1) {
@@ -20,7 +21,7 @@ export const MyReviewItemWrapper = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-
+    margin-bottom: 5px;
     p: nth-of-type(1) {
       color: var(--black-400);
       font-size: 1.25rem;

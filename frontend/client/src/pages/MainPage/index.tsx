@@ -11,20 +11,15 @@ import { getFoodTruck } from 'api/foodtruck/foodTruck';
 function MainPage() {
     interface Marker {
         categoryId: number;
-        foodTruckId: number;
+      foodTruckId: number;
+      foodTruckName: string;
         latitude: number;
         longitude: number;
   }
 
-  const [truckData, setTruckData] = useState({
-    markerCount: 0,
-    markerItems: []
-  });
+  const [truckData, setTruckData] = useState({markerCount: 0, markerItems: [] });
   const [markers, setMarkers] = useState<Array<Marker>>([]);
-  const [foodTruckList, setFoodTruckList] = useState<{ hasNext: boolean; items: any[] }>({
-    hasNext: false,
-    items: []
-  });
+  const [foodTruckList, setFoodTruckList] = useState<{ hasNext: boolean; items: any[] }>({ hasNext: false, items: [] });
 
   const CLIENT_KEY: string = process.env.REACT_APP_CLIENT_ID || 'your-default-key-or-handle-error';
 
@@ -96,10 +91,11 @@ function MainPage() {
   };
 
     // truckData에서 위도 경도를 추출하여 string에서 number로 변환
-    const extractMarkers = (data: { markerItems: Array<{ categoryId: number; foodTruckId: number, latitude: string; longitude: string }> }): Array<Marker> =>
+  const extractMarkers = (data: { markerItems: Array<{ categoryId: number; foodTruckId: number, foodTruckName: string; latitude: string; longitude: string }> }): Array<Marker> =>
       data.markerItems.map((item) => ({
           categoryId: item.categoryId,
-          foodTruckId: item.foodTruckId,
+        foodTruckId: item.foodTruckId,
+          foodTruckName: item.foodTruckName,
       latitude: parseFloat(item.latitude),
           longitude: parseFloat(item.longitude)
       
@@ -114,9 +110,6 @@ function MainPage() {
             },
               (response: any) => {
                   setFoodTruckList(response.data.data);
-              if (response.data.data.items.length > 0) {
-                setFoodTruckList(response.data.data);
-              }
             },
             (error: any) => {
               console.error('API Error: ', error);
@@ -125,13 +118,13 @@ function MainPage() {
     };
     
     // map MarkerClick event 처리
-    const handleMarkerClick = (foodTruckId: number, latitude: number, longitude: number) => {
+    const handleMarkerClick = (foodTruckId: number, foodTruckName: string, latitude: number, longitude: number) => {
         getFoodTruck(
             foodTruckId,
             {
                 latitude: latitude,
                 longitude: longitude
-            }, // 데이터를 보내지 않으므로 빈 객체
+            },
             (response: any) => {
                 // 성공 시의 처리 로직
                 console.log("Success:", response.data.data);
@@ -165,10 +158,21 @@ function MainPage() {
         );
     }
 
+    const toggleLike = (foodTruckId: number) => {
+        setFoodTruckList(prevState => {
+            return {
+              ...prevState,
+              items: prevState.items.map(item =>
+                item.foodTruckId === foodTruckId ? { ...item, isLiked: !item.isLiked } : item
+              )
+            };
+        });
+    };
+
   return (
     <MainPageLayout>
       <ShoppingCartItem></ShoppingCartItem>
-      <NaverMap clientId={CLIENT_KEY} markers={markers} onMarkerClick={handleMarkerClick} onMapClick={handleMapClick}></NaverMap>
+      <NaverMap clientId={CLIENT_KEY} markers={markers} foodTruckList={foodTruckList} onMarkerClick={handleMarkerClick} onMapClick={handleMapClick}></NaverMap>
       <FoodTruckListLayout ref={sheet}>
         <div className="header">
           <div className="handle"></div>
@@ -177,7 +181,7 @@ function MainPage() {
           {foodTruckList.items.length === 0 ? (
                 <span>근처에 푸드트럭이 없습니다.</span>
                   ) : (
-                      <FoodTruckList foodTrucks={foodTruckList.items}></FoodTruckList>
+                      <FoodTruckList foodTrucks={foodTruckList.items} onToggleLike={toggleLike}></FoodTruckList>
               )}        
         </div>
       </FoodTruckListLayout>

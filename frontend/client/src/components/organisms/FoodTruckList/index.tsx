@@ -15,18 +15,19 @@ interface FoodTruck {
   distance: number;
   address: string;
   foodTruckImageUrl: string;
-  isNew: boolean;
+    isNew: boolean;
 }
 
 interface IFoodTruckListProps {
-  foodTrucks: FoodTruck[];
+    foodTrucks: FoodTruck[];
+    onToggleLike: (foodTruckId: number) => void; 
 }
 
-function FoodTruckList({ foodTrucks }: IFoodTruckListProps) {
+function FoodTruckList({ foodTrucks, onToggleLike }: IFoodTruckListProps) {
   return (
     <FoodTruckListContainer>
       {foodTrucks.map((foodTruck, index) => (
-        <FoodTruckListItem key={index} {...foodTruck} />
+        <FoodTruckListItem key={index} {...foodTruck } onToggleLike={onToggleLike}/>
       ))}
     </FoodTruckListContainer>
   );

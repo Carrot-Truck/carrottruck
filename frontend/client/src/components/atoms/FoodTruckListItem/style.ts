@@ -8,6 +8,7 @@ export const FoodTruckListItemWrapper = styled.div`
   gap: 2px;
   align-self: stretch;
   padding: 10px 0px 5px 0px;
+  font-family: BM JUA_TTF;
 
   .restaurant {
     width: 360px;

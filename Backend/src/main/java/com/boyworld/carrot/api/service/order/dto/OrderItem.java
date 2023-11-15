@@ -24,7 +24,7 @@ public class OrderItem {
         this.status = status;
         this.totalPrice = totalPrice;
         this.createdTime = createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd E HH:mm"));
-        this.expectTime = expectTime != null ? expectTime.format(DateTimeFormatter.ofPattern("mm")) : null;
+        this.expectTime = expectTime != null ? expectTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd E HH:mm")) : null;
     }
 
     @Builder

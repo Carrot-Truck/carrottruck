@@ -106,8 +106,8 @@ function ScheduleForm() {
 
   type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
 
-  const modifySchedulDeetail = (day: DayOfWeek, startTime: string, endTime: string, scheduleId: number) =>{
-    navigate('/schedule/modify', { state: { day: day, startTime: startTime, endTime: endTime, scheduleId: scheduleId } });
+  const modifySchedulDeetail = (day: DayOfWeek, startTime: string, endTime: string, scheduleId: number, lat: string, long: string) =>{
+    navigate('/schedule/modify', { state: { day: day, startTime: startTime, endTime: endTime, scheduleId: scheduleId, latitude: lat, longitude: long } });
   }
 
     return (
@@ -118,14 +118,14 @@ function ScheduleForm() {
                     type="text"
                     value={schedules.MONDAY.startTime || ''}
                     // setValue={setMondayStartTime}
-                    // onChange={(e) => setMondayStartTime(e.target.value)}
+                    onChange={() => null}
                     placeholder="시작시간"
                 />
                 <P>~</P>
                 <Input
                     type="text"
                     value={schedules.MONDAY.endTime || ''}
-                    // onChange={(e) => setMondayEndTime(e.target.value)}
+                    onChange={() => null}
                     placeholder="종료시간"
                 />
                 <Button
@@ -133,7 +133,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("MONDAY", schedules.MONDAY.startTime, schedules.MONDAY.endTime, schedules.MONDAY.foodTruckId)}
+                    handleClick={()=>modifySchedulDeetail("MONDAY", schedules.MONDAY.startTime, schedules.MONDAY.endTime, schedules.MONDAY.foodTruckId, schedules.MONDAY.latitude, schedules.MONDAY.longitude)}
                 />
             </FieldSet>
             <FieldSet>
@@ -142,15 +142,14 @@ function ScheduleForm() {
                     type="text"
                     value={schedules.TUESDAY.startTime || ''}
                     // setValue={setMondayStartTime}
-                    // onChange={(e) => setTuesdayStartTime(e.target.value)}
+                    onChange={() => null}
                     placeholder="시작시간"
                 />
                 <P>~</P>
                 <Input
                     type="text"
                     value={schedules.TUESDAY.endTime || ''}
-                    // onChange={(e) => setTuesdayEndTime(e.target.value)}
-                    // onChange={(e) => handleInputChange(day, 'endTime', e.target.value)}
+                    onChange={() => null}
                     placeholder="종료시간"
                 />
                 <Button
@@ -158,7 +157,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("TUESDAY", schedules.TUESDAY.startTime, schedules.TUESDAY.endTime, schedules.TUESDAY.foodTruckId)}
+                    handleClick={()=>modifySchedulDeetail("TUESDAY", schedules.TUESDAY.startTime, schedules.TUESDAY.endTime, schedules.TUESDAY.foodTruckId, schedules.TUESDAY.latitude, schedules.TUESDAY.longitude)}
                 />
             </FieldSet>
             <FieldSet>
@@ -167,15 +166,14 @@ function ScheduleForm() {
                     type="text"
                     value={schedules.WEDNESDAY.startTime || ''}
                     // setValue={setMondayStartTime}
-                    // onChange={(e) => setWednesdayStartTime(e.target.value)}
+                    onChange={() => null}
                     placeholder="시작시간"
                 />
                 <P>~</P>
                 <Input
                     type="text"
                     value={schedules.WEDNESDAY.endTime || ''}
-                    // onChange={(e) => setWednesdayEndTime(e.target.value)}
-                    // onChange={(e) => handleInputChange(day, 'endTime', e.target.value)}
+                    onChange={() => null}
                     placeholder="종료시간"
                 />
                 <Button
@@ -183,7 +181,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("WEDNESDAY", schedules.WEDNESDAY.startTime, schedules.WEDNESDAY.endTime, schedules.WEDNESDAY.foodTruckId)}
+                    handleClick={()=>modifySchedulDeetail("WEDNESDAY", schedules.WEDNESDAY.startTime, schedules.WEDNESDAY.endTime, schedules.WEDNESDAY.foodTruckId, schedules.WEDNESDAY.latitude, schedules.WEDNESDAY.longitude)}
                 />
             </FieldSet>
             <FieldSet>
@@ -192,15 +190,14 @@ function ScheduleForm() {
                     type="text"
                     value={schedules.THURSDAY.startTime || ''}
                     // setValue={setMondayStartTime}
-                    // onChange={(e) => setThursdayStartTime(e.target.value)}
+                    onChange={() => null}
                     placeholder="시작시간"
                 />
                 <P>~</P>
                 <Input
                     type="text"
                     value={schedules.THURSDAY.endTime || ''}
-                    // onChange={(e) => setThursdayEndTime(e.target.value)}
-                    // onChange={(e) => handleInputChange(day, 'endTime', e.target.value)}
+                    onChange={() => null}
                     placeholder="종료시간"
                 />
                 <Button
@@ -208,7 +205,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("THURSDAY", schedules.THURSDAY.startTime, schedules.THURSDAY.endTime, schedules.THURSDAY.foodTruckId)}
+                    handleClick={()=>modifySchedulDeetail("THURSDAY", schedules.THURSDAY.startTime, schedules.THURSDAY.endTime, schedules.THURSDAY.foodTruckId, schedules.THURSDAY.latitude, schedules.THURSDAY.longitude)}
                 />
             </FieldSet>
             <FieldSet>
@@ -217,15 +214,14 @@ function ScheduleForm() {
                     type="text"
                     value={schedules.FRIDAY.startTime || ''}
                     // setValue={setMondayStartTime}
-                    // onChange={(e) => setFridayStartTime(e.target.value)}
+                    onChange={() => null}
                     placeholder="시작시간"
                 />
                 <P>~</P>
                 <Input
                     type="text"
                     value={schedules.FRIDAY.endTime || ''}
-                    // onChange={(e) => setFridayEndTime(e.target.value)}
-                    // onChange={(e) => handleInputChange(day, 'endTime', e.target.value)}
+                    onChange={() => null}
                     placeholder="종료시간"
                 />
                 <Button
@@ -233,7 +229,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("FRIDAY", schedules.FRIDAY.startTime, schedules.FRIDAY.endTime, schedules.FRIDAY.foodTruckId)}
+                    handleClick={()=>modifySchedulDeetail("FRIDAY", schedules.FRIDAY.startTime, schedules.FRIDAY.endTime, schedules.FRIDAY.foodTruckId, schedules.FRIDAY.latitude, schedules.FRIDAY.longitude)}
                 />
             </FieldSet>
             <FieldSet>
@@ -242,15 +238,14 @@ function ScheduleForm() {
                     type="text"
                     value={schedules.SATURDAY.startTime || ''}
                     // setValue={setMondayStartTime}
-                    // onChange={(e) => setSaturdayStartTime(e.target.value)}
+                    onChange={() => null}
                     placeholder="시작시간"
                 />
                 <P>~</P>
                 <Input
                     type="text"
                     value={schedules.SATURDAY.endTime || ''}
-                    // onChange={(e) => setSaturdayEndTime(e.target.value)}
-                    // onChange={(e) => handleInputChange(day, 'endTime', e.target.value)}
+                    onChange={() => null}
                     placeholder="종료시간"
                 />
                 <Button
@@ -258,7 +253,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("SATURDAY", schedules.SATURDAY.startTime, schedules.SATURDAY.endTime, schedules.SATURDAY.foodTruckId)}
+                    handleClick={()=>modifySchedulDeetail("SATURDAY", schedules.SATURDAY.startTime, schedules.SATURDAY.endTime, schedules.SATURDAY.foodTruckId, schedules.SATURDAY.latitude, schedules.SATURDAY.longitude)}
                 />
             </FieldSet>
             <FieldSet>
@@ -267,15 +262,14 @@ function ScheduleForm() {
                     type="text"
                     value={schedules.SUNDAY.startTime || ''}
                     // setValue={setMondayStartTime}
-                    // onChange={(e) => setSundayStartTime(e.target.value)}
+                    onChange={() => null}
                     placeholder="시작시간"
                 />
                 <P>~</P>
                 <Input
                     type="text"
                     value={schedules.SUNDAY.endTime || ''}
-                    // onChange={(e) => setSundayEndTime(e.target.value)}
-                    // onChange={(e) => handleInputChange(day, 'endTime', e.target.value)}
+                    onChange={() => null}
                     placeholder="종료시간"
                 />
                 <Button
@@ -283,7 +277,7 @@ function ScheduleForm() {
                     size="s"
                     color='Primary'
                     radius='l'
-                    handleClick={()=>modifySchedulDeetail("SUNDAY", schedules.SUNDAY.startTime, schedules.SUNDAY.endTime, schedules.SUNDAY.foodTruckId)}
+                    handleClick={()=>modifySchedulDeetail("SUNDAY", schedules.SUNDAY.startTime, schedules.SUNDAY.endTime, schedules.SUNDAY.foodTruckId, schedules.SUNDAY.latitude, schedules.SUNDAY.longitude)}
                 />
             </FieldSet>
             {/* <Button text="저장" color="Primary" size="full" radius="s" handleClick={modifySchedule} /> */}

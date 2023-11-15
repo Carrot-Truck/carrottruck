@@ -11,15 +11,14 @@ declare global {
 interface INaverMapProps {
   clientId: string; // 네이버 클라우드 플랫폼에서 발급받은 Client ID
   onMarkerChange: (latitude: number, longitude: number) => void;
+  savedMarker: any;
 }
-const ScheduleMap: React.FC<INaverMapProps> = ({ clientId, onMarkerChange  }) => {
+const ScheduleMap: React.FC<INaverMapProps> = ({ clientId, savedMarker, onMarkerChange  }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const markerRef = useRef(null); // 마커를 참조하기 위한 ref
 
   const updateLocation = (currentLocation: any) =>{
-
     const initialCenter = new window.naver.maps.LatLng(currentLocation.latitude, currentLocation.longitude); // 초기 중심 좌표 (예: 서울 시청)
-
     const mapOptions = {
       center: initialCenter,
       zoom: 17
@@ -43,24 +42,35 @@ const ScheduleMap: React.FC<INaverMapProps> = ({ clientId, onMarkerChange  }) =>
 
   }
   useEffect(() => {
+    
     const loadMap = () => {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const currentLocation = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          };
-          updateLocation(currentLocation);
-        },
-        (error) => {
-          console.error('Geolocation Error:', error);
-          const currentLocation = {
-            latitude: 37.5665,
-            longitude: 126.9780
-          };
-          updateLocation(currentLocation);
+      console.log("savedMarker:", savedMarker);
+      if(savedMarker.latitude != null && savedMarker.longitude !== null && savedMarker.latitude !== "" && savedMarker.longitude !== ""){
+        const currentLocation = {
+          latitude: savedMarker.latitude,
+          longitude: savedMarker.longitude
         }
-      );
+        updateLocation(currentLocation);
+        return;
+      }else{
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const currentLocation = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude
+            };
+            updateLocation(currentLocation);
+          },
+          (error) => {
+            console.error('Geolocation Error:', error);
+            const currentLocation = {
+              latitude: 37.5665,
+              longitude: 126.9780
+            };
+            updateLocation(currentLocation);
+          }
+        );
+      }
     };
 
     // 네이버 지도 스크립트 로드
@@ -73,7 +83,7 @@ const ScheduleMap: React.FC<INaverMapProps> = ({ clientId, onMarkerChange  }) =>
     return () => {
       document.head.removeChild(script);
     };
-  }, [clientId]);
+  }, [clientId, savedMarker]);
 
   return <MapWrapper ref={mapRef} />;
 };

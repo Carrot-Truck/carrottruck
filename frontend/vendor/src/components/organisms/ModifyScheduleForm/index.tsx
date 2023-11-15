@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BackSpace from 'components/atoms/BackSpace';
 import { AddMenuLayout, Input, P}  from './style';
@@ -6,8 +6,8 @@ import Button from 'components/atoms/Button';
 import Navbar from '../Navbar';
 import ScheduleMap from "components/atoms/ScheduleMap"
 import { reverseGeocoding } from 'api/address'
-import { AxiosResponse } from 'axios';
-import { createSchedule, editSchedule } from 'api/schedule';
+import {  AxiosResponse } from 'axios';
+import { createSchedule, editSchedule, getSchedule } from 'api/schedule';
 
 interface ScheduleFormInterface {
   foodTruckId: number,
@@ -23,8 +23,8 @@ function ModifyScheduleForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const [address, setAddress] = useState('');
-  const [longitude, setLongitude] = useState('');
-  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState(location.state.longitude);
+  const [latitude, setLatitude] = useState(location.state.latitude);
   const [startTime, setStartTime] = useState(location.state.startTime);
   const [endTime, setEndTime] = useState(location.state.endTime);
   const scheduleId = location.state.scheduleId;
@@ -80,12 +80,40 @@ function ModifyScheduleForm() {
     }
 
     if (location.state.startTime !== null && location.state.startTime !== ''){
+      console.log("new location: ", latitude, longitude)
       editSchedule(scheduleId, inputRequest, ()=>{ navigate(-1); return;}, ()=>{alert('등록 중 오류 발생!\n관리자에게 문의하세요'); navigate('/');});
     }else{
       createSchedule(inputRequest, ()=>{ navigate(-1); return;}, ()=>{alert('등록 중 오류 발생!\n관리자에게 문의하세요'); navigate('/');});
     }
     
   };
+  const updateLocation = (response: AxiosResponse) =>{
+    setLongitude(response.data.data.longitude);
+    setLatitude(response.data.data.latitude);
+    setAddress(response.data.data.address);
+    savedMarker.latitude = response.data.data.latitude;
+    savedMarker.longitude = response.data.data.longitude;
+  };
+
+  const initialRegistration = () =>{
+    setLatitude("37.5665");
+    setLongitude("126.9780");
+    setAddress("");
+  };
+
+  const savedMarker = {
+    latitude: latitude,
+    longitude: longitude
+  };
+  
+  useEffect(()=>{
+    console.log(latitude, longitude)
+    const data = {
+      foodTruckId: Number.parseInt(localStorage.getItem("selectedFoodTruckId") || "0")
+    }
+    getSchedule(scheduleId, data, updateLocation, initialRegistration);
+    
+  }, [])
 
   return (
     <AddMenuLayout>
@@ -96,7 +124,7 @@ function ModifyScheduleForm() {
         </div>
         {/* <img className="headerImage" src={menuImageUrl} alt={menuName} /> */}
         <div className="storeInfo">
-          <ScheduleMap clientId={CLIENT_KEY} onMarkerChange={handleMarkerChange}></ScheduleMap>
+          <ScheduleMap clientId={CLIENT_KEY} savedMarker={savedMarker} onMarkerChange={handleMarkerChange}></ScheduleMap>
           <div className="location">
             <p>{address}</p>
           </div>

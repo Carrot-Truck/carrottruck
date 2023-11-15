@@ -11,14 +11,17 @@ declare global {
 interface INaverMapProps {
     clientId: string; // 네이버 클라우드 플랫폼에서 발급받은 Client ID
     markers: Array<{ categoryId: number; foodTruckId: number; latitude: number; longitude: number; }>;
+    foodTruckList: { hasNext: boolean; items: any[] };
     onMarkerClick: (foodTruckId: number, latitude: number, longitude: number) => void;
     onMapClick: (latitude: number, longitude: number) => void;
 }
 
-    const NaverMap: React.FC<INaverMapProps> = ({ clientId, markers, onMarkerClick, onMapClick }) => {
+    const NaverMap: React.FC<INaverMapProps> = ({ clientId, markers, foodTruckList, onMarkerClick, onMapClick }) => {
     const mapRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+    useEffect(() => {
+      
+        
     // 사용자의 현재 위치를 가져오는 함수
     const getCurrentLocation = () => {
       if (navigator.geolocation) {
@@ -50,6 +53,18 @@ interface INaverMapProps {
         position: new window.naver.maps.LatLng(latitude, longitude),
         map: map
       });
+        
+      const infoWindow = new window.naver.maps.InfoWindow({
+        content: '', // 초기 내용은 비워둠
+        maxWidth: 140,
+        backgroundColor: "#eee",
+        borderColor: "#2db400",
+        borderWidth: 5,
+        anchorSize: new window.naver.maps.Size(30, 30),
+        anchorSkew: true,
+        anchorColor: "#eee",
+        pixelOffset: new window.naver.maps.Point(20, -20)
+    });
 
         console.log(markers);
         let activeMarker: any | null = null; // 임시 변수 선언
@@ -73,18 +88,25 @@ interface INaverMapProps {
             if (activeMarker) {
                 activeMarker.setAnimation(null);
                 activeMarker = null;
+                infoWindow.close();
+
             }
         });
             
         window.naver.maps.Event.addListener(naverMarker, 'click', () => {
             onMarkerClick(marker.foodTruckId, latitude, longitude);
+            
             map.setCenter(new window.naver.maps.LatLng(marker.latitude, marker.longitude));
+
+            const contentString = `<div>푸드트럭 이름: ${marker.foodTruckId}</div>`; // 예시 내용
+            infoWindow.setContent(contentString);
 
             console.log(activeMarker == null);
             if (activeMarker) {
                 activeMarker.setAnimation(null);
             }
 
+            infoWindow.open(map, naverMarker);
             naverMarker.setAnimation(1);
             activeMarker = naverMarker; // 임시 변수 업데이트
         });

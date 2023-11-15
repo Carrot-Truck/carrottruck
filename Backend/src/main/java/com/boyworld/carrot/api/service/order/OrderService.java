@@ -7,7 +7,6 @@ import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderMenuDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
-import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
@@ -88,7 +87,7 @@ public class OrderService {
         FoodTruck foodTruck = getFoodTruckById(foodTruckId);
         checkOwnerAccess(member, foodTruck);
 
-        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, Status.PROCESSING);
+        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, new Status[]{Status.PENDING, Status.PROCESSING});
 
         return OrdersResponse.builder()
             .orderItems(orderItems)
@@ -104,8 +103,11 @@ public class OrderService {
      */
     public OrdersResponse getCompleteOrders(Long foodTruckId, String email) {
 
-        Long memberId = memberRepository.findByEmail(email).map(Member::getId).orElse(null);
-        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, Status.COMPLETE);
+        Member member = getMemberByEmail(email);
+        FoodTruck foodTruck = getFoodTruckById(foodTruckId);
+        checkOwnerAccess(member, foodTruck);
+
+        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, new Status[] {Status.COMPLETE});
 
         return OrdersResponse.builder()
             .orderItems(orderItems)

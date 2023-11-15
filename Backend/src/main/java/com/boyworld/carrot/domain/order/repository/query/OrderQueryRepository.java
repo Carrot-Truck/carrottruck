@@ -72,7 +72,7 @@ public class OrderQueryRepository {
         return orderItems;
     }
 
-    public List<OrderItem> getVendorOrderItems(Long foodTruckId, Status status) {
+    public List<OrderItem> getVendorOrderItems(Long foodTruckId, Status[] status) {
         List<OrderItem> orderItems = queryFactory
                 .select(Projections.constructor(OrderItem.class,
                         order.id,
@@ -91,7 +91,7 @@ public class OrderQueryRepository {
                                 .where(sale.foodTruck.id.eq(foodTruckId))
                                 .orderBy(sale.createdDate.desc())
                                 .fetchFirst()),
-                        order.status.eq(status)
+                        order.status.in(status)
                 )
                 .orderBy(order.createdDate.asc())
                 .fetch();

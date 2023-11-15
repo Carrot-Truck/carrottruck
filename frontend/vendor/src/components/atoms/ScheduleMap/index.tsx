@@ -83,7 +83,7 @@ const ScheduleMap: React.FC<INaverMapProps> = ({ clientId, savedMarker, onMarker
     return () => {
       document.head.removeChild(script);
     };
-  }, [clientId, savedMarker]);
+  }, [clientId]);
 
   return <MapWrapper ref={mapRef} />;
 };

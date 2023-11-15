@@ -8,6 +8,7 @@ import com.boyworld.carrot.api.service.order.OrderService;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderMenuDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
 import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
+import com.boyworld.carrot.client.Sse.SseUtil;
 import com.boyworld.carrot.docs.RestDocsSupport;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.order.Status;
@@ -39,10 +40,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OrderControllerDocsTest extends RestDocsSupport {
 
     private final OrderService orderService = mock(OrderService.class);
+    private final SseUtil sseUtil = mock(SseUtil.class);
 
     @Override
     protected Object initController() {
-        return new OrderController(orderService);
+        return new OrderController(orderService, sseUtil);
     }
 
     @DisplayName("전체 주문 내역 조회 API")

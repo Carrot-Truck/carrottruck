@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MyPageLayout } from './style';
+import { MyPageLayout , LogoutP} from './style';
 import BackHome from 'components/atoms/BackHome';
 import Navbar from 'components/organisms/Navbar';
 import NoteBook from 'assets/icons/notebook.svg';
@@ -38,6 +38,7 @@ function MyPage() {
     <MyPageLayout>
       <div className="header">
         <BackHome></BackHome>
+        <LogoutP onClick={handleLogout}>로그아웃</LogoutP>
       </div>
       <div className="userInfo" onClick={() => handleMyInfo()}>
         <p>{userData.nickname}</p>
@@ -60,7 +61,7 @@ function MyPage() {
       {selectedButton === 1 && <OrderListForm></OrderListForm>}
       {selectedButton === 2 && <MyReviewForm></MyReviewForm>}
       <Navbar></Navbar>
-      <p onClick={handleLogout}>로그아웃</p>
+      
     </MyPageLayout>
   );
 }

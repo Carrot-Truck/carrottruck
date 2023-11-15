@@ -13,14 +13,16 @@ h3 {
   font-weight: bold;
   grid-column: 1 / -1; // h3는 전체 너비를 차지하도록 설정
   font-size: 1.2rem;
-  margin-bottom: 8px; // 제목과 내용 사이의 여백
+  margin: 10px 0px 8px 10px; // 제목과 내용 사이의 여백
+  text-align: left;
 }
 
 .label {
-  text-align: right;
+  text-align: center;
   padding-right: 8px;
   border-right: 1px solid #ccc;
-  margin-bottom: 10px; // 제목과 내용 사이의 여백
+  margin-bottom: 10px; 
+  padding: 0px 0px 0px 5px;
 }
 
 .value {
@@ -31,6 +33,8 @@ h3 {
 .full {
     grid-column: 1 / -1;
     text-align: left;
+    padding: 10px;
+    margin-bottom: 5px;
 }
 
 .schedules{

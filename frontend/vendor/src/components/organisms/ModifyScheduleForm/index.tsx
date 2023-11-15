@@ -96,9 +96,7 @@ function ModifyScheduleForm() {
         </div>
         {/* <img className="headerImage" src={menuImageUrl} alt={menuName} /> */}
         <div className="storeInfo">
-
           <ScheduleMap clientId={CLIENT_KEY} onMarkerChange={handleMarkerChange}></ScheduleMap>
-          
           <div className="location">
             <p>{address}</p>
           </div>
@@ -118,7 +116,6 @@ function ModifyScheduleForm() {
                 placeholder="종료시간"
             />
           </div>
-
           {/* <p  className="quantity">총 금액: {menuPrice * quantity}원</p> */} 
           <Button size='full' radius='m' color='Primary' text='저장' handleClick={modifyScheduleDetail}></Button>
         </div>

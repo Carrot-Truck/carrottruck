@@ -570,6 +570,41 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                         )
                 );
     }
+    
+    @DisplayName("품절 메뉴 해제 API")
+    @Test
+    @WithMockUser(roles = "VENDOR")
+    void forsale() throws Exception {
+        given(saleService.forSaleMenu(anyLong(), anyString()))
+                .willReturn(1L);
+
+        Long menuId = 1L;
+        mockMvc.perform(
+                        put("/sale/for-sale/{menuId}", menuId)
+                                .header("Authentication", "authentication")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(
+                        document("forsale-menu",
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("menuId")
+                                                .description("품절 해제할 메뉴 ID")
+                                ),
+                                responseFields(
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                                .description("코드"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING)
+                                                .description("상태"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING)
+                                                .description("메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.NUMBER)
+                                                .description("품절 해제한 메뉴 ID")
+                                )
+                        )
+                );
+    }
 
     @DisplayName("영업 종료 API")
     @Test

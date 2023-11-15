@@ -1,6 +1,25 @@
-import styled from 'styled-components';
+import styled, { css } from "styled-components";
 
-export const MapWrapper = styled.div`
+interface MapWrapperProps {
+  dynamicHeight?: string;
+  translateY?: string;
+}
+
+export const MapWrapper = styled.div<MapWrapperProps>`
   width: 100%;
-  height: 600px;
+  ${(props) =>
+    props.dynamicHeight !== (null || undefined)
+      ? css`
+          height: ${props.dynamicHeight};
+        `
+      : css`
+          height: 600px;
+        `}
+  position: absolute;
+  ${(props) =>
+    props.translateY !== (null || undefined)
+      ? css`
+        transform: translateY(${props.translateY};
+      `
+      : css``}
 `;

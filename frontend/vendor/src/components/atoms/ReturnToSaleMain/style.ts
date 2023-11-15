@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ToOrderDetailWrapper = styled.div`
+export const ReturnToSaleMainWrapper = styled.div`
   display: flex;
   width: 36px;
   height: 36px;
@@ -8,6 +8,10 @@ export const ToOrderDetailWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  margin: auto 0;
-  padding-right: 50px;
+  position: sticky;
+  top: 0;
+
+  :hover {
+    cursor: pointer;
+  }
 `;

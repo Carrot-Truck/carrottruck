@@ -86,6 +86,16 @@ include::{snippets}/soldout-menu/path-parameters.adoc[]
 include::{snippets}/soldout-menu/response-body.adoc[]
 include::{snippets}/soldout-menu/response-fields.adoc[]
 
+=== 메뉴 품절 해제
+
+==== HTTP Request
+include::{snippets}/forsale-menu/http-request.adoc[]
+include::{snippets}/forsale-menu/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/forsale-menu/response-body.adoc[]
+include::{snippets}/forsale-menu/response-fields.adoc[]
+
 [[close-sale]]
 === 영업 종료
 

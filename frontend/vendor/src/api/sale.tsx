@@ -42,7 +42,12 @@ export async function setSoldout(menuId: number, success: any, fail: any) {
   await api.put(`/soldout/${menuId}`).then(success).catch(fail);
 }
 
+export async function setForSale(menuId: number, success: any, fail: any) {
+  api.defaults.headers["Authorization"] = getAuthorization();
+  await api.put(`/for-sale/${menuId}`).then(success).catch(fail);
+}
+
 export async function closeSale(foodTruckId: number, success: any, fail: any) {
   api.defaults.headers["Authorization"] = getAuthorization();
-  await api.put(`/cloase/${foodTruckId}`).then(success).catch(fail);
+  await api.put(`/close/${foodTruckId}`).then(success).catch(fail);
 }

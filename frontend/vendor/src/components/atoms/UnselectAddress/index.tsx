@@ -1,4 +1,4 @@
-import { UnselectWrapperWrapper } from "./style";
+import { UnselectAddressWrapper } from "./style";
 import back from "../../../assets/icons/keyboard-backspace.svg";
 
 interface IUnselectAddressProps {
@@ -35,9 +35,9 @@ function UnselectAddress({
   };
 
   return (
-    <UnselectWrapperWrapper onClick={handleUnselectClick}>
+    <UnselectAddressWrapper onClick={handleUnselectClick}>
       {sidoId && <img src={back} alt="" />}
-    </UnselectWrapperWrapper>
+    </UnselectAddressWrapper>
   );
 }
 

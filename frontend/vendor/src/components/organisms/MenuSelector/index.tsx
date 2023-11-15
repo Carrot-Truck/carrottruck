@@ -1,7 +1,7 @@
 import { MenuSelectorContainer } from "./style";
 import NothingHere from "components/atoms/NothingHere";
 import MenuSelectorItem from "components/atoms/MenuSelectorItem";
-import { setSoldout } from "api/sale";
+import { setForSale, setSoldout } from "api/sale";
 import { AxiosResponse } from "axios";
 
 interface IMenuItem {
@@ -15,6 +15,7 @@ interface IMenuItem {
 
 interface IMenuSelectorProps {
   menuItemList: IMenuItem[];
+  setMenuItemList: React.Dispatch<React.SetStateAction<IMenuItem[]>>;
   onSale: boolean;
 }
 
@@ -22,26 +23,67 @@ const getData = (response: AxiosResponse) => {
   return response.data.data;
 };
 
-function MenuSelector({ menuItemList, onSale }: IMenuSelectorProps) {
+function MenuSelector({ menuItemList, setMenuItemList, onSale }: IMenuSelectorProps) {
   const handleMenuItemClick = (index: number) => {
     const soldout: boolean | undefined = menuItemList.at(index)?.menuSoldOut;
     if (soldout !== undefined) {
       if (!onSale) {
-        menuItemList[index].menuSoldOut = !soldout;
-      } else {
-        setSoldout(
-          menuItemList[index].menuId,
-          (response: AxiosResponse) => {
-            const data = getData(response);
-            console.log(data);
-            if (data == index) {
-              menuItemList[index].menuSoldOut = !soldout;
+        setMenuItemList((prevMenuList) => {
+          return prevMenuList.map((menuItem) => {
+            if (menuItem.menuId === menuItemList[index].menuId) {
+              return { ...menuItem, menuSoldOut: !menuItem.menuSoldOut };
             }
-          },
-          (error: any) => {
-            console.log(error);
-          }
-        );
+            return menuItem;
+          });
+        });
+      } else {
+        if (
+          !menuItemList[index].menuSoldOut &&
+          window.confirm(`다음 상품을 품절상태로 변경할까요?\n${menuItemList[index].menuName}`)
+        ) {
+          setSoldout(
+            menuItemList[index].menuId,
+            (response: AxiosResponse) => {
+              const data = getData(response);
+              if (data == menuItemList[index].menuId) {
+                setMenuItemList((prevMenuList) => {
+                  return prevMenuList.map((menuItem) => {
+                    if (menuItem.menuId === data) {
+                      return { ...menuItem, menuSoldOut: !menuItem.menuSoldOut };
+                    }
+                    return menuItem;
+                  });
+                });
+              }
+            },
+            (error: any) => {
+              console.log(error);
+            }
+          );
+        } else if (
+          menuItemList[index].menuSoldOut &&
+          window.confirm(`다음 상품을 판매가능상태로 변경할까요?\n${menuItemList[index].menuName}`)
+        ) {
+          setForSale(
+            menuItemList[index].menuId,
+            (response: AxiosResponse) => {
+              const data = getData(response);
+              if (data == menuItemList[index].menuId) {
+                setMenuItemList((prevMenuList) => {
+                  return prevMenuList.map((menuItem) => {
+                    if (menuItem.menuId === data) {
+                      return { ...menuItem, menuSoldOut: !menuItem.menuSoldOut };
+                    }
+                    return menuItem;
+                  });
+                });
+              }
+            },
+            (error: any) => {
+              console.log(error);
+            }
+          );
+        }
       }
     }
   };
@@ -57,9 +99,9 @@ function MenuSelector({ menuItemList, onSale }: IMenuSelectorProps) {
             name={data.menuName}
             price={data.menuPrice}
             description={data.menuDescription}
-            soldout={data.menuSoldOut}
             image={data.menuImageUrl}
             handleItemClick={() => handleMenuItemClick(index)}
+            className={`menu-item ${data.menuSoldOut ? "sold-out" : ""}`}
           />
         ))
       )}

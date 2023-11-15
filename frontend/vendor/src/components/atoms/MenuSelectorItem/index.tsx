@@ -4,21 +4,21 @@ interface IMenuSelectorItemProps {
   name: string;
   price: number;
   description: string;
-  soldout: boolean;
   image: string;
   handleItemClick: () => void;
+  className: string;
 }
 
 function MenuSelectorItem({
   name,
   price,
   description,
-  soldout,
   image,
   handleItemClick,
+  className,
 }: IMenuSelectorItemProps) {
   return (
-    <MenuSelectorItemWrapper onClick={handleItemClick} $soldout={soldout}>
+    <MenuSelectorItemWrapper onClick={handleItemClick} className={className}>
       <div className="menu-item-image">
         <img src={image} />
       </div>

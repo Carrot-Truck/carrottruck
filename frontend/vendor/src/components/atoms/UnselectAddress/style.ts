@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const UnselectWrapperWrapper = styled.div`
+export const UnselectAddressWrapper = styled.div`
   display: flex;
   width: 36px;
   height: 36px;

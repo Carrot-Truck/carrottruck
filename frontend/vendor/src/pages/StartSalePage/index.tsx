@@ -193,9 +193,15 @@ function StartSalePage() {
         <Loading />
       ) : (
         <>
-          <NaverMap clientId={clientId} markers={[]} />
+          <div className="map-container">
+            <NaverMap clientId={clientId} markers={[]} />
+          </div>
           <TitleText text={curAddress} size="s" textAlign="center" />
-          <MenuSelector menuItemList={menuItemList} onSale={false} />
+          <MenuSelector
+            menuItemList={menuItemList}
+            setMenuItemList={setMenuItemList}
+            onSale={false}
+          />
           <div className="start-sale-button-container">
             <Button
               size={"m"}

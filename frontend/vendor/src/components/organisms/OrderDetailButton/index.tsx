@@ -8,10 +8,16 @@ interface IOrderDetailButtonProps {
 }
 
 function OrderDetailButton({ isSaleDetailComp, setSaleDetailComp }: IOrderDetailButtonProps) {
+  const handleArrowClick = () => {
+    if (!isSaleDetailComp) {
+      setSaleDetailComp(true);
+    }
+  };
+
   return (
-    <OrderDetailButtonContainer>
+    <OrderDetailButtonContainer onClick={handleArrowClick}>
       <TitleText text={"주문 상세 보기"} size={"l"} textAlign={"center"} />
-      <ToOrderDetail isSaleDetailComp={isSaleDetailComp} setSaleDetailComp={setSaleDetailComp} />
+      <ToOrderDetail />
     </OrderDetailButtonContainer>
   );
 }

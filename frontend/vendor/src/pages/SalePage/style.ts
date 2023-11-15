@@ -1,8 +1,11 @@
 import styled from "styled-components";
 
 export const SalePageLayout = styled.div`
-  width: 360px;
-  padding-bottom: 200px;
+  width: 100vw;
   min-height: 100vh;
   display: relative;
+
+  .button-wrapper {
+    margin: 5px 0;
+  }
 `;

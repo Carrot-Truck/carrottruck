@@ -9,7 +9,7 @@ interface ITitleTextProps {
 function TitleText({ text, size, textAlign }: ITitleTextProps) {
   return (
     <TitleTextWrapper $size={size} $textAlign={textAlign}>
-      <div>{text}</div>
+      {text}
     </TitleTextWrapper>
   );
 }

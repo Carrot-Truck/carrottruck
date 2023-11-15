@@ -61,13 +61,16 @@ function FoodMenuModifyPage() {
   // }
 
   const handleFail = (response: AxiosError) => {
-    console.log("Error ", response);
+    console.log("Error at FoodMenuModifyPage::handleFail ", response);
     alert('메뉴 조회 중 에러 발생!\n다시 시도해주세요.');
     navigate('/');
   }
 
   useEffect(()=>{
-    getMenus(foodTruck.foodTruckId, loadMenu, handleFail);
+    const foodTruckId = {
+      foodTruckId: foodTruck.foodTruck.foodTruckId
+    }
+    getMenus(foodTruckId, loadMenu, handleFail);
   }, []);
 
   return (

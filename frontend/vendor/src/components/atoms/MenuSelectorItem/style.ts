@@ -1,28 +1,16 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
-interface IMenuSelectorItemWrapperProps {
-  $soldout: boolean;
-}
-
-export const MenuSelectorItemWrapper = styled.div<IMenuSelectorItemWrapperProps>`
+export const MenuSelectorItemWrapper = styled.div`
   width: 100%;
   height: 20vw;
   position: relative;
   border-bottom: 1px solid black;
 
-  ${({ $soldout }) =>
-    $soldout
-      ? css`
-          background-color: var(--gray-300);
-        `
-      : css``}
-
   .menu-item-image {
     display: inline-block;
     position: absolute;
-    width: 20vw;
-    min-height: 20vw;
-    max-height: 3rem;
+    width: 20%;
+    height: 100%;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;

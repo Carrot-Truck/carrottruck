@@ -80,6 +80,7 @@ public class ScheduleService {
         Schedule schedule = getScheduleById(scheduleId);
 
         schedule.editSchedule(addressMap.get("roadaddr"), dto.getDayOfWeek(),
+                dto.getLatitude(), dto.getLongitude(),
                 dto.getStartTime(), dto.getEndTime());
 
         return ScheduleDetailResponse.of(schedule);

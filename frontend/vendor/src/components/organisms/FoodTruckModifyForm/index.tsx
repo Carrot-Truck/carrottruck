@@ -29,7 +29,9 @@ function FoodTruckModifyForm({ foodTruck }: any) {
 
   const handleSuccess = (response: AxiosResponse) => {
     if (response.data.code === 200) {
-      navigate('/foodtruck/menu/modify', { state: { foodTruck } });
+      // navigate('/foodtruck/menu/modify', { state: { foodTruck } });
+      alert('수정완료!');
+      navigate(-1);
     } else {
       alert('푸드트럭 등록 실패!\n다시 시도해주세요.');
       navigate('/');
@@ -103,40 +105,40 @@ function FoodTruckModifyForm({ foodTruck }: any) {
     }
 
     useEffect(() => {
-        fetchCategories();
-    setCategoryId((prevCategoryId) => foodTruck.categoryId || prevCategoryId)
-    setFoodTruckName((prevFoodTruckName) => foodTruck.foodTruckName || prevFoodTruckName);
-    setFoodTruckPicture((prevFoodTruckPicture) => foodTruck.foodTruckImageUrl || prevFoodTruckPicture);
-    setPhoneNumber((prevPhoneNumber) => foodTruck.phoneNumber || prevPhoneNumber);
-    setContent((prevContent) => foodTruck.content || prevContent);
-    setOriginInfo((prevOriginInfo) => foodTruck.originInfo || prevOriginInfo);
-    setPrepareTime((prevPrepareTime) => foodTruck.prepareTime || prevPrepareTime);
-    setWaitLimits((prevWaitLimits) => foodTruck.waitLimits || prevWaitLimits);
+      fetchCategories();
+      setCategoryId((prevCategoryId) => foodTruck.foodTruck.categoryId || prevCategoryId)
+      setFoodTruckName((prevFoodTruckName) => foodTruck.foodTruck.foodTruckName || prevFoodTruckName);
+      setFoodTruckPicture((prevFoodTruckPicture) => foodTruck.foodTruck.foodTruckImageUrl || prevFoodTruckPicture);
+      setPhoneNumber((prevPhoneNumber) => foodTruck.foodTruck.phoneNumber || prevPhoneNumber);
+      setContent((prevContent) => foodTruck.foodTruck.content || prevContent);
+      setOriginInfo((prevOriginInfo) => foodTruck.foodTruck.originInfo || prevOriginInfo);
+      setPrepareTime((prevPrepareTime) => foodTruck.foodTruck.prepareTime || prevPrepareTime);
+      setWaitLimits((prevWaitLimits) => foodTruck.foodTruck.waitLimits || prevWaitLimits);
       
 
     if (
-      foodTruck.foodTruckName &&
-      foodTruck.categoryId &&
-      foodTruck.foodTruckImageUrl &&
-      foodTruck.content &&
-      foodTruck.phoneNumber &&
-      foodTruck.prepareTime &&
-      foodTruck.waitLimits &&
-      foodTruck.originInfo
+      foodTruck.foodTruck.foodTruckName &&
+      foodTruck.foodTruck.categoryId &&
+      foodTruck.foodTruck.foodTruckImageUrl &&
+      foodTruck.foodTruck.content &&
+      foodTruck.foodTruck.phoneNumber &&
+      foodTruck.foodTruck.prepareTime &&
+      foodTruck.foodTruck.waitLimits &&
+      foodTruck.foodTruck.originInfo
     ) {
       setIsDone(true);
     } else {
       setIsDone(false);
     }
   }, [
-    foodTruck.foodTruckName,
-    foodTruck.foodTruckImageUrl,
-    foodTruck.categoryId,
-    foodTruck.content,
-    foodTruck.phoneNumber,
-    foodTruck.prepareTime,
-    foodTruck.waitLimits,
-    foodTruck.originInfo,
+    foodTruck.foodTruck.foodTruckName,
+    foodTruck.foodTruck.foodTruckImageUrl,
+    foodTruck.foodTruck.categoryId,
+    foodTruck.foodTruck.content,
+    foodTruck.foodTruck.phoneNumber,
+    foodTruck.foodTruck.prepareTime,
+    foodTruck.foodTruck.waitLimits,
+    foodTruck.foodTruck.originInfo,
   ]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -220,7 +222,7 @@ function FoodTruckModifyForm({ foodTruck }: any) {
         color={isDone ? 'Primary' : 'SubFirst'}
         size="full"
         radius="m"
-        text={isDone ? '다음(1/2)' : '필수 정보 입력'}
+        text={isDone ? '수정' : '필수 정보 입력'}
       />
     </FoodTruckModifyContainer>
   );

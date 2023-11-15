@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 interface IMenuSelectorContainer {
   $onSale: boolean;
@@ -6,14 +6,12 @@ interface IMenuSelectorContainer {
 
 export const MenuSelectorContainer = styled.div<IMenuSelectorContainer>`
   width: 100%;
-  min-height: 30vw;
-  max-height: 70vw;
+  max-height: 85vw;
   overflow: auto;
+  border-top: 1px solid gray;
+  border-bottom: 3px solid gray;
 
-  ${({ $onSale }) =>
-    $onSale
-      ? css`
-          margin-top: 30vw;
-        `
-      : css``}
+  .sold-out {
+    background-color: var(--gray-300);
+  }
 `;

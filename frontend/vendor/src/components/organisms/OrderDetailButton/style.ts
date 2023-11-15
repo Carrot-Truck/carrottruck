@@ -1,9 +1,8 @@
 import styled from "styled-components";
 
 export const OrderDetailButtonContainer = styled.div`
-  width: 50%;
-  min-height: 30vw;
-  max-height: 30vw;
-  position: absolute;
-  transform: translate(-50%, -50%);
+  display: flex;
+  min-height: 20vw;
+  max-height: 20vw;
+  border-bottom: 2px solid gray;
 `;

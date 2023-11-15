@@ -18,16 +18,21 @@ public class OrderItem {
     private String expectTime;
     private List<OrderMenuItem> orderMenuItems;
 
+    public OrderItem(Long orderId, Status status, Integer totalPrice,
+                     LocalDateTime createdTime, LocalDateTime expectTime) {
+        this.orderId = orderId;
+        this.status = status;
+        this.totalPrice = totalPrice;
+        this.createdTime = createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd E HH:mm"));
+        this.expectTime = expectTime != null ? expectTime.format(DateTimeFormatter.ofPattern("mm")) : null;
+    }
+
     @Builder
     public OrderItem(Long orderId, Status status, Integer totalPrice, Integer orderCnt,
                      LocalDateTime createdTime, LocalDateTime expectTime,
                      List<OrderMenuItem> orderMenuItems) {
-        this.orderId = orderId;
-        this.status = status;
-        this.totalPrice = totalPrice;
+        this(orderId, status, totalPrice, createdTime, expectTime);
         this.orderCnt = orderCnt;
-        this.createdTime = createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd E HH:mm"));
-        this.expectTime = expectTime != null ? expectTime.format(DateTimeFormatter.ofPattern("mm")) : null;
         this.orderMenuItems = orderMenuItems;
     }
 

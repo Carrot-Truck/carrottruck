@@ -8,6 +8,7 @@ import com.boyworld.carrot.api.controller.review.request.ReviewRequest;
 import com.boyworld.carrot.api.controller.review.response.FoodTruckReviewResponse;
 import com.boyworld.carrot.api.controller.review.response.MyReviewResponse;
 import com.boyworld.carrot.api.service.review.ReviewService;
+import com.boyworld.carrot.api.service.review.dto.MyReviewDto;
 import com.boyworld.carrot.security.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -87,6 +88,19 @@ public class ReviewController {
     public ApiResponse<FoodTruckReviewResponse> getFoodTruckReview(@Valid @PathVariable Long foodTruckId){
         log.debug("ReviewController#getFoodTruckReview called! Food truck id = {}", foodTruckId);
         FoodTruckReviewResponse response = reviewService.getFoodTruckReview(foodTruckId);
+        return ApiResponse.ok(response);
+    }
+
+    /**
+     * read order's review API
+     * @param orderId orderId
+     * @return FoodTruckReviewResponse : averageGrade and List of FoodTruckReviewDto(reviewId, grade, content)
+     */
+    @GetMapping("/order/{orderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<MyReviewDto> getMyOrderReview(@Valid @PathVariable Long orderId){
+        log.debug("ReviewController#getMyOrderReview called! Order id = {}", orderId);
+        MyReviewDto response = reviewService.getMyOrderReview(SecurityUtil.getCurrentLoginId(), orderId);
         return ApiResponse.ok(response);
     }
 

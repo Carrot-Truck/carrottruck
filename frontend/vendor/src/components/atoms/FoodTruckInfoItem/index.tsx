@@ -1,4 +1,5 @@
 import {InfoItemContainer} from './style';
+import { useEffect} from 'react';
 
 // FoodTruckInfo 컴포넌트에서 사용할 props 인터페이스
 interface FoodTruckInfoProps {
@@ -14,14 +15,43 @@ const FoodTruckInfoItem = ({ title, value }: FoodTruckInfoProps) => {
       }
       return value;
     };
-    
+
+  // const renderTime = (value: Array<any>) => {
+  //   if(value === null ) return "정보가 없습니다.";
+  //   return value.toString;
+  // };
+    useEffect(()=>{
+      console.log("FoodTruckInfoItem ", title, value);
+    }, [])
+
+  const switchDateFormEngToKor = (value: string) => {
+    switch(value){
+      case 'MONDAY': return '월';
+      case 'TUESDAY': return '화';
+      case 'WEDNESDAY': return '수';
+      case 'THURSDAY': return '목';
+      case 'FRIDAY': return '금';
+      case 'SATURDAY': return '토';
+      case 'SUNDAY': return '일';
+    }
+  }    
   return (
     <InfoItemContainer>
       <h3>{title}</h3>
       {title === "영업정보" && (
         <>
           <div className="label">운영시간</div>
-          <div className="value">{renderValue(value)}</div>
+          <div className="value">
+            {value.map((schedule: any, index: number) => (
+              <div key={index}>
+                {switchDateFormEngToKor(schedule.dayOfWeek)} : 
+                {schedule.startTime} - {schedule.endTime} <br></br>
+                {schedule.address}
+              </div>
+              
+            ))}
+          </div>
+
         </>
       )}
       {title === "사업자정보" && (

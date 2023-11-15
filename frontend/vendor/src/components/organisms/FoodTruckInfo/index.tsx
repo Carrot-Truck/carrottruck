@@ -27,7 +27,7 @@ interface FoodTruck {
     vendorName : string,
     tradeName : string,
     businessNumber : string
-  };
+  },
   // menus: Array<{
   //     menuId: 0,
   //     menuName: '',
@@ -36,13 +36,13 @@ interface FoodTruck {
   //     menuSoldOut: false,
   //     menuImageUrl: ''
   // }>;
-  schedules: Array<{
+  schedules: {
     scheduleId: number,
     address: string,
     dayOfWeek: string,
     startTime: string,
     endTime: string
-  }>;
+  }[],
 
   // reviews: Array<{
   //   reviewId: 0,
@@ -56,7 +56,6 @@ interface FoodTruck {
 
 function FoodTruckInfo({ foodTruckDetail, schedules }: FoodTruck) {
   const navigate = useNavigate();
-
   const modifyInfo = ()=>{
     navigate('/schedule');
   }

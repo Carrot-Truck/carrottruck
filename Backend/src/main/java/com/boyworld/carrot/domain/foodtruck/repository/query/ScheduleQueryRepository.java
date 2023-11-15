@@ -70,8 +70,6 @@ public class ScheduleQueryRepository {
                 )
                 .fetch();
 
-        log.debug("ids={}", ids);
-
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
@@ -131,7 +129,6 @@ public class ScheduleQueryRepository {
                 .limit(PAGE_SIZE + 1)
                 .fetch();
 
-        log.debug("ids={}", ids);
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }

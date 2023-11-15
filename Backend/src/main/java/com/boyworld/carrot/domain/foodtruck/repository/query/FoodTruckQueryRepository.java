@@ -1,5 +1,6 @@
 package com.boyworld.carrot.domain.foodtruck.repository.query;
 
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckOverview;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckClientDetailDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckVendorDetailDto;
@@ -288,6 +289,55 @@ public class FoodTruckQueryRepository {
                 .fetchFirst();
 
         return id != null;
+    }
+
+    /**
+     * 찜한 푸드트럭 목록 조회 쿼리
+     *
+     * @param email 사용자 이메일
+     * @return 이메일에 해당하는 사용자가 찜한 푸드트럭 목록
+     */
+    public List<FoodTruckItem> getLikedFoodTrucksByEmail(String email) {
+
+        List<Long> ids = queryFactory
+                .select(foodTruckLike.foodTruck.id)
+                .from(foodTruckLike)
+                .join(foodTruckLike.member, member)
+                .where(
+                        foodTruckLike.member.email.eq(email)
+                )
+                .fetch();
+        log.debug("ids={}", ids);
+
+        LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
+
+        return queryFactory
+                .select(Projections.constructor(FoodTruckItem.class,
+                        foodTruck.category.id,
+                        foodTruck.id,
+                        foodTruck.name,
+                        sale.isNotNull().and(sale.endTime.isNull()),
+                        isLiked(email),
+                        foodTruckLike.id.count().intValue(),
+                        review.grade.sum().divide(review.count()).doubleValue(),
+                        review.id.count().intValue(),
+                        foodTruckImage.uploadFile.storeFileName,
+                        isNew(lastMonth)
+                ))
+                .from(foodTruck)
+                .leftJoin(member).on(foodTruck.vendor.eq(member), member.active)
+                .leftJoin(review).on(review.foodTruck.eq(foodTruck))
+                .leftJoin(sale).on(sale.foodTruck.eq(foodTruck))
+                .leftJoin(foodTruckLike).on(foodTruckLike.foodTruck.eq(foodTruck))
+                .leftJoin(foodTruckImage).on(foodTruckImage.foodTruck.eq(foodTruck))
+                .where(
+                        foodTruck.id.in(ids)
+                )
+                .groupBy(
+                        foodTruck.id
+                )
+                .fetch();
+
     }
 
     private BooleanExpression isEqualEmail(String email) {

@@ -10,9 +10,9 @@ declare global {
 
 interface INaverMapProps {
     clientId: string; // 네이버 클라우드 플랫폼에서 발급받은 Client ID
-    markers: Array<{ categoryId: number; foodTruckId: number; latitude: number; longitude: number; }>;
+  markers: Array<{ categoryId: number; foodTruckId: number; foodTruckName: string; latitude: number; longitude: number; }>;
     foodTruckList: { hasNext: boolean; items: any[] };
-    onMarkerClick: (foodTruckId: number, latitude: number, longitude: number) => void;
+  onMarkerClick: (foodTruckId: number, foodTruckName: string, latitude: number, longitude: number) => void;
     onMapClick: (latitude: number, longitude: number) => void;
 }
 
@@ -56,14 +56,15 @@ interface INaverMapProps {
         
       const infoWindow = new window.naver.maps.InfoWindow({
         content: '', // 초기 내용은 비워둠
-        maxWidth: 140,
-        backgroundColor: "#eee",
-        borderColor: "#2db400",
-        borderWidth: 5,
-        anchorSize: new window.naver.maps.Size(30, 30),
-        anchorSkew: true,
-        anchorColor: "#eee",
-        pixelOffset: new window.naver.maps.Point(20, -20)
+        maxWidth: 100,
+        height: 30,
+        backgroundColor: "white",
+        borderColor: "black",
+        borderWidth: 1,
+        disableAnchor: true,
+        textAlign: "center",
+        margin: "auto",
+        pixelOffset: new window.naver.maps.Point(0, -20)
     });
 
         console.log(markers);
@@ -94,11 +95,15 @@ interface INaverMapProps {
         });
             
         window.naver.maps.Event.addListener(naverMarker, 'click', () => {
-            onMarkerClick(marker.foodTruckId, latitude, longitude);
+            onMarkerClick(marker.foodTruckId, marker.foodTruckName, latitude, longitude);
             
             map.setCenter(new window.naver.maps.LatLng(marker.latitude, marker.longitude));
 
-            const contentString = `<div>푸드트럭 이름: ${marker.foodTruckId}</div>`; // 예시 내용
+            // const contentString = `<div>푸드트럭 이름: ${marker.foodTruckId}</div>`; // 예시 내용
+          const contentString = `
+            <div style="padding: 5px; margin: 5px 0px; width: 100px; height: 10px; display: flex; justify-content: center; align-items: center; font-family: BM JUA_TTF;">
+            <p style="font-size: 1rem; margin: 0; text-align: center;">${marker.foodTruckName}</p>
+          </div>`;
             infoWindow.setContent(contentString);
 
             console.log(activeMarker == null);

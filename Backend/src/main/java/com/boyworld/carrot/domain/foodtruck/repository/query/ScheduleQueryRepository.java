@@ -70,8 +70,6 @@ public class ScheduleQueryRepository {
                 )
                 .fetch();
 
-        log.debug("ids={}", ids);
-
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
@@ -84,6 +82,7 @@ public class ScheduleQueryRepository {
                         schedule.id,
                         schedule.foodTruck.category.id,
                         schedule.foodTruck.id,
+                        schedule.foodTruck.name,
                         distance,
                         schedule.latitude,
                         schedule.longitude,
@@ -130,7 +129,6 @@ public class ScheduleQueryRepository {
                 .limit(PAGE_SIZE + 1)
                 .fetch();
 
-        log.debug("ids={}", ids);
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }

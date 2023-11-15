@@ -4,6 +4,7 @@ export const OrderListFormContainer = styled.div`
   .waiting {
     font-size: 0.75rem;
     text-align: left;
+    min-height: 100vh;
 
     .orderDetail {
       border: 1px solid var(--black-300);

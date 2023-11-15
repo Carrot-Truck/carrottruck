@@ -4,6 +4,7 @@ export const MyPageLayout = styled.div`
   width: 360px;
   padding-bottom: 200px;
   font-family: BM JUA_TTF;
+  min-height: 100vh;
 
   .userInfo {
     display: flex;

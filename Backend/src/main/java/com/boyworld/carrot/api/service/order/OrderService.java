@@ -103,7 +103,10 @@ public class OrderService {
      */
     public OrdersResponse getCompleteOrders(Long foodTruckId, String email) {
 
-        Long memberId = memberRepository.findByEmail(email).map(Member::getId).orElse(null);
+        Member member = getMemberByEmail(email);
+        FoodTruck foodTruck = getFoodTruckById(foodTruckId);
+        checkOwnerAccess(member, foodTruck);
+
         List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, new Status[] {Status.COMPLETE});
 
         return OrdersResponse.builder()

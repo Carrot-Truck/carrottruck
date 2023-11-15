@@ -227,6 +227,26 @@ public class SaleController {
     }
 
     /**
+     * 품절 해제 메뉴 등록 API
+     *
+     * @param menuId 품절 해제할 메뉴 식별키
+     * @return 품절 해제한 메뉴 식별키
+     */
+    @PutMapping("for-sale/{menuId}")
+    public ApiResponse<Long> forSale(@PathVariable Long menuId) {
+        log.debug("SaleController#forSale called");
+        log.debug("menuId={}", menuId);
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        Long soldOutId = saleService.forSaleMenu(menuId, email);
+        log.debug("menuId={}", soldOutId);
+
+        return ApiResponse.ok(soldOutId);
+    }
+
+    /**
      * 영업 종료 API
      * 
      * @param foodTruckId 종료할 푸드트럭 id

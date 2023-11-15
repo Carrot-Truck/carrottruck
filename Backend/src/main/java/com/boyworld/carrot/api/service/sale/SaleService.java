@@ -237,6 +237,25 @@ public class SaleService {
     }
 
     /**
+     * 메뉴 품절 해제 API
+     *
+     * @param menuId    품절 해제할 메뉴 식별키
+     * @param email     로그인한 사용자 이메일
+     * @return 품절 해제한 메뉴 식별키
+     */
+    public Long forSaleMenu(Long menuId, String email) {
+        // 1. 로그인한 사용자가 menuId에 해당하는 메뉴를 가진
+        // 푸드트럭 보유한 사업자인지 확인
+        Member member = getMemberByEmail(email);
+        Menu menu = getMenuById(menuId);
+        checkOwnerAccess(member, menu);
+
+        // 2. 맞으면 해당 menuId 활성화
+        menu.getMenuInfo().onSale();
+        return menuId;
+    }
+
+    /**
      * 영업 종료 API
      * 
      * @param foodTruckId    영업 종료할 푸드트럭 식별키

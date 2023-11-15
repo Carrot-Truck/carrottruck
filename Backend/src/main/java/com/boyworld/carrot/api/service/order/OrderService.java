@@ -7,7 +7,6 @@ import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderMenuDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
-import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;

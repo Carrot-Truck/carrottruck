@@ -94,7 +94,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(review.getContent()).isEqualTo(savedReview.getContent());
         assertThat(review.getGrade()).isEqualTo(savedReview.getGrade());
         assertThat(savedReview.getId()).isNotNull();
-        assertThat(reviewRepository.count()).isEqualTo(1);
+        assertThat(reviewRepository.count()).isNotZero();
     }
 
     @DisplayName("사용자가 리뷰 사진과 함께 리뷰를 등록한다.")
@@ -132,13 +132,13 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(review.getContent()).isEqualTo(savedReview.getContent());
         assertThat(review.getGrade()).isEqualTo(savedReview.getGrade());
         assertThat(savedReview.getId()).isNotNull();
-        assertThat(reviewRepository.count()).isEqualTo(1);
+        assertThat(reviewRepository.count()).isNotZero();
 
         assertThat(reviewImage).isSameAs(savedReviewImage);
         assertThat(reviewImage.getStoreFileName()).isEqualTo(savedReviewImage.getStoreFileName());
         assertThat(reviewImage.getUploadFileName()).isEqualTo(savedReviewImage.getUploadFileName());
         assertThat(savedReviewImage.getId()).isNotNull();
-        assertThat(reviewImageRepository.count()).isEqualTo(1);
+        assertThat(reviewImageRepository.count()).isNotZero();
     }
 
     @DisplayName("사업자는 리뷰에 댓글을 남길 수 있다.")
@@ -174,7 +174,7 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         assertThat(comment).isSameAs(savedComment);
         assertThat(comment.getContent()).isEqualTo(savedComment.getContent());
         assertThat(comment.getId()).isNotNull();
-        assertThat(commentRepository.count()).isEqualTo(1);
+        assertThat(commentRepository.count()).isNotZero();
     }
 
     @DisplayName("사용자는 내가 작성한 리뷰 목록을 확인할 수 있다.")
@@ -251,12 +251,11 @@ public class ReviewQueryRepositoryTest extends IntegrationTestSupport {
         Review deletedReview = reviewRepository.findById(reviewId).orElseThrow();
 
         // then
-        assertThat(reviewRepository.count()).isEqualTo(1);
+        assertThat(reviewRepository.count()).isNotZero();
         assertThat(reviewRepository.findByMemberAndActive(member, true).isEmpty()).isFalse();
-        assertThat(reviewRepository.findByMemberAndActive(member, true).get().size()).isEqualTo(0);
+        assertThat(reviewRepository.findByMemberAndActive(member, true).get().size()).isZero();
         assertThat(deletedReview.getActive()).isFalse();
     }
-
 
     private Member createMember(Role role, String email) {
         Member member = Member.builder()

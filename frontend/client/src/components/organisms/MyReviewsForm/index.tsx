@@ -34,6 +34,7 @@ function MyReviewForm() {
           createdDate={myreview.createdDate}
           content={myreview.content}
           imageUrl={myreview.imageUrl}
+          writable={false}
         ></MyReview>
       ))}
     </MyReviewsFormContainer>

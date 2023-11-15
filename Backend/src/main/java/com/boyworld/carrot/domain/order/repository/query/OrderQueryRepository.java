@@ -31,7 +31,6 @@ public class OrderQueryRepository {
         List<OrderItem> orderItems = queryFactory
                 .select(Projections.constructor(OrderItem.class,
                         order.id.as("orderId"),
-                        order.member.id.as("memberId"),
                         order.status,
                         order.totalPrice,
                         order.createdDate.as("createdTime"),

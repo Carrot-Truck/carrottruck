@@ -6,8 +6,10 @@ import NoteBook from 'assets/icons/notebook.svg';
 import Pencil from 'assets/icons/pencil.svg';
 import Heart from 'assets/icons/filled_heart.svg';
 import MyReviewForm from 'components/organisms/MyReviewsForm';
+import { useNavigate } from 'react-router-dom';
 
 function MyPage() {
+  const navigate = useNavigate();
   const [selectedButton, setSelectedButton] = useState<number>(1);
   const userData = {
     name: '김동현',
@@ -22,12 +24,21 @@ function MyPage() {
     setSelectedButton(buttonId);
   };
 
+  const handleMyInfo = () => {
+    navigate("/mypage/myinfo");
+  }
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  }
+
   return (
     <MyPageLayout>
       <div className="header">
         <BackHome></BackHome>
       </div>
-      <div className="userInfo">
+      <div className="userInfo" onClick={() => handleMyInfo()}>
         <p>{userData.nickname}</p>
         <p> 님 &gt;</p>
       </div>
@@ -47,6 +58,7 @@ function MyPage() {
       </div>
       {selectedButton && <MyReviewForm></MyReviewForm>}
       <Navbar></Navbar>
+      <p onClick={handleLogout}>로그아웃</p>
     </MyPageLayout>
   );
 }

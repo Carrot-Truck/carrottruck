@@ -130,6 +130,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .id(1L)
                 .categoryId(1L)
                 .foodTruckId(1L)
+                .foodTruckName("1번 푸드트럭")
                 .latitude(BigDecimal.valueOf(37.5665))
                 .longitude(BigDecimal.valueOf(126.9780))
                 .distance(BigDecimal.valueOf(100))
@@ -140,6 +141,7 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                 .id(2L)
                 .categoryId(2L)
                 .foodTruckId(2L)
+                .foodTruckName("2번 푸드트럭")
                 .latitude(BigDecimal.valueOf(35.1595))
                 .longitude(BigDecimal.valueOf(126.8526))
                 .distance(BigDecimal.valueOf(100))
@@ -197,6 +199,8 @@ public class FoodTruckControllerDocsTest extends RestDocsSupport {
                                         .description("카테고리 식별키"),
                                 fieldWithPath("data.markerItems[].foodTruckId").type(JsonFieldType.NUMBER)
                                         .description("푸드트럭 식별키"),
+                                fieldWithPath("data.markerItems[].foodTruckName").type(JsonFieldType.STRING)
+                                        .description("푸드트럭 이름"),
                                 fieldWithPath("data.markerItems[].distance").type(JsonFieldType.STRING)
                                         .description("거리"),
                                 fieldWithPath("data.markerItems[].latitude").type(JsonFieldType.STRING)

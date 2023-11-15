@@ -99,6 +99,7 @@ public class SaleQueryRepository {
                         sale.id,
                         sale.foodTruck.category.id,
                         sale.foodTruck.id,
+                        sale.foodTruck.name,
                         distance,
                         sale.latitude,
                         sale.longitude,

@@ -11,7 +11,8 @@ import { getFoodTruck } from 'api/foodtruck/foodTruck';
 function MainPage() {
     interface Marker {
         categoryId: number;
-        foodTruckId: number;
+      foodTruckId: number;
+      foodTruckName: string;
         latitude: number;
         longitude: number;
   }
@@ -90,10 +91,11 @@ function MainPage() {
   };
 
     // truckData에서 위도 경도를 추출하여 string에서 number로 변환
-    const extractMarkers = (data: { markerItems: Array<{ categoryId: number; foodTruckId: number, latitude: string; longitude: string }> }): Array<Marker> =>
+  const extractMarkers = (data: { markerItems: Array<{ categoryId: number; foodTruckId: number, foodTruckName: string; latitude: string; longitude: string }> }): Array<Marker> =>
       data.markerItems.map((item) => ({
           categoryId: item.categoryId,
-          foodTruckId: item.foodTruckId,
+        foodTruckId: item.foodTruckId,
+          foodTruckName: item.foodTruckName,
       latitude: parseFloat(item.latitude),
           longitude: parseFloat(item.longitude)
       
@@ -116,7 +118,7 @@ function MainPage() {
     };
     
     // map MarkerClick event 처리
-    const handleMarkerClick = (foodTruckId: number, latitude: number, longitude: number) => {
+    const handleMarkerClick = (foodTruckId: number, foodTruckName: string, latitude: number, longitude: number) => {
         getFoodTruck(
             foodTruckId,
             {

@@ -2,14 +2,18 @@ import { useEffect, useState } from 'react';
 import Input from 'components/atoms/Input';
 import Button from 'components/atoms/Button';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setIsAuthenticated } from 'slices/userSlice/userSlice';
 import { FieldSet, LoginFormContainer } from './style';
 import axios from 'axios';
 
 function LoginForm() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
   const accessToken = localStorage.getItem('accessToken');
   const grantType = localStorage.getItem('grantType');
   const APPLICATION_SPRING_SERVER_URL =
@@ -49,6 +53,7 @@ function LoginForm() {
       };
       const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/auth/login/client`, body);
       // 로컬스토리지에 토큰 저장
+      dispatch(setIsAuthenticated(true));
       localStorage.setItem('accessToken', response.data.data.accessToken);
       localStorage.setItem('refreshToken', response.data.data.refreshToken);
       localStorage.setItem('grantType', response.data.data.grantType);

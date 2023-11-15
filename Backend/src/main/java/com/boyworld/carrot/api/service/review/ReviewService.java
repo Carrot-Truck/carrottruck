@@ -137,6 +137,21 @@ public class ReviewService {
             return null;
         }
     }
+    /**
+     * read my review-list API
+     * from SecurityUtil.getCurrentLoginId()
+     */
+    public MyReviewDto getMyOrderReview(String userEmail, Long orderId) {
+        try {
+            Member member = memberRepository.findByEmail(userEmail).orElseThrow();
+            Order order = orderRepository.findById(orderId).orElseThrow();
+            Review review = reviewRepository.findByMemberAndOrderAndActive(member, order,true).orElse(null);
+            if(review == null) return null;
+            return MyReviewDto.of(review);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * read food truck's review-list API

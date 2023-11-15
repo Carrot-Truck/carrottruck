@@ -88,7 +88,7 @@ public class OrderService {
         FoodTruck foodTruck = getFoodTruckById(foodTruckId);
         checkOwnerAccess(member, foodTruck);
 
-        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, Status.PROCESSING);
+        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, new Status[]{Status.PENDING, Status.PROCESSING});
 
         return OrdersResponse.builder()
             .orderItems(orderItems)
@@ -105,7 +105,7 @@ public class OrderService {
     public OrdersResponse getCompleteOrders(Long foodTruckId, String email) {
 
         Long memberId = memberRepository.findByEmail(email).map(Member::getId).orElse(null);
-        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, Status.COMPLETE);
+        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, new Status[] {Status.COMPLETE});
 
         return OrdersResponse.builder()
             .orderItems(orderItems)

@@ -42,10 +42,6 @@ function ModifyScheduleForm() {
     reverseGeocoding(request, (response: AxiosResponse)=>{if(response.data.data.address === null) {setAddress("지원하지 않는 주소입니다."); return;}setAddress(response.data.data.address);}, () => {setAddress("유효한 곳에 핀을 놓아주세요.")});
   };
 
-  // const handleBack = () => {
-  //   navigate(-1);
-  // };
-
   const validateTimeFormat = (time: string) => {
     // 정규표현식: 'HH:MM' 형식 검증 (00:00 ~ 23:59)
     const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;

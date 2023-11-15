@@ -51,7 +51,6 @@ const ScheduleMap: React.FC<INaverMapProps> = ({ clientId, savedMarker, onMarker
           longitude: savedMarker.longitude
         }
         updateLocation(currentLocation);
-        return;
       }else{
         navigator.geolocation.getCurrentPosition(
           async (position) => {
@@ -83,7 +82,7 @@ const ScheduleMap: React.FC<INaverMapProps> = ({ clientId, savedMarker, onMarker
     return () => {
       document.head.removeChild(script);
     };
-  }, [clientId]);
+  }, [clientId, savedMarker]);
 
   return <MapWrapper ref={mapRef} />;
 };

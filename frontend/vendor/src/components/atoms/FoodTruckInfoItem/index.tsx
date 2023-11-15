@@ -43,10 +43,11 @@ const FoodTruckInfoItem = ({ title, value }: FoodTruckInfoProps) => {
           <div className="label">운영시간</div>
           <div className="value">
             {value.map((schedule: any, index: number) => (
-              <div key={index}>
-                {switchDateFormEngToKor(schedule.dayOfWeek)} : 
-                {schedule.startTime} - {schedule.endTime} <br></br>
-                {schedule.address}
+              <div key={index} className="schedules">
+                {switchDateFormEngToKor(schedule.dayOfWeek)} : {schedule.startTime} - {schedule.endTime} 
+                <div className='address'>
+                  {schedule.address}
+                </div>
               </div>
               
             ))}

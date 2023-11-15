@@ -32,4 +32,13 @@ h3 {
     grid-column: 1 / -1;
     text-align: left;
 }
+
+.schedules{
+  margin-bottom: 10px;
+}
+
+.address{
+  margin-top: 3px;
+  font-size: 0.75rem;
+}
 `;

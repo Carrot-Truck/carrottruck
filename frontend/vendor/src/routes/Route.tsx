@@ -15,6 +15,7 @@ import FoodMenuDetailModifyPage from "pages/FoodMenuDetailModifyPage";
 import SalePage from "pages/SalePage";
 import StartSalePage from "pages/StartSalePage";
 // import FoodMenuDetailPage from 'pages/FoodMenuDetailPage'
+import ModifyScheduleForm from 'components/organisms/ModifyScheduleForm'
 
 function RouteLink() {
   return (
@@ -32,6 +33,7 @@ function RouteLink() {
         <Route path="/sale" element={<SalePage />} />
         <Route path="/start-sale" element={<StartSalePage />} />
         <Route path="/schedule" element={<SchedulePage />} />
+        <Route path="/schedule/modify" element={<ModifyScheduleForm />} />
         <Route path="/foodtruck/modify" element={<FoodTruckModifyPage />} />
         <Route path="/foodtruck/menu/modify" element={<FoodMenuModifyPage />} />
         <Route path="/foodtruck/menu/create" element={<FoodMenuDetailModifyPage />} />

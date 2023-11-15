@@ -5,7 +5,7 @@ import EmptyStar from 'assets/icons/star_empty.svg';
 interface IMyReviewProps {
   foodTruckName: string;
   grade: number;
-  createdDate: number[];
+  createdDate: string;
   content: string;
   imageUrl: string;
 }
@@ -17,6 +17,10 @@ function MyReview(props: IMyReviewProps) {
   const filledStars = Array(grade).fill(<img src={Star} alt="Filled Star" />);
   const emptyStars = Array(5 - grade).fill(<img src={EmptyStar} alt="Empty Star" />);
 
+  const splitDate = createdDate.split("T");
+  const datePart = splitDate[0]; // 날짜 부분
+  const timePart = splitDate[1]; // 시간 부분
+
   return (
     <MyReviewItemWrapper>
       <div className="name">
@@ -27,11 +31,11 @@ function MyReview(props: IMyReviewProps) {
         {emptyStars}
       </div>
       <p>
-        작성일자: {createdDate[0]}-{createdDate[1]}-{createdDate[2]}
+        작성일자: {datePart} {timePart}
       </p>
       <p>{content}</p>
       <div className="reviewImage">
-        <img src={imageUrl} alt="" />
+        {imageUrl && <img src={imageUrl} alt="Review" />} {/* imageUrl이 유효할 때만 이미지를 렌더링 */}
       </div>
     </MyReviewItemWrapper>
   );

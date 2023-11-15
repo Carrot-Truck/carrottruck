@@ -7,7 +7,7 @@ import {
   EditableField
 } from './style';
 import { useState, useEffect, useRef } from 'react';
-import BackSpace from 'components/atoms/BackHome';
+import BackSpace from 'components/atoms/BackSpace';
 import { info, edit } from 'api/member/client';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError, AxiosResponse } from 'axios';

@@ -1,10 +1,16 @@
 import Navbar from "components/organisms/Navbar";
 import { SchedulePageLayout } from "./style";
+import BackSpace from 'components/atoms/BackHome';
+import ScheduleForm from "components/organisms/ScheduleForm";
 
 function SchedulePage() {
   return (
     <SchedulePageLayout>
-      schedule page
+      <div className="header">
+        <BackSpace></BackSpace>
+        <p>스케줄 수정</p>
+      </div>
+      <ScheduleForm></ScheduleForm>
       <Navbar />
     </SchedulePageLayout>
   );

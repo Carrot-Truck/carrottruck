@@ -9711,34 +9711,50 @@ values  (46, 1, '가회동'),
         (5031, 249, '현북면');
 
 -- members
--- members
 INSERT INTO `members` (active, role, phone_number, name, email, nickname, encrypted_pwd)
 VALUES (true, 'VENDOR', '010-1234-5678', '김싸피', 'ssafy@ssafy.com', '김싸피',
         '$2a$10$Yie4X4XlVeXFhh6/SXqAYudC1fgPadxVDX1DoWTAA435Y2z5UR4Hm'),
+       (true, 'VENDOR', '010-7226-7777', '유호재', 'hodust@ssafy.com', '유린기',
+        '$2a$10$rSNIQTWapmTxUM2nbGUN.OLjcF.E0VSfuiFlLg4DiuhGJgKv2jcwe'),
+       (true, 'VENDOR', '010-1234-1234', '곽강한', 'strong123@ssafy.com', '행강한복강한',
+        '$2a$10$Ny987sRt1S5kXc9eJVjF..5D55/oc218kOI9vVJesvO5jnNzP8QBa'),
+       (true, 'VENDOR', '010-1234-1111', '서현영', 'zero@ssafy.com', '서현영',
+        '$2a$10$29W8vhjEQZ0j5taZgz/iB.frPg55ovYXVZIW0UPO4MR3Jy3T1ZbGW'),
        (true, 'CLIENT', '010-5678-4321', '이싸피', 'test@ssafy.com', '이싸피',
         '$2a$10$2OiOykdxMdvbDi43rEAgdOADZjuDwNV5HbBHDbJ8syAT4YltiD9xi'),
-       (true, 'CLIENT', '010-5370-9638', '최영환', 'longbright0804@gmail.com', '건조기',
+       (true, 'CLIENT', '010-5370-1234', '최영환', 'longbright0804@gmail.com', '건조기',
         '$2a$10$qA3WtSYU0EHbBrgb8xPtHeZhT4reLlaIUca2FtYRRKQTi6f9ivuwS'),
-       (true, 'CLIENT', '010-9130-9942', '김동현', 'qhfh12@gmail.com', '매미킴',
+       (true, 'CLIENT', '010-9130-1234', '김동현', 'qhfh12@gmail.com', '매미킴',
         '$2a$10$wUXN3.19iFAwLwDtiEBpsOc9g4i2k8qD1QIeFqqHnmQcc72fwLw56'),
-       (true, 'CLIENT', '010-7925-2928', '박건후', 'gunhoo2016@gmail.com', '아닌데?소대장',
+       (true, 'CLIENT', '010-7925-1234', '박건후', 'gunhoo2016@gmail.com', '아닌데?소대장',
         '$2a$10$xIXllebmoy8WTAgGqgusBO5SgKrdy70N6k/JqmaCm0sIrB6O.bN7q'),
-       (true, 'CLIENT', '010-2638-5572', '박은규', 'parkeg1223@gmail.com', '네~',
+       (true, 'CLIENT', '010-2638-1234', '박은규', 'parkeg1223@gmail.com', '네~',
         '$2a$10$7uMhXxEzu6mknTnsQq57Quz7bI4obLutwx7gN1iB5MiX8elIcEHe.'),
-       (true, 'CLIENT', '010-2538-3835', '양진형', 'jinhyugn@gmail.com', '어서와',
+       (true, 'CLIENT', '010-2538-1234', '양진형', 'jinhyugn@gmail.com', '어서와',
         '$2a$10$8taighh1ozBRDGr0LHkjYOOzrtKvgmpFUhz40pwZd1MlEVqZnA1sa'),
-       (true, 'CLIENT', '010-9512-7065', '이정찬', 'jeongchanlee0113@gmail.com', '고인',
+       (true, 'CLIENT', '010-9512-1234', '이정찬', 'jeongchanlee0113@gmail.com', '고인',
         '$2a$10$pxkt..My6UTBy57SGgYhM.e4lj5SScpIi5eVLoksSxoXIbDjepHgK');
 
 -- vendor_info
 INSERT INTO `vendor_info` (active, vendor_id, vendor_name, trade_name, business_number, phone_number)
-VALUES (true, 1, '김싸피', '당근트럭', '123-45-67890', '010-1234-5678');
+VALUES (true, 1, '김싸피', '된장삼겹', '123-45-67890', '010-1234-5678'),
+       (true, 2, '유호재', '호재의 음식세상', '111-22-22222', '010-7226-7777'),
+       (true, 3, '곽강한', '곽페베네', '111-33-33333', '010-1234-1234'),
+       (true, 4, '서현영', '칠공분혈', '111-44-44444', '010-1234-1111');
 
 -- food_truck
 INSERT INTO `food_truck` (active, prepare_time, selected, wait_limits, category_id, vendor_id, phone_number, name,
                           content, origin_info)
 VALUES (true, 40, true, 10, 1, 1, '010-1234-5678', '동현 된장삼겹', '된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭',
-        '돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)');
+        '돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)'),
+       (true, 30, false, 20, 2, 2, '010-7226-7777', '호볶이', '떡볶이는 호볶이! 드디어 대한민국 상륙!',
+        '쌀(중국산), 고축가루(중국산), 참깨(중국산), 양파(중국산), 대파(중국산)'),
+       (true, 40, false, 10, 4, 2, '010-7226-7777', '호덮밥', '회 덮밥 & 일식 전문 푸드트럭',
+        '연어(노르웨이산), 광어(국산), 참치(동원참치)'),
+       (true, 40, false, 10, 9, 3, '010-1234-1234', '곽페베네', '행강한복강한의 행복하고 강한 커피 전문 푸드트럭',
+        '원두(에티오피아산), 우유(미국산)'),
+       (true, 40, false, 10, 11, 4, '010-1234-1111', '칠공붕어빵', '칠공분혊하며 만들어낸 붕어빵!',
+        '밀(국산), 슈크림(국산), 팥(중국산)');
 
 -- menu
 INSERT INTO `menu` (active, price, sold_out, food_truck_id, name, description)
@@ -9748,9 +9764,36 @@ VALUES (true, 14000, false, 1, '달콤짭짭한 밥도둑 된장 삼겹살', '�
        (true, 14000, false, 1, '달콤짭짤 부드러운 된장 항정살', '동현 된장삼겹만의 된장 항정살!'),
        (true, 8000, false, 1, '달콤짭짤 술 안주 된장 껍데기', '동현 된장삼겹만의 된장 소스와 함께 먹는 껍데기!'),
        (true, 14000, false, 1, '달콤짭짤 술 안주 된장 갈매기살', '동현 된장삼겹만의 된장 갈매기살!'),
-       (true, 15000, false, 1, '달콤짭짤 술 안주 매운닭발', '동현 된장삼겹만의 새로운 도전 매운닭발!');
+       (true, 15000, false, 1, '달콤짭짤 술 안주 매운닭발', '동현 된장삼겹만의 새로운 도전 매운닭발!'),
+
+       (true, 15000, false, 2, '호볶호볶 스페셜', '호볶이만의 시그니쳐, 호볶호볶 스페셜!'),
+       (true, 11000, false, 2, '매달매달 호볶이', '매달매달 호볶이 특제 양념장으로 만든 호볶이'),
+       (true, 12000, false, 2, '크림크림 호볶이', '크림 좋아하시면 호볶이만의 특제 소스로 만든 크림 호볶이!'),
+       (true, 12000, false, 2, '로제로제 호볶이', '호볶이에 드디어 로제가 생겼습니다! 로제로제 호볶이!'),
+       (true, 11000, false, 2, '단짠단짠 호볶이', '단짠단짠 호볶이 특제 소스로 만든 호볶이만의 간장 떡볶이!'),
+       (true, 4000, false, 2, '호볶 찰찰 순대', '호볶이만의 찰찰 순대'),
+       (true, 6000, false, 2, '호볶 겉바속촉 모듬튀김', '호볶이 만의 겉바속촉 모듬튀김'),
+       (true, 5000, false, 2, '호볶 어묵', '떡볶이 먹는데 어묵을 안먹는다고? 당신 중국인이야?'),
+
+       (true, 15000, false, 3, '호덮호덮 스페셜', '호덮밥만의 메뉴 1 + 사이드 1 스페셜 메뉴'),
+       (true, 11000, false, 3, '연어 호덮밥', '매달매달 호볶이 특제 양념장으로 만든 호볶이'),
+       (true, 11000, false, 3, '참치 호덮밥', '크림 좋아하시면 호볶이만의 특제 소스로 만든 크림 호볶이!'),
+
+       (true, 2000, false, 4, '곽메리카노', '곽메리카노 좋아 좋아 좋아'),
+       (true, 3000, false, 4, '곽페라떼', '곽페라떼'),
+       (true, 3500, false, 4, '곽닐라라떼', '곽페라떼'),
+
+       (true, 1000, false, 5, '팥 붕어빵 4개', '팥공분혈!'),
+       (true, 1000, false, 5, '슈크림 붕어빵 4개', '슈공분혈!')
+;
 
 -- food_truck_schedule
 INSERT INTO `food_truck_schedule` (active, end_time, latitude, longitude, start_time, food_truck_id, day_of_week,
                                    address)
 VALUES (true, '19:00:00', 35.202430, 126.809444, '09:00:00', 1, 'MONDAY', '광주광역시 광산구 하남산단6번로 107');
+
+-- survey
+INSERT INTO `survey` (active, category_id, member_id, dong, sido, sigungu, content)
+VALUES (true, 6, 6, '하남산단6번로 107', '광주광역시', '광산구', '쌀국쑤 뚝빼기~'),
+       (true, 11, 6, '하남산단6번로 107', '광주광역시', '광산구', '타코야끼 가게가 없는게 말이 안돼요;'),
+       (true, 1, 6, '하남산단6번로 107', '광주광역시', '광산구', '고추 삼겹집은 없나요?');

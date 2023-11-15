@@ -13,7 +13,10 @@ import {getFoodTruckOverviews} from 'api/foodtruck/foodTruck';
 import {getFoodTruckReview} from 'api/review'
 import {getFoodTruckDetails} from 'api/foodtruck/foodTruck'
 import { AxiosResponse, AxiosError } from 'axios';
+import { getSchedules } from 'api/schedule';
 import BackSpaceHome from 'components/atoms/BackHome';
+import FoodTruckInfo from 'components/organisms/FoodTruckInfo';
+import FoodTruckReview from 'components/organisms/FoodTruckReview';
 
 function FoodTruckPage() {
   const navigate = useNavigate();
@@ -22,24 +25,35 @@ function FoodTruckPage() {
     
   const navigateToModifyPage = () => {
       navigate('/foodtruck/modify', { state: { foodTruck: foodTruck } });
-      console.log(foodTruck);
+      // console.log(foodTruck);
     };
     
   const buttonClick = (buttonNumber: number) => {
     setSelectedButton(buttonNumber);
   };
   const [foodTruck, setFoodTruck] = useState({
-    foodTruckId: 0,
-    foodTruckName: '',
-    categoryId: 0,
-    content: '',
-    originInfo: '',
-    prepareTime: 0,
-    waitLimits: 0,
-    phoneNumber: '',
-    grade: 0,
-    reviewCount: 0,
-    foodTruckImageUrl: 'https://carrottruck.s3.ap-northeast-2.amazonaws.com/%EB%8B%B9%EA%B7%BC%ED%8A%B8%EB%9F%AD%EB%A1%9C%EA%B3%A0.png',
+    foodTruck: {
+      foodTruckId: 0,
+      foodTruckName: '',
+      phoneNumber: '',
+      content: '',
+      originInfo: '',
+      isOpen: false,
+      isLiked: false,
+      prepareTime: 30,
+      avgGrade: 4.5,
+      likeCount: 132,
+      reviewCount: 1324,
+      distance: 123.123,
+      address: '',
+      foodTruckImageUrl:
+        'https://carrottruck.s3.ap-northeast-2.amazonaws.com/%EB%8B%B9%EA%B7%BC%ED%8A%B8%EB%9F%AD%EB%A1%9C%EA%B3%A0.png',
+      selected: true,
+      isNew: true,
+      vendorName: '',
+      tradeName: '',
+      businessNumber: ''
+    },
     menus: [
       {
         menuId: 0,
@@ -54,7 +68,7 @@ function FoodTruckPage() {
       {
         scheduleId: 0,
         address: '',
-        days: '',
+        dayOfWeek: '',
         startTime: '',
         endTime: ''
       }
@@ -70,43 +84,51 @@ function FoodTruckPage() {
     ]
   });
 
-  const afterUpdateMenu = (response: AxiosResponse) => {
-    console.log('Menu data fetched successfully', response);
-    const menusData = response.data.data.menus;
-    const menuCount = response.data.data.menuCount;
-    const foodTruckData = response.data.data.foodTruck;
-      const newPrepareTime = response.data.data.foodTruck.prepareTime;
-      const newWaitLimits = response.data.data.foodTruck.waitLimits;
-    const newOriginInfo = response.data.data.foodTruck.originInfo;
-    const newPhoneNumber = response.data.data.foodTruck.phoneNumber;
-    const newCategoryId = response.data.data.foodTruck.categoryId;
-    
-    setFoodTruck(prevState => {
-      // 메뉴 갯수가 0이면 메뉴를 비워주고, 아니면 새로운 메뉴 데이터로 업데이트
-      if (menuCount === 0 ) {
-        if(foodTruckData === null){
-          return { ...prevState, menus: [] };
-        }else{
-            return { ...prevState, menus: [], content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl, prepareTime: newPrepareTime, waitLimits: newWaitLimits, originInfo: newOriginInfo, phoneNumber: newPhoneNumber, categoryId: newCategoryId}
-        }
+  const afterUpdateSchedule = (response: AxiosResponse) => {
+    // console.log(response);
+
+    setFoodTruck((prevState) => {
+      if (prevState.schedules !== response.data.data.schedules) {
+        return {
+          ...prevState,
+          schedules: response.data.data.schedules
+        };
       } else {
-        if(foodTruckData === null){
-          return { ...prevState, menus: menusData };
-        }else{
-          return { ...prevState, menus: menusData, content: foodTruckData.content, foodTruckImageUrl: foodTruckData.foodTruckImageUrl, prepareTime: newPrepareTime, waitLimits: newWaitLimits, originInfo: newOriginInfo, phoneNumber: newPhoneNumber, categoryId: newCategoryId}
-        }
+        return prevState;
       }
     });
+  };
+
+  const afterUpdateMenu = (response: AxiosResponse) => {
+    // console.log('Menu data fetched successfully', response.data.data);
+    // const menusData = response.data.data.menus;
+    // const newFoodTruck = response.data.data.foodTruck;
+        
+    setFoodTruck((prevState) => {
+      if (prevState.foodTruck !== response.data.data.foodTruck || prevState.menus !== response.data.data.menus) {
+        return {
+          ...prevState,
+          foodTruck: response.data.data.foodTruck,
+          menus: response.data.data.menus
+        };
+      } else {
+        return prevState;
+      }
+    });
+    const foodTruckId = {
+      foodTruckId: response.data.data.foodTruck.foodTruckId
+    };
+    getSchedules(foodTruckId, afterUpdateSchedule, handleFail);
   }
 
   const afterUpdateReview = (response: AxiosResponse) => {
-    console.log('Review data fetched successfully', response);
+    // console.log('Review data fetched successfully', response.data.data);
     const averageGrade = response.data.data.averageGrade;
-    const foodTruckReviewDtoList = response.data.data.foodTruckDtoList;
+    const foodTruckReviewDtoList = response.data.data.foodTruckReviewDtoList;
     
     setFoodTruck(prevState =>{
       // 현재 상태와 비교하여 값이 다를 때만 업데이트
-      if (prevState.grade !== averageGrade || prevState.reviews !== foodTruckReviewDtoList) {
+      if (prevState.foodTruck.avgGrade !== averageGrade || prevState.reviews !== foodTruckReviewDtoList) {
         return {
           ...prevState,
           grade: averageGrade,
@@ -120,13 +142,13 @@ function FoodTruckPage() {
   }
   
   const updateFoodTruckId = (response: AxiosResponse) => {
-    console.log(response);
+    // console.log(response);
     const newFoodTruckId = response.data.data.items[response.data.data.items.length-1].foodTruckId;
     const newFoodTruckName = response.data.data.items[response.data.data.items.length-1].foodTruckName;
     
     setFoodTruck(prevState => {
       // 현재 상태와 비교하여 값이 다를 때만 업데이트
-      if (prevState.foodTruckId !== newFoodTruckId || prevState.foodTruckName !== newFoodTruckName) {
+      if (prevState.foodTruck.foodTruckId !== newFoodTruckId || prevState.foodTruck.foodTruckName !== newFoodTruckName) {
         return {
           ...prevState,
           foodTruckId: newFoodTruckId,
@@ -147,6 +169,9 @@ function FoodTruckPage() {
     navigate('/');
   };
 
+  const modifyMenu = () =>{
+    navigate('/foodtruck/menu/modify', { state: { foodTruck } });
+  }
   const lastFoodTruckId = {
     lastFoodTruckId: ''
   };
@@ -163,10 +188,10 @@ function FoodTruckPage() {
           <BackSpaceHome></BackSpaceHome>
           <img src={ModifyButton} alt=""  onClick={navigateToModifyPage}/>
         </div>
-        <img className="headerImage" src={foodTruck.foodTruckImageUrl} alt="" />
+        <img className="headerImage" src={foodTruck.foodTruck.foodTruckImageUrl} alt="" />
         <div className="storeInfo">
           <div className="foodTruckName">
-            <span>{foodTruck.foodTruckName}</span>
+            <span>{foodTruck.foodTruck.foodTruckName}</span>
             {/* <img src={EmptyHeart} alt="" /> */}
           </div>
           {/* <div className="location">
@@ -177,19 +202,19 @@ function FoodTruckPage() {
           </div> */}
           <div className="review">
             <div>
-            {foodTruck.grade === 0 && foodTruck.reviewCount === 0 ? (
+              {foodTruck.foodTruck.reviewCount === 0 ? (
                 <span>등록된 리뷰가 없습니다.</span>
-                ) : (
-                  <>
-                    <img src={Star} alt="" />
-                    <span>({foodTruck.grade})</span>
-                    <span>{foodTruck.reviewCount}</span>
-                  </>
-                )}
+              ) : (
+                <>
+                  <img src={Star} alt="" />
+                  <span>{Math.ceil(foodTruck.foodTruck.avgGrade * 10) / 10}</span>
+                  <span>({foodTruck.foodTruck.reviewCount})</span>
+                </>
+              )}
             </div>
-            {/* {foodTruck.foodTruckDetail.isOpen ? <span id="open">open</span> : <span id="close">close</span>} */}
+            {foodTruck.foodTruck.isOpen ? <span id="open">open</span> : <span id="close">close</span>}
           </div>
-          <span style={{ textAlign: 'left' }}>{foodTruck.content}</span>
+          <span style={{ textAlign: 'left' }}>{foodTruck.foodTruck.content}</span>
         </div>
         <div className="switchButton">
           <Button
@@ -214,11 +239,20 @@ function FoodTruckPage() {
             handleClick={() => buttonClick(3)}
           />
         </div>
+        
         {selectedButton === 1 && foodTruck.menus.length > 0 && (
           <FoodTruckMenu menus={foodTruck.menus} />
         )}
-        {/* {selectedButton === 2 && } */}
-        {/* {selectedButton === 3 && } */}
+        <div className='Button'>
+          {selectedButton === 1 && (
+            <Button size="l" radius='m' color='Primary' handleClick={modifyMenu} text="메뉴 수정"/>
+          )}
+        </div>
+        
+        {selectedButton === 2 && (
+          <FoodTruckInfo foodTruckDetail={foodTruck.foodTruck} schedules={foodTruck.schedules}></FoodTruckInfo>
+        )}
+        {selectedButton === 3 && <FoodTruckReview reviews={foodTruck.reviews}></FoodTruckReview>}
         <Navbar/>
       </div>
     </FoodTruckLayout>

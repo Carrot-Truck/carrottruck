@@ -4,7 +4,6 @@ export const OrderListFormContainer = styled.div`
   .waiting {
     font-size: 0.75rem;
     text-align: left;
-    min-height: 100vh;
 
     .orderDetail {
       border: 1px solid var(--black-300);
@@ -50,5 +49,11 @@ export const OrderListFormContainer = styled.div`
 
   .gray {
     color: var(--gray-300);
+  }
+
+  .emptyDiv{
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+    font-size: 3rem;
   }
 `;

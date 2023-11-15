@@ -82,7 +82,7 @@ function OrderListForm() {
   return (
     <OrderListFormContainer>
       {orderItems.map((orderItem : any) =>
-        orderItem.status === 'PROCESSING' ? (
+        (orderItem.status === 'PROCESSING' || orderItem.status === 'PENDING') && (
           <div className="waiting">
             <p className="nowTitle gray">예상 조리시간: {orderItem.expectTime}분</p>
             <p className="gray">{orderItem.createdTime}</p>
@@ -102,9 +102,7 @@ function OrderListForm() {
               </div>
             </div>
           </div>
-        ) : (
-          <div></div>
-        )
+        ) 
       )}
       <div className="title">
         <p>주문 내역</p>
@@ -122,7 +120,7 @@ function OrderListForm() {
             }))}
           />
         ) : (
-          <div></div>
+          <div className='emptyDiv'> 텅 </div>
         )
       )}
     </OrderListFormContainer>

@@ -42,7 +42,8 @@ function CartPage() {
           setCart(data);
         },
         (error: any) => {
-          setCart(null);
+          alert("잘못된 접근입니다");
+          navigate("/login");
         }
       );
     };
@@ -50,15 +51,17 @@ function CartPage() {
   }, []);
 
   const handleMenuRemoved = (removedMenuId: string, removedPrice: number) => {
-    setCart(prevCart => {
+    setCart((prevCart) => {
       if (prevCart) {
-        const newCartMenus = prevCart.cartMenus.filter(menu => menu.cartMenuId !== removedMenuId);
+        const newCartMenus = prevCart.cartMenus.filter(
+          (menu) => menu.cartMenuId !== removedMenuId
+        );
         const newTotalPrice = prevCart.totalPrice - removedPrice;
-  
+
         return {
           ...prevCart,
           cartMenus: newCartMenus,
-          totalPrice: newTotalPrice
+          totalPrice: newTotalPrice,
         };
       }
       return prevCart;
@@ -66,21 +69,24 @@ function CartPage() {
   };
 
   const handleMenuUpdated = (updatedMenuId: string, newQuantity: number) => {
-    setCart(prevCart => {
+    setCart((prevCart) => {
       if (prevCart) {
-        const newCartMenus = prevCart.cartMenus.map(menu =>
+        const newCartMenus = prevCart.cartMenus.map((menu) =>
           menu.cartMenuId === updatedMenuId
             ? { ...menu, cartMenuQuantity: newQuantity }
             : menu
         );
-  
+
         // 새로운 총 금액 계산
-        const newTotalPrice = newCartMenus.reduce((sum, item) => sum + (item.menuPrice * item.cartMenuQuantity), 0);
-  
+        const newTotalPrice = newCartMenus.reduce(
+          (sum, item) => sum + item.menuPrice * item.cartMenuQuantity,
+          0
+        );
+
         return {
           ...prevCart,
           cartMenus: newCartMenus,
-          totalPrice: newTotalPrice
+          totalPrice: newTotalPrice,
         };
       }
       return prevCart;
@@ -102,7 +108,7 @@ function CartPage() {
   };
 
   const handleCartOrder = () => {
-    navigate('/cartorder'); // 결제 페이지로 이동
+    navigate("/cartorder"); // 결제 페이지로 이동
   };
 
   return (
@@ -111,22 +117,18 @@ function CartPage() {
         <BackSpace></BackSpace>
         <p>장바구니</p>
       </div>
-      <div>
-        {cart?.foodTruckName}
-      </div>
+      <div>{cart?.foodTruckName}</div>
       {renderCartContent()}
-      <div>
-        {cart?.totalPrice}
-      </div>
+      <div>{cart?.totalPrice}</div>
       <Button
         handleClick={handleCartOrder}
         color={isDisabled ? "SubFirst" : "Primary"}
         size="full"
         radius="m"
-        text= "포장 주문하기"
+        text="포장 주문하기"
         disabled={isDisabled}
       />
-      <Navbar/>
+      <Navbar />
     </CartPageLayout>
   );
 }

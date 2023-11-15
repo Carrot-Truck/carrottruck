@@ -30,8 +30,9 @@ function CartOrderPage() {
           setCartOrder(data);
         },
         (error: any) => {
-          console.log(error);
-          setCartOrder(null);
+          alert('잘못된 접근입니다.');
+          navigate('/');
+          // setCartOrder(null);
         }
       );
     };

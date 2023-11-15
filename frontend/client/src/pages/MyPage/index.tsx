@@ -6,6 +6,7 @@ import NoteBook from 'assets/icons/notebook.svg';
 import Pencil from 'assets/icons/pencil.svg';
 import Heart from 'assets/icons/filled_heart.svg';
 import MyReviewForm from 'components/organisms/MyReviewsForm';
+import OrderListForm from 'components/organisms/OrderListForm';
 import { useNavigate } from 'react-router-dom';
 
 function MyPage() {
@@ -25,13 +26,13 @@ function MyPage() {
   };
 
   const handleMyInfo = () => {
-    navigate("/mypage/myinfo");
-  }
+    navigate('/mypage/myinfo');
+  };
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/login");
-  }
+    navigate('/login');
+  };
 
   return (
     <MyPageLayout>
@@ -56,7 +57,8 @@ function MyPage() {
           <p>찜</p>
         </div>
       </div>
-      {selectedButton && <MyReviewForm></MyReviewForm>}
+      {selectedButton === 1 && <OrderListForm></OrderListForm>}
+      {selectedButton === 2 && <MyReviewForm></MyReviewForm>}
       <Navbar></Navbar>
       <p onClick={handleLogout}>로그아웃</p>
     </MyPageLayout>

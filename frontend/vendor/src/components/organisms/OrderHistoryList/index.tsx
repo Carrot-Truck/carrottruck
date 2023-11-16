@@ -104,7 +104,11 @@ function OrderHistoryList({ selectedOrderHistory, vendorEmail }: IOrderHistoryLi
   };
 
   const fetchOrderLists = (orderId: number) => {
-    setOpenOrderId(orderId);
+    if (orderId !== -1) {
+      setOpenOrderId(orderId);
+    } else if (processingOrderList.length !== 0) {
+      setOpenOrderId(processingOrderList[0].orderId);
+    }
     setLoading(true);
     getProcessingData();
     getCompleteData();
@@ -153,6 +157,7 @@ function OrderHistoryList({ selectedOrderHistory, vendorEmail }: IOrderHistoryLi
               expectTime={data.expectTime}
               menuInfos={data.orderMenuItems}
               clientInfo={data.clientInfo}
+              openOrder={false}
             />
           ))
         )

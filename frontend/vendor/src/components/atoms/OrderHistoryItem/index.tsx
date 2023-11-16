@@ -142,7 +142,7 @@ function OrderHistoryItem({
       (response: AxiosResponse) => {
         const data = getData(response);
         if (data == orderId && fetchOrderLists !== undefined) {
-          fetchOrderLists(orderId);
+          fetchOrderLists(-1);
         }
       },
       (error: any) => {

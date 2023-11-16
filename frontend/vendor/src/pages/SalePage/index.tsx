@@ -195,16 +195,19 @@ function SalePage() {
         </>
       ) : (
         <>
-          <ReturnToSaleMain
-            isSaleDetailComp={isSaleDetailComp}
-            setSaleDetailComp={setSaleDetailComp}
-          />
-          <SwitchButton
-            selectedButton={selectedOrderHistory}
-            setSelectedButton={setSelectedOrderHistory}
-            firstButton={"주문내역"}
-            secondButton={"완료내역"}
-          />
+          <div className="header-bar">
+            <ReturnToSaleMain
+              isSaleDetailComp={isSaleDetailComp}
+              setSaleDetailComp={setSaleDetailComp}
+            />
+            <SwitchButton
+              selectedButton={selectedOrderHistory}
+              setSelectedButton={setSelectedOrderHistory}
+              firstButton={"주문내역"}
+              secondButton={"완료내역"}
+              position="sticky"
+            />
+          </div>
           <OrderHistoryList selectedOrderHistory={selectedOrderHistory} vendorEmail={vendorEmail} />
         </>
       )}

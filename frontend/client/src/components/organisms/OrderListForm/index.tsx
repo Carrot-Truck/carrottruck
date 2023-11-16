@@ -58,7 +58,7 @@ function OrderListForm() {
         ) 
       )}
       <div className="title">
-        <p>주문 내역</p>
+        <p>완료된 주문</p>
       </div>
       {orderItems.some((orderItem: any) => orderItem.status === 'COMPLETE') ? (
         orderItems.map((orderItem: any) =>

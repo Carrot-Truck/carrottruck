@@ -65,3 +65,8 @@ export async function isOpenFoodTruck(foodTruckId: number, success: any, fail: a
   api.defaults.headers["Authorization"] = getAuthorization();
   await api.get(`/open/${foodTruckId}`).then(success).catch(fail);
 }
+
+export async function getLikedFoodTruck( success: any, fail: any) {
+  api.defaults.headers["Authorization"] = getAuthorization();
+  await api.get(`/like`).then(success).catch(fail);
+}

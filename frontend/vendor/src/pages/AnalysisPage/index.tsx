@@ -11,6 +11,7 @@ import { getStoreAnalysis } from "api/analysis";
 import Loading from "components/atoms/Loading";
 import TitleText from "components/atoms/TitleText";
 import AnalysisResult from "components/organisms/AnalysisResult";
+import BackSpace from 'components/atoms/BackSpace';
 
 interface ICategory {
   categoryId: number;
@@ -133,6 +134,9 @@ function AnalysisPage() {
 
   return (
     <AnalysisLayout>
+      <div className="header">
+          <BackSpace/>
+        </div>
       {loading ? (
         <>
           <TitleText text={"상권 분석중..."} size={"m"} textAlign={"center"} />

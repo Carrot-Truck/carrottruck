@@ -81,9 +81,9 @@ function CartMenuItem({
       <MenuTextWrapper>
         <p>{menu.menuName}</p>
         <div>
-          <button onClick={handleIncrement}>+</button>
-          <p>{menu.cartMenuQuantity}</p>
           <button onClick={handleDecrement}>-</button>
+          <p>{menu.cartMenuQuantity}</p>
+          <button onClick={handleIncrement}>+</button>
         </div>
         <p>{menu.cartMenuTotalPrice * menu.cartMenuQuantity}원</p>
       </MenuTextWrapper>

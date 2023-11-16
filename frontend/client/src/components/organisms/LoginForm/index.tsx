@@ -3,7 +3,7 @@ import Input from 'components/atoms/Input';
 import Button from 'components/atoms/Button';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setIsAuthenticated } from 'slices/userSlice/userSlice';
+import { setToken, setIsAuthenticated } from 'slices/userSlice/userSlice';
 import { FieldSet, LoginFormContainer } from './style';
 import axios from 'axios';
 
@@ -18,12 +18,12 @@ function LoginForm() {
   const grantType = localStorage.getItem('grantType');
   const APPLICATION_SPRING_SERVER_URL =
     process.env.NODE_ENV === 'production' ? 'https://k9c211.p.ssafy.io/api' : 'http://localhost:8001/api';
-  
-    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        login();
-      }
-    };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      login();
+    }
+  };
 
   useEffect(() => {
     const isValidUser = async () => {
@@ -53,6 +53,7 @@ function LoginForm() {
       };
       const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/auth/login/client`, body);
       dispatch(setIsAuthenticated(true));
+      dispatch(setToken(response.data.data.accessToken));
       // 로컬스토리지에 토큰 저장
       localStorage.setItem('accessToken', response.data.data.accessToken);
       localStorage.setItem('refreshToken', response.data.data.refreshToken);

@@ -23,8 +23,8 @@ function RouteLink() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<MainPage />} />
         <Route element={<PrivateRoute authentication={true} />}>
-          <Route path="/" element={<MainPage />} />
           <Route path="/registration" element={<RegistrationPage />} />
           <Route path="/foodtruck" element={<FoodTruckPage />} />
           {/* <Route path="/foodtruck/menu/:menuId" element={<FoodMenuDetailPage />} /> */}

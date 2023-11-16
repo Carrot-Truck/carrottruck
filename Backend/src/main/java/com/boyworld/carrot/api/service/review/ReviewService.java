@@ -128,7 +128,7 @@ public class ReviewService {
                 MyReviewDto myReviewDto = MyReviewDto.of(review);
                 // 만약 리뷰 Repository 에서 해당 리뷰의 사진이 존재하면 추가
                 if(reviewImageRepository.findByReviewId(review.getId()).isPresent()){
-                    myReviewDto.setImageUrl(reviewImageRepository.findByReviewId(review.getId()).get().getUploadFileName());
+                    myReviewDto.setImageUrl(reviewImageRepository.findByReviewId(review.getId()).get().getStoreFileName());
                 }
                 response.add(myReviewDto);
             }

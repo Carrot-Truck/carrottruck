@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BackSpace from 'components/atoms/BackSpace';
 import { AddMenuLayout, Input, P}  from './style';
@@ -92,16 +92,16 @@ function ModifyScheduleForm() {
   };
 
   const initialRegistration = () =>{
-    setLatitude("37.5665");
-    setLongitude("126.9780");
+    setLatitude("35.2053955000000");
+    setLongitude("126.811531400000");
     setAddress("");
   };
 
-  const savedMarker = {
+  const savedMarker = useMemo(() => ({
     latitude: latitude,
     longitude: longitude
-  };
-  
+  }), [latitude, longitude]);
+
   useEffect(()=>{
     console.log(latitude, longitude)
     const data = {

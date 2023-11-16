@@ -1,14 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import { persistReducer } from 'redux-persist';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 const initialState = {
-  token: sessionStorage.getItem('accessToken'),
-  userEmail: '',
-  nickname: '',
-  phoneNumber: '',
-  role: '',
-  isAuthenticated: false,
-  active: ''
+  token: localStorage.getItem('accessToken'),
+  isAuthenticated: false
+};
+
+const persistConfig = {
+  key: 'user',
+  storage: storage,
+  whitelist: ['token', 'isAuthenticated']
 };
 
 const userSlice = createSlice({
@@ -18,23 +20,8 @@ const userSlice = createSlice({
     setToken(state, action) {
       state.token = action.payload;
     },
-    setUserEmail(state, action) {
-      state.userEmail = action.payload;
-    },
-    setNickname(state, action) {
-      state.nickname = action.payload;
-    },
-    setPhoneNumber(state, action) {
-      state.phoneNumber = action.payload;
-    },
-    setRole(state, action) {
-      state.role = action.payload;
-    },
     setIsAuthenticated(state, action) {
-      state.isAuthenticated = action.payload;
-    },
-    setActive(state, action) {
-      state.active = action.payload;
+      state.isAuthenticated = action.payload.isAuthenticated;
     },
     logoutUser(state) {
       state.isAuthenticated = false;
@@ -42,6 +29,6 @@ const userSlice = createSlice({
   }
 });
 
-export const { setToken, setUserEmail, setNickname, setPhoneNumber, setRole, setActive } = userSlice.actions;
+export const { setToken, setIsAuthenticated } = userSlice.actions;
 
-export default userSlice.reducer;
+export default persistReducer(persistConfig, userSlice.reducer);

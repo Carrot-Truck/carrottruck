@@ -1,6 +1,5 @@
 import { ReactElement } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 interface PrivateRouteProps {
   children?: ReactElement; // Router.tsx에서 PrivateRoute가 감싸고 있는 Componet Element
@@ -13,13 +12,20 @@ export default function PrivateRoute({ authentication }: PrivateRouteProps): Rea
    * 로그인 했을 경우 : true 라는 텍스트 반환
    * 로그인 안했을 경우 : null or false(로그아웃 버튼 눌렀을경우 false로 설정) 반환
    */
-  const isAuthenticated = useSelector((state: any) => state.user.isAuthenticated);
+  let isAuthenticated = null;
+  const userPersistData = localStorage.getItem('persist:user');
+  console.log('userpersist란다.', userPersistData);
+  if (userPersistData) {
+    const userObject = JSON.parse(userPersistData);
+    isAuthenticated = userObject.isAuthenticated;
+    console.log('isAuthenticated:', isAuthenticated);
+  }
 
   if (authentication) {
     // 인증이 반드시 필요한 페이지
 
     // 인증을 안했을 경우 로그인 페이지로, 했을 경우 해당 페이지로
-    return isAuthenticated === null || isAuthenticated === false ? <Navigate to="/login" /> : <Outlet />;
+    return isAuthenticated === null || isAuthenticated === 'false' ? <Navigate to="/login" /> : <Outlet />;
   } else {
     // 인증이 반드시 필요 없는 페이지
 

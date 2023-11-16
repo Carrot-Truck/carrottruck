@@ -304,7 +304,8 @@ public class FoodTruckQueryRepository {
                 .from(foodTruckLike)
                 .join(foodTruckLike.member, member)
                 .where(
-                        foodTruckLike.member.email.eq(email)
+                        foodTruckLike.member.email.eq(email),
+                        foodTruckLike.active
                 )
                 .fetch();
         log.debug("ids={}", ids);

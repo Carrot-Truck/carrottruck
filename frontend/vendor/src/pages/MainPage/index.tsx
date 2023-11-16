@@ -1,11 +1,14 @@
-import { MainPageLayout } from "./style";
+import { LogoutP, MainPageLayout } from "./style";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "components/organisms/Navbar";
 import RegistFoodTruckButton from "components/organisms/RegistFoodTruckButton";
 import VendorMainForm from "components/organisms/VendorMainForm";
 import { AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
-import { getFoodTruckOverviews, isOpenFoodTruck } from "api/foodtruck/foodTruck";
+import {
+  getFoodTruckOverviews,
+  isOpenFoodTruck,
+} from "api/foodtruck/foodTruck";
 import FoodTruckSelector from "components/organisms/FoodTruckSelector";
 import FoodTruckList from "components/organisms/FoodTruckList";
 import { getInfo } from "api/member/vendor";
@@ -28,8 +31,11 @@ function MainPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [detailViewable, setDetailViewable] = useState<boolean>(false);
   const [foodTruckList, setFoodTruckList] = useState<IFoodTruckListItem[]>([]);
-  const [selectedFoodTruck, setSelectedFoodTruck] = useState<number | null>(null);
-  const [selectedFoodTruckName, setSelectedFoodTruckName] = useState<string>("");
+  const [selectedFoodTruck, setSelectedFoodTruck] = useState<number | null>(
+    null
+  );
+  const [selectedFoodTruckName, setSelectedFoodTruckName] =
+    useState<string>("");
 
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -134,8 +140,19 @@ function MainPage() {
     checkOnSale();
   }, [selectedFoodTruck]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("grantType");
+    localStorage.removeItem("selectedFoodTruckId");
+    navigate("/login");
+  };
+
   return (
     <MainPageLayout ref={mainRef} onClick={modalOutSideClick}>
+      <div className="header">
+        <LogoutP onClick={handleLogout}>로그아웃</LogoutP>
+      </div>
       {loading ? (
         <Loading />
       ) : dataEmpty ? (

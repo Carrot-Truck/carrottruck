@@ -1,12 +1,12 @@
-import BackSpace from "components/atoms/BackHome";
-import { CartOrderPageLayout } from "./style";
-import Navbar from "components/organisms/Navbar";
-import axios, { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
-import { getCartOrder } from "api/cart";
-import Button from "components/atoms/Button";
-import { useNavigate } from "react-router-dom";
-import { createOrder } from "api/order";
+import BackSpace from 'components/atoms/BackHome';
+import { CartOrderPageLayout } from './style';
+import Navbar from 'components/organisms/Navbar';
+import axios, { AxiosResponse } from 'axios';
+import { useEffect, useState } from 'react';
+import { getCartOrder } from 'api/cart';
+import Button from 'components/atoms/Button';
+import { useNavigate } from 'react-router-dom';
+import { createOrder } from 'api/order';
 
 const getData = (response: AxiosResponse) => {
   return response.data.data;
@@ -15,9 +15,9 @@ const getData = (response: AxiosResponse) => {
 function CartOrderPage() {
   const navigate = useNavigate();
   const [cartOrder, setCartOrder] = useState<null | {
-    foodTruckName: "";
+    foodTruckName: '';
     prepareTime: number;
-    phoneNumber: "";
+    phoneNumber: '';
     totalPrice: number;
   }>(null);
 
@@ -39,7 +39,7 @@ function CartOrderPage() {
     fetchData();
 
     const loadScript = (src: string, callback: () => void) => {
-      const script = document.createElement("script");
+      const script = document.createElement('script');
       script.src = src;
       script.onload = callback;
       script.onerror = () => {
@@ -48,11 +48,8 @@ function CartOrderPage() {
       document.head.appendChild(script);
     };
 
-    loadScript("https://code.jquery.com/jquery-1.12.4.min.js", () => {
-      loadScript(
-        "https://cdn.iamport.kr/js/iamport.payment-1.1.7.js",
-        () => {}
-      );
+    loadScript('https://code.jquery.com/jquery-1.12.4.min.js', () => {
+      loadScript('https://cdn.iamport.kr/js/iamport.payment-1.1.7.js', () => {});
     });
 
     return () => {};
@@ -60,10 +57,10 @@ function CartOrderPage() {
 
   const loadIamportScript = () => {
     return new Promise<void>((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://service.iamport.kr/js/iamport.payment-1.1.5.js"; // 아임포트 스크립트 URL
+      const script = document.createElement('script');
+      script.src = 'https://service.iamport.kr/js/iamport.payment-1.1.5.js'; // 아임포트 스크립트 URL
       script.onload = () => resolve();
-      script.onerror = () => reject(new Error("아임포트 스크립트 로드 실패"));
+      script.onerror = () => reject(new Error('아임포트 스크립트 로드 실패'));
       document.head.appendChild(script);
     });
   };
@@ -76,38 +73,36 @@ function CartOrderPage() {
 
     IMP.request_pay(
       {
-        pg: "kakaopay.TC0ONETIME",
-        pay_method: "card",
+        pg: 'kakaopay.TC0ONETIME',
+        pay_method: 'card',
         merchant_uid: new Date().getTime(),
-        name: "당근트럭_포장주문",
-        amount: cartOrder?.totalPrice,
+        name: '당근트럭_포장주문',
+        amount: cartOrder?.totalPrice
       },
       async (rsp: { imp_uid: string; paid_amount: any }) => {
         try {
-          const { data } = await axios.post(
-            "http://localhost:8001/api/verifyIamport/" + rsp.imp_uid
-          );
+          const { data } = await axios.post('http://localhost:8001/api/verifyIamport/' + rsp.imp_uid);
           if (rsp.paid_amount === data.data.response.amount) {
-            alert("결제 성공");
+            alert('결제 성공');
             createOrder(
               (response: AxiosResponse) => {
                 const data = getData(response);
-                console.log("결제 완료 데이터: ", data);
-                navigate("/cart");
+                console.log('결제 완료 데이터: ', data);
+                navigate('/cart');
                 // 주문내역으로 이동하기
               },
               (error: any) => {
-                console.log("결제시도 오류: ", error);
-                navigate("/cart");
+                console.log('결제시도 오류: ', error);
+                navigate('/cart');
               }
             );
           } else {
-            alert("결제 실패");
-            navigate("/cart");
+            alert('결제 실패');
+            navigate('/cart');
           }
         } catch (error) {
-          console.error("Error while verifying payment:", error);
-          alert("결제 실패");
+          console.error('Error while verifying payment:', error);
+          alert('결제 실패');
         }
       }
     );
@@ -119,19 +114,25 @@ function CartOrderPage() {
       <div className="header">
         <p>주문하기</p>
       </div>
-      <div>
-        <p className="foodTruckName">{cartOrder?.foodTruckName}</p>
-        <p className="prepareTime">{cartOrder?.prepareTime}</p>
-        <p className="phoneNumber">{cartOrder?.phoneNumber}</p>
-        <p className="totalPrice">{cartOrder?.totalPrice}</p>
+      <div className="payment">
+        <div className="info">
+          <p className="foodTruckName">{cartOrder?.foodTruckName}</p>
+          <p className="prepareTime">예상 준비 시간: {cartOrder?.prepareTime} 분</p>
+          <p className="phoneNumber">전화번호: {cartOrder?.phoneNumber}</p>
+        </div>
+        <div className="price">
+          <p>결제금액</p>
+          <div className="orderPrice">
+            <p>주문금액:</p>
+            <p className="totalPrice">{cartOrder?.totalPrice} 원</p>
+          </div>
+          <div className="totalprice">
+            <p>총금액:</p>
+            <p className="totalPrice">{cartOrder?.totalPrice} 원</p>
+          </div>
+        </div>
       </div>
-      <Button
-        handleClick={requestPay}
-        color="Primary"
-        size="full"
-        radius="m"
-        text="결제하기"
-      />
+      <Button handleClick={requestPay} color="Primary" size="full" radius="m" text="결제하기" />
       <Navbar />
     </CartOrderPageLayout>
   );

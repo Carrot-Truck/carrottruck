@@ -9,7 +9,7 @@ import MyReviewForm from 'components/organisms/MyReviewsForm';
 import OrderListForm from 'components/organisms/OrderListForm';
 import { useNavigate } from 'react-router-dom';
 import { info } from 'api/member/client';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 // import FoodTruckList from 'components/organisms/FoodTruckList';
 
 interface User {
@@ -44,10 +44,16 @@ function MyPage() {
     navigate('/login');
   };
 
+  const handleFailUserInfoUpdate = (error: AxiosError) => {
+    console.log("Error at Mypage handleFailUserInfoUpdate : ", error);
+    alert("로그인 정보가 없습니다.");
+    navigate('/login');
+  }
+
   useEffect(()=>{
     // TODO: 여기에 내가 좋아요 한 foodTruckList 받아서
     // 3 번 FoodTruckList 에 뿌려주기
-    info((response: AxiosResponse)=>setUserData(response.data.data), handleLogout)
+    info((response: AxiosResponse)=>setUserData(response.data.data), handleFailUserInfoUpdate)
   }, [])
 
   return (

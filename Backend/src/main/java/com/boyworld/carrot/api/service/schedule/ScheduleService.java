@@ -52,7 +52,11 @@ public class ScheduleService {
 
         Map<String, String> addressMap =
                 geocodingService.reverseGeocoding(dto.getLatitude(), dto.getLongitude(), "roadaddr");
-        Schedule schedule = dto.toEntity(foodTruck, addressMap.get("roadaddr"));
+        String address = addressMap.get("roadaddr");
+        if (address == null || address.isBlank()) {
+            address = "지원하지 않는 주소입니다.";
+        }
+        Schedule schedule = dto.toEntity(foodTruck, address);
 
         Schedule savedSchedule = scheduleRepository.save(schedule);
 

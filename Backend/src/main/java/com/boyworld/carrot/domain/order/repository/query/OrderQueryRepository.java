@@ -108,7 +108,7 @@ public class OrderQueryRepository {
                     .select(Projections.bean(OrderMenuItem.class,
                             orderMenu.id,
                             orderMenu.menu.id.as("menuId"),
-                            orderMenu.menu.menuInfo.name,
+                            orderMenu.menu.menuInfo.name.as("menuName"),
                             orderMenu.menu.menuInfo.price,
                             orderMenu.quantity
                     ))

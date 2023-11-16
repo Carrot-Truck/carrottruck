@@ -7,6 +7,7 @@ import Navbar from 'components/organisms/Navbar';
 import useBottomSheet from 'hooks/useBottomSheet';
 import ShoppingCartItem from 'components/atoms/ShoppingCartItem';
 import { getFoodTruck } from 'api/foodtruck/foodTruck';
+import Toggle from 'components/atoms/Toggle';
 
 function MainPage() {
   interface Marker {
@@ -178,6 +179,9 @@ function MainPage() {
 
   return (
     <MainPageLayout>
+      <div className="toggle">
+        <Toggle></Toggle>
+      </div>
       <NaverMap
         clientId={CLIENT_KEY}
         markers={markers}

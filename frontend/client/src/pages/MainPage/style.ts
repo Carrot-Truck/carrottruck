@@ -4,6 +4,11 @@ import { BOTTOM_SHEET_HEIGHT } from './BottomSheetOption';
 export const MainPageLayout = styled.div`
   width: 360px;
   padding-bottom: 200px;
+
+  .toggle {
+    position: relative;
+    z-index: 1000;
+  }
 `;
 
 // FoodTruckList 컴포넌트 스타일

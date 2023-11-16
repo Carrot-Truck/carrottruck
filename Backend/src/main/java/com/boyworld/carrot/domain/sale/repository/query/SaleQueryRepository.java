@@ -202,9 +202,9 @@ public class SaleQueryRepository {
 
     private BooleanExpression isLastId(Long lastSaleId, OrderCondition orderCondition) {
         if (orderCondition == null) {
-            return lastSaleId != null ? sale.id.lt(lastSaleId) : null;
+            return lastSaleId != null ? sale.id.gt(lastSaleId) : null;
         }
-        return lastSaleId != null ? sale.id.gt(lastSaleId) : null;
+        return lastSaleId != null ? sale.id.lt(lastSaleId) : null;
     }
 
     private BooleanExpression isActiveFoodTruck() {

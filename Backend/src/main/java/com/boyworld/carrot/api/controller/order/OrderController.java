@@ -4,6 +4,7 @@ import com.boyworld.carrot.api.ApiResponse;
 import com.boyworld.carrot.api.controller.order.response.OrderResponse;
 import com.boyworld.carrot.api.controller.order.response.OrdersResponse;
 import com.boyworld.carrot.api.service.order.OrderService;
+import com.boyworld.carrot.client.Sse.SseUtil;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.security.SecurityUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.io.IOException;
 
 /**
  * 주문 관련 API 컨트롤러
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderService orderService;
+    private final SseUtil sseUtil;
 
     /**
      * 사용자 전체 주문 내역 조회 API
@@ -144,4 +149,18 @@ public class OrderController {
 
         return ApiResponse.ok(cancelId);
     }
+
+    /**
+     *  sse 구독 요청 API
+     *
+     */
+    @GetMapping(value = "/subscribe/{email}", produces = "text/event-stream")
+    public SseEmitter subscribe(@PathVariable("email") String email) throws IOException {
+        log.debug("OrderController#subscribe called");
+
+        log.debug("email={}", email);
+
+        return sseUtil.subscribe(email);
+    }
+
 }

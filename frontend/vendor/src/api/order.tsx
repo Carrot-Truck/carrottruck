@@ -1,6 +1,7 @@
-import { getAuthorization, orderApi } from "./index";
+import { getAuthorization, orderApi, orderEventApi } from "./index";
 
 const api = orderApi;
+const eventApi = orderEventApi;
 
 export async function getOrders(success: any, fail: any) {
   api.defaults.headers["Authorization"] = getAuthorization();
@@ -30,4 +31,9 @@ export async function createOrder(data: Object, success: any, fail: any) {
 export async function cancelOrder(orderId: number, success: any, fail: any) {
   api.defaults.headers["Authorization"] = getAuthorization();
   await api.get(`/${orderId}`).then(success).catch(fail);
+}
+
+export async function subscribe(orderId: number, success: any, fail: any) {
+  api.defaults.headers["Authorization"] = getAuthorization();
+  await eventApi.get(`/${orderId}`).then(success).catch(fail);
 }

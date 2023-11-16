@@ -171,7 +171,7 @@ function MainPage() {
 
   return (
     <MainPageLayout>
-      <ShoppingCartItem></ShoppingCartItem>
+      {/* <ShoppingCartItem></ShoppingCartItem> */}
       <NaverMap clientId={CLIENT_KEY} markers={markers} foodTruckList={foodTruckList} onMarkerClick={handleMarkerClick} onMapClick={handleMapClick}></NaverMap>
       <FoodTruckListLayout ref={sheet}>
         <div className="header">

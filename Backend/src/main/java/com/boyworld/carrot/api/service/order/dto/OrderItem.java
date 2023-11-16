@@ -40,10 +40,10 @@ public class OrderItem {
     }
 
     @Builder
-    public OrderItem(Long orderId, Status status, Integer totalPrice, Integer orderCnt,
+    public OrderItem(Long orderId, Status status, String nickname, String phoneNumber, Integer totalPrice, Integer orderCnt,
                      LocalDateTime createdTime, LocalDateTime expectTime,
                      List<OrderMenuItem> orderMenuItems) {
-        this(orderId, status, totalPrice, createdTime, expectTime);
+        this(orderId, status, nickname, phoneNumber, totalPrice, createdTime, expectTime);
         this.orderCnt = orderCnt;
         this.orderMenuItems = orderMenuItems;
     }

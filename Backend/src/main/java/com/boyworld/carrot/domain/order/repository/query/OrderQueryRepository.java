@@ -62,7 +62,7 @@ public class OrderQueryRepository {
                 menuOptionIds.addAll(queryFactory
                         .select(orderMenuOption.menuOption.id)
                         .from(orderMenuOption)
-                        .where(orderMenuOption.orderMenu.id.eq(orderMenuItem.getMenuId()))
+                        .where(orderMenuOption.orderMenu.id.eq(orderMenuItem.getId()))
                         .fetch());
                 orderMenuItem.setMenuOptionList(menuOptionIds);
             }

@@ -21,6 +21,9 @@ interface IMenuInfo {
 }
 
 const getMenuSummary = (menus: IMenuInfo[]) => {
+  if (menus === undefined || menus.length === 0) {
+    return;
+  }
   const menuArray = [];
   for (const menu of menus) {
     menuArray.push(`${menu.menuName} x${menu.quantity}`);

@@ -6,6 +6,17 @@ export const MainPageLayout = styled.div`
   max-height: 100vh;
   min-height: 100vh;
   justify-content: center;
+  font-family: BM JUA_TTF;
+  min-height: 100vh;
+
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: space-between; /* 요소들을 양 끝으로 정렬 */
+  }
 `;
 
 export const LogoutP = styled.p`

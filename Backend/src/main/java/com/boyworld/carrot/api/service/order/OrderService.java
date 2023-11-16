@@ -68,9 +68,8 @@ public class OrderService {
      */
     public OrdersResponse getOrders(String email) {
 
-        List<OrderItem> orderItems = memberRepository.findByEmail(email).map(Member::getId).map(
-            orderQueryRepository::getClientOrderItems
-        ).orElseThrow();
+        Member member = getMemberByEmail(email);
+        List<OrderItem> orderItems = orderQueryRepository.getClientOrderItems(member.getId());
 
         return OrdersResponse.builder()
                 .orderItems(orderItems)

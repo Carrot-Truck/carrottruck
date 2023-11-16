@@ -28,7 +28,7 @@ function LoginForm() {
   useEffect(() => {
     const isValidUser = async () => {
       try {
-        await axios.get(`${APPLICATION_SPRING_SERVER_URL}/member/cilent/info`, {
+        await axios.get(`${APPLICATION_SPRING_SERVER_URL}/member/client/info`, {
           headers: {
             Authorization: `${grantType} ${accessToken}`
           }

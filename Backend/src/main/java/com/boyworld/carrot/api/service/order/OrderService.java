@@ -7,6 +7,8 @@ import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderMenuDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
+import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
+import com.boyworld.carrot.client.Sse.SseUtil;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
 import com.boyworld.carrot.domain.member.Member;
@@ -56,6 +58,7 @@ public class OrderService {
     private final SaleRepository saleRepository;
     private final SaleQueryRepository saleQueryRepository;
     private final CartService cartService;
+    private final SseUtil sseUtil;
 
     /**
      * 전체 주문내역 조회 API
@@ -86,7 +89,7 @@ public class OrderService {
         FoodTruck foodTruck = getFoodTruckById(foodTruckId);
         checkOwnerAccess(member, foodTruck);
 
-        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, new Status[]{Status.PENDING, Status.PROCESSING});
+        List<OrderItem> orderItems = orderQueryRepository.getVendorOrderItems(foodTruckId, new Status[] {Status.PENDING, Status.PROCESSING});
 
         return OrdersResponse.builder()
             .orderItems(orderItems)
@@ -186,6 +189,9 @@ public class OrderService {
         getSaleById(order.getSale().getId()).incrementOrderNumber();
 
         pauseByWaitLimit(dto.getFoodTruckId(), foodTruck.getWaitLimits());
+
+        sseUtil.send(foodTruck.getVendor().getEmail(), 1);
+
         return createdOrder.getId();
     }
 

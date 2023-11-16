@@ -61,7 +61,7 @@ function OrderListForm() {
         <p>주문 내역</p>
       </div>
       {orderItems.map((orderItem:any) =>
-        orderItem.status === 'COMPLETE' ? (<div>
+        (orderItem.status === 'COMPLETE' && orderItem.status !== 'PROCESSING' && orderItem.status !== 'PENDING' && orderItem.status !== 'CANCELED' && orderItem.status !== 'DECLINED') ? (<div>
             <OrderListItem
               orderId={orderItem.orderId}
               totalPrice={orderItem.totalPrice}

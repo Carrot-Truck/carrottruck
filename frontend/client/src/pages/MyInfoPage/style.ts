@@ -3,6 +3,11 @@ import styled from 'styled-components';
 export const MyInfoPageLayout = styled.div`
   width: 360px;
   padding-bottom: 200px;
+  min-height: 100vh;
+
+  // div {
+  //   margin-bottom: 10px;
+  // }
 `;
 
 export const PageContainer = styled.div`

@@ -110,8 +110,9 @@ function MyInfoPage() {
 
   return (
     <MyInfoPageLayout>
+      <BackSpace></BackSpace>
       <PageContainer>
-        <BackSpace></BackSpace>
+        
         <UserInfoSection>
           <div>닉네임</div>
           <EditableField onClick={() => toggleEditMode('nickname')}>

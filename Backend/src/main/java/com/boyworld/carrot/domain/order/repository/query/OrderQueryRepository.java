@@ -49,7 +49,10 @@ public class OrderQueryRepository {
             orderItem.setOrderCnt(count++);
             List<OrderMenuItem> orderMenuItems = queryFactory
                     .select(Projections.constructor(OrderMenuItem.class,
+                            orderMenu.id,
                             orderMenu.menu.id.as("menuId"),
+                            orderMenu.menu.menuInfo.name,
+                            orderMenu.menu.menuInfo.price,
                             orderMenu.quantity
                     ))
                     .from(orderMenu)

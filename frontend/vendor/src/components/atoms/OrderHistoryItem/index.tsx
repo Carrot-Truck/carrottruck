@@ -84,7 +84,7 @@ function OrderHistoryItem({
 }: IOrderHistoryItemProps) {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const [menuStrings, setMenuStrings] = useState<IMenuString[]>([]);
-  const [pendingExpect, setPendingExpect] = useState<number | null>(null);
+  const [pendingExpect, setPendingExpect] = useState<number>();
 
   const expectTimeRef = useRef<HTMLInputElement>(null);
 

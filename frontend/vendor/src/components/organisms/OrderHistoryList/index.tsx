@@ -8,6 +8,7 @@ import NothingHere from "components/atoms/NothingHere";
 
 interface IOrderHistoryListProps {
   selectedOrderHistory: number;
+  vendorEmail: string;
 }
 
 interface IOrderItems {
@@ -37,7 +38,7 @@ const getData = (response: AxiosResponse) => {
   return response.data.data;
 };
 
-function OrderHistoryList({ selectedOrderHistory }: IOrderHistoryListProps) {
+function OrderHistoryList({ selectedOrderHistory, vendorEmail }: IOrderHistoryListProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [processingOrderList, setProcessingOrderList] = useState<IOrderItems[]>([]);
   const [completeOrderList, setCompleteOrderList] = useState<IOrderItems[]>([]);
@@ -49,7 +50,7 @@ function OrderHistoryList({ selectedOrderHistory }: IOrderHistoryListProps) {
 
   useEffect(() => {
     const eventSource = new EventSource(
-      `${process.env.REACT_APP_API_URL}/order/subscribe/ssafy@ssafy.com`
+      `${process.env.REACT_APP_API_URL}/order/subscribe/${vendorEmail}`
     );
 
     eventSource.addEventListener("sse", (event) => {
@@ -57,7 +58,6 @@ function OrderHistoryList({ selectedOrderHistory }: IOrderHistoryListProps) {
         console.log("SSE 연결 성공함");
         return;
       } else if (event.data === "1") {
-        console.log(event.data);
         fetchData();
       }
     });
@@ -73,7 +73,6 @@ function OrderHistoryList({ selectedOrderHistory }: IOrderHistoryListProps) {
       selectedFoodTruckId,
       (response: AxiosResponse) => {
         const data = getData(response);
-        console.log(data);
         setProcessingOrderList(data["orderItems"]);
       },
       (error: any) => {

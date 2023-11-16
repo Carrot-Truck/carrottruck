@@ -13,6 +13,7 @@ import Button from "components/atoms/Button";
 import { closeSale, pause, restart } from "api/sale";
 import SwitchButton from "components/organisms/SwitchButton";
 import OrderHistoryList from "components/organisms/OrderHistoryList";
+import { getInfo } from "api/member/vendor";
 
 interface IMenuItem {
   menuId: number;
@@ -33,6 +34,7 @@ function SalePage() {
   const [isSaleDetailComp, setSaleDetailComp] = useState<boolean>(false);
   const [pausing, setPausing] = useState<boolean>(false);
   const [selectedOrderHistory, setSelectedOrderHistory] = useState<number>(1);
+  const [vendorEmail, setVendorEmail] = useState<string>("");
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -59,7 +61,17 @@ function SalePage() {
     } else {
       setMenuItemList(receivedData);
     }
-    setLoading(false);
+
+    getInfo(
+      (response: AxiosResponse) => {
+        const data = getData(response);
+        setVendorEmail(data["email"]);
+        setLoading(false);
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
   };
 
   const checkOnSale = () => {
@@ -193,7 +205,7 @@ function SalePage() {
             firstButton={"주문내역"}
             secondButton={"완료내역"}
           />
-          <OrderHistoryList selectedOrderHistory={selectedOrderHistory} />
+          <OrderHistoryList selectedOrderHistory={selectedOrderHistory} vendorEmail={vendorEmail} />
         </>
       )}
       <Navbar />

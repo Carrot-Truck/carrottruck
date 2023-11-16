@@ -39,7 +39,7 @@
     "workbox-streams": "^6.6.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3002 && react-scripts start",
     "build": "react-scripts build && tsc --build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

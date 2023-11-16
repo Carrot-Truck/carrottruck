@@ -127,6 +127,9 @@ public class ScheduleQueryRepository {
                         schedule.active
                 )
                 .limit(PAGE_SIZE + 1)
+                .orderBy(
+                        createOrderSpecifier(condition.getOrderCondition(), distance)
+                )
                 .fetch();
 
         if (ids == null || ids.isEmpty()) {
@@ -238,9 +241,9 @@ public class ScheduleQueryRepository {
 
     private BooleanExpression isLastId(Long lastScheduleId, OrderCondition orderCondition) {
         if (orderCondition == null) {
-            return lastScheduleId != null ? schedule.id.lt(lastScheduleId) : null;
+            return lastScheduleId != null ? schedule.id.gt(lastScheduleId) : null;
         }
-        return lastScheduleId != null ? schedule.id.gt(lastScheduleId) : null;
+        return lastScheduleId != null ? schedule.id.lt(lastScheduleId) : null;
     }
 
     private BooleanExpression isOpen(LocalDateTime today, LocalDateTime now) {

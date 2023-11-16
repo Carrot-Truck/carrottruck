@@ -176,7 +176,8 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
         createSchedules(foodTruck1);
         createSchedules(foodTruck2);
 
-        Sale sale1 = createSale(foodTruck1, null, "sale1 address");
+        Sale sale1 = createSale(foodTruck1, LocalDateTime.now().minusHours(1), "sale1 address");
+        Sale sale3 = createSale(foodTruck1, null, "sale3 address");
         Sale sale2 = createSale(foodTruck2, null, "sale2 address");
 
         createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);
@@ -285,15 +286,21 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
         createOrdersAndReviews(client1, client2, foodTruck1, foodTruck2, sale1, sale2);
 
         // when
-        FoodTruckVendorDetailDto foodTruck =
-                foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruck1.getId());
+        FoodTruckVendorDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruck1.getId());
+        log.debug("foodTruck={}", foodTruck);
+
+        // then
+        assertThat(foodTruck).isNotNull();
+
+        // when
+        foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruck2.getId());
         log.debug("foodTruck={}", foodTruck);
 
         // then
         assertThat(foodTruck).isNotNull();
     }
 
-    @DisplayName("사업자는 푸드트럭 식별키로 푸드트럭을 조회할 수 있다.")
+    @DisplayName("사업자는 푸드트럭 식별키로 다른 테이블 데이터 없이 푸드트럭을 조회할 수 있다.")
     @Test
     void getFoodTruckByIdAsVendorWithoutOthers() {
         // given
@@ -314,8 +321,14 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
         createFoodTruckImage(foodTruck1);
 
         // when
-        FoodTruckVendorDetailDto foodTruck =
-                foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruck1.getId());
+        FoodTruckVendorDetailDto foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruck1.getId());
+        log.debug("foodTruck={}", foodTruck);
+
+        // then
+        assertThat(foodTruck).isNotNull();
+
+        // when
+        foodTruck = foodTruckQueryRepository.getFoodTruckByIdAsVendor(foodTruck2.getId());
         log.debug("foodTruck={}", foodTruck);
 
         // then

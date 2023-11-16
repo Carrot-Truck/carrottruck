@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface IMenuSelectorContainer {
   $onSale: boolean;
 }
 
 export const MenuSelectorContainer = styled.div<IMenuSelectorContainer>`
-  width: 100%;
+  width: 100vw;
   max-height: 85vw;
   overflow: auto;
   border-top: 1px solid gray;

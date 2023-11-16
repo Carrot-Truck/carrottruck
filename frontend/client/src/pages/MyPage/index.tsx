@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MyPageLayout , LogoutP} from './style';
+import { MyPageLayout, LogoutP } from './style';
 import BackHome from 'components/atoms/BackHome';
 import Navbar from 'components/organisms/Navbar';
 import NoteBook from 'assets/icons/notebook.svg';
@@ -13,11 +13,11 @@ import { AxiosError, AxiosResponse } from 'axios';
 // import FoodTruckList from 'components/organisms/FoodTruckList';
 
 interface User {
-  name : string,
-  nickname : string,
-  email : string,
-  phoneNumber : string,
-  role : string
+  name: string;
+  nickname: string;
+  email: string;
+  phoneNumber: string;
+  role: string;
 }
 function MyPage() {
   const navigate = useNavigate();
@@ -40,24 +40,25 @@ function MyPage() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("grantType");
-    localStorage.removeItem("selectedFoodTruckId");
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('grantType');
+    localStorage.removeItem('selectedFoodTruckId');
+    localStorage.removeItem('persist:user');
     navigate('/login');
   };
 
   const handleFailUserInfoUpdate = (error: AxiosError) => {
-    console.log("Error at Mypage handleFailUserInfoUpdate : ", error);
-    alert("로그인 정보가 없습니다.");
+    console.log('Error at Mypage handleFailUserInfoUpdate : ', error);
+    alert('로그인 정보가 없습니다.');
     navigate('/login');
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     // TODO: 여기에 내가 좋아요 한 foodTruckList 받아서
     // 3 번 FoodTruckList 에 뿌려주기
-    info((response: AxiosResponse)=>setUserData(response.data.data), handleFailUserInfoUpdate)
-  }, [])
+    info((response: AxiosResponse) => setUserData(response.data.data), handleFailUserInfoUpdate);
+  }, []);
 
   return (
     <MyPageLayout>
@@ -87,7 +88,6 @@ function MyPage() {
       {selectedButton === 2 && <MyReviewForm></MyReviewForm>}
       {/* {selectedButton === 3 && <FoodTruckList></FoodTruckList>} */}
       <Navbar></Navbar>
-      
     </MyPageLayout>
   );
 }

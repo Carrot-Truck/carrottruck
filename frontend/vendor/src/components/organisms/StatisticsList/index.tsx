@@ -195,7 +195,8 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
     navigate(`${location.pathname}/detail?${queryString}`);
   };
 
-  const handleSalesItemClick = (foodTruckId: number, salesId: number) => {
+  const handleSalesItemClick = (foodTruckId: number, salesId: number, summary: IBySalesItem) => {
+    localStorage.setItem("summaryTemp", JSON.stringify(summary));
     const params: Record<string, any> = {
       criteria: "sales",
       foodTruckId: foodTruckId,
@@ -204,7 +205,13 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
     moveToDetailPage(params);
   };
 
-  const handleWeekItemClick = (foodTruckId: number, startDate: string, endDate: string) => {
+  const handleWeekItemClick = (
+    foodTruckId: number,
+    startDate: string,
+    endDate: string,
+    summary: IByWeekItem
+  ) => {
+    localStorage.setItem("summaryTemp", JSON.stringify(summary));
     const params: Record<string, any> = {
       criteria: "week",
       foodTruckId: foodTruckId,
@@ -214,7 +221,13 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
     moveToDetailPage(params);
   };
 
-  const handleMonthItemClick = (foodTruckId: number, year: number, month: number) => {
+  const handleMonthItemClick = (
+    foodTruckId: number,
+    year: number,
+    month: number,
+    summary: IByMonthItem
+  ) => {
+    localStorage.setItem("summaryTemp", JSON.stringify(summary));
     const params: Record<string, any> = {
       criteria: "month",
       foodTruckId: foodTruckId,
@@ -278,7 +291,9 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
               totalHours={data.totalHours}
               totalMinutes={data.totalMinutes}
               totalSales={data.totalSales}
-              handleSalesItemClick={() => handleSalesItemClick(selectedFoodTruckId, data.salesId)}
+              handleSalesItemClick={() =>
+                handleSalesItemClick(selectedFoodTruckId, data.salesId, data)
+              }
             />
           ))
         )
@@ -295,7 +310,7 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
               totalMinutes={data.totalMinutes}
               totalSales={data.totalSales}
               handleWeekItemClick={() =>
-                handleWeekItemClick(selectedFoodTruckId, data.startDate, data.endDate)
+                handleWeekItemClick(selectedFoodTruckId, data.startDate, data.endDate, data)
               }
             />
           ))
@@ -313,7 +328,7 @@ function StatisticsList({ selectedCriteria, year, month }: IStatisticsListProps)
               totalMinutes={data.totalMinutes}
               totalSales={data.totalSales}
               handleMonthItemClick={() =>
-                handleMonthItemClick(selectedFoodTruckId, year, data.month)
+                handleMonthItemClick(selectedFoodTruckId, year, data.month, data)
               }
             />
           ))

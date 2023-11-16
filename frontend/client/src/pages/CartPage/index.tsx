@@ -37,6 +37,7 @@ function CartPage() {
     const fetchData = async () => {
       getCart(
         (response: AxiosResponse) => {
+          console.log(response);
           const data = getData(response);
           console.log(data);
           setCart(data);

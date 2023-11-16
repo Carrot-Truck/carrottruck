@@ -125,7 +125,7 @@ public class SaleService {
 
         // 2. 주문번호로 주문 조회, 상태 STATUS.PROCESSING 으로 변경
         order = order.editOrderStatusAndExpectTime(Status.PROCESSING,
-                LocalDateTime.now().plusHours(9).plusMinutes(dto.getPrepareTime()));
+                LocalDateTime.now().plusMinutes(dto.getPrepareTime()));
 
         FoodTruck foodTruck = order.getSale().getFoodTruck();
         pauseByWaitLimit(foodTruck.getId(), foodTruck.getWaitLimits());
@@ -273,7 +273,7 @@ public class SaleService {
         Sale sale = saleQueryRepository.getLatestSale(foodTruckId).orElseThrow(
             () -> new NoSuchElementException("존재하지 않은 영업입니다.")
         );
-        LocalDateTime now = LocalDateTime.now().plusHours(9);
+        LocalDateTime now = LocalDateTime.now();
         sale.editEndTime(now);
         sale.editOrderable(false);
 

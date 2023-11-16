@@ -3,7 +3,7 @@ import NavbarItem from 'components/atoms/NavbarItem';
 import { ReactComponent as Schedule } from 'assets/icons/schedule.svg';
 // import { ReactComponent as ShoppingCart } from 'assets/icons/shopping_cart.svg';
 import { ReactComponent as MainPage } from 'assets/icons/mainpage.svg';
-import { ReactComponent as User } from 'assets/icons/user.svg';
+import { ReactComponent as User } from 'assets/icons/user_.svg';
 import { ReactComponent as Cart } from 'assets/icons/shopping_cart.svg';
 
 function Navbar() {

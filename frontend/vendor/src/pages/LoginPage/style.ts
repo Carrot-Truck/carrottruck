@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const LoginPageLayout = styled.div`
-  width: 360px;
+  width: 100vw;
   padding-bottom: 200px;
 
   .header {

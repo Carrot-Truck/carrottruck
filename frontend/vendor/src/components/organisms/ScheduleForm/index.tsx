@@ -11,56 +11,56 @@ function ScheduleForm() {
     MONDAY: {
       foodTruckId: 0,
       dayOfWeek: 'MONDAY',
-      latitude : "37.5665",
-      longitude : "126.9780",
+      latitude : "",
+      longitude : "",
       startTime: '',
       endTime: ''
     },
     TUESDAY: {
       foodTruckId: 0,
       dayOfWeek: 'MONDAY',
-      latitude : "37.5665",
-      longitude : "126.9780",
+      latitude : "",
+      longitude : "",
       startTime: '',
       endTime: ''
       },
       WEDNESDAY: {
         foodTruckId: 0,
         dayOfWeek: 'MONDAY',
-        latitude : "37.5665",
-        longitude : "126.9780",
+        latitude : "",
+        longitude : "",
         startTime: '',
         endTime: ''
       },
       THURSDAY: {
         foodTruckId: 0,
         dayOfWeek: 'MONDAY',
-        latitude : "37.5665",
-        longitude : "126.9780",
+        latitude : "",
+        longitude : "",
         startTime: '',
         endTime: ''
       },
       FRIDAY: {
         foodTruckId: 0,
         dayOfWeek: 'MONDAY',
-        latitude : "37.5665",
-        longitude : "126.9780",
+        latitude : "",
+        longitude : "",
         startTime: '',
         endTime: ''
       },
       SATURDAY: {
         foodTruckId: 0,
         dayOfWeek: 'MONDAY',
-        latitude : "37.5665",
-        longitude : "126.9780",
+        latitude : "",
+        longitude : "",
         startTime: '',
         endTime: ''
       },
       SUNDAY: {
         foodTruckId: 0,
         dayOfWeek: 'MONDAY',
-        latitude : "37.5665",
-        longitude : "126.9780",
+        latitude : "",
+        longitude : "",
         startTime: '',
         endTime: ''
       },

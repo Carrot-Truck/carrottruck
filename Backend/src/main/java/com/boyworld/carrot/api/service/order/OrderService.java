@@ -7,7 +7,6 @@ import com.boyworld.carrot.api.service.cart.CartService;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderDto;
 import com.boyworld.carrot.api.service.order.dto.CreateOrderMenuDto;
 import com.boyworld.carrot.api.service.order.dto.OrderItem;
-import com.boyworld.carrot.api.service.order.dto.OrderMenuItem;
 import com.boyworld.carrot.client.Sse.SseUtil;
 import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.boyworld.carrot.domain.foodtruck.repository.command.FoodTruckRepository;
@@ -153,6 +152,8 @@ public class OrderService {
         CreateOrderDto dto = cartService.createOrderByCart(email);
         Member member = getMemberByEmail(email);
         FoodTruck foodTruck = getFoodTruckById(dto.getFoodTruckId());
+        Sale sale = saleQueryRepository.getLatestSale(dto.getFoodTruckId()).orElse(null);
+        if (sale == null || sale.getEndTime() != null) throw new InValidAccessException("잘못된 접근입니다.");
 
         Order order = Order.builder()
                 .member(member)

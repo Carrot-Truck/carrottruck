@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const NavbarContainer = styled.div`
   display: flex;
-  width: 360px;
+  width: 100vw;
   padding: 16px 28px 24px 28px;
   justify-content: space-between;
   align-items: center;

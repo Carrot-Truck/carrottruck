@@ -135,7 +135,7 @@ public class FoodTruckQueryRepository {
                 .from(sale)
                 .where(
                         sale.foodTruck.id.eq(foodTruckId),
-                        sale.endTime.isNotNull(),
+                        sale.endTime.isNull(),
                         sale.foodTruck.active,
                         sale.active
                 );

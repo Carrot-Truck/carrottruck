@@ -11,6 +11,7 @@ import { getStoreAnalysis } from "api/analysis";
 import Loading from "components/atoms/Loading";
 import TitleText from "components/atoms/TitleText";
 import AnalysisResult from "components/organisms/AnalysisResult";
+import BackSpace from 'components/atoms/BackSpace';
 
 interface ICategory {
   categoryId: number;
@@ -131,54 +132,11 @@ function AnalysisPage() {
     getAnalysisData(0);
   };
 
-  // useEffect(() => {
-  //   const eventSource = new EventSource(
-  //     `${process.env.REACT_APP_API_URL}/order/subscribe/ssafy@ssafy.com`
-  //   );
-
-  //   eventSource.addEventListener("sse", (event) => {
-  //     if (event.data === "connect completed") {
-  //       console.log("SSE 연결 성공함");
-  //       return;
-  //     } else {
-  //       console.log(event);
-  //       // axios
-  //       //   .get(`https://j9c210.p.ssafy.io/api1/alarm/${email}`, {
-  //       //     headers: {
-  //       //       Authorization: `Bearer ${accessToken}`,
-  //       //     },
-  //       //   })
-  //       //   .then((res) => {
-  //       //     console.log('알람 내용 불러오는 거 성공함');
-  //       //     console.log(res.data);
-  //       //     setAlarmData(res.data);
-  //       //   })
-  //       //   .catch((err) => {
-  //       //     console.log('에러..');
-  //       //     console.log(err);
-  //       //   });
-
-  //       // Swal.fire({
-  //       //   icon: 'success',
-  //       //   title: '새로운 알람이 도착했습니다!',
-  //       //   text: event.data.content,
-  //       //   confirmButtonColor: '#f8a70c',
-  //       // });
-
-  //       // console.log('sse통해 넘어오는 이벤트 데이터', event);
-  //     }
-  //   });
-
-  //   // 컴포넌트가 언마운트될 때 SSE 연결을 닫습니다.
-  //   return () => {
-  //     console.log("sse 연결을 닫습니다");
-  //     eventSource.close();
-  //   };
-  // }, []);
-
-  //REACT_APP_CLIENT_ID
   return (
     <AnalysisLayout>
+      <div className="header">
+          <BackSpace/>
+        </div>
       {loading ? (
         <>
           <TitleText text={"상권 분석중..."} size={"m"} textAlign={"center"} />

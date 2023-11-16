@@ -37,7 +37,7 @@ function OrderListForm() {
       {orderItems.map((orderItem : any) =>
         (orderItem.status === 'PROCESSING' || orderItem.status === 'PENDING') && (
           <div className="waiting">
-            <p className="nowTitle gray">예상 조리시간: {orderItem.expectTime}분</p>
+            <p className="nowTitle gray">예상 완료시각: {orderItem.expectTime}</p>
             <p className="gray">{orderItem.createdTime}</p>
             <div className="orderDetail">
               <p>주문 항목</p>
@@ -58,7 +58,7 @@ function OrderListForm() {
         ) 
       )}
       <div className="title">
-        <p>주문 내역</p>
+        <p>완료된 주문</p>
       </div>
       {orderItems.some((orderItem: any) => orderItem.status === 'COMPLETE') ? (
         orderItems.map((orderItem: any) =>

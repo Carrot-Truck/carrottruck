@@ -1,4 +1,4 @@
-import { MainPageLayout } from "./style";
+import { LogoutP, MainPageLayout } from "./style";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "components/organisms/Navbar";
 import RegistFoodTruckButton from "components/organisms/RegistFoodTruckButton";
@@ -134,8 +134,19 @@ function MainPage() {
     checkOnSale();
   }, [selectedFoodTruck]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("grantType");
+    localStorage.removeItem("selectedFoodTruckId");
+    navigate('/login');
+  };
+
   return (
     <MainPageLayout ref={mainRef} onClick={modalOutSideClick}>
+            <div className="header">
+        <LogoutP onClick={handleLogout}>로그아웃</LogoutP>
+      </div>
       {loading ? (
         <Loading />
       ) : dataEmpty ? (

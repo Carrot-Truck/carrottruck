@@ -37,8 +37,12 @@ function OrderListForm() {
       {orderItems.map((orderItem : any) =>
         (orderItem.status === 'PROCESSING' || orderItem.status === 'PENDING') && (
           <div className="waiting">
-            <p className="nowTitle gray">예상 완료시각: {orderItem.expectTime}</p>
-            <p className="gray">{orderItem.createdTime}</p>
+            {orderItem.expectTime !== null && orderItem.expectTime !== '' && (
+                <>
+                    <p className="nowTitle gray">예상 완료시각: {orderItem.expectTime}</p>
+                </>
+            )}
+            <p className="gray">주문 시각: {orderItem.createdTime}</p>
             <div className="orderDetail">
               <p>주문 항목</p>
               {orderItem.orderMenuItems.map((orderMenuItem:any) => (

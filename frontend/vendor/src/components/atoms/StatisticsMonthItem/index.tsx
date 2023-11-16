@@ -7,7 +7,8 @@ interface IStatisticsMonthItemProps {
   totalHours: number;
   totalMinutes: number;
   totalSales: number;
-  handleMonthItemClick: () => void;
+  handleMonthItemClick?: () => void;
+  inDetail?: boolean;
 }
 
 function StatisticsMonthItem({
@@ -17,24 +18,25 @@ function StatisticsMonthItem({
   totalMinutes,
   totalSales,
   handleMonthItemClick,
+  inDetail,
 }: IStatisticsMonthItemProps) {
   return (
     <StatisticsMonthItemWrapper>
-      <div className="month-item">
-        <div className="month-left-div">
-          <p>
-            {year}년 {month}월
-          </p>
-          <p>
-            총 {totalHours}시간 {totalMinutes}분
-          </p>
+      <div className="month-left-div">
+        <div className="month-date">
+          {year}년 {month}월
         </div>
-        <div className="month-right-div">
+        <div>
+          총 {totalHours}시간 {totalMinutes}분
+        </div>
+      </div>
+      <div className="month-right-div">
+        {!inDetail && (
           <div className="next_arrow_wrapper" onClick={handleMonthItemClick}>
             <img src={next} alt="" />
           </div>
-          <p>{totalSales}원</p>
-        </div>
+        )}
+        <div className="month-total-sale">{totalSales.toLocaleString()}원</div>
       </div>
     </StatisticsMonthItemWrapper>
   );

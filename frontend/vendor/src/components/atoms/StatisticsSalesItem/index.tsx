@@ -9,7 +9,8 @@ interface IStatisticsSalesItemProps {
   totalHours: number;
   totalMinutes: number;
   totalSales: number;
-  handleSalesItemClick: () => void;
+  handleSalesItemClick?: () => void;
+  inDetail?: boolean;
 }
 
 function StatisticsSalesItem({
@@ -21,26 +22,27 @@ function StatisticsSalesItem({
   totalMinutes,
   totalSales,
   handleSalesItemClick,
+  inDetail,
 }: IStatisticsSalesItemProps) {
   return (
     <StatisticsSalesItemWrapper>
-      <div className="sales-item">
-        <div className="sales-left-div">
-          <p>{date}</p>
-          <p>
-            {startTime} ~ {endTime}
-          </p>
-          <p>
-            총 {totalHours}시간 {totalMinutes}분
-          </p>
-          <p>{address}</p>
+      <div className="sales-left-div">
+        <div className="sales-date">{date}</div>
+        <div className="sales-time">
+          {startTime} ~ {endTime}
         </div>
-        <div className="sales-right-div">
+        <div>
+          총 {totalHours}시간 {totalMinutes}분
+        </div>
+        {!inDetail && <div>{address}</div>}
+      </div>
+      <div className="sales-right-div">
+        {!inDetail && (
           <div className="next_arrow_wrapper" onClick={handleSalesItemClick}>
             <img src={next} alt="" />
           </div>
-          <p>{totalSales}원</p>
-        </div>
+        )}
+        <div className="sales-total-sale">{totalSales.toLocaleString()}원</div>
       </div>
     </StatisticsSalesItemWrapper>
   );

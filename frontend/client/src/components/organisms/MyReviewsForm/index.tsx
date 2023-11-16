@@ -24,7 +24,7 @@ function MyReviewForm() {
   return (
     <MyReviewsFormContainer>
       <div className="title">
-        <p>리뷰내역</p>
+        <p>리뷰 내역</p>
       </div>
       {myReviewsList.map((myreview:any) => (
         <MyReview

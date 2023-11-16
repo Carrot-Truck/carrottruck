@@ -10,7 +10,8 @@ import OrderListForm from 'components/organisms/OrderListForm';
 import { useNavigate } from 'react-router-dom';
 import { info } from 'api/member/client';
 import { AxiosError, AxiosResponse } from 'axios';
-// import FoodTruckList from 'components/organisms/FoodTruckList';
+import { getLikedFoodTruck } from 'api/foodtruck/foodTruck';
+import FoodTruckList from 'components/organisms/FoodTruckList';
 
 interface User {
   name : string,
@@ -29,6 +30,18 @@ function MyPage() {
     phoneNumber: '',
     role: ''
   });
+  const [foodTruckList, setFoodTruckList] = useState<{ hasNext: boolean; items: any[] }>({ hasNext: false, items: [] });
+
+  const toggleLike = (foodTruckId: number) => {
+    setFoodTruckList(prevState => {
+        return {
+          ...prevState,
+          items: prevState.items.map(item =>
+            item.foodTruckId === foodTruckId ? { ...item, isLiked: !item.isLiked } : item
+          )
+        };
+    });
+};
 
   // 클릭 핸들러 함수
   const handleClick = (buttonId: number) => {
@@ -53,10 +66,21 @@ function MyPage() {
     navigate('/login');
   }
 
+  const handleSuccess = (response: AxiosResponse) => {
+    setFoodTruckList(response.data.data);
+  };
+  
+
+  const handleFail = () => {
+    alert("찜한 푸드트럭 조회 중 문제가 발생하였습니다.\n관리자에게 문의하세요.");
+    navigate('/');
+  }
+
   useEffect(()=>{
     // TODO: 여기에 내가 좋아요 한 foodTruckList 받아서
     // 3 번 FoodTruckList 에 뿌려주기
-    info((response: AxiosResponse)=>setUserData(response.data.data), handleFailUserInfoUpdate)
+    getLikedFoodTruck(handleSuccess, handleFail);
+    info((response: AxiosResponse)=>{setUserData(response.data.data); }, handleFailUserInfoUpdate)
   }, [])
 
   return (
@@ -85,7 +109,14 @@ function MyPage() {
       </div>
       {selectedButton === 1 && <OrderListForm></OrderListForm>}
       {selectedButton === 2 && <MyReviewForm></MyReviewForm>}
-      {/* {selectedButton === 3 && <FoodTruckList></FoodTruckList>} */}
+      {selectedButton === 3 && (
+      <>
+        <div className="title">
+          <p>찜 내역</p>
+        </div>
+        <FoodTruckList foodTrucks={foodTruckList.items} onToggleLike={toggleLike} />
+      </>
+    )}
       <Navbar></Navbar>
       
     </MyPageLayout>

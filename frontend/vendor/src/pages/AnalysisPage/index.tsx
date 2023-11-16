@@ -48,6 +48,7 @@ function AnalysisPage() {
 
     // 컴포넌트가 언마운트될 때 SSE 연결을 닫습니다.
     return () => {
+      console.log("sse 연결을 닫습니다");
       eventSource.close();
     };
   }, []);

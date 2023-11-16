@@ -27,6 +27,11 @@ export async function decline(data: Object, success: any, fail: any) {
   await api.post(`/decline`, data).then(success).catch(fail);
 }
 
+export async function complete(data: Object, success: any, fail: any) {
+  api.defaults.headers["Authorization"] = getAuthorization();
+  await api.post(`/complete`, data).then(success).catch(fail);
+}
+
 export async function pause(foodTruckId: number, success: any, fail: any) {
   api.defaults.headers["Authorization"] = getAuthorization();
   await api.put(`/pause/${foodTruckId}`).then(success).catch(fail);

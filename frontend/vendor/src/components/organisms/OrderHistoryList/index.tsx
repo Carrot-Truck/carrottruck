@@ -16,8 +16,9 @@ interface IOrderItems {
   orderCnt: number;
   totalPrice: number;
   createdTime: string;
-  expectTime: number;
-  menuInfos: IMenuInfo[];
+  expectTime: string;
+  orderMenuItems: IMenuInfo[];
+  clientInfo: IClientInfo;
 }
 
 interface IMenuInfo {
@@ -25,6 +26,11 @@ interface IMenuInfo {
   quantity: number;
   menuName: string;
   price: number;
+}
+
+interface IClientInfo {
+  nickname: string;
+  phoneNumber: string;
 }
 
 const getData = (response: AxiosResponse) => {
@@ -35,16 +41,39 @@ function OrderHistoryList({ selectedOrderHistory }: IOrderHistoryListProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [processingOrderList, setProcessingOrderList] = useState<IOrderItems[]>([]);
   const [completeOrderList, setCompleteOrderList] = useState<IOrderItems[]>([]);
+  const [openOrderId, setOpenOrderId] = useState<number>(0);
 
   const selectedFoodTruckId: number = Number.parseInt(
     localStorage.getItem("selectedFoodTruckId") || "0"
   );
+
+  useEffect(() => {
+    const eventSource = new EventSource(
+      `${process.env.REACT_APP_API_URL}/order/subscribe/ssafy@ssafy.com`
+    );
+
+    eventSource.addEventListener("sse", (event) => {
+      if (event.data === "connect completed") {
+        console.log("SSE 연결 성공함");
+        return;
+      } else if (event.data === "1") {
+        console.log(event.data);
+        fetchData();
+      }
+    });
+
+    return () => {
+      console.log("sse 연결을 닫습니다");
+      eventSource.close();
+    };
+  }, []);
 
   const getProcessingData = () => {
     getProcessingOrders(
       selectedFoodTruckId,
       (response: AxiosResponse) => {
         const data = getData(response);
+        console.log(data);
         setProcessingOrderList(data["orderItems"]);
       },
       (error: any) => {
@@ -75,6 +104,13 @@ function OrderHistoryList({ selectedOrderHistory }: IOrderHistoryListProps) {
     getCompleteData();
   };
 
+  const fetchOrderLists = (orderId: number) => {
+    setOpenOrderId(orderId);
+    setLoading(true);
+    getProcessingData();
+    getCompleteData();
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -94,8 +130,12 @@ function OrderHistoryList({ selectedOrderHistory }: IOrderHistoryListProps) {
               createdTime={data.createdTime}
               orderCnt={data.orderCnt}
               totalPrice={data.totalPrice}
+              status={data.status}
               expectTime={data.expectTime}
-              menuInfos={data.menuInfos}
+              menuInfos={data.orderMenuItems}
+              clientInfo={data.clientInfo}
+              fetchOrderLists={fetchOrderLists}
+              openOrder={openOrderId === data.orderId}
             />
           ))
         )
@@ -110,8 +150,10 @@ function OrderHistoryList({ selectedOrderHistory }: IOrderHistoryListProps) {
               createdTime={data.createdTime}
               orderCnt={data.orderCnt}
               totalPrice={data.totalPrice}
+              status={data.status}
               expectTime={data.expectTime}
-              menuInfos={data.menuInfos}
+              menuInfos={data.orderMenuItems}
+              clientInfo={data.clientInfo}
             />
           ))
         )

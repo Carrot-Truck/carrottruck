@@ -130,7 +130,7 @@ public class OrderQueryRepository {
 
     public OrderItem getOrder(Long orderId, Role role) {
 
-        OrderItem orderItem = null;
+        OrderItem orderItem;
         if (role.equals(Role.CLIENT)) {
             orderItem = queryFactory
                     .select(Projections.constructor(OrderItem.class,

@@ -9,6 +9,8 @@ export const StatisticsCriteriaWrapper = styled.p<IStatisticsCriteriaWrapperProp
   border: 1px solid black;
   padding: 2px;
   width: 40px;
+  position: sticky;
+  top: 0;
 
   ${({ selected }) =>
     selected

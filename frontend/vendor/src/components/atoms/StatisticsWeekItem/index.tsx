@@ -7,7 +7,8 @@ interface IStatisticsWeekItemProps {
   totalHours: number;
   totalMinutes: number;
   totalSales: number;
-  handleWeekItemClick: () => void;
+  handleWeekItemClick?: () => void;
+  inDetail?: boolean;
 }
 
 function StatisticsWeekItem({
@@ -17,24 +18,25 @@ function StatisticsWeekItem({
   totalMinutes,
   totalSales,
   handleWeekItemClick,
+  inDetail,
 }: IStatisticsWeekItemProps) {
   return (
     <StatisticsWeekItemWrapper>
-      <div className="week-item">
-        <div className="week-left-div">
-          <p>
-            {startDate} ~ {endDate}
-          </p>
-          <p>
-            총 {totalHours}시간 {totalMinutes}분
-          </p>
+      <div className="week-left-div">
+        <div className="week-date">
+          {startDate} ~ {endDate}
         </div>
-        <div className="week-right-div">
+        <div>
+          총 {totalHours}시간 {totalMinutes}분
+        </div>
+      </div>
+      <div className="week-right-div">
+        {!inDetail && (
           <div className="next_arrow_wrapper" onClick={handleWeekItemClick}>
             <img src={next} alt="" />
           </div>
-          <p>{totalSales}원</p>
-        </div>
+        )}
+        <div className="week-total-sale">{totalSales.toLocaleString()}원</div>
       </div>
     </StatisticsWeekItemWrapper>
   );

@@ -14,7 +14,9 @@
     "@types/react-dom": "^18.2.14",
     "@types/redux-persist": "^4.3.1",
     "axios": "^1.6.0",
+    "chart.js": "^4.4.0",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.3",
     "react-router-dom": "^6.17.0",
@@ -63,9 +65,9 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "",
     "@types/styled-components": "^5.1.29",
     "eslint": "^8.52.0",
-    "eslint-config-airbnb-typescript": "^17.1.0",
-    "@babel/plugin-proposal-private-property-in-object": ""
+    "eslint-config-airbnb-typescript": "^17.1.0"
   }
 }

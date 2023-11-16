@@ -52,8 +52,8 @@ function LoginForm() {
         password
       };
       const response = await axios.post(`${APPLICATION_SPRING_SERVER_URL}/auth/login/client`, body);
-      // 로컬스토리지에 토큰 저장
       dispatch(setIsAuthenticated(true));
+      // 로컬스토리지에 토큰 저장
       localStorage.setItem('accessToken', response.data.data.accessToken);
       localStorage.setItem('refreshToken', response.data.data.refreshToken);
       localStorage.setItem('grantType', response.data.data.grantType);

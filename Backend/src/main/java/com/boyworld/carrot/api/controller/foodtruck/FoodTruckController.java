@@ -308,4 +308,22 @@ public class FoodTruckController {
 
         return ApiResponse.ok(result);
     }
+
+    /**
+     * 찜한 푸드트럭 목록 조회 API
+     *
+     * @return 현재 로그인한 사용자가 찜한 푸드트럭 목록
+     */
+    @GetMapping("/like")
+    public ApiResponse<FoodTruckResponse<List<FoodTruckItem>>> getLikedFoodTrucks() {
+        log.debug("FoodTruckController#getLikedFoodTrucks called");
+
+        String email = SecurityUtil.getCurrentLoginId();
+        log.debug("email={}", email);
+
+        FoodTruckResponse<List<FoodTruckItem>> response = foodTruckQueryService.getLikedFoodTrucks(email);
+        log.debug("response={}", response);
+
+        return ApiResponse.ok(response);
+    }
 }

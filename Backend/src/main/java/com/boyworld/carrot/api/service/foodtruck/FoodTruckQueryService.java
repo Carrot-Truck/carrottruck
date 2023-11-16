@@ -136,21 +136,6 @@ public class FoodTruckQueryService {
     }
 
     /**
-     * 다음 페이지 존재여부 확인
-     *
-     * @param list 객체 리스트
-     * @param <T>  응답 객체
-     * @return true: 다음 페이지가 존재하는 경우 / false: 다음 페이지가 존재하지 않는 경우
-     */
-    private <T> boolean checkHasNext(List<T> list) {
-        if (list.size() > PAGE_SIZE) {
-            list.remove(PAGE_SIZE);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * 푸드트럭 상세 조회 (사용자용)
      *
      * @param foodTruckId 푸드트럭 식별키
@@ -189,5 +174,37 @@ public class FoodTruckQueryService {
      */
     public Boolean isOpenFoodTruck(Long foodTruckId) {
         return foodTruckQueryRepository.isOpenFoodTruckById(foodTruckId);
+    }
+
+    /**
+     * 찜한 푸드트럭 목록 조회
+     *
+     * @param email 현재 로그인한 사용자의 이메일
+     * @return 현재 로그인한 사용자가 찜한 푸드트럭 목록
+     */
+    public FoodTruckResponse<List<FoodTruckItem>> getLikedFoodTrucks(String email) {
+        List<FoodTruckItem> items = foodTruckQueryRepository.getLikedFoodTrucksByEmail(email);
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        boolean hasNext = checkHasNext(items);
+
+        return FoodTruckResponse.of(hasNext, items);
+    }
+
+    /**
+     * 다음 페이지 존재여부 확인
+     *
+     * @param list 객체 리스트
+     * @param <T>  응답 객체
+     * @return true: 다음 페이지가 존재하는 경우 / false: 다음 페이지가 존재하지 않는 경우
+     */
+    private <T> boolean checkHasNext(List<T> list) {
+        if (list.size() > PAGE_SIZE) {
+            list.remove(PAGE_SIZE);
+            return true;
+        }
+        return false;
     }
 }

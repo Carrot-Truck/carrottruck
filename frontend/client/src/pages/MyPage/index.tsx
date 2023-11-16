@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { MyPageLayout } from './style';
+import { useState, useEffect } from 'react';
+import { MyPageLayout , LogoutP} from './style';
 import BackHome from 'components/atoms/BackHome';
 import Navbar from 'components/organisms/Navbar';
 import NoteBook from 'assets/icons/notebook.svg';
@@ -8,17 +8,27 @@ import Heart from 'assets/icons/filled_heart.svg';
 import MyReviewForm from 'components/organisms/MyReviewsForm';
 import OrderListForm from 'components/organisms/OrderListForm';
 import { useNavigate } from 'react-router-dom';
+import { info } from 'api/member/client';
+import { AxiosResponse } from 'axios';
+// import FoodTruckList from 'components/organisms/FoodTruckList';
 
+interface User {
+  name : string,
+  nickname : string,
+  email : string,
+  phoneNumber : string,
+  role : string
+}
 function MyPage() {
   const navigate = useNavigate();
   const [selectedButton, setSelectedButton] = useState<number>(1);
-  const userData = {
-    name: '김동현',
-    nickname: '매미킴',
-    email: 'ssafy@gmail.com',
-    phoneNumber: '010-1234-1234',
-    role: 'CLIENT'
-  };
+  const [userData, setUserData] = useState<User>({
+    name: '',
+    nickname: '',
+    email: '',
+    phoneNumber: '',
+    role: ''
+  });
 
   // 클릭 핸들러 함수
   const handleClick = (buttonId: number) => {
@@ -34,10 +44,17 @@ function MyPage() {
     navigate('/login');
   };
 
+  useEffect(()=>{
+    // TODO: 여기에 내가 좋아요 한 foodTruckList 받아서
+    // 3 번 FoodTruckList 에 뿌려주기
+    info((response: AxiosResponse)=>setUserData(response.data.data), handleLogout)
+  }, [])
+
   return (
     <MyPageLayout>
       <div className="header">
         <BackHome></BackHome>
+        <LogoutP onClick={handleLogout}>로그아웃</LogoutP>
       </div>
       <div className="userInfo" onClick={() => handleMyInfo()}>
         <p>{userData.nickname}</p>
@@ -59,8 +76,9 @@ function MyPage() {
       </div>
       {selectedButton === 1 && <OrderListForm></OrderListForm>}
       {selectedButton === 2 && <MyReviewForm></MyReviewForm>}
+      {/* {selectedButton === 3 && <FoodTruckList></FoodTruckList>} */}
       <Navbar></Navbar>
-      <p onClick={handleLogout}>로그아웃</p>
+      
     </MyPageLayout>
   );
 }

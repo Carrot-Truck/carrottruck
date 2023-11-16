@@ -16,6 +16,8 @@ public class FoodTruckMarkerItem {
 
     private Long foodTruckId;
 
+    private String foodTruckName;
+
     private String latitude;
 
     private String longitude;
@@ -25,11 +27,12 @@ public class FoodTruckMarkerItem {
     private Boolean isOpen;
 
     @Builder
-    public FoodTruckMarkerItem(Long id, Long categoryId, Long foodTruckId, BigDecimal distance,
+    public FoodTruckMarkerItem(Long id, Long categoryId, Long foodTruckId, String foodTruckName, BigDecimal distance,
                                BigDecimal latitude, BigDecimal longitude, Boolean isOpen) {
         this.id = id;
         this.categoryId = categoryId;
         this.foodTruckId = foodTruckId;
+        this.foodTruckName = foodTruckName;
         this.distance = distance.toEngineeringString();
         this.latitude = latitude.toEngineeringString();
         this.longitude = longitude.toEngineeringString();

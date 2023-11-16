@@ -17,6 +17,11 @@ export async function getMyReview(success: any, fail: any) {
   await api.get(``).then(success).catch(fail);
 }
 
+export async function getMyOrderReview(orderId: number, success: any, fail: any) {
+  api.defaults.headers["Authorization"] = getAuthorization();
+  await api.get(`/order/${orderId}`).then(success).catch(fail);
+}
+
 export async function getFoodTruckReview(foodTruckId: number, success: any, fail: any) {
   await api.get(`/${foodTruckId}`).then(success).catch(fail);
 }

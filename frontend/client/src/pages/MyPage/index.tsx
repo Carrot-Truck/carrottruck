@@ -40,7 +40,10 @@ function MyPage() {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("grantType");
+    localStorage.removeItem("selectedFoodTruckId");
     navigate('/login');
   };
 

@@ -1,18 +1,18 @@
 import NaverMap from "components/atoms/Map";
-import { AnalysisResponseContainer } from "./style";
+import { AnalysisResultContainer } from "./style";
 import TitleText from "components/atoms/TitleText";
 
-interface IAnalysisResponseProps {
+interface IAnalysisResultProps {
   categoryName: string;
   sido: string;
   sigungu: string;
   dong: string;
   radiusCount: number;
   addressCount: number;
-  stores: IStoreResponse[];
+  stores: IStoreResult[];
 }
 
-interface IStoreResponse {
+interface IStoreResult {
   storeName: string;
   latitude: number;
   longitude: number;
@@ -23,7 +23,7 @@ interface ILocation {
   longitude: number;
 }
 
-function AnalysisResponse({
+function AnalysisResult({
   categoryName,
   sido,
   sigungu,
@@ -31,7 +31,7 @@ function AnalysisResponse({
   radiusCount,
   addressCount,
   stores,
-}: IAnalysisResponseProps) {
+}: IAnalysisResultProps) {
   const clientId: string = process.env.REACT_APP_CLIENT_ID || "";
 
   const locations: ILocation[] = stores.map((store) => ({
@@ -42,7 +42,7 @@ function AnalysisResponse({
   const address: string = `${sido} ${sigungu} ${dong}`;
 
   return (
-    <AnalysisResponseContainer>
+    <AnalysisResultContainer>
       <NaverMap clientId={clientId} markers={locations} dynamicheight="60vh" />
       <div className="analysis-info">
         <TitleText text={categoryName} size={"s"} textAlign={"left"} />
@@ -52,8 +52,8 @@ function AnalysisResponse({
         <p>{`반경 1km 내 검색결과: { ${radiusCount} } 건`}</p>
         <p>{`${dong} 내 검색결과: { ${addressCount} } 건`}</p>
       </div>
-    </AnalysisResponseContainer>
+    </AnalysisResultContainer>
   );
 }
 
-export default AnalysisResponse;
+export default AnalysisResult;

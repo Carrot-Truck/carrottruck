@@ -3,7 +3,7 @@ import { persistStore } from 'redux-persist';
 
 import userReducer from '../slices/userSlice/userSlice';
 
-export const store = configureStore({
+export const store: any = configureStore({
   reducer: {
     user: userReducer
   },

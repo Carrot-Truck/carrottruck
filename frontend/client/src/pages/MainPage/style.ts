@@ -44,4 +44,13 @@ export const FoodTruckListLayout = styled.div`
       margin: auto;
     }
   }
+
+  .bottomsheetcontent {
+    margin-top: 1rem;
+
+    span {
+      font-family: BM JUA_TTF;
+      font-size: 20px;
+    }
+  }
 `;

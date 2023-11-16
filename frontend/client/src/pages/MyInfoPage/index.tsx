@@ -110,8 +110,9 @@ function MyInfoPage() {
 
   return (
     <MyInfoPageLayout>
+      <BackSpace></BackSpace>
       <PageContainer>
-        <BackSpace></BackSpace>
+        
         <UserInfoSection>
           <div>닉네임</div>
           <EditableField onClick={() => toggleEditMode('nickname')}>
@@ -161,8 +162,9 @@ function MyInfoPage() {
           </EditableField>
         </ContactInfoSection>
         <SettingsButton>연동된 소셜계정</SettingsButton>
-        <Navbar></Navbar>
+        
       </PageContainer>
+      <Navbar></Navbar>
     </MyInfoPageLayout>
   );
 }

@@ -60,29 +60,32 @@ function OrderListForm() {
       <div className="title">
         <p>주문 내역</p>
       </div>
-      {orderItems.map((orderItem:any) =>
-        orderItem.status === 'COMPLETE' ? (<div>
-            <OrderListItem
-              orderId={orderItem.orderId}
-              totalPrice={orderItem.totalPrice}
-              createdTime={orderItem.createdTime}
-              orderMenuItems={orderItem.orderMenuItems.map((item:any) => ({
-                id: item.id,
-                quantity: item.quantity,
-                menuName: item.menuName
-              }))}
-            />
-            <Button
-              size='s'
-              text='리뷰'
-              color='Primary'
-              radius='m'
-              handleClick={()=>writeReview(orderItem.orderId)}
-            />
-          </div>
-        ) : (
-          <div className='emptyDiv'> 텅 </div>
+      {orderItems.some((orderItem: any) => orderItem.status === 'COMPLETE') ? (
+        orderItems.map((orderItem: any) =>
+          orderItem.status === 'COMPLETE' && (
+            <div key={orderItem.orderId}>
+              <OrderListItem
+                orderId={orderItem.orderId}
+                totalPrice={orderItem.totalPrice}
+                createdTime={orderItem.createdTime}
+                orderMenuItems={orderItem.orderMenuItems.map((item: any) => ({
+                  id: item.id,
+                  quantity: item.quantity,
+                  menuName: item.menuName,
+                }))}
+              />
+              <Button
+                size='s'
+                text='리뷰'
+                color='Primary'
+                radius='m'
+                handleClick={() => writeReview(orderItem.orderId)}
+              />
+            </div>
+          )
         )
+      ) : (
+        <div className='emptyDiv'> 텅 </div>
       )}
     </OrderListFormContainer>
   );

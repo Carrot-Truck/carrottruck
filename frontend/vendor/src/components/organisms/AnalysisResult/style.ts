@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const AnalysisResponseContainer = styled.div`
+export const AnalysisResultContainer = styled.div`
   .analysis-info {
     margin: 10px;
     padding-bottom: 10px;

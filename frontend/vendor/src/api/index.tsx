@@ -81,6 +81,13 @@ export const orderApi = axios.create({
   },
 });
 
+export const orderEventApi = axios.create({
+  baseURL: `${process.env.REACT_APP_API_URL}/order`,
+  headers: {
+    "Content-type": "text/event-stream",
+  },
+});
+
 export const paymentApi = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}/verifyIamport`,
   headers: {

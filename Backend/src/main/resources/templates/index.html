@@ -493,6 +493,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#food-truck-like">푸드트럭 찜</a></li>
 <li><a href="#edit-selected-food-truck">선택된 푸드트럭 변경</a></li>
 <li><a href="#is-open-food-truck">푸드트럭 영업 여부 조회</a></li>
+<li><a href="#search-liked-food-truck-list">찜한 푸드트럭 목록 조회</a></li>
 </ul>
 </li>
 <li><a href="#MemberAddress-API">Member Address API</a>
@@ -546,6 +547,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#pause-order">주문 일시 정지</a></li>
 <li><a href="#restart-order">주문 일시 정지 해제</a></li>
 <li><a href="#soldout-menu">메뉴 품절 등록</a></li>
+<li><a href="#_메뉴_품절_해제">메뉴 품절 해제</a></li>
 <li><a href="#close-sale">영업 종료</a></li>
 </ul>
 </li>
@@ -2560,7 +2562,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 518
+Content-Length: 610
 
 {
   "code" : 200,
@@ -2572,6 +2574,7 @@ Content-Length: 518
       "id" : 1,
       "categoryId" : 1,
       "foodTruckId" : 1,
+      "foodTruckName" : "1번 푸드트럭",
       "latitude" : "37.5665",
       "longitude" : "126.978",
       "distance" : "100",
@@ -2580,6 +2583,7 @@ Content-Length: 518
       "id" : 2,
       "categoryId" : 2,
       "foodTruckId" : 2,
+      "foodTruckName" : "2번 푸드트럭",
       "latitude" : "35.1595",
       "longitude" : "126.8526",
       "distance" : "100",
@@ -2642,6 +2646,11 @@ Content-Length: 518
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.markerItems[].foodTruckId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 식별키</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.markerItems[].foodTruckName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 이름</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.markerItems[].distance</code></p></td>
@@ -3055,20 +3064,20 @@ Content-Length: 2050
       "scheduleId" : 1,
       "address" : "광주 광산구 장덕로5번길 16",
       "dayOfWeek" : "MONDAY",
-      "startTime" : "15:54",
-      "endTime" : "20:54"
+      "startTime" : "11:39",
+      "endTime" : "16:39"
     }, {
       "scheduleId" : 2,
       "address" : "광주 광산구 장덕로5번길 16",
       "dayOfWeek" : "TUESDAY",
-      "startTime" : "15:54",
-      "endTime" : "20:54"
+      "startTime" : "11:39",
+      "endTime" : "16:39"
     }, {
       "scheduleId" : 3,
       "address" : "",
       "dayOfWeek" : "WEDNESDAY",
-      "startTime" : "15:54",
-      "endTime" : "20:54"
+      "startTime" : "11:39",
+      "endTime" : "16:39"
     } ]
   }
 }</code></pre>
@@ -3362,20 +3371,20 @@ Content-Length: 1888
       "scheduleId" : 1,
       "address" : "광주 광산구 장덕로5번길 16",
       "dayOfWeek" : "MONDAY",
-      "startTime" : "15:54",
-      "endTime" : "20:54"
+      "startTime" : "11:39",
+      "endTime" : "16:39"
     }, {
       "scheduleId" : 2,
       "address" : "광주 광산구 장덕로5번길 16",
       "dayOfWeek" : "TUESDAY",
-      "startTime" : "15:54",
-      "endTime" : "20:54"
+      "startTime" : "11:39",
+      "endTime" : "16:39"
     }, {
       "scheduleId" : 3,
       "address" : "",
       "dayOfWeek" : "WEDNESDAY",
-      "startTime" : "15:54",
-      "endTime" : "20:54"
+      "startTime" : "11:39",
+      "endTime" : "16:39"
     } ]
   }
 }</code></pre>
@@ -4092,6 +4101,152 @@ Content-Length: 84
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="search-liked-food-truck-list"><a class="link" href="#search-liked-food-truck-list">찜한 푸드트럭 목록 조회</a></h3>
+<div class="sect3">
+<h4 id="_http_request_26"><a class="link" href="#_http_request_26">HTTP Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /food-truck/like HTTP/1.1
+Authentication: authentication
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_http_response_26"><a class="link" href="#_http_response_26">HTTP Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 720
+
+{
+  "code" : 200,
+  "status" : "OK",
+  "message" : "SUCCESS",
+  "data" : {
+    "hasNext" : false,
+    "items" : [ {
+      "categoryId" : 1,
+      "foodTruckId" : 1,
+      "foodTruckName" : "동현 된장삼겹",
+      "isOpen" : false,
+      "isLiked" : true,
+      "likeCount" : 143,
+      "grade" : 4.5,
+      "reviewCount" : 1324,
+      "foodTruckImageUrl" : "imageUrl",
+      "isNew" : true
+    }, {
+      "categoryId" : 2,
+      "foodTruckId" : 2,
+      "foodTruckName" : "팔천순대",
+      "isOpen" : true,
+      "isLiked" : false,
+      "likeCount" : 132,
+      "grade" : 4.0,
+      "reviewCount" : 1324,
+      "foodTruckImageUrl" : "imageUrl",
+      "isNew" : false
+    } ]
+  }
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">코드</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.hasNext</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">다음 페이지 존재 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 검색 결과 목록</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items[].categoryId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">카테고리 식별키</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items[].foodTruckId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 식별키</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items[].foodTruckName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items[].isOpen</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">영업 상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items[].isLiked</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">찜 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items[].grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">평점</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items[].likeCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">찜 개수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items[].reviewCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 개수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items[].foodTruckImageUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 이미지 저장 경로</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.items[].isNew</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">신규 등록 여부</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -4100,7 +4255,7 @@ Content-Length: 84
 <div class="sect2">
 <h3 id="create-address"><a class="link" href="#create-address">사용자 주소 등록</a></h3>
 <div class="sect3">
-<h4 id="_http_request_26"><a class="link" href="#_http_request_26">HTTP Request</a></h4>
+<h4 id="_http_request_27"><a class="link" href="#_http_request_27">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /member/address HTTP/1.1
@@ -4136,7 +4291,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_26"><a class="link" href="#_http_response_26">HTTP Response</a></h4>
+<h4 id="_http_response_27"><a class="link" href="#_http_response_27">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
@@ -4211,7 +4366,7 @@ Content-Length: 195
 <div class="sect2">
 <h3 id="search-address"><a class="link" href="#search-address">사용자 주소 목록 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_27"><a class="link" href="#_http_request_27">HTTP Request</a></h4>
+<h4 id="_http_request_28"><a class="link" href="#_http_request_28">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /member/address?lastMemberAddressId= HTTP/1.1
@@ -4239,7 +4394,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_27"><a class="link" href="#_http_response_27">HTTP Response</a></h4>
+<h4 id="_http_response_28"><a class="link" href="#_http_response_28">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -4326,7 +4481,7 @@ Content-Length: 391
 <div class="sect2">
 <h3 id="search-detail-address"><a class="link" href="#search-detail-address">사용자 주소 상세 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_28"><a class="link" href="#_http_request_28">HTTP Request</a></h4>
+<h4 id="_http_request_29"><a class="link" href="#_http_request_29">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /member/address/1 HTTP/1.1
@@ -4355,7 +4510,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_28"><a class="link" href="#_http_response_28">HTTP Response</a></h4>
+<h4 id="_http_response_29"><a class="link" href="#_http_response_29">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -4425,7 +4580,7 @@ Content-Length: 195
 <div class="sect2">
 <h3 id="edit-address"><a class="link" href="#edit-address">사용자 주소 수정</a></h3>
 <div class="sect3">
-<h4 id="_http_request_29"><a class="link" href="#_http_request_29">HTTP Request</a></h4>
+<h4 id="_http_request_30"><a class="link" href="#_http_request_30">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /member/address/1 HTTP/1.1
@@ -4481,7 +4636,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_29"><a class="link" href="#_http_response_29">HTTP Response</a></h4>
+<h4 id="_http_response_30"><a class="link" href="#_http_response_30">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -4556,7 +4711,7 @@ Content-Length: 197
 <div class="sect2">
 <h3 id="delete-address"><a class="link" href="#delete-address">사용자 주소 삭제</a></h3>
 <div class="sect3">
-<h4 id="_http_request_30"><a class="link" href="#_http_request_30">HTTP Request</a></h4>
+<h4 id="_http_request_31"><a class="link" href="#_http_request_31">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /member/address/1 HTTP/1.1
@@ -4586,7 +4741,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_30"><a class="link" href="#_http_response_30">HTTP Response</a></h4>
+<h4 id="_http_response_31"><a class="link" href="#_http_response_31">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
@@ -4642,7 +4797,7 @@ Content-Length: 85
 <div class="sect2">
 <h3 id="edit-selected-address"><a class="link" href="#edit-selected-address">선택된 주소 변경</a></h3>
 <div class="sect3">
-<h4 id="_http_request_31"><a class="link" href="#_http_request_31">HTTP Request</a></h4>
+<h4 id="_http_request_32"><a class="link" href="#_http_request_32">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /member/address/selected HTTP/1.1
@@ -4685,7 +4840,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_31"><a class="link" href="#_http_response_31">HTTP Response</a></h4>
+<h4 id="_http_response_32"><a class="link" href="#_http_response_32">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -4746,7 +4901,7 @@ Content-Length: 81
 <div class="sect2">
 <h3 id="create-menu"><a class="link" href="#create-menu">메뉴 등록</a></h3>
 <div class="sect3">
-<h4 id="_http_request_32"><a class="link" href="#_http_request_32">HTTP Request</a></h4>
+<h4 id="_http_request_33"><a class="link" href="#_http_request_33">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /menu HTTP/1.1
@@ -4774,7 +4929,7 @@ Content-Type: application/json
 </div>
 </div>
 <div class="sect3">
-<h4 id="_http_response_32"><a class="link" href="#_http_response_32">HTTP Response</a></h4>
+<h4 id="_http_response_33"><a class="link" href="#_http_response_33">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
@@ -4867,7 +5022,7 @@ Content-Length: 348
 <div class="sect2">
 <h3 id="search-menu"><a class="link" href="#search-menu">메뉴 목록 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_33"><a class="link" href="#_http_request_33">HTTP Request</a></h4>
+<h4 id="_http_request_34"><a class="link" href="#_http_request_34">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /menu?foodTruckId=1 HTTP/1.1
@@ -4896,7 +5051,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_33"><a class="link" href="#_http_response_33">HTTP Response</a></h4>
+<h4 id="_http_response_34"><a class="link" href="#_http_response_34">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -5009,7 +5164,7 @@ Content-Length: 694
 <div class="sect2">
 <h3 id="search-menu-detail"><a class="link" href="#search-menu-detail">메뉴 상세 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_34"><a class="link" href="#_http_request_34">HTTP Request</a></h4>
+<h4 id="_http_request_35"><a class="link" href="#_http_request_35">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /menu/1?foodTruckId=1 HTTP/1.1
@@ -5039,7 +5194,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_34"><a class="link" href="#_http_response_34">HTTP Response</a></h4>
+<h4 id="_http_response_35"><a class="link" href="#_http_response_35">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -5188,7 +5343,7 @@ Content-Length: 792
 <div class="sect2">
 <h3 id="edit-menu"><a class="link" href="#edit-menu">메뉴 수정</a></h3>
 <div class="sect3">
-<h4 id="_http_request_35"><a class="link" href="#_http_request_35">HTTP Request</a></h4>
+<h4 id="_http_request_36"><a class="link" href="#_http_request_36">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /menu/1 HTTP/1.1
@@ -5271,7 +5426,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_35"><a class="link" href="#_http_response_35">HTTP Response</a></h4>
+<h4 id="_http_response_36"><a class="link" href="#_http_response_36">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -5327,7 +5482,7 @@ Content-Length: 81
 <div class="sect2">
 <h3 id="delete-menu"><a class="link" href="#delete-menu">메뉴 삭제</a></h3>
 <div class="sect3">
-<h4 id="_http_request_36"><a class="link" href="#_http_request_36">HTTP Request</a></h4>
+<h4 id="_http_request_37"><a class="link" href="#_http_request_37">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /menu/1 HTTP/1.1
@@ -5356,7 +5511,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_36"><a class="link" href="#_http_response_36">HTTP Response</a></h4>
+<h4 id="_http_response_37"><a class="link" href="#_http_response_37">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
@@ -5412,7 +5567,7 @@ Content-Length: 82
 <div class="sect2">
 <h3 id="create-menu-option"><a class="link" href="#create-menu-option">메뉴 옵션 등록</a></h3>
 <div class="sect3">
-<h4 id="_http_request_37"><a class="link" href="#_http_request_37">HTTP Request</a></h4>
+<h4 id="_http_request_38"><a class="link" href="#_http_request_38">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /menu/1/option HTTP/1.1
@@ -5461,7 +5616,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_37"><a class="link" href="#_http_response_37">HTTP Response</a></h4>
+<h4 id="_http_response_38"><a class="link" href="#_http_response_38">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
@@ -5548,7 +5703,7 @@ Content-Length: 256
 <div class="sect2">
 <h3 id="delete-menu-option"><a class="link" href="#delete-menu-option">메뉴 옵션 삭제</a></h3>
 <div class="sect3">
-<h4 id="_http_request_38"><a class="link" href="#_http_request_38">HTTP Request</a></h4>
+<h4 id="_http_request_39"><a class="link" href="#_http_request_39">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /menu/option/1 HTTP/1.1
@@ -5577,7 +5732,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_38"><a class="link" href="#_http_response_38">HTTP Response</a></h4>
+<h4 id="_http_response_39"><a class="link" href="#_http_response_39">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
@@ -5638,7 +5793,7 @@ Content-Length: 82
 <div class="sect2">
 <h3 id="get-orders"><a class="link" href="#get-orders">전체 주문 내역 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_39"><a class="link" href="#_http_request_39">HTTP Request</a></h4>
+<h4 id="_http_request_40"><a class="link" href="#_http_request_40">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /order HTTP/1.1
@@ -5648,7 +5803,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_http_response_39"><a class="link" href="#_http_response_39">HTTP Response</a></h4>
+<h4 id="_http_response_40"><a class="link" href="#_http_response_40">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -5662,7 +5817,7 @@ Host: localhost:8080</code></pre>
       "orderCnt" : 0,
       "totalPrice" : 40000,
       "createdTime" : "2023-10-30 Mon 17:25",
-      "expectTime" : "55",
+      "expectTime" : "2023-10-30 Mon 17:55",
       "orderMenuItems" : [ {
         "id" : 1,
         "menuId" : 1,
@@ -5684,7 +5839,7 @@ Host: localhost:8080</code></pre>
       "orderCnt" : 1,
       "totalPrice" : 15000,
       "createdTime" : "2023-11-01 Wed 17:35",
-      "expectTime" : "05",
+      "expectTime" : "2023-11-01 Wed 18:05",
       "orderMenuItems" : [ {
         "id" : 3,
         "menuId" : 2,
@@ -5824,7 +5979,7 @@ Host: localhost:8080</code></pre>
 <div class="sect2">
 <h3 id="get-order-by-client"><a class="link" href="#get-order-by-client">고객 - 주문 상세 조회 API</a></h3>
 <div class="sect3">
-<h4 id="_http_request_40"><a class="link" href="#_http_request_40">HTTP Request</a></h4>
+<h4 id="_http_request_41"><a class="link" href="#_http_request_41">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /order/client/1 HTTP/1.1
@@ -5853,7 +6008,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_40"><a class="link" href="#_http_response_40">HTTP Response</a></h4>
+<h4 id="_http_response_41"><a class="link" href="#_http_response_41">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -5867,7 +6022,7 @@ Host: localhost:8080</code></pre>
       "orderCnt" : 0,
       "totalPrice" : 40000,
       "createdTime" : "2023-10-30 Mon 15:35",
-      "expectTime" : "55",
+      "expectTime" : "2023-10-30 Mon 15:55",
       "orderMenuItems" : [ {
         "id" : 1,
         "menuId" : 1,
@@ -5999,7 +6154,7 @@ Host: localhost:8080</code></pre>
 <div class="sect2">
 <h3 id="get-order-by-vendor"><a class="link" href="#get-order-by-vendor">사업자 - 주문 상세 조회 API</a></h3>
 <div class="sect3">
-<h4 id="_http_request_41"><a class="link" href="#_http_request_41">HTTP Request</a></h4>
+<h4 id="_http_request_42"><a class="link" href="#_http_request_42">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /order/vendor/1 HTTP/1.1
@@ -6028,7 +6183,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_41"><a class="link" href="#_http_response_41">HTTP Response</a></h4>
+<h4 id="_http_response_42"><a class="link" href="#_http_response_42">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -6042,7 +6197,7 @@ Host: localhost:8080</code></pre>
       "orderCnt" : 0,
       "totalPrice" : 40000,
       "createdTime" : "2023-10-30 Mon 15:35",
-      "expectTime" : "55",
+      "expectTime" : "2023-10-30 Mon 15:55",
       "orderMenuItems" : [ {
         "id" : 1,
         "menuId" : 1,
@@ -6174,7 +6329,7 @@ Host: localhost:8080</code></pre>
 <div class="sect2">
 <h3 id="create-order"><a class="link" href="#create-order">주문 생성 API</a></h3>
 <div class="sect3">
-<h4 id="_http_request_42"><a class="link" href="#_http_request_42">HTTP Request</a></h4>
+<h4 id="_http_request_43"><a class="link" href="#_http_request_43">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /order/create HTTP/1.1
@@ -6252,7 +6407,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_42"><a class="link" href="#_http_response_42">HTTP Response</a></h4>
+<h4 id="_http_response_43"><a class="link" href="#_http_response_43">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -6304,7 +6459,7 @@ Host: localhost:8080
 <div class="sect2">
 <h3 id="cancel-order"><a class="link" href="#cancel-order">주문 취소 API</a></h3>
 <div class="sect3">
-<h4 id="_http_request_43"><a class="link" href="#_http_request_43">HTTP Request</a></h4>
+<h4 id="_http_request_44"><a class="link" href="#_http_request_44">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /order/1 HTTP/1.1
@@ -6334,7 +6489,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_43"><a class="link" href="#_http_response_43">HTTP Response</a></h4>
+<h4 id="_http_response_44"><a class="link" href="#_http_response_44">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -6386,7 +6541,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 <div class="sect2">
 <h3 id="delete-order"><a class="link" href="#delete-order">주문 내역 삭제 API</a></h3>
 <div class="sect3">
-<h4 id="_http_request_44"><a class="link" href="#_http_request_44">HTTP Request</a></h4>
+<h4 id="_http_request_45"><a class="link" href="#_http_request_45">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /order/1 HTTP/1.1
@@ -6415,7 +6570,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_44"><a class="link" href="#_http_response_44">HTTP Response</a></h4>
+<h4 id="_http_response_45"><a class="link" href="#_http_response_45">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -6472,7 +6627,7 @@ Host: localhost:8080</code></pre>
 <div class="sect2">
 <h3 id="create-review"><a class="link" href="#create-review">리뷰 등록</a></h3>
 <div class="sect3">
-<h4 id="_http_request_45"><a class="link" href="#_http_request_45">HTTP Request</a></h4>
+<h4 id="_http_request_46"><a class="link" href="#_http_request_46">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /review HTTP/1.1
@@ -6493,104 +6648,6 @@ image file
     'image'@'review1.png'</code></pre>
 </div>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_http_response_45"><a class="link" href="#_http_response_45">HTTP Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
-Content-Type: application/json
-Content-Length: 89
-
-{
-  "code" : 201,
-  "status" : "CREATED",
-  "message" : "CREATED",
-  "data" : true
-}</code></pre>
-</div>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Path</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">코드</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상태</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">메시지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">작성 성공 여부</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="create-comment"><a class="link" href="#create-comment">리뷰 답글 등록</a></h3>
-<div class="sect3">
-<h4 id="_http_request_46"><a class="link" href="#_http_request_46">HTTP Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /review/comment HTTP/1.1
-Content-Type: application/json
-Content-Length: 64
-Host: localhost:8080
-
-{
-  "reviewId" : 1,
-  "comment" : "리뷰 감사합니다."
-}</code></pre>
-</div>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Path</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 ID</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>comment</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">답글</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="sect3">
 <h4 id="_http_response_46"><a class="link" href="#_http_response_46">HTTP Response</a></h4>
@@ -6647,9 +6704,107 @@ Content-Length: 89
 </div>
 </div>
 <div class="sect2">
-<h3 id="get-my-review"><a class="link" href="#get-my-review">내 리뷰 조회</a></h3>
+<h3 id="create-comment"><a class="link" href="#create-comment">리뷰 답글 등록</a></h3>
 <div class="sect3">
 <h4 id="_http_request_47"><a class="link" href="#_http_request_47">HTTP Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /review/comment HTTP/1.1
+Content-Type: application/json
+Content-Length: 64
+Host: localhost:8080
+
+{
+  "reviewId" : 1,
+  "comment" : "리뷰 감사합니다."
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reviewId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">리뷰 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>comment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">답글</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_47"><a class="link" href="#_http_response_47">HTTP Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
+Content-Type: application/json
+Content-Length: 89
+
+{
+  "code" : 201,
+  "status" : "CREATED",
+  "message" : "CREATED",
+  "data" : true
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">코드</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">작성 성공 여부</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="get-my-review"><a class="link" href="#get-my-review">내 리뷰 조회</a></h3>
+<div class="sect3">
+<h4 id="_http_request_48"><a class="link" href="#_http_request_48">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /review HTTP/1.1
@@ -6659,12 +6814,12 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_http_response_47"><a class="link" href="#_http_response_47">HTTP Response</a></h4>
+<h4 id="_http_response_48"><a class="link" href="#_http_response_48">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 903
+Content-Length: 901
 
 {
   "code" : 200,
@@ -6678,7 +6833,7 @@ Content-Length: 903
         "foodTruckId" : 1
       },
       "grade" : 5,
-      "createdDate" : [ 2023, 11, 15, 15, 54, 15, 641341100 ],
+      "createdDate" : [ 2023, 11, 16, 11, 40, 2, 434945300 ],
       "content" : "여기 맛집이다!!",
       "imageUrl" : "https://carrottruck.s3.ap-northeast-2.amazonaws.com/review/7e46bb52-07de-4077-b382-feee759e89a7%EC%A7%B1%EA%B5%AC.jpg"
     }, {
@@ -6688,7 +6843,7 @@ Content-Length: 903
         "foodTruckId" : 2
       },
       "grade" : 1,
-      "createdDate" : [ 2023, 11, 12, 15, 54, 15, 641341100 ],
+      "createdDate" : [ 2023, 11, 13, 11, 40, 2, 434945300 ],
       "content" : "여기 진짜 별로에요. 서비스도 최악이고 다신 안올거에요.",
       "imageUrl" : null
     } ]
@@ -6782,7 +6937,7 @@ Content-Length: 903
 <div class="sect2">
 <h3 id="get-food-truck-review"><a class="link" href="#get-food-truck-review">푸드트럭 리뷰 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_48"><a class="link" href="#_http_request_48">HTTP Request</a></h4>
+<h4 id="_http_request_49"><a class="link" href="#_http_request_49">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /review/1 HTTP/1.1
@@ -6791,7 +6946,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_http_response_48"><a class="link" href="#_http_response_48">HTTP Response</a></h4>
+<h4 id="_http_response_49"><a class="link" href="#_http_response_49">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -6897,7 +7052,7 @@ Content-Length: 486
 <div class="sect2">
 <h3 id="withdrawal-review"><a class="link" href="#withdrawal-review">리뷰 삭제</a></h3>
 <div class="sect3">
-<h4 id="_http_request_49"><a class="link" href="#_http_request_49">HTTP Request</a></h4>
+<h4 id="_http_request_50"><a class="link" href="#_http_request_50">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /review/withdrawal HTTP/1.1
@@ -6931,7 +7086,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_49"><a class="link" href="#_http_response_49">HTTP Response</a></h4>
+<h4 id="_http_response_50"><a class="link" href="#_http_response_50">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -6987,7 +7142,7 @@ Content-Length: 84
 <div class="sect2">
 <h3 id="report-review"><a class="link" href="#report-review">리뷰 신고</a></h3>
 <div class="sect3">
-<h4 id="_http_request_50"><a class="link" href="#_http_request_50">HTTP Request</a></h4>
+<h4 id="_http_request_51"><a class="link" href="#_http_request_51">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /review/report HTTP/1.1
@@ -7026,7 +7181,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_50"><a class="link" href="#_http_response_50">HTTP Response</a></h4>
+<h4 id="_http_response_51"><a class="link" href="#_http_response_51">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -7082,7 +7237,7 @@ Content-Length: 58
 <div class="sect2">
 <h3 id="open-sale"><a class="link" href="#open-sale">영업 개시</a></h3>
 <div class="sect3">
-<h4 id="_http_request_51"><a class="link" href="#_http_request_51">HTTP Request</a></h4>
+<h4 id="_http_request_52"><a class="link" href="#_http_request_52">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /sale/open HTTP/1.1
@@ -7155,7 +7310,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_51"><a class="link" href="#_http_response_51">HTTP Response</a></h4>
+<h4 id="_http_response_52"><a class="link" href="#_http_response_52">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
@@ -7237,7 +7392,7 @@ Content-Length: 203
 <div class="sect2">
 <h3 id="get-processing-order"><a class="link" href="#get-processing-order">진행 중인 주문 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_52"><a class="link" href="#_http_request_52">HTTP Request</a></h4>
+<h4 id="_http_request_53"><a class="link" href="#_http_request_53">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /sale/processing/1 HTTP/1.1
@@ -7266,12 +7421,12 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_52"><a class="link" href="#_http_response_52">HTTP Response</a></h4>
+<h4 id="_http_response_53"><a class="link" href="#_http_response_53">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1092
+Content-Length: 1110
 
 {
   "code" : 200,
@@ -7284,7 +7439,7 @@ Content-Length: 1092
       "orderCnt" : 0,
       "totalPrice" : 40000,
       "createdTime" : "2023-10-30 Mon 17:25",
-      "expectTime" : "55",
+      "expectTime" : "2023-10-30 Mon 17:55",
       "orderMenuItems" : [ {
         "id" : 1,
         "menuId" : 1,
@@ -7431,7 +7586,7 @@ Content-Length: 1092
 <div class="sect2">
 <h3 id="get-complete-order"><a class="link" href="#get-complete-order">완료된 주문 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_53"><a class="link" href="#_http_request_53">HTTP Request</a></h4>
+<h4 id="_http_request_54"><a class="link" href="#_http_request_54">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /sale/complete/1 HTTP/1.1
@@ -7460,12 +7615,12 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_53"><a class="link" href="#_http_response_53">HTTP Response</a></h4>
+<h4 id="_http_response_54"><a class="link" href="#_http_response_54">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1674
+Content-Length: 1692
 
 {
   "code" : 200,
@@ -7478,7 +7633,7 @@ Content-Length: 1674
       "orderCnt" : 0,
       "totalPrice" : 40000,
       "createdTime" : "2023-10-30 Mon 17:25",
-      "expectTime" : "55",
+      "expectTime" : "2023-10-30 Mon 17:55",
       "orderMenuItems" : [ {
         "id" : 1,
         "menuId" : 1,
@@ -7647,7 +7802,7 @@ Content-Length: 1674
 <div class="sect2">
 <h3 id="accept-order"><a class="link" href="#accept-order">주문 수락</a></h3>
 <div class="sect3">
-<h4 id="_http_request_54"><a class="link" href="#_http_request_54">HTTP Request</a></h4>
+<h4 id="_http_request_55"><a class="link" href="#_http_request_55">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -7684,7 +7839,7 @@ Content-Length: 1674
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_54"><a class="link" href="#_http_response_54">HTTP Response</a></h4>
+<h4 id="_http_response_55"><a class="link" href="#_http_response_55">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -7736,7 +7891,7 @@ Content-Length: 1674
 <div class="sect2">
 <h3 id="decline-order"><a class="link" href="#decline-order">주문 거절</a></h3>
 <div class="sect3">
-<h4 id="_http_request_55"><a class="link" href="#_http_request_55">HTTP Request</a></h4>
+<h4 id="_http_request_56"><a class="link" href="#_http_request_56">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -7773,7 +7928,7 @@ Content-Length: 1674
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_55"><a class="link" href="#_http_response_55">HTTP Response</a></h4>
+<h4 id="_http_response_56"><a class="link" href="#_http_response_56">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -7825,7 +7980,7 @@ Content-Length: 1674
 <div class="sect2">
 <h3 id="pause-order"><a class="link" href="#pause-order">주문 일시 정지</a></h3>
 <div class="sect3">
-<h4 id="_http_request_56"><a class="link" href="#_http_request_56">HTTP Request</a></h4>
+<h4 id="_http_request_57"><a class="link" href="#_http_request_57">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /sale/pause/1 HTTP/1.1
@@ -7836,88 +7991,6 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 21. /sale/pause/{foodTruckId}</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foodTruckId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 ID</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_http_response_56"><a class="link" href="#_http_response_56">HTTP Response</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
-  "code" : 200,
-  "status" : "OK",
-  "message" : "SUCCESS",
-  "data" : 1
-}</code></pre>
-</div>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Path</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">코드</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">상태</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">메시지</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">주문 일시 정지한 푸드트럭 ID</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="restart-order"><a class="link" href="#restart-order">주문 일시 정지 해제</a></h3>
-<div class="sect3">
-<h4 id="_http_request_57"><a class="link" href="#_http_request_57">HTTP Request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /sale/restart/1 HTTP/1.1
-Authentication: authentication
-Host: localhost:8080
-Content-Type: application/x-www-form-urlencoded</code></pre>
-</div>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 22. /sale/restart/{foodTruckId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -7980,6 +8053,88 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">주문 일시 정지한 푸드트럭 ID</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="restart-order"><a class="link" href="#restart-order">주문 일시 정지 해제</a></h3>
+<div class="sect3">
+<h4 id="_http_request_58"><a class="link" href="#_http_request_58">HTTP Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /sale/restart/1 HTTP/1.1
+Authentication: authentication
+Host: localhost:8080
+Content-Type: application/x-www-form-urlencoded</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 22. /sale/restart/{foodTruckId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>foodTruckId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">푸드트럭 ID</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_58"><a class="link" href="#_http_response_58">HTTP Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "code" : 200,
+  "status" : "OK",
+  "message" : "SUCCESS",
+  "data" : 1
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">코드</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">주문 일시 정지 해제한 푸드트럭 ID</p></td>
 </tr>
 </tbody>
@@ -7989,7 +8144,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 <div class="sect2">
 <h3 id="soldout-menu"><a class="link" href="#soldout-menu">메뉴 품절 등록</a></h3>
 <div class="sect3">
-<h4 id="_http_request_58"><a class="link" href="#_http_request_58">HTTP Request</a></h4>
+<h4 id="_http_request_59"><a class="link" href="#_http_request_59">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /sale/soldout/1 HTTP/1.1
@@ -8019,7 +8174,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_58"><a class="link" href="#_http_response_58">HTTP Response</a></h4>
+<h4 id="_http_response_59"><a class="link" href="#_http_response_59">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -8069,9 +8224,91 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </div>
 </div>
 <div class="sect2">
+<h3 id="_메뉴_품절_해제"><a class="link" href="#_메뉴_품절_해제">메뉴 품절 해제</a></h3>
+<div class="sect3">
+<h4 id="_http_request_60"><a class="link" href="#_http_request_60">HTTP Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /sale/for-sale/1 HTTP/1.1
+Authentication: authentication
+Host: localhost:8080
+Content-Type: application/x-www-form-urlencoded</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 24. /sale/for-sale/{menuId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>menuId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">품절 해제할 메뉴 ID</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_60"><a class="link" href="#_http_response_60">HTTP Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "code" : 200,
+  "status" : "OK",
+  "message" : "SUCCESS",
+  "data" : 1
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">코드</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">품절 해제한 메뉴 ID</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
 <h3 id="close-sale"><a class="link" href="#close-sale">영업 종료</a></h3>
 <div class="sect3">
-<h4 id="_http_request_59"><a class="link" href="#_http_request_59">HTTP Request</a></h4>
+<h4 id="_http_request_61"><a class="link" href="#_http_request_61">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /sale/close/1 HTTP/1.1
@@ -8081,7 +8318,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 24. /sale/close/{foodTruckId}</caption>
+<caption class="title">Table 25. /sale/close/{foodTruckId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -8101,7 +8338,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_59"><a class="link" href="#_http_response_59">HTTP Response</a></h4>
+<h4 id="_http_response_61"><a class="link" href="#_http_response_61">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -8189,7 +8426,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 <div class="sect2">
 <h3 id="create-schedule"><a class="link" href="#create-schedule">스케줄 등록</a></h3>
 <div class="sect3">
-<h4 id="_http_request_60"><a class="link" href="#_http_request_60">HTTP Request</a></h4>
+<h4 id="_http_request_62"><a class="link" href="#_http_request_62">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /schedule HTTP/1.1
@@ -8256,7 +8493,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_60"><a class="link" href="#_http_response_60">HTTP Response</a></h4>
+<h4 id="_http_response_62"><a class="link" href="#_http_response_62">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
@@ -8355,7 +8592,7 @@ Content-Length: 323
 <div class="sect2">
 <h3 id="search-schedule"><a class="link" href="#search-schedule">스케줄 목록조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_61"><a class="link" href="#_http_request_61">HTTP Request</a></h4>
+<h4 id="_http_request_63"><a class="link" href="#_http_request_63">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /schedule?foodTruckId=1 HTTP/1.1
@@ -8383,7 +8620,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_61"><a class="link" href="#_http_response_61">HTTP Response</a></h4>
+<h4 id="_http_response_63"><a class="link" href="#_http_response_63">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -8399,20 +8636,20 @@ Content-Length: 622
       "scheduleId" : 1,
       "address" : "광주 광산구 장덕로5번길 16",
       "dayOfWeek" : "MONDAY",
-      "startTime" : "15:54",
-      "endTime" : "16:54"
+      "startTime" : "11:40",
+      "endTime" : "12:40"
     }, {
       "scheduleId" : 2,
       "address" : "광주 광산구 장덕로5번길 16",
       "dayOfWeek" : "TUESDAY",
-      "startTime" : "15:54",
-      "endTime" : "16:54"
+      "startTime" : "11:40",
+      "endTime" : "12:40"
     }, {
       "scheduleId" : 3,
       "address" : "",
       "dayOfWeek" : "WEDNESDAY",
-      "startTime" : "15:54",
-      "endTime" : "16:54"
+      "startTime" : "11:40",
+      "endTime" : "12:40"
     } ]
   }
 }</code></pre>
@@ -8489,7 +8726,7 @@ Content-Length: 622
 <div class="sect2">
 <h3 id="search-schedule-detail"><a class="link" href="#search-schedule-detail">스케줄 상세조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_62"><a class="link" href="#_http_request_62">HTTP Request</a></h4>
+<h4 id="_http_request_64"><a class="link" href="#_http_request_64">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /schedule/1?foodTruckId=1 HTTP/1.1
@@ -8498,7 +8735,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 25. /schedule/{scheduleId}</caption>
+<caption class="title">Table 26. /schedule/{scheduleId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -8518,7 +8755,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_62"><a class="link" href="#_http_response_62">HTTP Response</a></h4>
+<h4 id="_http_response_64"><a class="link" href="#_http_response_64">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -8617,7 +8854,7 @@ Content-Length: 321
 <div class="sect2">
 <h3 id="edit-schedule"><a class="link" href="#edit-schedule">스케줄 수정</a></h3>
 <div class="sect3">
-<h4 id="_http_request_63"><a class="link" href="#_http_request_63">HTTP Request</a></h4>
+<h4 id="_http_request_65"><a class="link" href="#_http_request_65">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /schedule/1 HTTP/1.1
@@ -8637,7 +8874,7 @@ Host: localhost:8080
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 26. /schedule/{scheduleId}</caption>
+<caption class="title">Table 27. /schedule/{scheduleId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -8657,7 +8894,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_63"><a class="link" href="#_http_response_63">HTTP Response</a></h4>
+<h4 id="_http_response_65"><a class="link" href="#_http_response_65">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -8756,7 +8993,7 @@ Content-Length: 319
 <div class="sect2">
 <h3 id="delete-schedule"><a class="link" href="#delete-schedule">스케줄 삭제</a></h3>
 <div class="sect3">
-<h4 id="_http_request_64"><a class="link" href="#_http_request_64">HTTP Request</a></h4>
+<h4 id="_http_request_66"><a class="link" href="#_http_request_66">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /schedule/1 HTTP/1.1
@@ -8765,7 +9002,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 27. /schedule/{scheduleId}</caption>
+<caption class="title">Table 28. /schedule/{scheduleId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -8785,7 +9022,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_64"><a class="link" href="#_http_response_64">HTTP Response</a></h4>
+<h4 id="_http_response_66"><a class="link" href="#_http_response_66">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
@@ -8846,7 +9083,7 @@ Content-Length: 82
 <div class="sect2">
 <h3 id="get-statistics-sales-list"><a class="link" href="#get-statistics-sales-list">영업 매출 통계 리스트 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_65"><a class="link" href="#_http_request_65">HTTP Request</a></h4>
+<h4 id="_http_request_67"><a class="link" href="#_http_request_67">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /statistics/1/sales?year=2023&amp;month=11&amp;lastSalesId=0 HTTP/1.1
@@ -8855,7 +9092,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 28. /statistics/{foodTruckId}/sales</caption>
+<caption class="title">Table 29. /statistics/{foodTruckId}/sales</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -8901,7 +9138,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_65"><a class="link" href="#_http_response_65">HTTP Response</a></h4>
+<h4 id="_http_response_67"><a class="link" href="#_http_response_67">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -8917,27 +9154,27 @@ Content-Length: 1057
     "lastSalesId" : 1,
     "statisticsBySales" : [ {
       "salesId" : 1,
-      "date" : "2023-11-12",
-      "startTime" : "10:09:17.3345958",
-      "endTime" : "15:54:17.3345958",
+      "date" : "2023-11-13",
+      "startTime" : "05:55:04.4004316",
+      "endTime" : "11:40:04.4004316",
       "address" : "광주광역시 광산구 장덕로5번길 16",
       "totalHours" : 5,
       "totalMinutes" : 45,
       "totalSales" : 113800
     }, {
       "salesId" : 5,
-      "date" : "2023-11-14",
-      "startTime" : "06:27:17.3345958",
-      "endTime" : "15:54:17.3345958",
+      "date" : "2023-11-15",
+      "startTime" : "02:13:04.4004316",
+      "endTime" : "11:40:04.4004316",
       "address" : "광주광역시 광산구 선암동 214-4",
       "totalHours" : 9,
       "totalMinutes" : 27,
       "totalSales" : 216600
     }, {
       "salesId" : 24,
-      "date" : "2023-11-15",
-      "startTime" : "06:21:17.3345958",
-      "endTime" : "15:54:17.3345958",
+      "date" : "2023-11-16",
+      "startTime" : "02:07:04.4004316",
+      "endTime" : "11:40:04.4004316",
       "address" : "광주광역시 광산구 장덕로5번길 16",
       "totalHours" : 9,
       "totalMinutes" : 33,
@@ -9039,7 +9276,7 @@ Content-Length: 1057
 <div class="sect2">
 <h3 id="get-statistics-sales-details"><a class="link" href="#get-statistics-sales-details">영업 매출 통계 상세 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_66"><a class="link" href="#_http_request_66">HTTP Request</a></h4>
+<h4 id="_http_request_68"><a class="link" href="#_http_request_68">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /statistics/1/sales-detail/1 HTTP/1.1
@@ -9048,7 +9285,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 29. /statistics/{foodTruckId}/sales-detail/{salesId}</caption>
+<caption class="title">Table 30. /statistics/{foodTruckId}/sales-detail/{salesId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -9072,12 +9309,12 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_66"><a class="link" href="#_http_response_66">HTTP Response</a></h4>
+<h4 id="_http_response_68"><a class="link" href="#_http_response_68">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1144
+Content-Length: 1140
 
 {
   "code" : 200,
@@ -9103,27 +9340,27 @@ Content-Length: 1144
       "totalSales" : 12700
     } ],
     "salesByHour" : [ {
-      "startHour" : 10,
+      "startHour" : 6,
       "totalOrders" : 1,
       "totalSales" : 10900
     }, {
-      "startHour" : 11,
+      "startHour" : 7,
       "totalOrders" : 2,
       "totalSales" : 22800
     }, {
-      "startHour" : 12,
+      "startHour" : 8,
       "totalOrders" : 2,
       "totalSales" : 12700
     }, {
-      "startHour" : 13,
+      "startHour" : 9,
       "totalOrders" : 3,
       "totalSales" : 34700
     }, {
-      "startHour" : 14,
+      "startHour" : 10,
       "totalOrders" : 3,
       "totalSales" : 34700
     }, {
-      "startHour" : 15,
+      "startHour" : 11,
       "totalOrders" : 1,
       "totalSales" : 10900
     } ]
@@ -9212,7 +9449,7 @@ Content-Length: 1144
 <div class="sect2">
 <h3 id="get-statistics-weekly-list"><a class="link" href="#get-statistics-weekly-list">주별 매출 통계 리스트 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_67"><a class="link" href="#_http_request_67">HTTP Request</a></h4>
+<h4 id="_http_request_69"><a class="link" href="#_http_request_69">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /statistics/1/weekly?year=2023&amp;lastWeek=1 HTTP/1.1
@@ -9221,7 +9458,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 30. /statistics/{foodTruckId}/weekly</caption>
+<caption class="title">Table 31. /statistics/{foodTruckId}/weekly</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -9263,7 +9500,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_67"><a class="link" href="#_http_response_67">HTTP Response</a></h4>
+<h4 id="_http_response_69"><a class="link" href="#_http_response_69">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -9277,15 +9514,15 @@ Content-Length: 543
   "data" : {
     "year" : 2023,
     "statisticsByWeek" : [ {
-      "startDate" : "2023-11-09",
-      "endDate" : "2023-11-15",
+      "startDate" : "2023-11-10",
+      "endDate" : "2023-11-16",
       "totalHours" : 28,
       "totalMinutes" : 36,
       "totalSales" : 527700,
       "week" : 40
     }, {
-      "startDate" : "2023-11-02",
-      "endDate" : "2023-11-08",
+      "startDate" : "2023-11-03",
+      "endDate" : "2023-11-09",
       "totalHours" : 58,
       "totalMinutes" : 36,
       "totalSales" : 992200,
@@ -9378,16 +9615,16 @@ Content-Length: 543
 <div class="sect2">
 <h3 id="get-statistics-weekly-details"><a class="link" href="#get-statistics-weekly-details">주별 매출 통계 상세 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_68"><a class="link" href="#_http_request_68">HTTP Request</a></h4>
+<h4 id="_http_request_70"><a class="link" href="#_http_request_70">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /statistics/1/weekly-detail?startDate=2023-11-09&amp;endDate=2023-11-15 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /statistics/1/weekly-detail?startDate=2023-11-10&amp;endDate=2023-11-16 HTTP/1.1
 Authentication: authentication
 Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 31. /statistics/{foodTruckId}/weekly-detail</caption>
+<caption class="title">Table 32. /statistics/{foodTruckId}/weekly-detail</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -9429,12 +9666,12 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_68"><a class="link" href="#_http_response_68">HTTP Response</a></h4>
+<h4 id="_http_response_70"><a class="link" href="#_http_response_70">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 2443
+Content-Length: 2444
 
 {
   "code" : 200,
@@ -9474,73 +9711,73 @@ Content-Length: 2443
     } ],
     "salesByHour" : [ {
       "startHour" : 13,
-      "totalOrders" : 7,
-      "totalSales" : 50300
+      "totalOrders" : 5,
+      "totalSales" : 52500
     }, {
       "startHour" : 14,
       "totalOrders" : 7,
-      "totalSales" : 42200
+      "totalSales" : 47200
     }, {
       "startHour" : 15,
       "totalOrders" : 6,
-      "totalSales" : 67200
+      "totalSales" : 59200
     }, {
       "startHour" : 16,
-      "totalOrders" : 7,
-      "totalSales" : 50300
+      "totalOrders" : 5,
+      "totalSales" : 50100
     }, {
       "startHour" : 17,
-      "totalOrders" : 7,
-      "totalSales" : 50600
+      "totalOrders" : 9,
+      "totalSales" : 43000
     }, {
       "startHour" : 18,
-      "totalOrders" : 6,
-      "totalSales" : 59800
+      "totalOrders" : 7,
+      "totalSales" : 53700
     }, {
       "startHour" : 19,
-      "totalOrders" : 8,
-      "totalSales" : 51000
+      "totalOrders" : 7,
+      "totalSales" : 54300
     }, {
       "startHour" : 20,
       "totalOrders" : 9,
-      "totalSales" : 50000
+      "totalSales" : 63600
     }, {
       "startHour" : 21,
-      "totalOrders" : 7,
-      "totalSales" : 63300
+      "totalOrders" : 6,
+      "totalSales" : 56000
     }, {
       "startHour" : 22,
-      "totalOrders" : 8,
-      "totalSales" : 43000
+      "totalOrders" : 11,
+      "totalSales" : 48100
     } ],
     "salesByDay" : [ {
       "day" : 0,
-      "totalOrders" : 11,
-      "totalSales" : 79300
+      "totalOrders" : 7,
+      "totalSales" : 75700
     }, {
       "day" : 1,
-      "totalOrders" : 12,
-      "totalSales" : 80200
+      "totalOrders" : 7,
+      "totalSales" : 91300
     }, {
       "day" : 2,
-      "totalOrders" : 8,
-      "totalSales" : 63200
+      "totalOrders" : 12,
+      "totalSales" : 81700
     }, {
       "day" : 3,
-      "totalOrders" : 9,
-      "totalSales" : 88900
+      "totalOrders" : 11,
+      "totalSales" : 74300
     }, {
       "day" : 4,
-      "totalOrders" : 8,
-      "totalSales" : 68100
+      "totalOrders" : 10,
+      "totalSales" : 71900
     }, {
       "day" : 5,
-      "totalOrders" : 11,
-      "totalSales" : 83200
+      "totalOrders" : 9,
+      "totalSales" : 76400
     }, {
       "day" : 6,
-      "totalOrders" : 13,
-      "totalSales" : 64800
+      "totalOrders" : 16,
+      "totalSales" : 56400
     } ]
   }
 }</code></pre>
@@ -9632,7 +9869,7 @@ Content-Length: 2443
 <div class="sect2">
 <h3 id="get-statistics-monthly-list"><a class="link" href="#get-statistics-monthly-list">월별 매출 통계 리스트 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_69"><a class="link" href="#_http_request_69">HTTP Request</a></h4>
+<h4 id="_http_request_71"><a class="link" href="#_http_request_71">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /statistics/1/monthly?year=2023 HTTP/1.1
@@ -9641,7 +9878,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 32. /statistics/{foodTruckId}/monthly</caption>
+<caption class="title">Table 33. /statistics/{foodTruckId}/monthly</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -9679,7 +9916,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_69"><a class="link" href="#_http_response_69">HTTP Response</a></h4>
+<h4 id="_http_response_71"><a class="link" href="#_http_response_71">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -9768,7 +10005,7 @@ Content-Length: 362
 <div class="sect2">
 <h3 id="get-statistics-monthly-details"><a class="link" href="#get-statistics-monthly-details">월별 매출 통계 상세 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_70"><a class="link" href="#_http_request_70">HTTP Request</a></h4>
+<h4 id="_http_request_72"><a class="link" href="#_http_request_72">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /statistics/1/monthly-detail?year=2023&amp;month=10 HTTP/1.1
@@ -9777,7 +10014,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 33. /statistics/{foodTruckId}/monthly-detail</caption>
+<caption class="title">Table 34. /statistics/{foodTruckId}/monthly-detail</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -9819,7 +10056,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_70"><a class="link" href="#_http_response_70">HTTP Response</a></h4>
+<h4 id="_http_response_72"><a class="link" href="#_http_response_72">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -9865,72 +10102,72 @@ Content-Length: 2474
     "salesByHour" : [ {
       "startHour" : 13,
       "totalOrders" : 12,
-      "totalSales" : 192400
+      "totalSales" : 167800
     }, {
       "startHour" : 14,
-      "totalOrders" : 16,
-      "totalSales" : 169000
+      "totalOrders" : 12,
+      "totalSales" : 154700
     }, {
       "startHour" : 15,
-      "totalOrders" : 15,
-      "totalSales" : 166500
+      "totalOrders" : 11,
+      "totalSales" : 177000
     }, {
       "startHour" : 16,
-      "totalOrders" : 15,
-      "totalSales" : 200100
+      "totalOrders" : 13,
+      "totalSales" : 199400
     }, {
       "startHour" : 17,
-      "totalOrders" : 10,
-      "totalSales" : 205400
+      "totalOrders" : 12,
+      "totalSales" : 202600
     }, {
       "startHour" : 18,
       "totalOrders" : 17,
-      "totalSales" : 131100
+      "totalSales" : 212100
     }, {
       "startHour" : 19,
-      "totalOrders" : 14,
-      "totalSales" : 162400
+      "totalOrders" : 16,
+      "totalSales" : 168500
     }, {
       "startHour" : 20,
-      "totalOrders" : 15,
-      "totalSales" : 157100
+      "totalOrders" : 14,
+      "totalSales" : 190700
     }, {
       "startHour" : 21,
       "totalOrders" : 16,
-      "totalSales" : 236100
+      "totalSales" : 152700
     }, {
       "startHour" : 22,
-      "totalOrders" : 15,
-      "totalSales" : 153100
+      "totalOrders" : 22,
+      "totalSales" : 147700
     } ],
     "salesByDay" : [ {
       "day" : 0,
-      "totalOrders" : 17,
-      "totalSales" : 295400
+      "totalOrders" : 24,
+      "totalSales" : 213900
     }, {
       "day" : 1,
       "totalOrders" : 17,
-      "totalSales" : 185700
+      "totalSales" : 198700
     }, {
       "day" : 2,
-      "totalOrders" : 21,
-      "totalSales" : 252900
+      "totalOrders" : 16,
+      "totalSales" : 267100
     }, {
       "day" : 3,
-      "totalOrders" : 19,
-      "totalSales" : 195100
+      "totalOrders" : 18,
+      "totalSales" : 291000
     }, {
       "day" : 4,
-      "totalOrders" : 18,
-      "totalSales" : 292000
+      "totalOrders" : 21,
+      "totalSales" : 329000
     }, {
       "day" : 5,
-      "totalOrders" : 24,
-      "totalSales" : 319000
+      "totalOrders" : 28,
+      "totalSales" : 182300
     }, {
       "day" : 6,
-      "totalOrders" : 29,
-      "totalSales" : 233100
+      "totalOrders" : 21,
+      "totalSales" : 291200
     } ]
   }
 }</code></pre>
@@ -10027,7 +10264,7 @@ Content-Length: 2474
 <div class="sect2">
 <h3 id="create-survey"><a class="link" href="#create-survey">수요조사 등록</a></h3>
 <div class="sect3">
-<h4 id="_http_request_71"><a class="link" href="#_http_request_71">HTTP Request</a></h4>
+<h4 id="_http_request_73"><a class="link" href="#_http_request_73">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /survey/submit HTTP/1.1
@@ -10078,7 +10315,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_71"><a class="link" href="#_http_response_71">HTTP Response</a></h4>
+<h4 id="_http_response_73"><a class="link" href="#_http_response_73">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
@@ -10160,7 +10397,7 @@ Content-Length: 240
 <div class="sect2">
 <h3 id="search-survey-list"><a class="link" href="#search-survey-list">수요조사 리스트 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_72"><a class="link" href="#_http_request_72">HTTP Request</a></h4>
+<h4 id="_http_request_74"><a class="link" href="#_http_request_74">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /survey/list?sido=%EA%B4%91%EC%A3%BC%EA%B4%91%EC%97%AD%EC%8B%9C&amp;sigungu=%EA%B4%91%EC%82%B0%EA%B5%AC&amp;dong=%EC%9E%A5%EB%8D%95%EB%8F%99 HTTP/1.1
@@ -10195,7 +10432,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_72"><a class="link" href="#_http_response_72">HTTP Response</a></h4>
+<h4 id="_http_response_74"><a class="link" href="#_http_response_74">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -10275,7 +10512,7 @@ Content-Length: 416
 <div class="sect2">
 <h3 id="search-survey-detail"><a class="link" href="#search-survey-detail">수요조사 카테고리별 리스트 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_73"><a class="link" href="#_http_request_73">HTTP Request</a></h4>
+<h4 id="_http_request_75"><a class="link" href="#_http_request_75">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /survey/list/9?sido=%EA%B4%91%EC%A3%BC%EA%B4%91%EC%97%AD%EC%8B%9C&amp;sigungu=%EA%B4%91%EC%82%B0%EA%B5%AC&amp;dong=%EC%9E%A5%EB%8D%95%EB%8F%99&amp;lastSurveyId=0 HTTP/1.1
@@ -10283,7 +10520,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 34. /survey/list/{categoryId}</caption>
+<caption class="title">Table 35. /survey/list/{categoryId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -10333,12 +10570,12 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_73"><a class="link" href="#_http_response_73">HTTP Response</a></h4>
+<h4 id="_http_response_75"><a class="link" href="#_http_response_75">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 719
+Content-Length: 716
 
 {
   "code" : 200,
@@ -10351,17 +10588,17 @@ Content-Length: 719
       "surveyId" : 1,
       "nickname" : "당근당근",
       "content" : "출근길에 아아가 있었으면 좋겠어요",
-      "createdTime" : "2023-10-15T15:54:17.828599"
+      "createdTime" : "2023-10-16T11:40:04.99057"
     }, {
       "surveyId" : 6,
       "nickname" : "트럭",
       "content" : "커피팔아주세요",
-      "createdTime" : "2023-11-14T15:54:17.828599"
+      "createdTime" : "2023-11-15T11:40:04.99057"
     }, {
       "surveyId" : 11,
       "nickname" : "바니",
       "content" : "붕어빵 먹고싶어요",
-      "createdTime" : "2023-11-15T15:54:17.828599"
+      "createdTime" : "2023-11-16T11:40:04.99057"
     } ],
     "hasNext" : false
   }
@@ -10439,7 +10676,7 @@ Content-Length: 719
 <div class="sect2">
 <h3 id="delete-survey"><a class="link" href="#delete-survey">수요조사 삭제</a></h3>
 <div class="sect3">
-<h4 id="_http_request_74"><a class="link" href="#_http_request_74">HTTP Request</a></h4>
+<h4 id="_http_request_76"><a class="link" href="#_http_request_76">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /survey/remove/11 HTTP/1.1
@@ -10449,7 +10686,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 35. /survey/remove/{surveyId}</caption>
+<caption class="title">Table 36. /survey/remove/{surveyId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -10469,7 +10706,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_74"><a class="link" href="#_http_response_74">HTTP Response</a></h4>
+<h4 id="_http_response_76"><a class="link" href="#_http_response_76">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -10530,7 +10767,7 @@ Content-Length: 82
 <div class="sect2">
 <h3 id="create-vendor"><a class="link" href="#create-vendor">사업자 회원가입</a></h3>
 <div class="sect3">
-<h4 id="_http_request_75"><a class="link" href="#_http_request_75">HTTP Request</a></h4>
+<h4 id="_http_request_77"><a class="link" href="#_http_request_77">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /member/vendor/join HTTP/1.1
@@ -10596,7 +10833,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_75"><a class="link" href="#_http_response_75">HTTP Response</a></h4>
+<h4 id="_http_response_77"><a class="link" href="#_http_response_77">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
@@ -10683,7 +10920,7 @@ Content-Length: 244
 <div class="sect2">
 <h3 id="remove-vendor"><a class="link" href="#remove-vendor">사업자 탈퇴</a></h3>
 <div class="sect3">
-<h4 id="_http_request_76"><a class="link" href="#_http_request_76">HTTP Request</a></h4>
+<h4 id="_http_request_78"><a class="link" href="#_http_request_78">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /member/vendor/withdrawal HTTP/1.1
@@ -10725,7 +10962,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_76"><a class="link" href="#_http_response_76">HTTP Response</a></h4>
+<h4 id="_http_response_78"><a class="link" href="#_http_response_78">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
@@ -10781,7 +11018,7 @@ Content-Length: 85
 <div class="sect2">
 <h3 id="search-vendor"><a class="link" href="#search-vendor">사업자 정보 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_77"><a class="link" href="#_http_request_77">HTTP Request</a></h4>
+<h4 id="_http_request_79"><a class="link" href="#_http_request_79">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /member/vendor/info HTTP/1.1
@@ -10791,7 +11028,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_http_response_77"><a class="link" href="#_http_response_77">HTTP Response</a></h4>
+<h4 id="_http_response_79"><a class="link" href="#_http_response_79">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -10873,7 +11110,7 @@ Content-Length: 239
 <div class="sect2">
 <h3 id="edit-vendor"><a class="link" href="#edit-vendor">사업자 정보 수정</a></h3>
 <div class="sect3">
-<h4 id="_http_request_78"><a class="link" href="#_http_request_78">HTTP Request</a></h4>
+<h4 id="_http_request_80"><a class="link" href="#_http_request_80">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /member/vendor HTTP/1.1
@@ -10922,7 +11159,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_78"><a class="link" href="#_http_response_78">HTTP Response</a></h4>
+<h4 id="_http_response_80"><a class="link" href="#_http_response_80">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -11020,7 +11257,7 @@ Content-Length: 279
 <div class="sect2">
 <h3 id="create-vendor-info"><a class="link" href="#create-vendor-info">사업자 정보 등록</a></h3>
 <div class="sect3">
-<h4 id="_http_request_79"><a class="link" href="#_http_request_79">HTTP Request</a></h4>
+<h4 id="_http_request_81"><a class="link" href="#_http_request_81">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /member/vendor-info HTTP/1.1
@@ -11074,7 +11311,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_79"><a class="link" href="#_http_response_79">HTTP Response</a></h4>
+<h4 id="_http_response_81"><a class="link" href="#_http_response_81">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
@@ -11161,7 +11398,7 @@ Content-Length: 274
 <div class="sect2">
 <h3 id="search-vendor-info"><a class="link" href="#search-vendor-info">사업자 정보 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_80"><a class="link" href="#_http_request_80">HTTP Request</a></h4>
+<h4 id="_http_request_82"><a class="link" href="#_http_request_82">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /member/vendor-info HTTP/1.1
@@ -11171,7 +11408,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_http_response_80"><a class="link" href="#_http_response_80">HTTP Response</a></h4>
+<h4 id="_http_response_82"><a class="link" href="#_http_response_82">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -11258,7 +11495,7 @@ Content-Length: 269
 <div class="sect2">
 <h3 id="delete-vendor-info"><a class="link" href="#delete-vendor-info">사업자 정보 삭제</a></h3>
 <div class="sect3">
-<h4 id="_http_request_81"><a class="link" href="#_http_request_81">HTTP Request</a></h4>
+<h4 id="_http_request_83"><a class="link" href="#_http_request_83">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /member/vendor-info/1 HTTP/1.1
@@ -11268,7 +11505,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 36. /member/vendor-info/{vendorInfoId}</caption>
+<caption class="title">Table 37. /member/vendor-info/{vendorInfoId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -11288,7 +11525,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_81"><a class="link" href="#_http_response_81">HTTP Response</a></h4>
+<h4 id="_http_response_83"><a class="link" href="#_http_response_83">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 302 Found
@@ -11349,7 +11586,7 @@ Content-Length: 85
 <div class="sect2">
 <h3 id="get-address-sido"><a class="link" href="#get-address-sido">시도 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_82"><a class="link" href="#_http_request_82">HTTP Request</a></h4>
+<h4 id="_http_request_84"><a class="link" href="#_http_request_84">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /address/sido HTTP/1.1
@@ -11358,7 +11595,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_http_response_82"><a class="link" href="#_http_response_82">HTTP Response</a></h4>
+<h4 id="_http_response_84"><a class="link" href="#_http_response_84">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -11430,7 +11667,7 @@ Content-Length: 277
 <div class="sect2">
 <h3 id="get-address-sigungu"><a class="link" href="#get-address-sigungu">시군구 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_83"><a class="link" href="#_http_request_83">HTTP Request</a></h4>
+<h4 id="_http_request_85"><a class="link" href="#_http_request_85">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /address/sigungu/3 HTTP/1.1
@@ -11438,7 +11675,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 37. /address/sigungu/{sidoId}</caption>
+<caption class="title">Table 38. /address/sigungu/{sidoId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -11458,7 +11695,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_83"><a class="link" href="#_http_response_83">HTTP Response</a></h4>
+<h4 id="_http_response_85"><a class="link" href="#_http_response_85">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -11536,7 +11773,7 @@ Content-Length: 369
 <div class="sect2">
 <h3 id="get-address-dong"><a class="link" href="#get-address-dong">읍면동 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_84"><a class="link" href="#_http_request_84">HTTP Request</a></h4>
+<h4 id="_http_request_86"><a class="link" href="#_http_request_86">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /address/dong/5 HTTP/1.1
@@ -11544,7 +11781,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 38. /address/dong/{sigunguId}</caption>
+<caption class="title">Table 39. /address/dong/{sigunguId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -11564,7 +11801,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_84"><a class="link" href="#_http_response_84">HTTP Response</a></h4>
+<h4 id="_http_response_86"><a class="link" href="#_http_response_86">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
@@ -11636,7 +11873,7 @@ Content-Length: 271
 <div class="sect2">
 <h3 id="get-address-geocode"><a class="link" href="#get-address-geocode">좌표 주소 변환</a></h3>
 <div class="sect3">
-<h4 id="_http_request_85"><a class="link" href="#_http_request_85">HTTP Request</a></h4>
+<h4 id="_http_request_87"><a class="link" href="#_http_request_87">HTTP Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /address/rgc?latitude=36.12341234&amp;longitude=128.3456789 HTTP/1.1
@@ -11667,7 +11904,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_85"><a class="link" href="#_http_response_85">HTTP Response</a></h4>
+<h4 id="_http_response_87"><a class="link" href="#_http_response_87">HTTP Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK

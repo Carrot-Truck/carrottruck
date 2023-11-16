@@ -162,8 +162,9 @@ function MyInfoPage() {
           </EditableField>
         </ContactInfoSection>
         <SettingsButton>연동된 소셜계정</SettingsButton>
-        <Navbar></Navbar>
+        
       </PageContainer>
+      <Navbar></Navbar>
     </MyInfoPageLayout>
   );
 }

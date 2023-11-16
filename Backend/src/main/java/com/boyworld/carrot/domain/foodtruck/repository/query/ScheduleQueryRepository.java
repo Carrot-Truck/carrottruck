@@ -127,6 +127,9 @@ public class ScheduleQueryRepository {
                         schedule.active
                 )
                 .limit(PAGE_SIZE + 1)
+                .orderBy(
+                        createOrderSpecifier(condition.getOrderCondition(), distance)
+                )
                 .fetch();
 
         if (ids == null || ids.isEmpty()) {

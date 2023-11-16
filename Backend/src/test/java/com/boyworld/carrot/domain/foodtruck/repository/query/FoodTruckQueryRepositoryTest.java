@@ -1,11 +1,13 @@
 package com.boyworld.carrot.domain.foodtruck.repository.query;
 
 import com.boyworld.carrot.IntegrationTestSupport;
+import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckItem;
 import com.boyworld.carrot.api.controller.foodtruck.response.FoodTruckOverview;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckClientDetailDto;
 import com.boyworld.carrot.api.service.foodtruck.dto.FoodTruckVendorDetailDto;
 import com.boyworld.carrot.domain.foodtruck.*;
 import com.boyworld.carrot.domain.foodtruck.repository.command.*;
+import com.boyworld.carrot.domain.foodtruck.repository.dto.SearchCondition;
 import com.boyworld.carrot.domain.member.Member;
 import com.boyworld.carrot.domain.member.Role;
 import com.boyworld.carrot.domain.member.VendorInfo;
@@ -447,6 +449,106 @@ class FoodTruckQueryRepositoryTest extends IntegrationTestSupport {
 
         // then
         assertThat(result).isFalse();
+    }
+
+    @DisplayName("사용자는 찜한 푸드트럭 목록을 조회한다.")
+    @Test
+    void getLikedFoodTrucksByEmail() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        FoodTruck foodTruck1 = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+        FoodTruck foodTruck2 = createFoodTruck(vendor2, category2, "팔천순대", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                30,
+                20,
+                false);
+
+        Sale sale1 = createSale(foodTruck1, null, "address 1");
+        Sale sale2 = createSale(foodTruck2, null, "address 2");
+
+        createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);
+
+        Order order1 = createOrder(client1, sale1, 30000);
+
+        Order order2 = createOrder(client1, sale2, 50000);
+        Order order3 = createOrder(client2, sale2, 40000);
+
+        createReview(client1, foodTruck1, order1, "별로에요", 3);
+
+        createReview(client2, foodTruck2, order3, "아 진짜 별로", 1);
+        createReview(client1, foodTruck2, order2, "마시써요", 4);
+
+        // when
+        List<FoodTruckItem> items = foodTruckQueryRepository.getLikedFoodTrucksByEmail(client2.getEmail());
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).isNotEmpty();
+    }
+
+    @DisplayName("사용자는 찜한 푸드트럭 목록을 조회한다.")
+    @Test
+    void getLikedFoodTrucksByEmailWithEmpty() {
+        // given
+        Member vendor1 = createMember(Role.VENDOR, "ssafy@gmail.com");
+        Member vendor2 = createMember(Role.VENDOR, "hi@ssafy.com");
+        Member client1 = createMember(Role.CLIENT, "ssafy123@ssafy.com");
+        Member client2 = createMember(Role.CLIENT, "hello123@ssafy.com");
+
+        Category category1 = createCategory("고기/구이");
+        Category category2 = createCategory("분식");
+
+        FoodTruck foodTruck1 = createFoodTruck(vendor1, category1, "동현 된장삼겹", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "된장 삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                40,
+                10,
+                true);
+        FoodTruck foodTruck2 = createFoodTruck(vendor2, category2, "팔천순대", "010-1234-5678",
+                "돼지고기(국산), 고축가루(국산), 참깨(중국산), 양파(국산), 대파(국산), 버터(프랑스)",
+                "삼겹 구이 & 삼겹 덮밥 전문 푸드트럭",
+                30,
+                20,
+                false);
+
+        Sale sale1 = createSale(foodTruck1, null, "address 1");
+        Sale sale2 = createSale(foodTruck2, null, "address 2");
+
+        createFoodTruckLikes(client1, client2, foodTruck1, foodTruck2);
+
+        Order order1 = createOrder(client1, sale1, 30000);
+
+        Order order2 = createOrder(client1, sale2, 50000);
+        Order order3 = createOrder(client2, sale2, 40000);
+
+        createReview(client1, foodTruck1, order1, "별로에요", 3);
+
+        createReview(client2, foodTruck2, order3, "아 진짜 별로", 1);
+        createReview(client1, foodTruck2, order2, "마시써요", 4);
+
+        // when
+        List<FoodTruckItem> items = foodTruckQueryRepository.getLikedFoodTrucksByEmail(vendor1.getEmail());
+        for (FoodTruckItem item : items) {
+            log.debug("item={}", item);
+        }
+
+        // then
+        assertThat(items).isEmpty();
     }
 
     private Member createMember(Role role, String email) {

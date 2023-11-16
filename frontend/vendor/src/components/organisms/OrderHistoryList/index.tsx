@@ -72,6 +72,7 @@ function OrderHistoryList({ selectedOrderHistory, vendorEmail }: IOrderHistoryLi
     getProcessingOrders(
       selectedFoodTruckId,
       (response: AxiosResponse) => {
+        console.log(response.data);
         const data = getData(response);
         setProcessingOrderList(data["orderItems"]);
       },

@@ -1,4 +1,4 @@
-import { css } from "styled-components";
+import { css } from 'styled-components';
 
 // SearchBar
 export const SearchBarSizeStyles = {
@@ -10,7 +10,7 @@ export const SearchBarSizeStyles = {
   `,
   full: css`
     width: 100%;
-  `,
+  `
 };
 
 // SearchBar
@@ -57,7 +57,7 @@ export const SearchBarColorStyles = {
       border: 1px solid var(--sub-color-2);
       background-color: var(--sub-color-2);
     }
-  `,
+  `
 };
 
 // Button
@@ -79,9 +79,9 @@ export const ButtonSizeStyles = {
     height: 48px;
   `,
   big: css`
-    width: 70%;
+    width: 80%;
     height: 210px;
-  `,
+  `
 };
 
 export const ButtonColorStyles = {
@@ -108,7 +108,7 @@ export const ButtonColorStyles = {
   Success: css`
     background-color: var(--success-color);
     color: var(--white-color);
-  `,
+  `
 };
 
 export const ButtonRadiusStyles = {
@@ -120,7 +120,7 @@ export const ButtonRadiusStyles = {
   `,
   l: css`
     border-radius: var(--radius-l);
-  `,
+  `
 };
 
 // CheckTextButton
@@ -148,7 +148,7 @@ export const CheckTextButtonStyles = {
       width: 32px;
       height: 32px;
     }
-  `,
+  `
 };
 
 // ButtonOutline
@@ -176,5 +176,5 @@ export const ButtonOutlineColorStyles = {
   Success: css`
     border: 1px solid var(--success-color);
     color: var(--black-color);
-  `,
+  `
 };

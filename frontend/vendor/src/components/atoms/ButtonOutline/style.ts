@@ -1,10 +1,10 @@
-import styled, { css } from "styled-components";
-import { ButtonOutlineColorStyles, ButtonRadiusStyles, ButtonSizeStyles } from "styles/style";
+import styled, { css } from 'styled-components';
+import { ButtonOutlineColorStyles, ButtonRadiusStyles, ButtonSizeStyles } from 'styles/style';
 
 interface IButtonOutlineWrapperProps {
-  $size: "s" | "m" | "l" | "full";
-  $radius: "s" | "m" | "l";
-  $color: "Normal" | "Primary" | "Danger" | "Success" | "SubFirst" | "SubSecond";
+  $size: 's' | 'm' | 'l' | 'full';
+  $radius: 's' | 'm' | 'l';
+  $color: 'Normal' | 'Primary' | 'Danger' | 'Success' | 'SubFirst' | 'SubSecond';
   disabled: boolean;
 }
 
@@ -17,7 +17,7 @@ export const ButtonOutlineWrapper = styled.button<IButtonOutlineWrapperProps>`
   overflow: hidden;
 
   span {
-    font-size: 1em;
+    font-size: 1rem;
     font-weight: 700;
   }
 

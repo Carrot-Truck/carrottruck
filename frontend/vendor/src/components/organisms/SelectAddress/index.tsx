@@ -1,10 +1,10 @@
-import { SelectAddressContainer } from "./style";
-import { useEffect, useState } from "react";
-import { getDong, getSigungu, getSido } from "api/address";
-import Loading from "components/atoms/Loading";
-import { AxiosResponse } from "axios";
-import ButtonOutline from "components/atoms/ButtonOutline";
-import TitleText from "components/atoms/TitleText";
+import { SelectAddressContainer } from './style';
+import { useEffect, useState } from 'react';
+import { getDong, getSigungu, getSido } from 'api/address';
+import Loading from 'components/atoms/Loading';
+import { AxiosResponse } from 'axios';
+import ButtonOutline from 'components/atoms/ButtonOutline';
+import TitleText from 'components/atoms/TitleText';
 
 interface ISelectAddressProps {
   sidoId: number | null;
@@ -36,7 +36,7 @@ function SelectAddress({
   setDongId,
   setSidoName,
   setSigunguName,
-  setDongName,
+  setDongName
 }: ISelectAddressProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [addressNames, setAddressNames] = useState<AddressItem[]>([]);
@@ -98,7 +98,7 @@ function SelectAddress({
           {addressNames.map((data: AddressItem) => (
             <ButtonOutline
               key={data.id}
-              size="s"
+              size="m"
               radius="s"
               color="Primary"
               text={data.name}

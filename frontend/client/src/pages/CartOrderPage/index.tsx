@@ -88,7 +88,7 @@ function CartOrderPage() {
               (response: AxiosResponse) => {
                 const data = getData(response);
                 console.log('결제 완료 데이터: ', data);
-                navigate('/cart');
+                navigate('/mypage');
                 // 주문내역으로 이동하기
               },
               (error: any) => {

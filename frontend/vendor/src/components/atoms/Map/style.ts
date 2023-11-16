@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
 
 interface MapWrapperProps {
   $dynamicheight?: string;
@@ -6,7 +6,7 @@ interface MapWrapperProps {
 }
 
 export const MapWrapper = styled.div<MapWrapperProps>`
-  width: 100%;
+  width: 100vw;
   ${(props) =>
     props.$dynamicheight !== (null || undefined)
       ? css`

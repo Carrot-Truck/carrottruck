@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const SchedulePageLayout = styled.div`
-  width: 360px;
+  width: 100vw;
   padding-bottom: 200px;
 
   .header {
@@ -14,5 +14,4 @@ export const SchedulePageLayout = styled.div`
       justify-content: center;
     }
   }
-  
 `;

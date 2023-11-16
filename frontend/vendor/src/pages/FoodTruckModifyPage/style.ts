@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const FoodTruckModifyLayout = styled.div`
-  width: 360px;
+  width: 100vw;
   padding-bottom: 200px;
   font-family: BMJUA;
 
@@ -10,6 +10,7 @@ export const FoodTruckModifyLayout = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    padding: 15px 0px 0px 10px;
 
     p {
       font-size: 2rem;

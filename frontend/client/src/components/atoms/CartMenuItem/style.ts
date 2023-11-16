@@ -7,6 +7,7 @@ export const CartMenuItemWrapper = styled.div`
   margin: 0.5rem;
   text-align: center;
   border-top: 1px solid var(--gray-400);
+  padding-top: 8px;
 
   img {
     width: 30%;
@@ -55,6 +56,7 @@ export const MenuTextWrapper = styled.div`
     font-size: 1.25rem;
     color: var(--black-300); /* font-color가 아닌 color 사용 */
     font-weight: 900;
+    marjin: 10px 0px;
   }
   p:nth-child(2) {
     font-size: 1rem;

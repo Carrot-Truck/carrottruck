@@ -8,6 +8,7 @@ import com.boyworld.carrot.domain.foodtruck.FoodTruck;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -109,23 +110,14 @@ public class FoodTruckQueryRepository {
      * @return 푸드트럭 식별키에 해당하는 푸드트럭 상세 정보 (메뉴, 리뷰 포함)
      */
     public FoodTruckClientDetailDto getFoodTruckByIdAsClient(Long foodTruckId, String email, BigDecimal currentLat, BigDecimal currentLng) {
-        Boolean isOpen = queryFactory
-                .select(sale.endTime.isNull())
-                .from(sale)
-                .where(
-                        sale.foodTruck.id.eq(foodTruckId),
-                        sale.endTime.isNull(),
-                        sale.foodTruck.active,
-                        sale.active
-                )
-                .fetchFirst();
+        Boolean isOpen = checkIsOpen(foodTruckId).fetchFirst();
 
         JPQLQuery<String> address = queryFactory
                 .select(sale.address)
                 .from(sale)
                 .where(
                         sale.foodTruck.id.eq(foodTruckId),
-                        sale.endTime.isNull(),
+                        sale.isNotNull().and(sale.endTime.isNull()),
                         sale.foodTruck.active,
                         sale.active
                 );
@@ -135,7 +127,7 @@ public class FoodTruckQueryRepository {
                 .from(sale)
                 .where(
                         sale.foodTruck.id.eq(foodTruckId),
-                        sale.endTime.isNull(),
+                        sale.isNotNull().and(sale.endTime.isNull()),
                         sale.foodTruck.active,
                         sale.active
                 );
@@ -170,7 +162,7 @@ public class FoodTruckQueryRepository {
                         foodTruck.phoneNumber,
                         foodTruck.content,
                         foodTruck.originInfo,
-                        sale.isNotNull().and(sale.endTime.isNull()),
+                        checkIsOpen(foodTruckId),
                         isLiked(email),
                         foodTruck.prepareTime,
                         getAvgGrade(foodTruckId),
@@ -347,6 +339,18 @@ public class FoodTruckQueryRepository {
 
     private BooleanExpression isGreaterThanLastId(Long lastFoodTruckId) {
         return lastFoodTruckId != null ? foodTruck.id.gt(lastFoodTruckId) : null;
+    }
+
+    private JPAQuery<Boolean> checkIsOpen(Long foodTruckId) {
+        return queryFactory
+                .select(sale.endTime.isNull())
+                .from(sale)
+                .where(
+                        sale.foodTruck.id.eq(foodTruckId),
+                        sale.isNotNull().and(sale.endTime.isNull()),
+                        sale.foodTruck.active,
+                        sale.active
+                );
     }
 
     private NumberTemplate<Double> calculateDistance(BigDecimal currentLat, NumberPath<BigDecimal> targetLat,

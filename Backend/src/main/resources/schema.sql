@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `members`
     `created_date`  TIMESTAMP    NOT NULL DEFAULT now(),
     `modified_date` TIMESTAMP    NOT NULL DEFAULT now(),
     `active`        TINYINT      NOT NULL DEFAULT 1
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `vendor_info`
 (
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `vendor_info`
     `modified_date`   TIMESTAMP    NOT NULL DEFAULT now(),
     `active`          TINYINT      NOT NULL DEFAULT 1,
     FOREIGN KEY (`vendor_id`) REFERENCES `members` (`member_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `member_address`
 (
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `member_address`
     `modified_date`     TIMESTAMP    NOT NULL DEFAULT now(),
     `active`            TINYINT      NOT NULL DEFAULT 1,
     FOREIGN KEY (`member_id`) REFERENCES `members` (`member_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `member_device_token`
 (
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `member_device_token`
     `modified_date`          TIMESTAMP    NOT NULL DEFAULT now(),
     `active`                 TINYINT      NOT NULL DEFAULT 1,
     FOREIGN KEY (`member_id`) REFERENCES `members` (`member_id`)
-    );
+);
 
 -- 푸드트럭 (food_truck) 관련 TABLES
 CREATE TABLE IF NOT EXISTS `category`
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `category`
     `created_date`  TIMESTAMP   NOT NULL DEFAULT now(),
     `modified_date` TIMESTAMP   NOT NULL DEFAULT now(),
     `active`        TINYINT     NOT NULL DEFAULT 1
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `category_code`
 (
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `category_code`
     `modified_date`    TIMESTAMP  NOT NULL DEFAULT now(),
     `active`           TINYINT    NOT NULL DEFAULT 1,
     FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `food_truck`
 (
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `food_truck`
     `active`        TINYINT      NOT NULL DEFAULT 1,
     FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`),
     FOREIGN KEY (`vendor_id`) REFERENCES `members` (`member_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `food_truck_schedule`
 (
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `food_truck_schedule`
     `modified_date`          TIMESTAMP       NOT NULL DEFAULT now(),
     `active`                 TINYINT         NOT NULL DEFAULT 1,
     FOREIGN KEY (`food_truck_id`) REFERENCES `food_truck` (`food_truck_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `food_truck_image`
 (
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `food_truck_image`
     `modified_date`       TIMESTAMP    NOT NULL DEFAULT now(),
     `active`              TINYINT      NOT NULL DEFAULT 1,
     FOREIGN KEY (`food_truck_id`) REFERENCES `food_truck` (`food_truck_id`)
-    );
+);
 
 CREATE TABLE IF Not Exists `food_truck_like`
 (
@@ -133,7 +133,7 @@ CREATE TABLE IF Not Exists `food_truck_like`
     `active`             TINYINT   NOT NULL DEFAULT 1,
     FOREIGN KEY (`member_id`) REFERENCES `members` (`member_id`),
     FOREIGN KEY (`food_truck_id`) REFERENCES `food_truck` (`food_truck_id`)
-    );
+);
 
 -- 메뉴 (menu) 관련 TABLES
 CREATE TABLE IF NOT EXISTS `menu`
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `menu`
     `modified_date` TIMESTAMP    NOT NULL DEFAULT now(),
     `active`        TINYINT      NOT NULL DEFAULT 1,
     FOREIGN KEY (`food_truck_id`) REFERENCES `food_truck` (`food_truck_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `menu_option`
 (
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `menu_option`
     `modified_date`  TIMESTAMP    NOT NULL DEFAULT now(),
     `active`         TINYINT      NOT NULL DEFAULT 1,
     FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `menu_image`
 (
@@ -174,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `menu_image`
     `modified_date`    TIMESTAMP    NOT NULL DEFAULT now(),
     `active`           TINYINT      NOT NULL DEFAULT 1,
     FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `sales`
 (
@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `sales`
     `modified_date` timestamp       NOT NULL DEFAULT NOW(),
     `active`        tinyint         NOT NULL DEFAULT 1,
     FOREIGN KEY (`food_truck_id`) REFERENCES `food_truck` (`food_truck_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `orders`
 (
@@ -207,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `orders`
     `active`        tinyint     NOT NULL DEFAULT 1,
     FOREIGN KEY (`member_id`) REFERENCES `members` (`member_id`),
     FOREIGN KEY (`sales_id`) REFERENCES `sales` (`sales_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `orders_menu`
 (
@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS `orders_menu`
     `active`         tinyint   NOT NULL DEFAULT 1,
     FOREIGN KEY (`orders_id`) REFERENCES `orders` (`orders_id`),
     FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `orders_menu_option`
 (
@@ -233,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `orders_menu_option`
     `active`                tinyint   NOT NULL DEFAULT 1,
     FOREIGN KEY (`orders_menu_id`) REFERENCES `orders_menu` (`orders_menu_id`),
     FOREIGN KEY (`menu_option_id`) REFERENCES `menu_option` (`menu_option_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `review`
 (
@@ -242,14 +242,14 @@ CREATE TABLE IF NOT EXISTS `review`
     `food_truck_id` bigint,
     `orders_id`     bigint,
     `content`       text      NOT NULL,
-    `grade`         int       NOT NULL,
+    `grade`         int       NOT NULL check ( grade <= 5 ),
     `created_date`  timestamp NOT NULL DEFAULT NOW(),
     `modified_date` timestamp NOT NULL DEFAULT NOW(),
     `active`        tinyint   NOT NULL DEFAULT 1,
     FOREIGN KEY (`member_id`) REFERENCES members (`member_id`),
     FOREIGN KEY (`food_truck_id`) REFERENCES food_truck (`food_truck_id`),
     FOREIGN KEY (`orders_id`) REFERENCES orders (`orders_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `comment`
 (
@@ -262,7 +262,7 @@ CREATE TABLE IF NOT EXISTS `comment`
     `active`        tinyint   NOT NULL DEFAULT 1,
     FOREIGN KEY (`review_id`) REFERENCES review (`review_id`),
     FOREIGN KEY (`vendor_id`) REFERENCES members (`member_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `review_image`
 (
@@ -274,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `review_image`
     `modified_date`    timestamp    NOT NULL DEFAULT NOW(),
     `active`           tinyint      NOT NULL DEFAULT 1,
     FOREIGN KEY (`review_id`) REFERENCES review (`review_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `review_report`
 (
@@ -288,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `review_report`
     `active`           tinyint     NOT NULL DEFAULT 1,
     FOREIGN KEY (`member_id`) REFERENCES members (`member_id`),
     FOREIGN KEY (`review_id`) REFERENCES review (`review_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `survey`
 (
@@ -304,7 +304,7 @@ CREATE TABLE IF NOT EXISTS `survey`
     `active`        tinyint      NOT NULL default 1,
     FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`),
     FOREIGN KEY (`member_id`) REFERENCES `members` (`member_id`)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `adong_code`
 (
@@ -314,26 +314,29 @@ CREATE TABLE IF NOT EXISTS `adong_code`
     `sigungu`       varchar(10) NULL,
     `dong`          varchar(20) NULL,
     `created_date`  timestamp   NOT NULL
-    );
+);
 
-CREATE TABLE IF NOT EXISTS `sido` (
-	`sido_id` bigint primary key auto_increment,
-	`name` varchar(10) NOT NULL,
+CREATE TABLE IF NOT EXISTS `sido`
+(
+    `sido_id` bigint primary key auto_increment,
+    `name`    varchar(10) NOT NULL,
     UNIQUE KEY `unique_sido` (`name`)
-	);
+);
 
-CREATE TABLE IF NOT EXISTS `sigungu` (
-	`sigungu_id` bigint primary key auto_increment,
-	`sido_id` bigint,
-	`name` varchar(10) NOT NULL,
-	FOREIGN KEY (`sido_id`) REFERENCES `sido` (`sido_id`),
+CREATE TABLE IF NOT EXISTS `sigungu`
+(
+    `sigungu_id` bigint primary key auto_increment,
+    `sido_id`    bigint,
+    `name`       varchar(10) NOT NULL,
+    FOREIGN KEY (`sido_id`) REFERENCES `sido` (`sido_id`),
     UNIQUE KEY `unique_sigungu` (`sido_id`, `name`)
-	);
+);
 
-CREATE TABLE IF NOT EXISTS `dong` (
-	`dong_id` bigint primary key auto_increment,
-	`sigungu_id` bigint,
-	`name` varchar(10) NOT NULL,
-	FOREIGN KEY (`sigungu_id`) REFERENCES `sigungu` (`sigungu_id`),
+CREATE TABLE IF NOT EXISTS `dong`
+(
+    `dong_id`    bigint primary key auto_increment,
+    `sigungu_id` bigint,
+    `name`       varchar(10) NOT NULL,
+    FOREIGN KEY (`sigungu_id`) REFERENCES `sigungu` (`sigungu_id`),
     UNIQUE KEY `unique_dong` (`sigungu_id`, `name`)
-	);
+);

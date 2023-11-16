@@ -194,7 +194,7 @@ function StartSalePage() {
       ) : (
         <>
           <div className="map-container">
-            <NaverMap clientId={clientId} markers={[]} />
+            <NaverMap clientId={clientId} markers={[]} dynamicheight={"50vh"} />
           </div>
           <TitleText text={curAddress} size="s" textAlign="center" />
           <MenuSelector

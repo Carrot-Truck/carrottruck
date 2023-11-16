@@ -1,5 +1,6 @@
 import { UnselectAddressWrapper } from "./style";
 import back from "../../../assets/icons/keyboard-backspace.svg";
+import { useNavigate } from "react-router-dom";
 
 interface IUnselectAddressProps {
   sidoId: number | null;
@@ -22,8 +23,12 @@ function UnselectAddress({
   categoryId,
   setCategoryId,
 }: IUnselectAddressProps) {
+  const navigate = useNavigate();
+
   const handleUnselectClick = () => {
-    if (categoryId != null) {
+    if (sidoId == null) {
+      navigate(-1);
+    } else if (categoryId != null) {
       setCategoryId(null);
     } else if (dongId != null) {
       setDongId(null);
@@ -36,7 +41,7 @@ function UnselectAddress({
 
   return (
     <UnselectAddressWrapper onClick={handleUnselectClick}>
-      {sidoId && <img src={back} alt="" />}
+      <img src={back} alt="" />
     </UnselectAddressWrapper>
   );
 }

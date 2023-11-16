@@ -15,9 +15,4 @@ export const StartSalePageLayout = styled.div`
       margin-left: auto;
     }
   }
-
-  .map-container {
-    height: 50vh;
-    overflow: hidden;
-  }
 `;

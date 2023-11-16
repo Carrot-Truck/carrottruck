@@ -20,16 +20,15 @@ public class OrderMenuItem {
     @Builder
     public OrderMenuItem(Long id, Long menuId, Integer quantity, String menuName,
                          Integer price, List<Long> menuOptionList) {
-        this.id = id;
-        this.menuId = menuId;
-        this.quantity = quantity;
-        this.menuName = menuName;
-        this.price = price;
+        this(id, menuId, menuName, price, quantity);
         this.menuOptionList = menuOptionList;
     }
 
-    public OrderMenuItem(Long id, Integer quantity) {
+    public OrderMenuItem(Long id, Long menuId, String menuName, Integer price, Integer quantity) {
         this.id = id;
+        this.menuId = menuId;
+        this.menuName = menuName;
+        this.price = price;
         this.quantity = quantity;
     }
 }

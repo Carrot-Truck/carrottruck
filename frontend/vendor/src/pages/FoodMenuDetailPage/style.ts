@@ -4,6 +4,7 @@ export const FoodMenuDetailLayout = styled.div`
   width: 100vw;
   padding-bottom: 200px;
   font-family: BMJUA;
+  padding: 0 10px;
 
   .header {
     width: 70%;

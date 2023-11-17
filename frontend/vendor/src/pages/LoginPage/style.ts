@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const LoginPageLayout = styled.div`
   width: 100vw;
   padding-bottom: 200px;
+  padding: 0 10px;
 
   .header {
     display: flex;

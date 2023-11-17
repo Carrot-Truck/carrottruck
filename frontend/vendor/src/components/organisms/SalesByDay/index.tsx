@@ -1,6 +1,6 @@
 import SalesByDayItem from "components/atoms/SalesByDayItem";
 import { SalesByDayContainer } from "./style";
-import { Chart as ChartJS, Legend, Tooltip, ArcElement } from "chart.js";
+import { Chart as ChartJS, Legend, Tooltip, ArcElement, registerables } from "chart.js";
 import { Chart } from "react-chartjs-2";
 import { useState } from "react";
 
@@ -25,7 +25,7 @@ const dayMapper: Record<number, string> = {
 };
 
 function SalesByDay({ salesByDay }: ISalesByDayProps) {
-  ChartJS.register(ArcElement, Tooltip, Legend);
+  ChartJS.register(ArcElement, Tooltip, Legend, ...registerables);
 
   const [criteria, setCriteria] = useState<number>(1);
 

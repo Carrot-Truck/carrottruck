@@ -1,6 +1,10 @@
-import styled from 'styled-components';
+import styled, { css } from "styled-components";
 
-export const SwitchButtonContainer = styled.div`
+interface SwitchButtonContainerProps {
+  $position?: string;
+}
+
+export const SwitchButtonContainer = styled.div<SwitchButtonContainerProps>`
   display: flex;
   width: 100%;
   padding: 10px 13px 10px 10px;
@@ -9,4 +13,10 @@ export const SwitchButtonContainer = styled.div`
   gap: 10px;
   border-radius: var(--radius-m);
   background: var(--sub-color-1);
+  ${(props) =>
+    props.$position !== (null || undefined)
+      ? css`
+          position: ${props.$position};
+        `
+      : css``}
 `;

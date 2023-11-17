@@ -4,6 +4,7 @@ export const FoodMenuDetailModifyLayout = styled.div`
   width: 360px;
   padding-bottom: 200px;
   font-family: BMJUA;
+  min-height: 100vh;
 
   .header {
     width: 70%;

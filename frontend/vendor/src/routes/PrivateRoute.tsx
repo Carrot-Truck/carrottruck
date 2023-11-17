@@ -1,4 +1,5 @@
 import { ReactElement } from 'react';
+import { useSelector } from 'react-redux';
 import { Outlet, Navigate } from 'react-router-dom';
 
 interface PrivateRouteProps {
@@ -12,14 +13,7 @@ export default function PrivateRoute({ authentication }: PrivateRouteProps): Rea
    * 로그인 했을 경우 : true 라는 텍스트 반환
    * 로그인 안했을 경우 : null or false(로그아웃 버튼 눌렀을경우 false로 설정) 반환
    */
-  let isAuthenticated = null;
-  const userPersistData = localStorage.getItem('persist:user');
-  console.log('userpersist란다.', userPersistData);
-  if (userPersistData) {
-    const userObject = JSON.parse(userPersistData);
-    isAuthenticated = userObject.isAuthenticated;
-    console.log('isAuthenticated:', isAuthenticated);
-  }
+  const isAuthenticated = useSelector((state: any) => state.user.isAuthenticated);
 
   if (authentication) {
     // 인증이 반드시 필요한 페이지

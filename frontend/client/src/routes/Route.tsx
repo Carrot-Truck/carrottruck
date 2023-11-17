@@ -17,9 +17,9 @@ function RouteLink() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route element={<PrivateRoute authentication={true} />}>
+          <Route path="/" element={<MainPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/cartorder" element={<CartOrderPage />} />

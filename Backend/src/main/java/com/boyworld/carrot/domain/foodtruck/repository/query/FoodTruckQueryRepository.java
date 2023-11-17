@@ -190,6 +190,7 @@ public class FoodTruckQueryRepository {
                         isEqualFoodTruckId(foodTruckId),
                         foodTruck.active
                 )
+                .groupBy(foodTruck.id)
                 .fetchOne();
     }
 

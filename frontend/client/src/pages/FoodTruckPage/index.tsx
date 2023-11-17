@@ -6,12 +6,13 @@ import Button from 'components/atoms/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 // import Pocha from 'assets/imgs/image 21.png';
 import EmptyHeart from 'assets/icons/empty_heart.svg';
+import FilledHeart from 'assets/icons/filled_heart.svg';
 import Pin from 'assets/icons/pin.svg';
 import Star from 'assets/icons/star.svg';
 import FoodTruckMenu from 'components/organisms/FoodTruckMenu';
 // import StoreInfoForm from 'components/organisms/StoreInfoForm';
 // import ReviewList from 'components/organisms/ReviewList';
-import { getFoodTruck } from 'api/foodtruck/foodTruck';
+import { getFoodTruck, foodTruckLike } from 'api/foodtruck/foodTruck';
 import { getFoodTruckReview } from 'api/review';
 import { AxiosResponse, AxiosError } from 'axios';
 import { getSchedules } from 'api/schedule';
@@ -139,6 +140,27 @@ function FoodTruckPage() {
     getFoodTruckReview(response.data.data.foodTruck.foodTruckId, afterUpdateReview, handleFail);
   };
 
+  const handleLikeClick = (event: any) => {
+    foodTruckLike({
+        foodTruckId: foodTruckId
+    },
+    (response: any) => {
+        console.log(response.data.data);
+        
+        // 여기에서 isLiked 상태 업데이트
+        setFoodTruck(prevState => ({
+          ...prevState,
+          foodTruck: {
+            ...prevState.foodTruck,
+            isLiked: !prevState.foodTruck.isLiked
+          }
+        }));
+    },
+    (error: any) => {
+        console.error('API Error: ', error);
+    });
+  };
+
   // handleFail 함수 수정
   const handleFail = (error: AxiosError) => {
     console.error('Error fetching review data', error);
@@ -191,7 +213,7 @@ function FoodTruckPage() {
         <div className="storeInfo">
           <div className="foodTruckName">
             <span>{foodTruck.foodTruck.foodTruckName}</span>
-            <img src={EmptyHeart} alt="" />
+            {foodTruck.foodTruck.isLiked ? <img src={FilledHeart} alt="" onClick={handleLikeClick}/> : <img src={EmptyHeart} alt="" onClick={handleLikeClick}/>} 
           </div>
           <div className="location">
             {/* <span> {foodTruck.distance}m </span> */}

@@ -35,6 +35,10 @@ function OrderReview() {
   const handleSuccess = (response : AxiosResponse) => {
     console.log("organisms/OrderReview/handleSuccess ", response.data);
     setReview(response.data.data);
+    if(response.data.data === null ) {
+      alert("리뷰 작성은 현재 공사중입니다.ㅜㅜ");
+      navigate('/mypage');
+    }
   }
 
   const handleFail = (error: AxiosError) => {

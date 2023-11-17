@@ -3,69 +3,199 @@ import { AnalysisLayout } from "./style";
 import Button from "components/atoms/Button";
 import { useNavigate } from "react-router";
 import NaverMap from "components/atoms/Map";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import CategoryList from "components/organisms/CategoryList";
+import { AxiosResponse } from "axios";
+import { getCategories } from "api/foodtruck/category";
+import { getStoreAnalysis } from "api/analysis";
+import Loading from "components/atoms/Loading";
+import TitleText from "components/atoms/TitleText";
+import AnalysisResult from "components/organisms/AnalysisResult";
+import BackSpace from 'components/atoms/BackSpace';
+
+interface ICategory {
+  categoryId: number;
+  categoryName: string;
+}
+
+interface ICoords {
+  latitude: number;
+  longitude: number;
+}
+
+interface IAnalysisResponse {
+  categoryName: string;
+  sido: string;
+  sigungu: string;
+  dong: string;
+  radiusCount: number;
+  addressCount: number;
+  stores: IStoreResponse[];
+}
+
+interface IStoreResponse {
+  storeName: string;
+  latitude: number;
+  longitude: number;
+}
+
+const getData = (response: AxiosResponse) => {
+  return response.data.data;
+};
 
 function AnalysisPage() {
+  const [showCategory, setShowCategory] = useState<boolean>(false);
+  const [categories, setCategory] = useState<ICategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [coords, setCoords] = useState<ICoords | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [analysisData, setAnalsysisData] = useState<IAnalysisResponse | null>(null);
+
   const navigate = useNavigate();
 
   const clientId: string = process.env.REACT_APP_CLIENT_ID || "";
 
-  useEffect(() => {
-    const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}/order/subscribe/ssafy@ssafy.com`);
-
-    eventSource.addEventListener('sse', (event) => {
-      if (event.data === 'connect completed') {
-        console.log('SSE 연결 성공함');
-        return;
-      } else {
-        console.log(event);
-        // axios
-        //   .get(`https://j9c210.p.ssafy.io/api1/alarm/${email}`, {
-        //     headers: {
-        //       Authorization: `Bearer ${accessToken}`,
-        //     },
-        //   })
-        //   .then((res) => {
-        //     console.log('알람 내용 불러오는 거 성공함');
-        //     console.log(res.data);
-        //     setAlarmData(res.data);
-        //   })
-        //   .catch((err) => {
-        //     console.log('에러..');
-        //     console.log(err);
-        //   });
-
-        // Swal.fire({
-        //   icon: 'success',
-        //   title: '새로운 알람이 도착했습니다!',
-        //   text: event.data.content,
-        //   confirmButtonColor: '#f8a70c',
-        // });
-
-        // console.log('sse통해 넘어오는 이벤트 데이터', event);
+  const fetchData = async () => {
+    getCategories(
+      (response: AxiosResponse) => {
+        const data = getData(response);
+        setCategory(data["categories"]);
+      },
+      (error: any) => {
+        console.log(error);
       }
-    });
+    );
+  };
 
-    // 컴포넌트가 언마운트될 때 SSE 연결을 닫습니다.
-    return () => {
-      console.log("sse 연결을 닫습니다");
-      eventSource.close();
+  const getCurrentLocation = () => {
+    const curCoords: ICoords = {
+      latitude: 0,
+      longitude: 0,
     };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          curCoords.latitude = latitude;
+          curCoords.longitude = longitude;
+          setCoords(curCoords);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    getCurrentLocation();
   }, []);
 
-  //REACT_APP_CLIENT_ID
+  const getAnalysisData = (retry: number) => {
+    if (selectedCategory === null) {
+      alert("카테고리를 선택해주세요.");
+      setLoading(false);
+      return;
+    }
+
+    const requestQuery: Record<string, any> = {
+      latitude: coords?.latitude,
+      longitude: coords?.longitude,
+    };
+
+    getStoreAnalysis(
+      selectedCategory,
+      requestQuery,
+      (response: AxiosResponse) => {
+        const data = getData(response);
+        setAnalsysisData(data);
+        setLoading(false);
+      },
+      (error: any) => {
+        if (retry < 5) {
+          console.log(`불러오지 못했어요.. 다시 시도할게요 ${retry + 1}/5`);
+          getAnalysisData(retry + 1);
+        } else {
+          console.log(error);
+          alert("잠시후에 다시 시도해주세요.");
+          setLoading(false);
+          setSelectedCategory(null);
+        }
+      }
+    );
+  };
+
+  const handleCategoryClick = () => {
+    setLoading(true);
+    getAnalysisData(0);
+  };
+
   return (
     <AnalysisLayout>
-      <NaverMap clientId={clientId} markers={[]} />
-      <Button
-        size="m"
-        radius="m"
-        color="Normal"
-        text="수요조사"
-        handleClick={() => {
-          navigate("/survey");
-        }}
-      />
+      <div className="header">
+          <BackSpace/>
+        </div>
+      {loading ? (
+        <>
+          <TitleText text={"상권 분석중..."} size={"m"} textAlign={"center"} />
+          <Loading />
+        </>
+      ) : analysisData !== null ? (
+        <>
+          <AnalysisResult
+            categoryName={analysisData.categoryName}
+            sido={analysisData.sido}
+            sigungu={analysisData.sigungu}
+            dong={analysisData.dong}
+            radiusCount={analysisData.radiusCount}
+            addressCount={analysisData.addressCount}
+            stores={analysisData.stores}
+          />
+        </>
+      ) : showCategory ? (
+        <>
+          <CategoryList
+            categories={categories}
+            onCategoryClick={setSelectedCategory}
+            selectedCategoryId={selectedCategory}
+          />
+          <Button
+            size="m"
+            radius="m"
+            color="Primary"
+            text="상권 분석"
+            handleClick={handleCategoryClick}
+          />
+        </>
+      ) : (
+        <>
+          <NaverMap clientId={clientId} markers={[]} dynamicheight={"70vh"} />
+          <div className="button-wrapper">
+            <Button
+              size="m"
+              radius="m"
+              color="Primary"
+              text="업종 선택"
+              handleClick={() => {
+                setShowCategory(true);
+              }}
+            />
+          </div>
+          <div className="button-wrapper">
+            <Button
+              size="m"
+              radius="m"
+              color="Primary"
+              text="수요조사"
+              handleClick={() => {
+                navigate("/survey");
+              }}
+            />
+          </div>
+        </>
+      )}
       <Navbar />
     </AnalysisLayout>
   );

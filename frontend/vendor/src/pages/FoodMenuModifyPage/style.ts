@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const FoodMenuModifyLayout = styled.div`
-  width: 10vw;
+  width: 100vw;
   padding-bottom: 200px;
   font-family: BMJUA;
   min-height: 100vh; // 최소 높이를 뷰포트 높이로 설정

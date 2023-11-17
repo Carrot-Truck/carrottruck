@@ -1,10 +1,11 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const FoodMenuDetailModifyLayout = styled.div`
   width: 100vw;
   padding-bottom: 200px;
   font-family: BMJUA;
   min-height: 100vh;
+  padding: 0 10px;
 
   .header {
     width: 70%;

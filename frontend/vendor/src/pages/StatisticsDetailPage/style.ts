@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const StatisticsDetailLayout = styled.div`
   width: 100vw;
@@ -6,6 +6,7 @@ export const StatisticsDetailLayout = styled.div`
   max-height: 100vh;
   overflow: auto;
   padding-bottom: 90px;
+  padding: 0 10px;
 
   .sales-address {
     text-align: left;

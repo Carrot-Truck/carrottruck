@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const MainPageLayout = styled.div`
   width: 100vw;
@@ -9,6 +9,7 @@ export const MainPageLayout = styled.div`
   justify-content: center;
   font-family: BM JUA_TTF;
   min-height: 100vh;
+  padding: 0 10px;
 
   .header {
     display: flex;

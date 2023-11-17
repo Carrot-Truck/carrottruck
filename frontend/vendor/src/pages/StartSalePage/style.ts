@@ -1,9 +1,10 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const StartSalePageLayout = styled.div`
   width: 100vw;
   max-height: 100vh;
   position: relative;
+  padding: 0 10px;
 
   .start-sale-button-container {
     display: flex;

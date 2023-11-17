@@ -10,6 +10,7 @@ export const FoodTruckModifyLayout = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    padding: 15px 0px 0px 10px;
 
     p {
       font-size: 2rem;

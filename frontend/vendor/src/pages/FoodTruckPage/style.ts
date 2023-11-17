@@ -19,6 +19,7 @@ export const FoodTruckLayout = styled.div`
     display: flex;
     flex-direction: rows;
     justify-content: space-between;
+    padding: 0px 2vw;
 
     p {
       font-family: BMJUA;
@@ -34,7 +35,7 @@ export const FoodTruckLayout = styled.div`
   }
 
   .headerImage {
-    width: 100%;
+    width: 90vw;
     height: 20vh;
   }
 
@@ -42,6 +43,8 @@ export const FoodTruckLayout = styled.div`
     display: flex;
     flex-direction: column;
     font-family: BM JUA_TTF;
+    width: 90vw;
+    padding: 0px 0px 0px 4vw;
 
     .foodTruckName {
       display: flex;

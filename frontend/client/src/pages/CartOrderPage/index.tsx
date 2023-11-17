@@ -81,14 +81,14 @@ function CartOrderPage() {
       },
       async (rsp: { imp_uid: string; paid_amount: any }) => {
         try {
-          const { data } = await axios.post('http://localhost:8001/api/verifyIamport/' + rsp.imp_uid);
+          const { data } = await axios.post('https://k9c211.p.ssafy.io/api/verifyIamport/' + rsp.imp_uid);
           if (rsp.paid_amount === data.data.response.amount) {
             alert('결제 성공');
             createOrder(
               (response: AxiosResponse) => {
                 const data = getData(response);
                 console.log('결제 완료 데이터: ', data);
-                navigate('/cart');
+                navigate('/mypage');
                 // 주문내역으로 이동하기
               },
               (error: any) => {

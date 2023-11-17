@@ -1,27 +1,27 @@
-import BIGButton from "components/atoms/BigButton";
-import Button from "components/atoms/Button";
-import { useNavigate } from "react-router-dom";
-import { ReigsterFoodTrcukFormContainer } from "./style";
+import BIGButton from 'components/atoms/BigButton';
+import Button from 'components/atoms/Button';
+import { useNavigate } from 'react-router-dom';
+import { ReigsterFoodTrcukFormContainer } from './style';
 
 function VendorMainForm() {
   const navigate = useNavigate();
 
   const register = async () => {
     try {
-      navigate("/registration");
+      navigate('/registration');
     } catch (error) {
       console.log(error);
-      navigate("/");
+      navigate('/');
     }
   };
 
   const start = async () => {
     try {
       // 이동하면 그 페이지에서는 /food-truck/vendor 로 post 매핑해서 값 넘겨야해
-      navigate("/start-sale");
+      navigate('/start-sale');
     } catch (error) {
       console.log(error);
-      navigate("/");
+      navigate('/');
     }
   };
 

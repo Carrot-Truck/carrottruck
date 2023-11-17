@@ -37,6 +37,7 @@ function CartPage() {
     const fetchData = async () => {
       getCart(
         (response: AxiosResponse) => {
+          console.log(response);
           const data = getData(response);
           console.log(data);
           setCart(data);
@@ -119,7 +120,7 @@ function CartPage() {
       </div>
       <div>{cart?.foodTruckName}</div>
       {renderCartContent()}
-      <div>{cart?.totalPrice}</div>
+      <div className="totalPrice">총 {cart?.totalPrice} 원</div>
       <Button
         handleClick={handleCartOrder}
         color={isDisabled ? "SubFirst" : "Primary"}

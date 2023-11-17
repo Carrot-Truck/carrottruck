@@ -1,8 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StartSalePageLayout = styled.div`
-  width: 360px;
-  min-height: 100vh;
+  width: 100vw;
   max-height: 100vh;
   position: relative;
 
@@ -14,10 +13,5 @@ export const StartSalePageLayout = styled.div`
     button {
       margin-left: auto;
     }
-  }
-
-  .map-container {
-    height: 50vh;
-    overflow: hidden;
   }
 `;

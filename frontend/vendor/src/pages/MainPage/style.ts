@@ -1,14 +1,14 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const MainPageLayout = styled.div`
-  width: 360px;
+  width: 100vw;
   padding-bottom: 200px;
   max-height: 100vh;
   min-height: 100vh;
+  display: center;
   justify-content: center;
   font-family: BM JUA_TTF;
   min-height: 100vh;
-
 
   .header {
     display: flex;
@@ -22,7 +22,7 @@ export const MainPageLayout = styled.div`
 export const LogoutP = styled.p`
   font-size: 1rem;
   position: absolute;
-  right: 0;
+  right: 5%;
   top: 50%; /* 부모 요소의 50% 위치에 */
   // transform: translateY(-50%); /* 자신의 높이의 절반만큼 올려서 중앙에 위치 */
 `;

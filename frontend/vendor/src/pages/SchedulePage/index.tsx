@@ -1,6 +1,6 @@
 import Navbar from "components/organisms/Navbar";
 import { SchedulePageLayout } from "./style";
-import BackSpace from 'components/atoms/BackHome';
+import BackSpace from 'components/atoms/BackSpace';
 import ScheduleForm from "components/organisms/ScheduleForm";
 
 function SchedulePage() {

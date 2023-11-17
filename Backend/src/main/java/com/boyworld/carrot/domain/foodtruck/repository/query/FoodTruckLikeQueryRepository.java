@@ -28,8 +28,7 @@ public class FoodTruckLikeQueryRepository {
                 .from(foodTruckLike)
                 .where(
                         foodTruckLike.member.id.eq(memberId),
-                        foodTruckLike.foodTruck.id.eq(foodTruckId),
-                        foodTruckLike.active
+                        foodTruckLike.foodTruck.id.eq(foodTruckId)
                 )
                 .fetchOne();
     }

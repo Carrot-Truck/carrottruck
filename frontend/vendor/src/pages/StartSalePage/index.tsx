@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { openSale, setSoldout } from "api/sale";
 import { getMenus } from "api/menu";
 import { isOpenFoodTruck } from "api/foodtruck/foodTruck";
+import BackSpace from "components/atoms/BackSpace";
 
 interface ICoords {
   latitude: number;
@@ -189,12 +190,15 @@ function StartSalePage() {
 
   return (
     <StartSalePageLayout>
+      <div className="hdaer">
+        <BackSpace></BackSpace>
+      </div>
       {loading ? (
         <Loading />
       ) : (
         <>
           <div className="map-container">
-            <NaverMap clientId={clientId} markers={[]} />
+            <NaverMap clientId={clientId} markers={[]} dynamicheight={"50vh"} />
           </div>
           <TitleText text={curAddress} size="s" textAlign="center" />
           <MenuSelector

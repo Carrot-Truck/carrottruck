@@ -21,7 +21,7 @@ function ButtonOutline(props: IButtonOutlineProps) {
       onClick={handleClick}
       disabled={disabled ?? false}
     >
-      {text}
+      <span>{text}</span>
     </ButtonOutlineWrapper>
   );
 }

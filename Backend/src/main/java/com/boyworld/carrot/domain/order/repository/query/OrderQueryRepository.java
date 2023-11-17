@@ -80,6 +80,8 @@ public class OrderQueryRepository {
                 .select(Projections.constructor(OrderItem.class,
                         order.id,
                         order.status,
+                        order.member.nickname,
+                        order.member.phoneNumber,
                         order.totalPrice,
                         order.createdDate,
                         order.expectTime
@@ -106,6 +108,8 @@ public class OrderQueryRepository {
                     .select(Projections.bean(OrderMenuItem.class,
                             orderMenu.id,
                             orderMenu.menu.id.as("menuId"),
+                            orderMenu.menu.menuInfo.name.as("menuName"),
+                            orderMenu.menu.menuInfo.price,
                             orderMenu.quantity
                     ))
                     .from(orderMenu)
@@ -128,19 +132,39 @@ public class OrderQueryRepository {
 
     public OrderItem getOrder(Long orderId, Role role) {
 
-        OrderItem orderItem = queryFactory
-                .select(Projections.constructor(OrderItem.class,
-                        order.id,
-                        order.status,
-                        order.totalPrice,
-                        order.createdDate,
-                        order.expectTime
-                ))
-                .from(order)
-                .where(
-                        order.id.eq(orderId)
-                )
-                .fetchOne();
+        OrderItem orderItem;
+        if (role.equals(Role.CLIENT)) {
+            orderItem = queryFactory
+                    .select(Projections.constructor(OrderItem.class,
+                            order.id,
+                            order.status,
+                            order.totalPrice,
+                            order.createdDate,
+                            order.expectTime
+                    ))
+                    .from(order)
+                    .where(
+                            order.id.eq(orderId)
+                    )
+                    .fetchOne();
+        } else {
+            orderItem = queryFactory
+                    .select(Projections.constructor(OrderItem.class,
+                            order.id,
+                            order.status,
+                            order.member.nickname,
+                            order.member.phoneNumber,
+                            order.totalPrice,
+                            order.createdDate,
+                            order.expectTime
+                    ))
+                    .from(order)
+                    .where(
+                            order.id.eq(orderId)
+                    )
+                    .fetchOne();
+        }
+
 
         List<OrderMenuItem> orderMenuItems = queryFactory
                 .select(Projections.constructor(OrderMenuItem.class,

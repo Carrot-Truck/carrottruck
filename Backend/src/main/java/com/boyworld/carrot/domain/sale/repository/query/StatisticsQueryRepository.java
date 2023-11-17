@@ -156,7 +156,9 @@ public class StatisticsQueryRepository {
                         sale.totalAmount.sum()
                 ))
                 .from(sale)
-                .where(getWeek(startOfYearDateTime).floor().in(weeks))
+                .where(getWeek(startOfYearDateTime).floor().in(weeks),
+                        isClosedSale(),
+                        isActiveSale())
                 .groupBy(getWeek(startOfYearDateTime).floor())
                 .orderBy(getWeek(startOfYearDateTime).floor().desc())
                 .fetch();
@@ -167,7 +169,10 @@ public class StatisticsQueryRepository {
                 .select(sale.id)
                 .from(sale)
                 .where(sale.foodTruck.id.eq(foodTruckId),
-                        sale.startTime.between(startDate, endDate.plusDays(1)))
+                        sale.startTime.between(startDate, endDate.plusDays(1)),
+                        isClosedSale(),
+                        isActiveSale()
+                )
                 .fetch();
 
         List<Long> orderIds = getOrderIds(salesIds);
@@ -216,7 +221,9 @@ public class StatisticsQueryRepository {
                 .from(sale)
                 .where(sale.foodTruck.id.eq(foodTruckId),
                         sale.startTime.year().eq(year),
-                        sale.startTime.month().eq(month)
+                        sale.startTime.month().eq(month),
+                        isClosedSale(),
+                        isActiveSale()
                 )
                 .fetch();
 
@@ -279,7 +286,7 @@ public class StatisticsQueryRepository {
                 .innerJoin(order)
                 .on(order.id.eq(orderMenu.order.id))
                 .where(order.id.in(orderIds))
-                .groupBy(orderMenu.menu.id)
+                .groupBy(orderMenu.menu.id, orderMenu.menu.menuInfo.name)
                 .orderBy(orderMenu.quantity.multiply(orderMenu.menu.menuInfo.price).sum().desc())
                 .fetch();
     }

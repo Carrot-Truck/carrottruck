@@ -170,6 +170,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
         orderItems.add(OrderItem.builder()
                 .orderId(1L)
                 .status(Status.PROCESSING)
+                .nickname("닉네임1")
+                .phoneNumber("연락처1")
                 .orderCnt(0)
                 .totalPrice(40000)
                 .createdTime(LocalDateTime.of(2023, 10, 30, 17, 25))
@@ -181,6 +183,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                 .orderId(2L)
                 .orderCnt(2)
                 .status(Status.PENDING)
+                .nickname("닉네임2")
+                .phoneNumber("연락처2")
                 .totalPrice(15000)
                 .createdTime(LocalDateTime.of(2023, 11, 1, 17, 35))
                 .expectTime(null)
@@ -223,6 +227,12 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                                                 .description("완료된 주문 ID"),
                                         fieldWithPath("data.orderItems[].status").type(JsonFieldType.STRING)
                                                 .description("주문 상태"),
+                                        fieldWithPath("data.orderItems[].clientInfo").type(JsonFieldType.OBJECT)
+                                                .description("주문 고객 정보"),
+                                        fieldWithPath("data.orderItems[].clientInfo.nickname").type(JsonFieldType.STRING)
+                                                .description("주문 고객 닉네임"),
+                                        fieldWithPath("data.orderItems[].clientInfo.phoneNumber").type(JsonFieldType.STRING)
+                                                .description("주문 고객 연락처"),
                                         fieldWithPath("data.orderItems[].orderCnt").type(JsonFieldType.NUMBER)
                                                 .description("이전 주문 횟수"),
                                         fieldWithPath("data.orderItems[].totalPrice").type(JsonFieldType.NUMBER)
@@ -290,6 +300,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
         orderItems.add(OrderItem.builder()
                 .orderId(1L)
                 .status(Status.COMPLETE)
+                .nickname("닉네임1")
+                .phoneNumber("연락처1")
                 .orderCnt(0)
                 .totalPrice(40000)
                 .createdTime(LocalDateTime.of(2023, 10, 30, 17, 25))
@@ -301,6 +313,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                 .orderId(2L)
                 .orderCnt(2)
                 .status(Status.CANCELLED)
+                .nickname("닉네임2")
+                .phoneNumber("연락처2")
                 .totalPrice(15000)
                 .createdTime(LocalDateTime.of(2023, 11, 1, 17, 35))
                 .expectTime(null)
@@ -311,6 +325,8 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                 .orderId(3L)
                 .orderCnt(2)
                 .status(Status.DECLINED)
+                .nickname("닉네임3")
+                .phoneNumber("연락처3")
                 .totalPrice(15000)
                 .createdTime(LocalDateTime.of(2023, 11, 1, 18, 35))
                 .expectTime(null)
@@ -352,6 +368,12 @@ public class SaleControllerDocsTest extends RestDocsSupport {
                                                 .description("완료된 주문 ID"),
                                         fieldWithPath("data.orderItems[].status").type(JsonFieldType.STRING)
                                                 .description("주문 상태"),
+                                        fieldWithPath("data.orderItems[].clientInfo").type(JsonFieldType.OBJECT)
+                                                .description("주문 고객 정보"),
+                                        fieldWithPath("data.orderItems[].clientInfo.nickname").type(JsonFieldType.STRING)
+                                                .description("주문 고객 닉네임"),
+                                        fieldWithPath("data.orderItems[].clientInfo.phoneNumber").type(JsonFieldType.STRING)
+                                                .description("주문 고객 연락처"),
                                         fieldWithPath("data.orderItems[].orderCnt").type(JsonFieldType.NUMBER)
                                                 .description("이전 주문 횟수"),
                                         fieldWithPath("data.orderItems[].totalPrice").type(JsonFieldType.NUMBER)

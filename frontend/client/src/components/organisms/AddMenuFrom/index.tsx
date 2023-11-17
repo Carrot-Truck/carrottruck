@@ -42,6 +42,7 @@ function AddMenuForm() {
             const data = getData(response);
             console.log(data);
             alert("메뉴를 담았습니다");
+            navigate(-1);
           },
           (error: any) => {
             console.log(requestData);

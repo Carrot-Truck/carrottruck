@@ -103,6 +103,8 @@ function SurveyList({ sido, sigungu, dong, categoryId, setCategoryId }: ISurveyL
         surveyItemList.map((data: ISurveyItem, index: number) => (
           <SurveyListItem
             key={index}
+            rank={index + 1}
+            categoryId={data.categoryId}
             categoryName={data.categoryName}
             surveyCount={data.surveyCount}
             handleSurveyItemClick={() => handleSurveyItemClick(data.categoryId)}

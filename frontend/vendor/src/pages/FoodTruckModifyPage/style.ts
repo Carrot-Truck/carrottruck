@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const FoodTruckModifyLayout = styled.div`
-  width: 360px;
+  width: 100vw;
   padding-bottom: 200px;
   font-family: BMJUA;
 

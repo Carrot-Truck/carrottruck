@@ -1,20 +1,20 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const FoodTruckLayout = styled.div`
-  width: 360px;
+  width: 100vw;
   padding-bottom: 200px;
-  min-height: 100vh;      // 최소 높이를 뷰포트 높이로 설정
+  min-height: 100vh; // 최소 높이를 뷰포트 높이로 설정
   justify-content: space-between; // 내용과 NavBar 사이의 공간을 균등하게 분배
 
   .content {
-    flex-grow: 1;  // 내용이 차지할 수 있는 만큼의 공간을 차지하도록 설정
+    flex-grow: 1; // 내용이 차지할 수 있는 만큼의 공간을 차지하도록 설정
     // 필요한 경우 여기에 추가 스타일을 적용합니다.
   }
 
-  .modifyButton{
+  .modifyButton {
     justify-content: right;
   }
-  
+
   .header {
     display: flex;
     flex-direction: rows;

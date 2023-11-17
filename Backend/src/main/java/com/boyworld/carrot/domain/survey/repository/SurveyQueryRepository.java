@@ -45,6 +45,7 @@ public class SurveyQueryRepository {
                         isActiveSurvey()
                 )
                 .groupBy(survey.category.id)
+                .orderBy(survey.count().castToNum(Integer.class).desc())
                 .fetch();
     }
 

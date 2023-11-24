@@ -51,7 +51,7 @@
             - UI/UX
         </td>
         <td><a href="https://github.com/">
-            <img src="https://avatars.githubusercontent.com/" width="50px" alt=""/><br />
+            <img src="https://avatars.githubusercontent.com/longBright" width="50px" alt=""/><br />
             <sub><b>최영환</b></sub></a>
         </td>
         <td align="left">
@@ -173,6 +173,10 @@
 
 ### 시스템 아키텍쳐
 - 시스템 아키텍쳐 이미지
+  <img src="./img/아키텍쳐.jpg"/>
+
+### API
+[당근트럭 REST API 문서](./exec/REST_Docs.pdf)
 
 ### Tool 
 ```
@@ -181,6 +185,291 @@
 - Server: Amazon EC2
 - CI/CD: Jenkins
 ```
+
+### Spring structure
+```
+├─api
+│  ├─controller
+│  │  ├─address
+│  │  │  └─response
+│  │  ├─analysis
+│  │  │  └─response
+│  │  ├─cart
+│  │  │  ├─request
+│  │  │  └─response
+│  │  ├─docs
+│  │  ├─foodtruck
+│  │  │  ├─request
+│  │  │  └─response
+│  │  ├─member
+│  │  │  ├─request
+│  │  │  └─response
+│  │  ├─menu
+│  │  │  ├─request
+│  │  │  └─response
+│  │  ├─order
+│  │  │  ├─request
+│  │  │  └─response
+│  │  ├─payment
+│  │  ├─review
+│  │  │  ├─request
+│  │  │  └─response
+│  │  ├─sale
+│  │  │  ├─request
+│  │  │  └─response
+│  │  ├─schedule
+│  │  │  ├─request
+│  │  │  └─response
+│  │  ├─statistics
+│  │  │  └─response
+│  │  └─survey
+│  │      ├─request
+│  │      └─response
+│  └─service
+│      ├─address
+│      │  └─dto
+│      ├─analysis
+│      │  └─dto
+│      ├─cart
+│      │  └─dto
+│      ├─fcm
+│      │  └─dto
+│      ├─foodtruck
+│      │  └─dto
+│      ├─geocoding
+│      │  └─dto
+│      │      └─gc
+│      ├─member
+│      │  ├─command
+│      │  ├─dto
+│      │  ├─error
+│      │  └─query
+│      ├─menu
+│      │  └─dto
+│      ├─order
+│      │  └─dto
+│      ├─review
+│      │  └─dto
+│      ├─sale
+│      │  └─dto
+│      ├─schedule
+│      │  └─dto
+│      ├─statistics
+│      │  └─dto
+│      │      ├─details
+│      │      └─list
+│      └─survey
+│          └─dto
+├─client
+│  ├─mail
+│  └─Sse
+├─config
+├─domain
+│  ├─address
+│  │  └─repository
+│  ├─adong
+│  │  └─repository
+│  ├─cart
+│  │  └─repository
+│  ├─foodtruck
+│  │  └─repository
+│  │      ├─command
+│  │      ├─dto
+│  │      └─query
+│  ├─member
+│  │  └─repository
+│  │      ├─command
+│  │      └─query
+│  ├─menu
+│  │  └─repository
+│  │      ├─command
+│  │      └─query
+│  ├─order
+│  │  └─repository
+│  │      ├─command
+│  │      └─query
+│  ├─review
+│  │  └─repository
+│  ├─sale
+│  │  └─repository
+│  │      ├─command
+│  │      └─query
+│  └─survey
+│      └─repository
+├─file
+└─security
+```
+
+### React structure (Client)
+```
+├─api
+│  ├─foodtruck
+│  └─member
+├─assets
+│  ├─fonts
+│  ├─icons
+│  └─imgs
+├─components
+│  ├─atoms
+│  │  ├─BackHome
+│  │  ├─BackSpace
+│  │  ├─BigButton
+│  │  ├─Button
+│  │  ├─CartMenuItem
+│  │  ├─CategoryListItem
+│  │  ├─FoodTruckInfoItem
+│  │  ├─FoodTruckListItem
+│  │  ├─FoodTruckMenuItem
+│  │  ├─FoodTruckReviewtem
+│  │  ├─Input
+│  │  ├─Map
+│  │  ├─MenuOption
+│  │  ├─MyReview
+│  │  ├─NavbarItem
+│  │  ├─OrderListItem
+│  │  ├─ReviewListItem
+│  │  ├─SearchBar
+│  │  ├─ShoppingCartItem
+│  │  └─Toggle
+│  └─organisms
+│      ├─AddMenuFrom
+│      ├─CartMenu
+│      ├─CategoryList
+│      ├─FoodTruckInfo
+│      ├─FoodTruckList
+│      ├─FoodTruckMenu
+│      ├─FoodTruckReview
+│      ├─JoinForm
+│      ├─LoginForm
+│      ├─MyReviewsForm
+│      ├─Navbar
+│      ├─OrderListForm
+│      ├─OrderReview
+│      ├─RegisterSwitchButton
+│      ├─RegistFoodTruckButton
+│      ├─ReviewList
+│      ├─StoreInfoForm
+│      └─SwitchButton
+├─hooks
+├─pages
+│  ├─CartOrderPage
+│  ├─CartPage
+│  ├─FoodTruckPage
+│  ├─LoginPage
+│  ├─MainPage
+│  ├─MyInfoPage
+│  ├─MyPage
+│  └─SurveyPage
+├─routes
+├─slices
+│  └─userSlice
+├─store
+└─styles
+```
+
+### React structure (Vendor)
+```
+├─api
+│  ├─foodtruck
+│  └─member
+├─assets
+│  ├─fonts
+│  ├─icons
+│  └─imgs
+├─components
+│  ├─atoms
+│  │  ├─BackHome
+│  │  ├─BackSpace
+│  │  ├─BigButton
+│  │  ├─Button
+│  │  ├─ButtonOutline
+│  │  ├─CategoryListItem
+│  │  ├─FoodTruckInfoItem
+│  │  ├─FoodTruckListItem
+│  │  ├─FoodTruckMenuItem
+│  │  ├─FoodTruckReviewtem
+│  │  ├─Input
+│  │  ├─InputChange
+│  │  ├─Loading
+│  │  ├─Map
+│  │  ├─MenuOption
+│  │  ├─MenuSelectorItem
+│  │  ├─NavbarItem
+│  │  ├─NothingHere
+│  │  ├─OrderHistoryItem
+│  │  ├─ReturnToSaleMain
+│  │  ├─ScheduleMap
+│  │  ├─SearchBar
+│  │  ├─SelectedFoodTruck
+│  │  ├─ShowDetail
+│  │  ├─StatisticsCriteria
+│  │  ├─StatisticsDateText
+│  │  ├─StatisticsMonthItem
+│  │  ├─StatisticsSalesItem
+│  │  ├─StatisticsWeekItem
+│  │  ├─SurveyDetailsItem
+│  │  ├─SurveyListItem
+│  │  ├─TitleText
+│  │  ├─Toggle
+│  │  ├─ToNextDate
+│  │  ├─ToOrderDetail
+│  │  ├─ToPrevDate
+│  │  └─UnselectAddress
+│  └─organisms
+│      ├─AnalysisResult
+│      ├─BusinessRegistration
+│      ├─CategoryList
+│      ├─FoodTruckInfo
+│      ├─FoodTruckList
+│      ├─FoodTruckMenu
+│      ├─FoodTruckModifyForm
+│      ├─FoodTruckRegistration
+│      ├─FoodTruckReview
+│      ├─FoodTruckSelector
+│      ├─JoinForm
+│      ├─LoginForm
+│      ├─MenuSelector
+│      ├─ModifyScheduleForm
+│      ├─Navbar
+│      ├─OrderDetailButton
+│      ├─OrderHistoryList
+│      ├─RegisterSwitchButton
+│      ├─RegistFoodTruckButton
+│      ├─SalesByDay
+│      ├─SalesByHour
+│      ├─SalesByMenu
+│      ├─ScheduleForm
+│      ├─SelectAddress
+│      ├─StatisticsCriteriaBar
+│      ├─StatisticsDateSelector
+│      ├─StatisticsList
+│      ├─SurveyList
+│      ├─SwitchButton
+│      └─VendorMainForm
+├─hooks
+├─pages
+│  ├─AnalysisPage
+│  ├─FoodMenuDetailModifyPage
+│  ├─FoodMenuDetailPage
+│  ├─FoodMenuModifyPage
+│  ├─FoodTruckModifyPage
+│  ├─FoodTruckPage
+│  ├─LoginPage
+│  ├─MainPage
+│  ├─RegistrationPage
+│  ├─SalePage
+│  ├─SchedulePage
+│  ├─StartSalePage
+│  ├─StatisticsDetailPage
+│  ├─StatisticsPage
+│  └─SurveyPage
+├─routes
+├─slices
+│  └─userSlice
+├─store
+└─styles
+```
+
 <!--
 
 <br>
@@ -259,7 +548,7 @@
 ## 주요 기술 Tech Stack 💡
 
 ### 시스템 아키텍쳐
-<img src="./exec/SA.png"/>
+<img src="./img/아키텍쳐.jpg"/>
 
 ### Tool 
 ```

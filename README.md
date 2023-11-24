@@ -79,14 +79,33 @@
 
 ## 주요 기능 Main Function 🧰
 ### 사용자
+#### 지도에 영업중인 푸드트럭 조회
+![지도에 영업중인 푸드트럭 조회](https://github.com/Carrot-Truck/carrottruck/assets/79788971/2d9cd27d-ce3a-4cce-802b-196117f0609f)
+#### 푸드트럭 목록 조회
+![푸드트럭 리스트 조회](https://github.com/Carrot-Truck/carrottruck/assets/79788971/e7766247-c1d1-4068-bf15-d006400377e9)
+#### 푸드트럭 상세조회( 메뉴, 가게정보, 리뷰)
+![푸드트럭 상세조회](https://github.com/Carrot-Truck/carrottruck/assets/79788971/c1e09d29-6200-49f1-a1e5-599a8b0fa987)
+#### 푸드트럭 찜
+![푸드트럭 찜](https://github.com/Carrot-Truck/carrottruck/assets/79788971/c375e2ae-4471-4c12-8f4f-e52a9f92af14)
+#### 장바구니 메뉴 추가
+![푸드트럭 장바구니 메뉴 추가](https://github.com/Carrot-Truck/carrottruck/assets/79788971/08d37325-7d6a-405f-83af-cb967b052727)
+#### 장바구니 메뉴 수정
+![푸드트럭 장바구니 수정](https://github.com/Carrot-Truck/carrottruck/assets/79788971/8db0fc9f-eb16-49c2-b31c-d2540028180a)
+#### 장바구니 메뉴 삭제
+![푸드트럭 장바구니 삭제](https://github.com/Carrot-Truck/carrottruck/assets/79788971/0c07ffcc-aa59-4a36-8d18-a32160129bc0)
+#### 주문하기 페이지 조회
+![사용자 주문정보 조회](https://github.com/Carrot-Truck/carrottruck/assets/79788971/6035815d-465f-4797-a79e-71d51292057a)
+#### 결제
+![결제](https://github.com/Carrot-Truck/carrottruck/assets/79788971/87a2aa58-3d58-4501-8490-25fc3e99505c)
+#### 유저 주문내역 조회
+<img src="https://github.com/Carrot-Truck/carrottruck/assets/79788971/298d2c21-66ee-4d5a-baa5-7dbbb42c0efe" width="200">
 
-- 푸드트럭 조회 : 자신의 주위에 있는 푸드트럭의 정보를 조회하는 기능
-- 푸드트럭 수요조사 : 사용자는 자신이 원하는 푸드트럭의 수요 조사에 참여 할 수 있는 기능
-- 음식 주문 및 결제 : 사용자는 자신이 원하는 메뉴를 주문하고 결제할 수 있는 기능
-- 푸드트럭 리뷰 등록 : 사용자는 자신이 이용한 푸드트럭의 리뷰를 등록 할 수 있다.
-- 푸드트럭 영업 시작 및 종료 : 사업자는 푸드트럭 영업을 시작 및 종료를 설정할 수 있는 기능
-- 푸드트럭 영업 관리 : 사업자는 영업이 시작되면 요청된 주문 내역을 조회할 수 있다.
-- 푸드트럭 매출 통계 조회 : 사업자는 푸드트럭의 매출 통계를 조회할 수 있다.
+#### 유저 리뷰조회
+<img src="https://github.com/Carrot-Truck/carrottruck/assets/79788971/7d0d30c6-65a5-4a8d-983a-207cb16e4b1c" width="200">
+
+#### 수요조사
+![수요조사 등록](https://github.com/Carrot-Truck/carrottruck/assets/79788971/c4aece00-41bf-4bfe-b25d-9adfebd1bb8f)
+
 
 ### 사업자
 #### 푸드트럭 등록

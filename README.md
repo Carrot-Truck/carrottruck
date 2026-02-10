@@ -33,8 +33,8 @@
         </td>
     </tr>
     <tr align="center">
-        <td><a href="https://github.com/">
-            <img src="https://avatars.githubusercontent.com/"  width="50px" alt=""/><br />
+        <td><a href="https://github.com/yjh910">
+            <img src="https://avatars.githubusercontent.com/yjh910"  width="50px" alt=""/><br />
             <sub><b>양진형</b></sub></a>
         </td>
         <td align="left">
